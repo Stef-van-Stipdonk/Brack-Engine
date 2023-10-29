@@ -1,0 +1,6 @@
+#ifndef BRACK_ENGINE_LIBRARY_H
+#define BRACK_ENGINE_LIBRARY_H
+
+void hello();
+
+#endif //BRACK_ENGINE_LIBRARY_H
