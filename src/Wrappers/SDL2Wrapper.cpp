@@ -31,7 +31,25 @@ bool SDL2Wrapper::Initialize() {
     }
 
     // Perform additional initialization as needed (e.g., renderer setup, resource loading).
+    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
+    if (renderer == nullptr) {
+        std::cerr << "Renderer creation failed: " << SDL_GetError() << std::endl;
+        SDL_DestroyWindow(window);
+        SDL_Quit();
+        return false;
+    }
+
+    // Set the background color (e.g., red in this case).
+    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); // RGBA format
+
+    // Clear the screen with the background color.
+    SDL_RenderClear(renderer);
+
+    // Present the renderer (update the window).
+    SDL_RenderPresent(renderer);
+    
+    
     return true;
 }
 
