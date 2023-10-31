@@ -43,8 +43,8 @@ public:
     int GetLayer();
 
     void SetLayer(int layer);
-    
-private:
+
+protected:
     uint32_t entityID;
 };
 

@@ -15,25 +15,25 @@ public:
 
     ~Vector2() = default;
 
-    [[nodiscard]] float getX() const;
+    float getX() const;
 
-    [[nodiscard]] float getY() const;
+    float getY() const;
 
     void setX(const float newX);
 
     void setY(const float newY);
 
-    [[nodiscard]] float magnitude() const;
+    float magnitude() const;
 
-    [[nodiscard]] Vector2 normalized() const;
+    Vector2 normalized() const;
 
-    [[nodiscard]] float dot(const Vector2 &other) const;
+    float dot(const Vector2 &other) const;
 
-    [[nodiscard]] float cross(const Vector2 &other) const;
+    float cross(const Vector2 &other) const;
 
-    [[nodiscard]] float distance(const Vector2 &other) const;
+    float distance(const Vector2 &other) const;
 
-    [[nodiscard]] float angel() const;
+    float angel() const;
 
     Vector2 operator+(const Vector2 &other) const;
 
