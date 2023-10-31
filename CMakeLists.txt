@@ -36,11 +36,18 @@ add_library(${PROJECT_NAME} SHARED ../src/library.cpp
 
 target_include_directories(Brack_Engine PUBLIC outfacingInterfaces)
 
+set(LIBRARY_FILES ${CMAKE_SOURCE_DIR}/lib/dll)
+
 if(WIN32 OR WIN64)
     target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARY})
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-    file(COPY lib/SDL/bin/SDL2.dll DESTINATION ${CMAKE_BINARY_DIR})
-    file(COPY lib/FMod/fmod.dll DESTINATION ${CMAKE_BINARY_DIR})
+    add_custom_command(
+            TARGET ${PROJECT_NAME}
+            POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_directory
+            ${LIBRARY_FILES}
+            ${CMAKE_BINARY_DIR}
+    )
 else()
     target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARIES})
 endif()
