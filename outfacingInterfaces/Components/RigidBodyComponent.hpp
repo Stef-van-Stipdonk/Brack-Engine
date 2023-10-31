@@ -7,8 +7,7 @@
 
 #include "IComponent.hpp"
 
-class RigidBodyComponent : public IComponent {
-public:
+struct RigidBodyComponent : public IComponent {
     RigidBodyComponent() = default;
 
     ~RigidBodyComponent() override = default;

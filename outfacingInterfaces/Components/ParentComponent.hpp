@@ -7,8 +7,7 @@
 
 #include "IComponent.hpp"
 
-class ParentComponent : public IComponent {
-public:
+struct ParentComponent : public IComponent {
     ParentComponent() = default;
 
     ~ParentComponent() override = default;

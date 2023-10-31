@@ -50,6 +50,8 @@ add_library(${PROJECT_NAME} SHARED ../src/library.cpp
         outfacingInterfaces/Components/ParticleComponent.hpp
         outfacingInterfaces/Components/ParticleEmitterComponent.hpp
         outfacingInterfaces/Components/BehaviourScript.hpp
+        outfacingInterfaces/Components/InputTag.hpp
+        outfacingInterfaces/Components/PersistenceTag.hpp
 )
 
 

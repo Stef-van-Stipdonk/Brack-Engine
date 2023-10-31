@@ -7,8 +7,7 @@
 
 #include "CollisionComponent.hpp"
 
-class CircleCollisionComponent : public CollisionComponent {
-public:
+struct CircleCollisionComponent : public CollisionComponent {
     CircleCollisionComponent() = default;
 
     ~CircleCollisionComponent() override = default;

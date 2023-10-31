@@ -8,8 +8,7 @@
 #include "TransformComponent.hpp"
 #include "Helpers/Color.hpp"
 
-class CameraComponent : public TransformComponent {
-public:
+struct CameraComponent : public TransformComponent {
     CameraComponent() = default;
 
     ~CameraComponent() override = default;

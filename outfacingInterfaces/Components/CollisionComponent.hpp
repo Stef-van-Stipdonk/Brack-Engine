@@ -7,8 +7,7 @@
 
 #include "TransformComponent.hpp"
 
-class CollisionComponent : public TransformComponent {
-public:
+struct CollisionComponent : public TransformComponent {
     virtual ~CollisionComponent() = default;
 };
 

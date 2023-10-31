@@ -7,8 +7,7 @@
 
 #include <cstdint>
 
-class IComponent {
-public:
+struct IComponent {
     virtual ~IComponent() = default;
 
     // Als we nog achter andere overeenkomende dingen komen bij ieder component kunnen we die hier toevoegens

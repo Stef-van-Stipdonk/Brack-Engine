@@ -8,8 +8,7 @@
 #include "IComponent.hpp"
 #include <string>
 
-class AudioComponent : public IComponent {
-public:
+struct AudioComponent : public IComponent {
     AudioComponent() = default;
 
     ~AudioComponent() = default;

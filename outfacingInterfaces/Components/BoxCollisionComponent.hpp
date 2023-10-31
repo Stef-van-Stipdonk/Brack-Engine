@@ -7,8 +7,7 @@
 
 #include "CollisionComponent.hpp"
 
-class BoxCollisionComponent : public CollisionComponent {
-public:
+struct BoxCollisionComponent : public CollisionComponent {
     BoxCollisionComponent() = default;
 
     ~BoxCollisionComponent() override = default;

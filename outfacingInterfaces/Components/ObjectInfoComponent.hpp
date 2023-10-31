@@ -8,8 +8,7 @@
 #include "IComponent.hpp"
 #include <string>
 
-class ObjectInfoComponent : public IComponent {
-public:
+struct ObjectInfoComponent : public IComponent {
     ObjectInfoComponent() = default;
 
     ~ObjectInfoComponent() override = default;

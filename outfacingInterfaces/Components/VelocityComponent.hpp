@@ -7,8 +7,7 @@
 
 #include "TransformComponent.hpp"
 
-class VelocityComponent : public TransformComponent {
-public:
+struct VelocityComponent : public TransformComponent {
     VelocityComponent() = default;
 
     ~VelocityComponent() = default;

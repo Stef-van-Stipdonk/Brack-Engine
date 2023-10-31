@@ -7,8 +7,7 @@
 
 #include "IComponent.hpp"
 
-class ParticleComponent : public IComponent {
-public:
+struct ParticleComponent : public IComponent {
     ParticleComponent() = default;
 
     ~ParticleComponent() override = default;

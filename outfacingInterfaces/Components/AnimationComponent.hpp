@@ -7,8 +7,7 @@
 
 #include "SpriteComponent.hpp"
 
-class AnimationComponent : public SpriteComponent {
-public:
+struct AnimationComponent : public SpriteComponent {
     AnimationComponent() = default;
 
     ~AnimationComponent() override = default;

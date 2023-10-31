@@ -9,13 +9,12 @@
 #include <vector>
 #include "IComponent.hpp"
 
-class ChildComponent : public IComponent{
-public:
+struct ChildComponent : public IComponent {
     ChildComponent() = default;
 
     ~ChildComponent() override = default;
 
-    std::vector <uint32_t> children;
-};    
+    std::vector<uint32_t> children;
+};
 
 #endif //BRACK_ENGINE_CHILDCOMPONENT_HPP

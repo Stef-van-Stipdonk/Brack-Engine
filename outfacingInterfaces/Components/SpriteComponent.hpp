@@ -9,8 +9,7 @@
 #include "Helpers/Color.hpp"
 #include <string>
 
-class SpriteComponent : public TransformComponent {
-public:
+struct SpriteComponent : public TransformComponent {
     SpriteComponent() = default;
 
     ~SpriteComponent() override = default;

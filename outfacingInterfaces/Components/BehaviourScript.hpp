@@ -8,8 +8,7 @@
 #include "IComponent.hpp"
 #include <functional>
 
-class BehaviourScript : public IComponent {
-public:
+struct BehaviourScript : public IComponent {
     BehaviourScript() = default;
 
     ~BehaviourScript() override = default;

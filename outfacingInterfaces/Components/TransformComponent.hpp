@@ -8,8 +8,7 @@
 #include "IComponent.hpp"
 #include "Helpers/Vector2.hpp"
 
-class TransformComponent : public IComponent {
-public:
+struct TransformComponent : public IComponent {
     TransformComponent() = default;
 
     ~TransformComponent() override = default;

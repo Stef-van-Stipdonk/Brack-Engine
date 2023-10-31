@@ -8,8 +8,7 @@
 #include "IComponent.hpp"
 #include <cstdint>
 
-class AIComponent : public IComponent {
-public:
+struct AIComponent : public IComponent {
     AIComponent() = default;
 
     ~AIComponent() override = default;
