@@ -7,7 +7,7 @@
 
 #include <unordered_map>
 #include <typeindex>
-#include "../../outfacingInterfaces/IComponent.hpp"
+#include "Components/IComponent.hpp"
 #include "../../outfacingInterfaces/IComponentStorage.hpp"
 
 // TODO: Kijken of we Bitsets voor components kunnen gebruiken

@@ -15,7 +15,7 @@ GameEngine::~GameEngine() {
 }
 
 bool GameEngine::Initialize() {
-    return sdl2Wrapper->Initialize();
+    return sdl2Wrapper->Initialize(); 
 }
 
 void GameEngine::Run() {

@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules")
 
 
-if(WIN32 OR WIN64)
+if (WIN32 OR WIN64)
     set(SDL2_PATH "${CMAKE_SOURCE_DIR}/lib/SDL")
     find_package(SDL2 REQUIRED)
     include_directories(${SDL2_INCLUDE_DIR})
@@ -15,10 +15,10 @@ else ()
     pkg_check_modules(SDL2 REQUIRED sdl2)
     include_directories(${SDL2_INCLUDE_DIRS})
     link_directories(${SDL2_LIBRARY_DIRS})
-endif()
+endif ()
 
 add_library(${PROJECT_NAME} SHARED ../src/library.cpp
-        outfacingInterfaces/IComponent.hpp
+        outfacingInterfaces/Components/IComponent.hpp
         outfacingInterfaces/ISystem.hpp
         src/Managers/Entities/EntityManager.cpp
         src/includes/EntityManager.hpp
@@ -31,6 +31,25 @@ add_library(${PROJECT_NAME} SHARED ../src/library.cpp
         outfacingInterfaces/IComponentStorage.hpp
         src/Wrappers/SDL2Wrapper.cpp
         outfacingInterfaces/GameEngine.cpp
+        outfacingInterfaces/Components/ChildComponent.hpp
+        outfacingInterfaces/Components/ParentComponent.hpp
+        outfacingInterfaces/Components/ObjectInfoComponent.hpp
+        outfacingInterfaces/Components/RigidBodyComponent.hpp
+        outfacingInterfaces/Components/AIComponent.hpp
+        outfacingInterfaces/Components/AudioComponent.hpp
+        outfacingInterfaces/Components/TransformComponent.hpp
+        outfacingInterfaces/Helpers/Vector2.cpp
+        outfacingInterfaces/Components/VelocityComponent.hpp
+        outfacingInterfaces/Components/CollisionComponent.hpp
+        outfacingInterfaces/Components/BoxCollisionComponent.hpp
+        outfacingInterfaces/Components/CircleCollisionComponent.hpp
+        outfacingInterfaces/Components/CameraComponent.hpp
+        outfacingInterfaces/Helpers/Color.hpp
+        outfacingInterfaces/Components/SpriteComponent.hpp
+        outfacingInterfaces/Components/AnimationComponent.hpp
+        outfacingInterfaces/Components/ParticleComponent.hpp
+        outfacingInterfaces/Components/ParticleEmitterComponent.hpp
+        outfacingInterfaces/Components/BehaviourScript.hpp
 )
 
 
@@ -38,7 +57,7 @@ target_include_directories(Brack_Engine PUBLIC outfacingInterfaces)
 
 set(LIBRARY_FILES ${CMAKE_SOURCE_DIR}/lib/dll)
 
-if(WIN32 OR WIN64)
+if (WIN32 OR WIN64)
     target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARY})
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
     add_custom_command(
@@ -48,6 +67,6 @@ if(WIN32 OR WIN64)
             ${LIBRARY_FILES}
             ${CMAKE_BINARY_DIR}
     )
-else()
+else ()
     target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARIES})
-endif()
+endif ()
