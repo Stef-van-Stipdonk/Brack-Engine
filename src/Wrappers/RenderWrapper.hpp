@@ -25,6 +25,8 @@ public:
 
     ~RenderWrapper();
 
+    void Run();
+
     void RenderSprite(SpriteComponent &sprite);
 
     void RenderText(TextComponent &text);

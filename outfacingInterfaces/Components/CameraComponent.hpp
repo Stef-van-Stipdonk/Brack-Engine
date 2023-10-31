@@ -6,10 +6,10 @@
 #define BRACK_ENGINE_CAMERACOMPONENT_HPP
 
 #include <memory>
-#include "TransformComponent.hpp"
 #include "Helpers/Color.hpp"
+#include "VelocityComponent.hpp"
 
-struct CameraComponent : public TransformComponent {
+struct CameraComponent : public VelocityComponent {
     CameraComponent() = default;
 
     ~CameraComponent() override = default;

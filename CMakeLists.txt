@@ -73,6 +73,11 @@ add_library(${PROJECT_NAME} SHARED ../src/library.cpp
         outfacingInterfaces/Components/UIComponent.hpp
         outfacingInterfaces/Components/ButtonComponent.hpp
         outfacingInterfaces/Components/TextComponent.hpp
+        outfacingInterfaces/GameObject.cpp
+        outfacingInterfaces/Camera.cpp
+        outfacingInterfaces/Scene.cpp
+        outfacingInterfaces/UIObject.cpp
+        outfacingInterfaces/test.cpp
 )
 
 
