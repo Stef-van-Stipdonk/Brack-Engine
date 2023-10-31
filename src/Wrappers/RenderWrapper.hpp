@@ -7,10 +7,15 @@
 
 #include <iostream>
 #include "SDL.h"
+#include "Components/CameraComponent.hpp"
+#include "Components/SpriteComponent.hpp"
+#include "Components/TextComponent.hpp"
 
 #ifdef _WIN32
 
 #include <windows.h>
+#include <map>
+#include <memory>
 
 #endif
 
@@ -20,13 +25,19 @@ public:
 
     ~RenderWrapper();
 
-    bool Initialize();
+    void RenderSprite(SpriteComponent &sprite);
 
-    void Run();
+    void RenderText(TextComponent &text);
+
+    void RenderButton(TextComponent &button);
+
+private:
+
+    bool Initialize();
 
     void Cleanup();
 
-
+    std::map<std::string, SDL_Texture *> textures;
 };
 
 

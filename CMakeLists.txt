@@ -17,6 +17,8 @@ else ()
     link_directories(${SDL2_LIBRARY_DIRS})
 endif ()
 
+include_directories(${CMAKE_SOURCE_DIR}/lib/FMod/include)
+
 add_library(${PROJECT_NAME} SHARED ../src/library.cpp
         outfacingInterfaces/Components/IComponent.hpp
         outfacingInterfaces/ISystem.hpp
@@ -30,7 +32,6 @@ add_library(${PROJECT_NAME} SHARED ../src/library.cpp
         src/includes/SparseSet.hpp
         outfacingInterfaces/IComponentStorage.hpp
         src/Wrappers/RenderWrapper.cpp
-        outfacingInterfaces/GameEngine.cpp
         outfacingInterfaces/Components/ChildComponent.hpp
         outfacingInterfaces/Components/ParentComponent.hpp
         outfacingInterfaces/Components/ObjectInfoComponent.hpp
@@ -67,6 +68,11 @@ add_library(${PROJECT_NAME} SHARED ../src/library.cpp
         src/Systems/PhysicsSystem.cpp
         src/Systems/TimerSystem.cpp
         src/Systems/AudioSystem.cpp
+        src/Wrappers/AudioWrapper.cpp
+        src/Wrappers/PhysicsWrapper.cpp
+        outfacingInterfaces/Components/UIComponent.hpp
+        outfacingInterfaces/Components/ButtonComponent.hpp
+        outfacingInterfaces/Components/TextComponent.hpp
 )
 
 
@@ -87,3 +93,6 @@ if (WIN32 OR WIN64)
 else ()
     target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARIES})
 endif ()
+
+target_link_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/lib/FMod)
+target_link_libraries(${PROJECT_NAME} PRIVATE fmod)

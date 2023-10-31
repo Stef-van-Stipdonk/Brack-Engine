@@ -7,7 +7,9 @@
 
 
 #include <cstdint>
+#include <memory>
 #include "ISystem.hpp"
+#include "../Wrappers/AudioWrapper.hpp"
 
 class AudioSystem : public ISystem {
 public:
@@ -19,6 +21,8 @@ public:
 
 private:
     void PlayPause(uint32_t entityID);
+
+    std::unique_ptr<AudioWrapper> audioWrapper;
 };
 
 

@@ -6,7 +6,9 @@
 #define BRACK_ENGINE_PHYSICSSYSTEM_HPP
 
 
+#include <memory>
 #include "ISystem.hpp"
+#include "../Wrappers/PhysicsWrapper.hpp"
 
 class PhysicsSystem : public ISystem {
 public:
@@ -15,6 +17,9 @@ public:
     ~PhysicsSystem() override;
 
     void Update(float deltaTime) override;
+
+private:
+    std::unique_ptr <PhysicsWrapper> physicsWrapper;
 };
 
 

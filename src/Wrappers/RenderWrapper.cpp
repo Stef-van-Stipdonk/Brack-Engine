@@ -5,7 +5,7 @@
 #include "RenderWrapper.hpp"
 
 RenderWrapper::RenderWrapper() {
-
+    Initialize();
 }
 
 RenderWrapper::~RenderWrapper() {
@@ -54,29 +54,21 @@ bool RenderWrapper::Initialize() {
     return true;
 }
 
-void RenderWrapper::Run() {
-    // Run the event loop
-    bool isRunning = true;
-    SDL_Event event;
-    while (isRunning) {
-        while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT) {
-                isRunning = false;
-            }
-        }
-
-        // Render your content here
-
-        // You can add rendering code here.
-
-        // Delay to control frame rate (optional)
-        SDL_Delay(16);
-    }
-}
-
 void RenderWrapper::Cleanup() {
     // Perform cleanup as necessary
     SDL_Quit();
+}
+
+void RenderWrapper::RenderSprite(SpriteComponent &sprite) {
+
+}
+
+void RenderWrapper::RenderText(TextComponent &text) {
+
+}
+
+void RenderWrapper::RenderButton(TextComponent &button) {
+
 }
 
 
