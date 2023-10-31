@@ -10,14 +10,9 @@
 #include "Components/CameraComponent.hpp"
 #include "Components/SpriteComponent.hpp"
 #include "Components/TextComponent.hpp"
-
-#ifdef _WIN32
-
-#include <windows.h>
 #include <map>
 #include <memory>
 
-#endif
 
 class RenderWrapper {
 public:
@@ -25,7 +20,7 @@ public:
 
     ~RenderWrapper();
 
-    void Run();
+    void Run(); //Alleen om te testen
 
     void RenderSprite(SpriteComponent &sprite);
 
