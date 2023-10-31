@@ -5,6 +5,7 @@
 #ifndef BRACK_ENGINE_CIRCLECOLLISIONCOMPONENT_HPP
 #define BRACK_ENGINE_CIRCLECOLLISIONCOMPONENT_HPP
 
+#include <memory>
 #include "CollisionComponent.hpp"
 
 struct CircleCollisionComponent : public CollisionComponent {
@@ -12,7 +13,7 @@ struct CircleCollisionComponent : public CollisionComponent {
 
     ~CircleCollisionComponent() override = default;
 
-    Vector2 radius;
+    std::unique_ptr<Vector2> radius;
 };
 
 #endif //BRACK_ENGINE_CIRCLECOLLISIONCOMPONENT_HPP

@@ -5,6 +5,7 @@
 #ifndef BRACK_ENGINE_CAMERACOMPONENT_HPP
 #define BRACK_ENGINE_CAMERACOMPONENT_HPP
 
+#include <memory>
 #include "TransformComponent.hpp"
 #include "Helpers/Color.hpp"
 
@@ -13,8 +14,8 @@ struct CameraComponent : public TransformComponent {
 
     ~CameraComponent() override = default;
 
-    Vector2 size;
-    Color backgroundColor;
+    std::unique_ptr<Vector2> size;
+    std::unique_ptr<Color> backgroundColor;
 };
 
 #endif //BRACK_ENGINE_CAMERACOMPONENT_HPP

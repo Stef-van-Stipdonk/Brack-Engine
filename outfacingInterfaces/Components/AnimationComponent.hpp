@@ -5,6 +5,7 @@
 #ifndef BRACK_ENGINE_ANIMATIONCOMPONENT_HPP
 #define BRACK_ENGINE_ANIMATIONCOMPONENT_HPP
 
+#include <memory>
 #include "SpriteComponent.hpp"
 
 struct AnimationComponent : public SpriteComponent {
@@ -15,7 +16,7 @@ struct AnimationComponent : public SpriteComponent {
     bool isLooping;
     float animationSpeed;
     int frameCount, currentFrame;
-    Vector2 startPosition;
+    std::unique_ptr<Vector2> startPosition;
 };
 
 #endif //BRACK_ENGINE_ANIMATIONCOMPONENT_HPP

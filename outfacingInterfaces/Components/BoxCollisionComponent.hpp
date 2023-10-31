@@ -5,6 +5,7 @@
 #ifndef BRACK_ENGINE_BOXCOLLISIONCOMPONENT_HPP
 #define BRACK_ENGINE_BOXCOLLISIONCOMPONENT_HPP
 
+#include <memory>
 #include "CollisionComponent.hpp"
 
 struct BoxCollisionComponent : public CollisionComponent {
@@ -12,7 +13,7 @@ struct BoxCollisionComponent : public CollisionComponent {
 
     ~BoxCollisionComponent() override = default;
 
-    Vector2 size;
+    std::unique_ptr<Vector2> size;
 };
 
 #endif //BRACK_ENGINE_BOXCOLLISIONCOMPONENT_HPP

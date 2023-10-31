@@ -8,6 +8,7 @@
 #include "TransformComponent.hpp"
 #include "Helpers/Color.hpp"
 #include <string>
+#include <memory>
 
 struct SpriteComponent : public TransformComponent {
     SpriteComponent() = default;
@@ -15,8 +16,8 @@ struct SpriteComponent : public TransformComponent {
     ~SpriteComponent() override = default;
 
     std::string spritePath;
-    Vector2 imageSize, spriteSize, tileOffset;
-    Color color;
+    std::unique_ptr<Vector2> imageSize, spriteSize, tileOffset;
+    std::unique_ptr<Color> color;
     bool flipX, flipY;
     int sortingLayer, orderInLayer;
 };
