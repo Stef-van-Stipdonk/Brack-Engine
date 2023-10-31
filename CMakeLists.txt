@@ -29,7 +29,7 @@ add_library(${PROJECT_NAME} SHARED ../src/library.cpp
         src/Managers/Components/SparseSet.cpp
         src/includes/SparseSet.hpp
         outfacingInterfaces/IComponentStorage.hpp
-        src/Wrappers/SDL2Wrapper.cpp
+        src/Wrappers/RenderWrapper.cpp
         outfacingInterfaces/GameEngine.cpp
         outfacingInterfaces/Components/ChildComponent.hpp
         outfacingInterfaces/Components/ParentComponent.hpp
@@ -52,6 +52,21 @@ add_library(${PROJECT_NAME} SHARED ../src/library.cpp
         outfacingInterfaces/Components/BehaviourScript.hpp
         outfacingInterfaces/Components/InputTag.hpp
         outfacingInterfaces/Components/PersistenceTag.hpp
+        src/Systems/RenderingSystem.cpp
+        src/Systems/AnimationSystem.cpp
+        src/Systems/MovementSystem.cpp
+        src/Systems/BehaviourScriptSystem.cpp
+        src/Systems/ParticleSystem.cpp
+        src/Systems/ReplaySystem.cpp
+        src/Systems/AISystem.cpp
+        src/Systems/LoadSystem.cpp
+        src/Systems/SaveSystem.cpp
+        src/Systems/InputSystem.cpp
+        src/Wrappers/InputWrapper.cpp
+        src/Systems/CollisionSystem.cpp
+        src/Systems/PhysicsSystem.cpp
+        src/Systems/TimerSystem.cpp
+        src/Systems/AudioSystem.cpp
 )
 
 

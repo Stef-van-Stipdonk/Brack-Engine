@@ -5,18 +5,22 @@
 #ifndef BRACK_ENGINE_GAMEENGINE_HPP
 #define BRACK_ENGINE_GAMEENGINE_HPP
 
-class SDL2Wrapper;
+class RenderWrapper;
 
 class GameEngine {
 public:
     GameEngine();
+
     ~GameEngine();
 
     bool Initialize();
+
     void Run();
+
     void Cleanup();
+
 private:
-    SDL2Wrapper* sdl2Wrapper;
+    RenderWrapper *sdl2Wrapper;
 };
 
 

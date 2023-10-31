@@ -3,10 +3,10 @@
 //
 
 #include "GameEngine.hpp"
-#include "../src/Wrappers/SDL2Wrapper.hpp"
+#include "../src/Wrappers/RenderWrapper.hpp"
 
-GameEngine::GameEngine() : sdl2Wrapper(nullptr){
-    sdl2Wrapper = new SDL2Wrapper();
+GameEngine::GameEngine() : sdl2Wrapper(nullptr) {
+    sdl2Wrapper = new RenderWrapper();
 }
 
 GameEngine::~GameEngine() {
@@ -15,7 +15,7 @@ GameEngine::~GameEngine() {
 }
 
 bool GameEngine::Initialize() {
-    return sdl2Wrapper->Initialize(); 
+    return sdl2Wrapper->Initialize();
 }
 
 void GameEngine::Run() {

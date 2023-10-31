@@ -2,18 +2,18 @@
 // Created by jesse on 30/10/2023.
 //
 
-#include "SDL2Wrapper.hpp"
+#include "RenderWrapper.hpp"
 
-SDL2Wrapper::SDL2Wrapper() {
+RenderWrapper::RenderWrapper() {
 
 }
 
-SDL2Wrapper::~SDL2Wrapper() {
+RenderWrapper::~RenderWrapper() {
     Cleanup();
 }
 
 
-bool SDL2Wrapper::Initialize() {
+bool RenderWrapper::Initialize() {
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         std::cerr << "SDL2 initialization failed: " << SDL_GetError() << std::endl;
         return false;
@@ -22,7 +22,8 @@ bool SDL2Wrapper::Initialize() {
     // Create a window.
     // You can customize the window size, title, and other settings as needed.
     // For simplicity, this example creates a 800x600 window.
-    SDL_Window* window = SDL_CreateWindow("Brack Engine Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN);
+    SDL_Window *window = SDL_CreateWindow("Brack Engine Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800,
+                                          600, SDL_WINDOW_SHOWN);
 
     if (window == nullptr) {
         std::cerr << "Window creation failed: " << SDL_GetError() << std::endl;
@@ -31,7 +32,7 @@ bool SDL2Wrapper::Initialize() {
     }
 
     // Perform additional initialization as needed (e.g., renderer setup, resource loading).
-    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
     if (renderer == nullptr) {
         std::cerr << "Renderer creation failed: " << SDL_GetError() << std::endl;
@@ -48,12 +49,12 @@ bool SDL2Wrapper::Initialize() {
 
     // Present the renderer (update the window).
     SDL_RenderPresent(renderer);
-    
-    
+
+
     return true;
 }
 
-void SDL2Wrapper::Run() {
+void RenderWrapper::Run() {
     // Run the event loop
     bool isRunning = true;
     SDL_Event event;
@@ -73,7 +74,7 @@ void SDL2Wrapper::Run() {
     }
 }
 
-void SDL2Wrapper::Cleanup() {
+void RenderWrapper::Cleanup() {
     // Perform cleanup as necessary
     SDL_Quit();
 }
