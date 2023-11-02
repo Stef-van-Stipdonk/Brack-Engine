@@ -49,6 +49,7 @@ private:
     static SystemManager instance;
     std::vector<ISystem *> systems;
 
+    void SortSystems();
 };
 
 

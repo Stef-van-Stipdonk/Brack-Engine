@@ -5,6 +5,8 @@
 #ifndef BRACK_ENGINE_ISYSTEM_HPP
 #define BRACK_ENGINE_ISYSTEM_HPP
 
+#include "vector"
+
 class ISystem {
 public:
     virtual ~ISystem() = default;
@@ -14,6 +16,17 @@ public:
 
     // Deze MOET iedere frame of gametick worden aangeroepen
     virtual void Update(float deltaTime) = 0;
+
+    void AddDependency(ISystem* dependency) {
+        if (std::find(dependencies.begin(), dependencies.end(), dependency) == dependencies.end()) {
+            dependencies.push_back(dependency);
+        }
+    }
+
+    const std::vector<ISystem*>& GetDependencies() const { return dependencies; }
+
+private:
+    std::vector<ISystem*> dependencies;
 };
 
 #endif //BRACK_ENGINE_ISYSTEM_HPP

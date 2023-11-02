@@ -7,9 +7,9 @@
 
 SystemManager SystemManager::instance;
 
-void SystemManager::AddSystem(ISystem *system) {
+void SystemManager::AddSystem(ISystem* system) {
     systems.push_back(system);
-    system->Init();
+    SortSystems();
 }
 
 void SystemManager::UpdateSystems(float deltaTime) {
@@ -20,4 +20,38 @@ void SystemManager::UpdateSystems(float deltaTime) {
 
 SystemManager &SystemManager::GetInstance() {
     return instance;
+}
+
+void SystemManager::SortSystems() {
+    auto IsDependent = [](ISystem* a, ISystem* b) {
+        const auto& dependencies = a->GetDependencies();
+        return std::find(dependencies.begin(), dependencies.end(), b) != dependencies.end();
+    };
+
+    // Perform the topological sort
+    std::vector<ISystem*> sorted;
+    std::vector<ISystem*> temp(systems);
+
+    while (!temp.empty()) {
+        bool acyclic = false;
+
+        for (auto it = temp.begin(); it != temp.end();) {
+            auto sys = *it;
+            if (std::none_of(temp.begin(), temp.end(), [sys, &IsDependent](ISystem* other) {
+                return IsDependent(sys, other);
+            })) {
+                sorted.push_back(sys);
+                it = temp.erase(it);
+                acyclic = true;
+            } else {
+                ++it;
+            }
+        }
+
+        if (!acyclic) {
+            throw std::runtime_error("Cyclic dependency detected");
+        }
+    }
+
+    systems = sorted;
 }
