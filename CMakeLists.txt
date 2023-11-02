@@ -3,7 +3,7 @@ project(Brack_Engine)
 
 set(CMAKE_CXX_STANDARD 17)
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules")
 
 
 if (WIN32 OR WIN64)
@@ -17,9 +17,7 @@ else ()
     link_directories(${SDL2_LIBRARY_DIRS})
 endif ()
 
-include_directories(${CMAKE_SOURCE_DIR}/lib/FMod/include)
-
-add_library(${PROJECT_NAME} SHARED ../src/library.cpp
+add_library(${PROJECT_NAME} SHARED src/library.cpp
         outfacingInterfaces/Components/IComponent.hpp
         outfacingInterfaces/ISystem.hpp
         src/Managers/Entities/EntityManager.cpp
@@ -87,10 +85,12 @@ add_library(${PROJECT_NAME} SHARED ../src/library.cpp
         outfacingInterfaces/BrackEngine.cpp
 )
 
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/FMod/include)
 
 target_include_directories(Brack_Engine PUBLIC outfacingInterfaces)
 
-set(LIBRARY_FILES ${CMAKE_SOURCE_DIR}/lib/dll)
+set(LIBRARY_FILES ${CMAKE_CURRENT_SOURCE_DIR}/lib/dll)
+
 
 if (WIN32 OR WIN64)
     target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARY})
@@ -106,5 +106,7 @@ else ()
     target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARIES})
 endif ()
 
-target_link_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/lib/FMod)
+target_link_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/FMod)
 target_link_libraries(${PROJECT_NAME} PRIVATE fmod)
+
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/outfacingInterfaces)
