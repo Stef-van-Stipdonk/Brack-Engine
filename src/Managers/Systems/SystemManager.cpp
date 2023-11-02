@@ -3,6 +3,7 @@
 //
 
 #include "../../includes/SystemManager.hpp"
+#include "Objects/Scene.hpp"
 
 void SystemManager::AddSystem(ISystem *system) {
     systems.push_back(system);

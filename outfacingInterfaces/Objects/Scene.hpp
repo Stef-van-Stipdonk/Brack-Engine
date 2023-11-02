@@ -13,9 +13,9 @@
 
 class Scene {
 public:
-    Scene(std::weak_ptr<SceneManager> sceneManager, Camera &&mainCamera);
+    Scene(Camera &&mainCamera);
 
-    Scene(std::weak_ptr<SceneManager> sceneManager);
+    Scene();
 
     ~Scene() = default;
 

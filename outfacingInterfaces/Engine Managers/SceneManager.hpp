@@ -6,8 +6,10 @@
 #define BRACK_ENGINE_SCENEMANAGER_HPP
 
 
-#include "Objects/Scene.hpp"
+#include <memory>
 #include "../../src/includes/EntityManager.hpp"
+
+class Scene;
 
 class SceneManager {
 public:
