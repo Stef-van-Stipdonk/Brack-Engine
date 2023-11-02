@@ -38,7 +38,7 @@ public:
     SystemManager(SystemManager &&) = delete;
 
     SystemManager &operator=(SystemManager &&) = delete;
-    
+
     void AddSystem(ISystem *system);
 
     void UpdateSystems(float deltaTime);

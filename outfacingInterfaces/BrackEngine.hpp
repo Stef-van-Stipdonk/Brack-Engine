@@ -15,30 +15,11 @@
 
 class BrackEngine {
 public:
-    BrackEngine();
+    BrackEngine() = default;
 
     ~BrackEngine() = default;
 
-    void Initialize();
-
     void Update();
-
-    EntityManager &GetEntityManager() const;
-
-    SystemManager &GetSystemManager() const;
-
-    SceneManager &GetSceneManager() const;
-
-    ReplayManager &GetReplayManager() const;
-
-    InputManager &GetInputManager() const;
-
-private:
-    std::shared_ptr<EntityManager> entityManager;
-    std::shared_ptr<SystemManager> systemManager;
-    std::shared_ptr<SceneManager> sceneManager;
-    std::shared_ptr<ReplayManager> replayManager;
-    std::shared_ptr<InputManager> inputManager;
 };
 
 
