@@ -11,8 +11,9 @@ class IComponentStorage {
 public:
     virtual ~IComponentStorage() = default;
 
-    virtual void removeComponentByEntity(uint32_t entity) = 0;
-    virtual void insertComponent(uint32_t entity, void* component) = 0;
+    virtual void RemoveComponentByEntity(uint32_t entity) = 0;
+
+    virtual void InsertComponent(uint32_t entity, void *component) = 0;
 };
 
 #endif //BRACK_ENGINE_ICOMPONENTSTORAGE_HPP

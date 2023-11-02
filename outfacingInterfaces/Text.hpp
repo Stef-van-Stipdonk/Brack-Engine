@@ -27,9 +27,9 @@ public:
 
     int GetFontSize() const;
 
-    void SetColor(const Color color);
+    void SetColor(const Color &color);
 
-    Color GetColor() const;
+    Color &GetColor() const;
 };
 
 

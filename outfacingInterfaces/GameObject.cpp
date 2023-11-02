@@ -4,13 +4,6 @@
 
 #include "GameObject.hpp"
 
-void GameObject::AddComponent(IComponent *component) {
-
-}
-
-GameObject GameObject::GetParent() {
-    return GameObject();
-}
 
 std::vector<GameObject> GameObject::GetChildren() {
     return std::vector<GameObject>();
@@ -48,12 +41,21 @@ void GameObject::SetLayer(int layer) {
 
 }
 
+GameObject &GameObject::GetParent() {
+    return *this;
+}
+
 template<typename T>
-bool GameObject::HasComponent() {
+void GameObject::AddComponent(T &component) {
+
+}
+
+template<typename T>
+bool GameObject::HasComponent(T &component) {
     return false;
 }
 
 template<typename T>
-T *GameObject::GetComponent() {
+T *GameObject::GetComponent(T &component) {
     return nullptr;
 }

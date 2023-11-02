@@ -4,18 +4,18 @@
 
 #include "../../includes/SparseSet.hpp"
 
-template <typename T>
+template<typename T>
 SparseSet<T>::~SparseSet() {}
 
 template<typename T>
-void SparseSet<T>::removeComponentByEntity(uint32_t entity) {
+void SparseSet<T>::RemoveComponentByEntity(uint32_t entity) {
     Remove(entity);
 }
 
 template<typename T>
-void SparseSet<T>::insertComponent(uint32_t entity, void* component){
+void SparseSet<T>::InsertComponent(uint32_t entity, void *component) {
     // Unsafe cast, als iemand iets beters kan vinden <3
-    Insert(entity, *static_cast<T*>(component));
+    Insert(entity, *static_cast<T *>(component));
 }
 
 

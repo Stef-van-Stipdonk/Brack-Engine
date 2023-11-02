@@ -8,8 +8,8 @@ void Scene::AddGameObject(GameObject &gameObject) {
 
 }
 
-GameObject Scene::GetGameObjectByName(char *name) {
-    return GameObject();
+GameObject &Scene::GetGameObjectByName(char *name) {
+    return *new GameObject();
 }
 
 std::vector<GameObject> Scene::GetGameObjectsByTag(char *tag) {

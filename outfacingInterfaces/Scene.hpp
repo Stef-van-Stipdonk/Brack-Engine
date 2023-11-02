@@ -18,7 +18,7 @@ public:
 
     void AddGameObject(GameObject &gameObject);
 
-    GameObject GetGameObjectByName(char *name);
+    GameObject &GetGameObjectByName(char *name);
 
     std::vector<GameObject> GetGameObjectsByTag(char *tag);
 

@@ -28,10 +28,10 @@ int Text::GetFontSize() const {
     return 0;
 }
 
-void Text::SetColor(const Color color) {
+void Text::SetColor(const Color &color) {
 
 }
 
-Color Text::GetColor() const {
-    return Color();
+Color &Text::GetColor() const {
+    return *new Color();
 }

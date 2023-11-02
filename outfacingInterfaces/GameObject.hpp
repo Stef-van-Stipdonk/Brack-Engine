@@ -16,15 +16,16 @@ public:
 
     ~GameObject() = default;
 
-    void AddComponent(IComponent *component);
+    template<typename T>
+    void AddComponent(T &component);
 
     template<typename T>
-    T *GetComponent();
+    T *GetComponent(T &component);
 
     template<typename T>
-    bool HasComponent();
+    bool HasComponent(T &component);
 
-    GameObject GetParent();
+    GameObject &GetParent();
 
     std::vector<GameObject> GetChildren();
 
