@@ -6,12 +6,16 @@
 #define BRACK_ENGINE_REPLAYMANAGER_HPP
 
 #include <string>
+#include <memory>
+#include "../../src/includes/EntityManager.hpp"
 
 class ReplayManager {
 public:
     ReplayManager() = default;
 
     ~ReplayManager() = default;
+
+    void Initialize(std::shared_ptr<EntityManager> newEntityManager);
 
     void StartReplay(std::string filePath);
 
@@ -25,6 +29,8 @@ public:
 
     void StopReplayPlayback();
 
+private:
+    std::shared_ptr<EntityManager> entityManager;
 };
 
 

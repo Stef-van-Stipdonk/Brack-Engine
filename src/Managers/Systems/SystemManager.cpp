@@ -10,7 +10,11 @@ void SystemManager::AddSystem(ISystem *system) {
 }
 
 void SystemManager::UpdateSystems(float deltaTime) {
-    for (auto system : systems) {
+    for (auto system: systems) {
         system->Update(deltaTime);
     }
+}
+
+void SystemManager::Initialize(std::shared_ptr<EntityManager> newEntityManager) {
+    entityManager = newEntityManager;
 }

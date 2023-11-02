@@ -15,11 +15,13 @@ private:
     uint32_t nextID = 1; // Start from 1 for simplicity.
 
 public:
+    void Initialize();
+
     uint32_t CreateEntity();
 
     void DestroyEntity(uint32_t entity);
 
-    const std::unordered_set<uint32_t>& GetAllEntities() const;
+    const std::unordered_set<uint32_t> &GetAllEntities() const;
 };
 
 

@@ -17,3 +17,7 @@ void EntityManager::DestroyEntity(uint32_t entity) {
 const std::unordered_set<uint32_t> &EntityManager::GetAllEntities() const {
     return entities;
 }
+
+void EntityManager::Initialize() {
+
+}

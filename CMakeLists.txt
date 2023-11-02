@@ -84,6 +84,7 @@ add_library(${PROJECT_NAME} SHARED ../src/library.cpp
         "outfacingInterfaces/Engine Managers/ReplayManager.cpp"
         "outfacingInterfaces/Engine Managers/InputManager.cpp"
         outfacingInterfaces/Helpers/InputState.hpp
+        outfacingInterfaces/BrackEngine.cpp
 )
 
 

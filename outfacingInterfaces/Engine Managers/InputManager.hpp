@@ -9,12 +9,15 @@
 #include <memory>
 #include "Helpers/Vector2.hpp"
 #include "Helpers/InputState.hpp"
+#include "../../src/includes/EntityManager.hpp"
 
 class InputManager {
 public:
     InputManager() = default;
 
     ~InputManager() = default;
+
+    void Initialize(std::shared_ptr<EntityManager> newEntityManager);
 
     void SetKeyPressed(const int key);
 
@@ -44,6 +47,7 @@ private:
     std::map<int, InputState> keyInputs;
     std::map<int, InputState> mouseInputs;
     std::unique_ptr<Vector2> mousePosition;
+    std::shared_ptr<EntityManager> entityManager;
 };
 
 

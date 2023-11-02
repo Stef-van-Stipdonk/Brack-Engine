@@ -51,3 +51,7 @@ void InputManager::SetMousePosition(const Vector2 &position) {
 Vector2 &InputManager::GetMousePosition() const {
     return *mousePosition;
 }
+
+void InputManager::Initialize(std::shared_ptr<EntityManager> newEntityManager) {
+    entityManager = newEntityManager;
+}  

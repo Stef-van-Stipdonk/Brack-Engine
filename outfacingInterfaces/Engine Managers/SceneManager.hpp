@@ -7,6 +7,7 @@
 
 
 #include "Objects/Scene.hpp"
+#include "../../src/includes/EntityManager.hpp"
 
 class SceneManager {
 public:
@@ -14,10 +15,13 @@ public:
 
     ~SceneManager() = default;
 
+    void Initialize(std::shared_ptr<EntityManager> newEntityManager);
+
     void SetActiveScene(Scene &scene);
 
 private:
-    bool hasChanged;
+    std::shared_ptr<EntityManager> entityManager;
+    bool hasChanged = false;
 };
 
 

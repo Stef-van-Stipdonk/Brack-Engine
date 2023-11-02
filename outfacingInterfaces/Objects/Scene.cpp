@@ -23,3 +23,20 @@ std::vector<GameObject> Scene::GetAllGameObjects() {
 void Scene::RemoveGameObject(GameObject &gameObject) {
 
 }
+
+Camera Scene::GetMainCamera() {
+    return Camera();
+}
+
+void Scene::SetCamera(Camera &camera) {
+
+}
+
+Scene::Scene(std::weak_ptr<SceneManager> sceneManager, Camera &&mainCamera) {
+
+}
+
+Scene::Scene(std::weak_ptr<SceneManager> sceneManager) : Scene(sceneManager, Camera()) {
+
+}
+

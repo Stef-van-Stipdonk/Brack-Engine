@@ -9,10 +9,13 @@
 #include <memory>
 #include "GameObject.hpp"
 #include "Camera.hpp"
+#include "Engine Managers/SceneManager.hpp"
 
 class Scene {
 public:
-    Scene() = default;
+    Scene(std::weak_ptr<SceneManager> sceneManager, Camera &&mainCamera);
+
+    Scene(std::weak_ptr<SceneManager> sceneManager);
 
     ~Scene() = default;
 
@@ -26,8 +29,12 @@ public:
 
     void RemoveGameObject(GameObject &gameObject);
 
+    Camera GetMainCamera();
+
+    void SetCamera(Camera &camera);
+
 private:
-    std::unique_ptr<Camera> mainCamera;
+    std::weak_ptr<SceneManager> sceneManager;
 };
 
 

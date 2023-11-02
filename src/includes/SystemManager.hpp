@@ -21,18 +21,22 @@
 // Iterate and resolve dependencies based on the matrix to determine the execution order.
 
 #include <vector>
+#include <memory>
 #include "../../outfacingInterfaces/ISystem.hpp"
+#include "EntityManager.hpp"
 
 class SystemManager {
 private:
-    std::vector<ISystem*> systems;
+    std::vector<ISystem *> systems;
+    std::shared_ptr<EntityManager> entityManager;
 
 public:
-    void AddSystem(ISystem* system);
+    void Initialize(std::shared_ptr<EntityManager> newEntityManager);
+
+    void AddSystem(ISystem *system);
 
     void UpdateSystems(float deltaTime);
 };
-
 
 
 #endif //BRACK_ENGINE_SYSTEMMANAGER_HPP

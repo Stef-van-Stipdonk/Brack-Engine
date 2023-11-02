@@ -27,3 +27,7 @@ void ReplayManager::PauseReplayPlayback() {
 void ReplayManager::StopReplayPlayback() {
 
 }
+
+void ReplayManager::Initialize(std::shared_ptr<EntityManager> newEntityManager) {
+    entityManager = newEntityManager;
+}
