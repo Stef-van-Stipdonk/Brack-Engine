@@ -4,6 +4,8 @@
 
 #include "ReplayManager.hpp"
 
+ReplayManager ReplayManager::instance;
+
 void ReplayManager::StartReplay(std::string filePath) {
 
 }
@@ -28,6 +30,6 @@ void ReplayManager::StopReplayPlayback() {
 
 }
 
-void ReplayManager::Initialize(std::shared_ptr<EntityManager> newEntityManager) {
-    entityManager = newEntityManager;
+ReplayManager &ReplayManager::GetInstance() {
+    return instance;
 }

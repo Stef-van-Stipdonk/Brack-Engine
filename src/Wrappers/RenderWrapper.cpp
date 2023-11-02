@@ -42,7 +42,7 @@ bool RenderWrapper::Initialize() {
     }
 
     // Set the background color (e.g., red in this case).
-    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); // RGBA format
+    SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255); // RGBA format
 
     // Clear the screen with the background color.
     SDL_RenderClear(renderer);

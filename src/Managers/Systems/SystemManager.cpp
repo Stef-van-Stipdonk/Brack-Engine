@@ -5,6 +5,8 @@
 #include "../../includes/SystemManager.hpp"
 #include "Objects/Scene.hpp"
 
+SystemManager SystemManager::instance;
+
 void SystemManager::AddSystem(ISystem *system) {
     systems.push_back(system);
     system->Init();
@@ -16,6 +18,6 @@ void SystemManager::UpdateSystems(float deltaTime) {
     }
 }
 
-void SystemManager::Initialize(std::shared_ptr<EntityManager> newEntityManager) {
-    entityManager = newEntityManager;
+SystemManager &SystemManager::GetInstance() {
+    return instance;
 }

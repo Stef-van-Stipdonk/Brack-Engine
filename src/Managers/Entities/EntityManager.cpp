@@ -4,6 +4,8 @@
 
 #include "../../includes/EntityManager.hpp"
 
+EntityManager EntityManager::instance;
+
 uint32_t EntityManager::CreateEntity() {
     uint32_t id = nextID++;
     entities.insert(id);
@@ -18,6 +20,7 @@ const std::unordered_set<uint32_t> &EntityManager::GetAllEntities() const {
     return entities;
 }
 
-void EntityManager::Initialize() {
 
+EntityManager &EntityManager::GetInstance() {
+    return instance;
 }

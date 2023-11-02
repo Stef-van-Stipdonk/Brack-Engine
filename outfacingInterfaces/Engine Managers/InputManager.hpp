@@ -13,11 +13,17 @@
 
 class InputManager {
 public:
-    InputManager() = default;
+    static InputManager &GetInstance();
 
     ~InputManager() = default;
 
-    void Initialize(std::shared_ptr<EntityManager> newEntityManager);
+    InputManager(const InputManager &) = delete;
+
+    InputManager &operator=(const InputManager &) = delete;
+
+    InputManager &operator=(InputManager &&) = delete;
+
+    InputManager(InputManager &&) = delete;
 
     void SetKeyPressed(const int key);
 
@@ -44,10 +50,13 @@ public:
     Vector2 &GetMousePosition() const;
 
 private:
+    InputManager() = default;
+
+    static InputManager instance;
+
     std::map<int, InputState> keyInputs;
     std::map<int, InputState> mouseInputs;
     std::unique_ptr<Vector2> mousePosition;
-    std::shared_ptr<EntityManager> entityManager;
 };
 
 

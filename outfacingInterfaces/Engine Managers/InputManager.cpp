@@ -4,6 +4,8 @@
 
 #include "InputManager.hpp"
 
+InputManager InputManager::instance;
+
 void InputManager::SetKeyPressed(const int key) {
 
 }
@@ -52,6 +54,6 @@ Vector2 &InputManager::GetMousePosition() const {
     return *mousePosition;
 }
 
-void InputManager::Initialize(std::shared_ptr<EntityManager> newEntityManager) {
-    entityManager = newEntityManager;
-}  
+InputManager &InputManager::GetInstance() {
+    return instance;
+}

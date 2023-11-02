@@ -13,16 +13,24 @@ class Scene;
 
 class SceneManager {
 public:
-    SceneManager() = default;
+    static SceneManager &GetInstance();
 
     ~SceneManager() = default;
 
-    void Initialize(std::shared_ptr<EntityManager> newEntityManager);
+    SceneManager(const SceneManager &) = delete;
+
+    SceneManager &operator=(const SceneManager &) = delete;
+
+    SceneManager(SceneManager &&) = delete;
+
+    SceneManager &operator=(SceneManager &&) = delete;
 
     void SetActiveScene(Scene &scene);
 
 private:
-    std::shared_ptr<EntityManager> entityManager;
+    SceneManager() = default;
+
+    static SceneManager instance;
     bool hasChanged = false;
 };
 

@@ -26,16 +26,29 @@
 #include "EntityManager.hpp"
 
 class SystemManager {
-private:
-    std::vector<ISystem *> systems;
-    std::shared_ptr<EntityManager> entityManager;
-
 public:
-    void Initialize(std::shared_ptr<EntityManager> newEntityManager);
+    static SystemManager &GetInstance();
 
+    ~SystemManager() = default;
+
+    SystemManager(const SystemManager &) = delete;
+
+    SystemManager &operator=(const SystemManager &) = delete;
+
+    SystemManager(SystemManager &&) = delete;
+
+    SystemManager &operator=(SystemManager &&) = delete;
+    
     void AddSystem(ISystem *system);
 
     void UpdateSystems(float deltaTime);
+
+private:
+    SystemManager() = default;
+
+    static SystemManager instance;
+    std::vector<ISystem *> systems;
+
 };
 
 

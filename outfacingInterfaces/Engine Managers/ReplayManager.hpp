@@ -11,11 +11,17 @@
 
 class ReplayManager {
 public:
-    ReplayManager() = default;
+    static ReplayManager &GetInstance();
 
     ~ReplayManager() = default;
 
-    void Initialize(std::shared_ptr<EntityManager> newEntityManager);
+    ReplayManager(const ReplayManager &) = delete;
+
+    ReplayManager &operator=(const ReplayManager &) = delete;
+
+    ReplayManager &operator=(ReplayManager &&) = delete;
+
+    ReplayManager(ReplayManager &&) = delete;
 
     void StartReplay(std::string filePath);
 
@@ -30,7 +36,9 @@ public:
     void StopReplayPlayback();
 
 private:
-    std::shared_ptr<EntityManager> entityManager;
+    static ReplayManager instance;
+
+    ReplayManager() = default;
 };
 
 
