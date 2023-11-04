@@ -9,7 +9,8 @@
 #include <string>
 
 struct AudioComponent : public IComponent {
-    AudioComponent() = default;
+
+    explicit AudioComponent(uint32_t entityId) : IComponent(entityId) {}
 
     ~AudioComponent() = default;
 

@@ -9,7 +9,7 @@
 #include "CollisionComponent.hpp"
 
 struct BoxCollisionComponent : public CollisionComponent {
-    BoxCollisionComponent() = default;
+    explicit BoxCollisionComponent(uint32_t entityId) : CollisionComponent(entityId) {}
 
     ~BoxCollisionComponent() override = default;
 

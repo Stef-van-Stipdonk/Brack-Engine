@@ -9,7 +9,8 @@
 #include "CollisionComponent.hpp"
 
 struct CircleCollisionComponent : public CollisionComponent {
-    CircleCollisionComponent() = default;
+
+    explicit CircleCollisionComponent(uint32_t entityId) : CollisionComponent(entityId) {}
 
     ~CircleCollisionComponent() override = default;
 

@@ -10,6 +10,8 @@
 #include "Helpers/Vector2.hpp"
 
 struct UIComponent : public IComponent {
+    explicit UIComponent(uint32_t entityId) : IComponent(entityId) {}
+
     std::unique_ptr<Vector2> size;
 };
 

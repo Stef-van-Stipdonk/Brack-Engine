@@ -9,7 +9,8 @@
 #include <cstdint>
 
 struct AIComponent : public IComponent {
-    AIComponent() = default;
+
+    explicit AIComponent(uint32_t entityId) : IComponent(entityId) {}
 
     ~AIComponent() override = default;
 

@@ -9,7 +9,8 @@
 #include "SpriteComponent.hpp"
 
 struct AnimationComponent : public SpriteComponent {
-    AnimationComponent() = default;
+
+    explicit AnimationComponent(uint32_t entityId) : SpriteComponent(entityId) {}
 
     ~AnimationComponent() override = default;
 

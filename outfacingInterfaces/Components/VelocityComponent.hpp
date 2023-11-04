@@ -8,7 +8,7 @@
 #include "TransformComponent.hpp"
 
 struct VelocityComponent : public TransformComponent {
-    VelocityComponent() = default;
+    explicit VelocityComponent(uint32_t entityId) : TransformComponent(entityId) {}
 
     ~VelocityComponent() = default;
 

@@ -9,7 +9,8 @@
 #include <string>
 
 struct ObjectInfoComponent : public IComponent {
-    ObjectInfoComponent() = default;
+
+    explicit ObjectInfoComponent(uint32_t entityId) : IComponent(entityId) {}
 
     ~ObjectInfoComponent() override = default;
 

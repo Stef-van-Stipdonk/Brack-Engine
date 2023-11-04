@@ -6,9 +6,11 @@
 #define BRACK_ENGINE_BUTTONCOMPONENT_HPP
 
 #include <functional>
-#include "IComponent.hpp"
+#include "UIComponent.hpp"
 
-struct ButtonComponent : public IComponent {
+struct ButtonComponent : public UIComponent {
+    explicit ButtonComponent(uint32_t entityId) : UIComponent(entityId) {}
+
     bool interactable;
     std::function<void()> OnClick;
 };

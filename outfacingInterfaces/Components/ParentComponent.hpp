@@ -8,11 +8,12 @@
 #include "IComponent.hpp"
 
 struct ParentComponent : public IComponent {
-    ParentComponent() = default;
+
+    explicit ParentComponent(uint32_t entityId) : IComponent(entityId) {}
 
     ~ParentComponent() override = default;
 
-    const uint32_t parentID;
+    uint32_t parentID;
 };
 
 #endif //BRACK_ENGINE_PARENTCOMPONENT_HPP

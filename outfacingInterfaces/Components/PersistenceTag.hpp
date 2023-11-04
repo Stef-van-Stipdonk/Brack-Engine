@@ -8,7 +8,7 @@
 #include "IComponent.hpp"
 
 struct PersistenceTag : public IComponent {
-    PersistenceTag() = default;
+    explicit PersistenceTag(uint32_t entityId) : IComponent(entityId) {}
 
     ~PersistenceTag() override = default;
 };

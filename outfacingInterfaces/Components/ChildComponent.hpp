@@ -10,7 +10,7 @@
 #include "IComponent.hpp"
 
 struct ChildComponent : public IComponent {
-    ChildComponent() = default;
+    explicit ChildComponent(uint32_t entityId) : IComponent(entityId) {}
 
     ~ChildComponent() override = default;
 

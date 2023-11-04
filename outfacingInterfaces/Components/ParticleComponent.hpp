@@ -8,7 +8,7 @@
 #include "IComponent.hpp"
 
 struct ParticleComponent : public IComponent {
-    ParticleComponent() = default;
+    explicit ParticleComponent(uint32_t entityId) : IComponent(entityId) {}
 
     ~ParticleComponent() override = default;
 

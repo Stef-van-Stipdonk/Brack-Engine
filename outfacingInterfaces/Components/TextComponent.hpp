@@ -7,10 +7,12 @@
 
 #include <string>
 #include <memory>
-#include "IComponent.hpp"
 #include "Helpers/Color.hpp"
+#include "UIComponent.hpp"
 
-struct TextComponent : public IComponent {
+struct TextComponent : public UIComponent {
+    explicit TextComponent(uint32_t entityId) : UIComponent(entityId) {}
+
     std::string text, fontPath;
     int fontSize;
     std::unique_ptr<Color> color;

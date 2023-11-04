@@ -10,7 +10,8 @@
 #include "Helpers/Vector2.hpp"
 
 struct TransformComponent : public IComponent {
-    TransformComponent() = default;
+
+    explicit TransformComponent(uint32_t entityId) : IComponent(entityId) {}
 
     ~TransformComponent() override = default;
 

@@ -10,6 +10,7 @@
 struct IComponent {
     virtual ~IComponent() = default;
 
+    explicit IComponent(uint32_t entityID) : entityID(entityID) {};
     // Als we nog achter andere overeenkomende dingen komen bij ieder component kunnen we die hier toevoegens
     uint32_t entityID;
     bool isActive = true;

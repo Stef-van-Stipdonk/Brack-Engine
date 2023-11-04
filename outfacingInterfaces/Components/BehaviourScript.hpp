@@ -9,7 +9,8 @@
 #include <functional>
 
 struct BehaviourScript : public IComponent {
-    BehaviourScript() = default;
+
+    explicit BehaviourScript(uint32_t entityId) : IComponent(entityId) {}
 
     ~BehaviourScript() override = default;
 
