@@ -9,7 +9,7 @@ Color Camera::GetBackgroundColor() const {
 }
 
 void Camera::SetBackgroundColor(const Color color) {
-
+    backgroundColor = color;
 }
 
 Vector2 Camera::GetSize() const {
@@ -18,4 +18,9 @@ Vector2 Camera::GetSize() const {
 
 void Camera::SetSize(const Vector2 size) {
 
+}
+
+Camera::Camera() : GameObject() {
+    size = Vector2(800, 600);
+    backgroundColor = Color(0, 0, 0, 255);
 }

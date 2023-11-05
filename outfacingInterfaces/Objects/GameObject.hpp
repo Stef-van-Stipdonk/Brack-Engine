@@ -45,8 +45,12 @@ public:
 
     void SetLayer(int layer);
 
+    uint32_t GetEntityID();
+
+    void SetEntityID(uint32_t id);
+
 protected:
-    uint32_t entityID;
+    uint32_t entityID = 0;
 };
 
 

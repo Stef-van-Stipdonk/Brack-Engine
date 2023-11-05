@@ -22,11 +22,15 @@ public:
 
     void Run(); //Alleen om te testen
 
+    void RenderCamera(CameraComponent &camera);
+
     void RenderSprite(SpriteComponent &sprite);
 
     void RenderText(TextComponent &text);
 
     void RenderButton(TextComponent &button);
+
+    void RenderFrame();
 
 private:
 
@@ -35,6 +39,7 @@ private:
     void Cleanup();
 
     std::map<std::string, SDL_Texture *> textures;
+    std::unique_ptr<SDL_Renderer, void (*)(SDL_Renderer *)> renderer;
 };
 
 

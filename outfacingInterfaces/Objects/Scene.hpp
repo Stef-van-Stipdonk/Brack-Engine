@@ -29,12 +29,13 @@ public:
 
     void RemoveGameObject(GameObject &gameObject);
 
-    Camera GetMainCamera();
+    Camera &GetMainCamera();
 
     void SetCamera(Camera &camera);
 
 private:
-    std::weak_ptr<SceneManager> sceneManager;
+    std::vector<GameObject> gameObjects;
+    Camera mainCamera;
 };
 
 

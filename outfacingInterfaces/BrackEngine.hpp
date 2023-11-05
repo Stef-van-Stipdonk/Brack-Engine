@@ -15,7 +15,7 @@
 
 class BrackEngine {
 public:
-    BrackEngine() = default;
+    BrackEngine();
 
     ~BrackEngine() = default;
 

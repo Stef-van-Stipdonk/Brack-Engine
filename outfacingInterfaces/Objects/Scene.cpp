@@ -24,19 +24,22 @@ void Scene::RemoveGameObject(GameObject &gameObject) {
 
 }
 
-Camera Scene::GetMainCamera() {
-    return Camera();
+Camera &Scene::GetMainCamera() {
+    if (mainCamera.GetEntityID() == 0)
+        return mainCamera;
+    mainCamera = Camera();
+    return mainCamera;
 }
 
 void Scene::SetCamera(Camera &camera) {
-
+    mainCamera = camera;
 }
 
 Scene::Scene(Camera &&mainCamera) {
-
+    this->mainCamera = mainCamera;
 }
 
 Scene::Scene() {
-
+    mainCamera = Camera();
 }
 

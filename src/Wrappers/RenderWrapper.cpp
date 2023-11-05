@@ -4,7 +4,7 @@
 
 #include "RenderWrapper.hpp"
 
-RenderWrapper::RenderWrapper() {
+RenderWrapper::RenderWrapper() : renderer(nullptr, nullptr) {
     Initialize();
 }
 
@@ -32,7 +32,10 @@ bool RenderWrapper::Initialize() {
     }
 
     // Perform additional initialization as needed (e.g., renderer setup, resource loading).
-    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    renderer = std::unique_ptr<SDL_Renderer, void (*)(SDL_Renderer *)>(
+            SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED),
+            [](SDL_Renderer *r) { SDL_DestroyRenderer(r); }
+    );
 
     if (renderer == nullptr) {
         std::cerr << "Renderer creation failed: " << SDL_GetError() << std::endl;
@@ -41,22 +44,24 @@ bool RenderWrapper::Initialize() {
         return false;
     }
 
-    // Set the background color (e.g., red in this case).
-    SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255); // RGBA format
-
-    // Clear the screen with the background color.
-    SDL_RenderClear(renderer);
-
-    // Present the renderer (update the window).
-    SDL_RenderPresent(renderer);
-
-
     return true;
 }
 
 void RenderWrapper::Cleanup() {
     // Perform cleanup as necessary
     SDL_Quit();
+}
+
+void RenderWrapper::RenderCamera(CameraComponent &camera) {
+    auto &backgroundColor = camera.backgroundColor;
+    SDL_SetRenderDrawColor(renderer.get(), backgroundColor->r, backgroundColor->g, backgroundColor->b,
+                           backgroundColor->a); // RGBA format
+
+    // Clear the screen with the background color.
+    SDL_RenderClear(renderer.get());
+
+    // Present the renderer (update the window).
+    SDL_RenderPresent(renderer.get());
 }
 
 void RenderWrapper::RenderSprite(SpriteComponent &sprite) {
@@ -91,4 +96,6 @@ void RenderWrapper::Run() {
 }
 
 
-
+void RenderWrapper::RenderFrame() {
+    //Render dubble buffered frame
+}

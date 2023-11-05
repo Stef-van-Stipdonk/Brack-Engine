@@ -45,6 +45,15 @@ GameObject &GameObject::GetParent() {
     return *this;
 }
 
+uint32_t GameObject::GetEntityID() {
+    return entityID;
+}
+
+void GameObject::SetEntityID(uint32_t id) {
+    entityID = id;
+}
+
+
 template<typename T>
 void GameObject::AddComponent(T &component) {
 
