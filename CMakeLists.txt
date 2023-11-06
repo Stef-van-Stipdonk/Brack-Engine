@@ -78,14 +78,16 @@ add_library(${PROJECT_NAME} SHARED src/library.cpp
         outfacingInterfaces/test.cpp
         outfacingInterfaces/Objects/Button.cpp
         outfacingInterfaces/Objects/Text.cpp
-        "outfacingInterfaces/Engine Managers/SceneManager.cpp"
-        "outfacingInterfaces/Engine Managers/ReplayManager.cpp"
-        "outfacingInterfaces/Engine Managers/InputManager.cpp"
+        outfacingInterfaces/EngineManagers/SceneManager.cpp
+        outfacingInterfaces/EngineManagers/ReplayManager.cpp
+        outfacingInterfaces/EngineManagers/InputManager.cpp
         outfacingInterfaces/Helpers/InputState.hpp
         outfacingInterfaces/BrackEngine.cpp
         src/GameObjectConverter.cpp
         src/Logger.hpp
         src/Logger.cpp
+        src/ConfigSingleton.cpp
+        outfacingInterfaces/Config.cpp
 )
 
 # Define an option for logging to a file

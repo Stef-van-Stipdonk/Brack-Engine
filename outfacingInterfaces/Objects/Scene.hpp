@@ -9,7 +9,7 @@
 #include <memory>
 #include "GameObject.hpp"
 #include "Camera.hpp"
-#include "Engine Managers/SceneManager.hpp"
+#include "EngineManagers/SceneManager.hpp"
 
 class Scene {
 public:

@@ -11,7 +11,6 @@ SceneManager SceneManager::instance;
 
 void SceneManager::SetActiveScene(Scene &scene) {
     auto camera = scene.GetMainCamera();
-    std::cout << camera.GetEntityID() << std::endl;
     GameObjectConverter::AddCamera(camera);
 }
 
