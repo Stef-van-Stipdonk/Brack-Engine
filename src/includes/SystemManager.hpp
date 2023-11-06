@@ -41,8 +41,7 @@ public:
 
     void AddSystem(ISystem *system);
 
-    void UpdateSystems();
-    void ToggleRunning();
+    void UpdateSystems(float deltaTime);
 
 private:
     SystemManager() = default;

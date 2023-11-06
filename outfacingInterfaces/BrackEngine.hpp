@@ -7,6 +7,7 @@
 
 
 #include <memory>
+#include <chrono>
 #include "../src/includes/EntityManager.hpp"
 #include "../src/includes/SystemManager.hpp"
 #include "EngineManagers/SceneManager.hpp"
@@ -20,9 +21,10 @@ public:
 
     ~BrackEngine() = default;
 
-    void Update();
-    bool isRunning = true;
+    void Run();
 private:
+    float GetDeltaTime();
+    std::chrono::time_point<std::chrono::high_resolution_clock> lastTime;
 };
 
 
