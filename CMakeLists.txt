@@ -17,7 +17,7 @@ else ()
     link_directories(${SDL2_LIBRARY_DIRS})
 endif ()
 
-add_library(${PROJECT_NAME} SHARED src/library.cpp
+add_library(${PROJECT_NAME} SHARED
         outfacingInterfaces/Components/IComponent.hpp
         outfacingInterfaces/ISystem.hpp
         src/Managers/Entities/EntityManager.cpp
@@ -75,7 +75,6 @@ add_library(${PROJECT_NAME} SHARED src/library.cpp
         outfacingInterfaces/Objects/Camera.cpp
         outfacingInterfaces/Objects/Scene.cpp
         outfacingInterfaces/Objects/UIObject.cpp
-        outfacingInterfaces/test.cpp
         outfacingInterfaces/Objects/Button.cpp
         outfacingInterfaces/Objects/Text.cpp
         outfacingInterfaces/EngineManagers/SceneManager.cpp
