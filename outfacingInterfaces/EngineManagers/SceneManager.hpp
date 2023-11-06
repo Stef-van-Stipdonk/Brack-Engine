@@ -32,6 +32,8 @@ private:
 
     static SceneManager instance;
     bool hasChanged = false;
+
+    void RemoveActiveScene(Scene &scene);
 };
 
 

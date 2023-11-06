@@ -17,11 +17,14 @@ GameObject GameObjectConverter::GetGameObject(uint32_t entityID) {
 }
 
 void GameObjectConverter::AddGameObject(GameObject &gameObject) {
+    if(gameObject.GetEntityID() == 0)
+        gameObject.SetEntityID(EntityManager::GetInstance().CreateEntity());
 
 }
 
 void GameObjectConverter::RemoveGameObject(GameObject &gameObject) {
-
+    if(gameObject.GetEntityID() != 0)
+        EntityManager::GetInstance().DestroyEntity(gameObject.GetEntityID());
 }
 
 void GameObjectConverter::AddCamera(Camera &camera) {

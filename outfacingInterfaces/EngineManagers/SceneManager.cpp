@@ -12,7 +12,19 @@ SceneManager SceneManager::instance;
 void SceneManager::SetActiveScene(Scene &scene) {
     auto camera = scene.GetMainCamera();
     GameObjectConverter::AddCamera(camera);
+
+    for (auto &gameObject : scene.GetAllGameObjects()) {
+        GameObjectConverter::AddGameObject(gameObject);
+    }
 }
+
+void SceneManager::RemoveActiveScene(Scene &scene) {
+
+    for (auto &gameObject : scene.GetAllGameObjects()) {
+        GameObjectConverter::RemoveGameObject(gameObject);
+    }
+}
+
 
 SceneManager &SceneManager::GetInstance() {
     return instance;
