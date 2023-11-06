@@ -24,7 +24,6 @@ public:
     void Update();
 private:
     float GetDeltaTime();
-    std::chrono::high_resolution_clock clock;
     std::chrono::time_point<std::chrono::high_resolution_clock> lastTime;
 };
 

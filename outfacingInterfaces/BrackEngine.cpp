@@ -18,11 +18,11 @@ void BrackEngine::Update() {
 BrackEngine::BrackEngine(Config &&config) {
     ConfigSingleton::GetInstance().SetIsRunning(config.isRunning);
     SystemManager::GetInstance().AddSystem(new RenderingSystem());
-    lastTime = clock.now();
+    lastTime = std::chrono::high_resolution_clock::now();
 }
 
 float BrackEngine::GetDeltaTime() {
-    auto currentTime = clock.now();
+    auto currentTime = std::chrono::high_resolution_clock::now();
     std::chrono::duration<float> deltaTime = std::chrono::duration_cast<std::chrono::duration<float>>(currentTime - lastTime);
     lastTime = currentTime;
 
