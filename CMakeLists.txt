@@ -3,11 +3,11 @@ project(Brack_Engine)
 
 set(CMAKE_CXX_STANDARD 17)
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules")
 
 
 if (WIN32 OR WIN64)
-    set(SDL2_PATH "${CMAKE_SOURCE_DIR}/lib/SDL")
+    set(SDL2_PATH "${CMAKE_CURRENT_SOURCE_DIR}/lib/SDL")
     find_package(SDL2 REQUIRED)
     include_directories(${SDL2_INCLUDE_DIR})
 else ()
@@ -17,9 +17,7 @@ else ()
     link_directories(${SDL2_LIBRARY_DIRS})
 endif ()
 
-include_directories(${CMAKE_SOURCE_DIR}/lib/FMod/include)
-
-add_library(${PROJECT_NAME} SHARED ../src/library.cpp
+add_library(${PROJECT_NAME} SHARED src/library.cpp
         outfacingInterfaces/Components/IComponent.hpp
         outfacingInterfaces/ISystem.hpp
         src/Managers/Entities/EntityManager.cpp
@@ -86,12 +84,43 @@ add_library(${PROJECT_NAME} SHARED ../src/library.cpp
         outfacingInterfaces/Helpers/InputState.hpp
         outfacingInterfaces/BrackEngine.cpp
         src/GameObjectConverter.cpp
+        src/Logger.hpp
+        src/Logger.cpp
 )
 
+# Define an option for logging to a file
+option(LOG_TO_FILE "Enable logging to a file" OFF)
+
+# Check if LOG_TO_FILE option is set to ON and add a compile definition accordingly
+if(LOG_TO_FILE)
+    target_compile_definitions(Brack_Engine PRIVATE LOG_TO_FILE)
+endif()
+
+if(NOT DEFINED CURRENT_LOG_LEVEL)
+    # Define a default log level based on the build type
+    if(CMAKE_BUILD_TYPE STREQUAL "Info")
+        set(CURRENT_LOG_LEVEL "LOG_LEVEL_INFO")
+    elseif(CMAKE_BUILD_TYPE STREQUAL "None")
+        set(CURRENT_LOG_LEVEL "LOG_LEVEL_NONE")
+    elseif(CMAKE_BUILD_TYPE STREQUAL "Warning")
+        set(CURRENT_LOG_LEVEL "LOG_LEVEL_WARNING")
+    elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
+        set(CURRENT_LOG_LEVEL "LOG_LEVEL_ERROR")
+    else ()
+        set(CURRENT_LOG_LEVEL "LOG_LEVEL_DEBUG" CACHE STRING "Set the current log level")
+    endif()
+endif()
+
+# Now, add the definition for the CURRENT_LOG_LEVEL
+add_compile_definitions(CURRENT_LOG_LEVEL=${CURRENT_LOG_LEVEL})
+
+
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/FMod/include)
 
 target_include_directories(Brack_Engine PUBLIC outfacingInterfaces)
 
-set(LIBRARY_FILES ${CMAKE_SOURCE_DIR}/lib/dll)
+set(LIBRARY_FILES ${CMAKE_CURRENT_SOURCE_DIR}/lib/dll)
+
 
 if (WIN32 OR WIN64)
     target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARY})
@@ -107,5 +136,7 @@ else ()
     target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARIES})
 endif ()
 
-target_link_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/lib/FMod)
+target_link_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/FMod)
 target_link_libraries(${PROJECT_NAME} PRIVATE fmod)
+
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/outfacingInterfaces)
