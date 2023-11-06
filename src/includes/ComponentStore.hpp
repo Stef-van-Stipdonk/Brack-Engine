@@ -13,6 +13,7 @@
 #include <iostream>
 #include "Components/IComponent.hpp"
 #include "../../outfacingInterfaces/IComponentStorage.hpp"
+#include "../Logger.hpp"
 
 // TODO: Kijken of we Bitsets voor components kunnen gebruiken
 // Vanuit onze vriend google:
@@ -39,9 +40,11 @@ public:
     template<typename T>
     void AddComponent(uint32_t entity, T *component) {
         auto typeID = std::type_index(typeid(component));
+        Logger::Info(typeID.name());
         auto it = components.find(typeID);
         if (it != components.end()) {
             it->second[entity] = component;
+            Logger::Info(typeID.name());
         } else {
             auto newStorage = std::unordered_map<uint32_t, IComponent *>();
             std::cout << "add " << typeID.name() << std::endl;
