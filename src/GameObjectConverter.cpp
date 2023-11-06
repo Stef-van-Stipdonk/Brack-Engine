@@ -26,7 +26,6 @@ void GameObjectConverter::RemoveGameObject(GameObject &gameObject) {
 
 void GameObjectConverter::AddCamera(Camera &camera) {
     camera.SetEntityID(EntityManager::GetInstance().CreateEntity());
-    std::cout << camera.GetEntityID() << std::endl;
     auto *cameraComponent = new CameraComponent(camera.GetEntityID());
     cameraComponent->size = camera.GetSize();
     cameraComponent->backgroundColor = camera.GetBackgroundColor();

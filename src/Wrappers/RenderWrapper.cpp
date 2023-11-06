@@ -4,6 +4,7 @@
 
 #include "RenderWrapper.hpp"
 #include "../includes/SystemManager.hpp"
+#include "../ConfigSingleton.hpp"
 
 RenderWrapper::RenderWrapper() : renderer(nullptr, nullptr) {
     Initialize();
@@ -83,7 +84,7 @@ void RenderWrapper::Run() {
         while (SDL_PollEvent(&event)) {
             // Close the window if the user presses the "X" button.
             if (event.type == SDL_QUIT) {
-                SystemManager::GetInstance().ToggleRunning();
+                ConfigSingleton::GetInstance().ToggleIsRunning();
             }
     }
 }

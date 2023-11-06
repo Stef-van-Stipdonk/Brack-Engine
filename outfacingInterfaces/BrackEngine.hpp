@@ -9,17 +9,20 @@
 #include <memory>
 #include "../src/includes/EntityManager.hpp"
 #include "../src/includes/SystemManager.hpp"
-#include "Engine Managers/SceneManager.hpp"
-#include "Engine Managers/ReplayManager.hpp"
-#include "Engine Managers/InputManager.hpp"
+#include "EngineManagers/SceneManager.hpp"
+#include "EngineManagers/ReplayManager.hpp"
+#include "EngineManagers/InputManager.hpp"
+#include "Config.hpp"
 
 class BrackEngine {
 public:
-    BrackEngine();
+    BrackEngine(Config &&config);
 
     ~BrackEngine() = default;
 
     void Update();
+    bool isRunning = true;
+private:
 };
 
 

@@ -15,10 +15,8 @@ void SystemManager::AddSystem(ISystem* system) {
 
 void SystemManager::UpdateSystems() {
     float deltaTime = 0.0f;
-    while(isRunning){
-        for (auto system: systems) {
-            system->Update(deltaTime);
-        }
+    for (auto system: systems) {
+        system->Update(deltaTime);
     }
 }
 
