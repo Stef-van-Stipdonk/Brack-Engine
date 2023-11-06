@@ -9,7 +9,7 @@
 
 
 void BrackEngine::Update() {
-//    Logger::Debug("Updating systems");
+    Logger::Debug("Updating systems");
     while (ConfigSingleton::GetInstance().IsRunning()){
         SystemManager::GetInstance().UpdateSystems();
     }

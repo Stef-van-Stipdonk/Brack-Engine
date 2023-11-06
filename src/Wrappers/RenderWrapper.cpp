@@ -5,6 +5,7 @@
 #include "RenderWrapper.hpp"
 #include "../includes/SystemManager.hpp"
 #include "../ConfigSingleton.hpp"
+#include "../Logger.hpp"
 
 RenderWrapper::RenderWrapper() : renderer(nullptr, nullptr) {
     Initialize();
@@ -29,6 +30,7 @@ bool RenderWrapper::Initialize() {
 
     if (window == nullptr) {
         std::cerr << "Window creation failed: " << SDL_GetError() << std::endl;
+        Logger::GetInstance().Shutdown();
         SDL_Quit();
         return false;
     }
@@ -41,6 +43,7 @@ bool RenderWrapper::Initialize() {
 
     if (renderer == nullptr) {
         std::cerr << "Renderer creation failed: " << SDL_GetError() << std::endl;
+        Logger::GetInstance().Shutdown();
         SDL_DestroyWindow(window);
         SDL_Quit();
         return false;
@@ -51,6 +54,7 @@ bool RenderWrapper::Initialize() {
 
 void RenderWrapper::Cleanup() {
     // Perform cleanup as necessary
+    Logger::GetInstance().Shutdown();
     SDL_Quit();
 }
 

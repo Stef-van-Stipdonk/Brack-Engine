@@ -39,13 +39,13 @@ public:
     Logger(const Logger&) = delete;
     Logger& operator=(const Logger&) = delete;
 
+// Static method to get the singleton instance
+static Logger& GetInstance();
+
 private:
     // Private constructor and destructor
     Logger();
     ~Logger();
-
-    // Static method to get the singleton instance
-    static Logger& GetInstance();
 
     // Instance methods to perform the actual logging
     void LogError(const std::string &message);
