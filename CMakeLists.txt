@@ -7,7 +7,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules")
 
 
 if (WIN32 OR WIN64)
-    set(SDL2_PATH "${CMAKE_SOURCE_DIR}/lib/SDL")
+    set(SDL2_PATH "${CMAKE_CURRENT_SOURCE_DIR}/lib/SDL")
     find_package(SDL2 REQUIRED)
     include_directories(${SDL2_INCLUDE_DIR})
 else ()

@@ -2,6 +2,7 @@
 // Created by Stef van Stipdonk on 29/10/2023.
 //
 
+#include <stdexcept>
 #include "../../includes/SystemManager.hpp"
 #include "Objects/Scene.hpp"
 

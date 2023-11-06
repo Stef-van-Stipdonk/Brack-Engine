@@ -5,6 +5,7 @@
 #ifndef BRACK_ENGINE_ISYSTEM_HPP
 #define BRACK_ENGINE_ISYSTEM_HPP
 
+#include <algorithm>
 #include "vector"
 
 class ISystem {
