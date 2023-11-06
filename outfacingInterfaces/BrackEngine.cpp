@@ -7,10 +7,9 @@
 
 
 void BrackEngine::Update() {
-    SystemManager::GetInstance().UpdateSystems(0.0f);//TODO add delta time
+        SystemManager::GetInstance().UpdateSystems();
 }
 
 BrackEngine::BrackEngine() {
     SystemManager::GetInstance().AddSystem(new RenderingSystem());
-
 }

@@ -13,9 +13,12 @@ void SystemManager::AddSystem(ISystem* system) {
     SortSystems();
 }
 
-void SystemManager::UpdateSystems(float deltaTime) {
-    for (auto system: systems) {
-        system->Update(deltaTime);
+void SystemManager::UpdateSystems() {
+    float deltaTime = 0.0f;
+    while(isRunning){
+        for (auto system: systems) {
+            system->Update(deltaTime);
+        }
     }
 }
 
@@ -55,4 +58,8 @@ void SystemManager::SortSystems() {
     }
 
     systems = sorted;
+}
+
+void SystemManager::ToggleRunning() {
+    isRunning = !isRunning;
 }

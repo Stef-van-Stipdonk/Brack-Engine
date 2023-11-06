@@ -3,6 +3,7 @@
 //
 
 #include "RenderWrapper.hpp"
+#include "../includes/SystemManager.hpp"
 
 RenderWrapper::RenderWrapper() : renderer(nullptr, nullptr) {
     Initialize();
@@ -77,21 +78,13 @@ void RenderWrapper::RenderButton(TextComponent &button) {
 }
 
 void RenderWrapper::Run() {
-    // Run the game loop.
-    bool gameLoopActive = true;
-    while (gameLoopActive) {
         // Process events.
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
             // Close the window if the user presses the "X" button.
             if (event.type == SDL_QUIT) {
-                gameLoopActive = false;
+                SystemManager::GetInstance().ToggleRunning();
             }
-        }
-
-        // Perform game logic here.
-
-        // Render stuff.
     }
 }
 

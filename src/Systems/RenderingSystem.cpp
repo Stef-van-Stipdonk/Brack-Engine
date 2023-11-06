@@ -19,6 +19,7 @@ void RenderingSystem::Update(float deltaTime) {
         auto component = ComponentStore::GetInstance().getComponent<CameraComponent>(1);
 //        Logger::Debug(std::string(reinterpret_cast<const char *>(component->entityID)));
         sdl2Wrapper->RenderCamera(component);
+        sdl2Wrapper->Run();
     }
     catch (std::exception &e) {
         std::cout << e.what() << std::endl;

@@ -41,7 +41,8 @@ public:
 
     void AddSystem(ISystem *system);
 
-    void UpdateSystems(float deltaTime);
+    void UpdateSystems();
+    void ToggleRunning();
 
 private:
     SystemManager() = default;
@@ -49,6 +50,7 @@ private:
     static SystemManager instance;
     std::vector<ISystem *> systems;
 
+    bool isRunning = true;
     void SortSystems();
 };
 
