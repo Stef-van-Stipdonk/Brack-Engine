@@ -30,8 +30,7 @@ bool RenderWrapper::Initialize() {
 
     if (window == nullptr) {
         std::cerr << "Window creation failed: " << SDL_GetError() << std::endl;
-        Logger::GetInstance().Shutdown();
-        SDL_Quit();
+        Cleanup();
         return false;
     }
 
@@ -45,7 +44,7 @@ bool RenderWrapper::Initialize() {
         std::cerr << "Renderer creation failed: " << SDL_GetError() << std::endl;
         Logger::GetInstance().Shutdown();
         SDL_DestroyWindow(window);
-        SDL_Quit();
+        Cleanup();
         return false;
     }
 
