@@ -22,7 +22,7 @@ public:
 
     void Run(); //Alleen om te testen
 
-    void RenderCamera(CameraComponent &camera);
+    void RenderCamera(CameraComponent* camera);
 
     void RenderSprite(SpriteComponent &sprite);
 

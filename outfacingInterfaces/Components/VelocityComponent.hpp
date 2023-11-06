@@ -12,7 +12,7 @@ struct VelocityComponent : public TransformComponent {
 
     ~VelocityComponent() = default;
 
-    std::unique_ptr<Vector2> velocity;
+    Vector2 velocity;
 };
 
 #endif //BRACK_ENGINE_VELOCITYCOMPONENT_HPP

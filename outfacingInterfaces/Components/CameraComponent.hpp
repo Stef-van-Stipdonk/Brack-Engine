@@ -14,8 +14,8 @@ struct CameraComponent : public VelocityComponent {
 
     ~CameraComponent() override = default;
 
-    std::unique_ptr<Vector2> size;
-    std::unique_ptr<Color> backgroundColor;
+    Vector2 size;
+    Color backgroundColor;
 };
 
 #endif //BRACK_ENGINE_CAMERACOMPONENT_HPP

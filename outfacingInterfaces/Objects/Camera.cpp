@@ -5,7 +5,7 @@
 #include "Camera.hpp"
 
 Color Camera::GetBackgroundColor() const {
-    return Color();
+    return backgroundColor;
 }
 
 void Camera::SetBackgroundColor(const Color color) {
@@ -13,7 +13,7 @@ void Camera::SetBackgroundColor(const Color color) {
 }
 
 Vector2 Camera::GetSize() const {
-    return Vector2();
+    return size;
 }
 
 void Camera::SetSize(const Vector2 size) {

@@ -52,10 +52,10 @@ void RenderWrapper::Cleanup() {
     SDL_Quit();
 }
 
-void RenderWrapper::RenderCamera(CameraComponent &camera) {
-    auto &backgroundColor = camera.backgroundColor;
-    SDL_SetRenderDrawColor(renderer.get(), backgroundColor->r, backgroundColor->g, backgroundColor->b,
-                           backgroundColor->a); // RGBA format
+void RenderWrapper::RenderCamera(CameraComponent* camera) {
+    auto &backgroundColor = camera->backgroundColor;
+    SDL_SetRenderDrawColor(renderer.get(), backgroundColor.r, backgroundColor.g, backgroundColor.b,
+                           backgroundColor.a); // RGBA format
 
     // Clear the screen with the background color.
     SDL_RenderClear(renderer.get());
