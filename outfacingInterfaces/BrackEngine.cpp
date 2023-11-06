@@ -7,18 +7,17 @@
 #include "../src/Logger.hpp"
 #include "../src/ConfigSingleton.hpp"
 
-
-void BrackEngine::Update() {
-//    Logger::Debug("Updating systems");
-    while (ConfigSingleton::GetInstance().IsRunning()){
-        SystemManager::GetInstance().UpdateSystems(GetDeltaTime());
-    }
-}
-
 BrackEngine::BrackEngine(Config &&config) {
     ConfigSingleton::GetInstance().SetIsRunning(config.isRunning);
     SystemManager::GetInstance().AddSystem(new RenderingSystem());
     lastTime = std::chrono::high_resolution_clock::now();
+}
+
+void BrackEngine::Run() {
+//    Logger::Debug("Updating systems");
+    while (ConfigSingleton::GetInstance().IsRunning()){
+        SystemManager::GetInstance().UpdateSystems(GetDeltaTime());
+    }
 }
 
 float BrackEngine::GetDeltaTime() {

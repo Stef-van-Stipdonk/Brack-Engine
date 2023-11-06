@@ -21,7 +21,7 @@ public:
 
     ~BrackEngine() = default;
 
-    void Update();
+    void Run();
 private:
     float GetDeltaTime();
     std::chrono::time_point<std::chrono::high_resolution_clock> lastTime;
