@@ -42,14 +42,14 @@ public:
     void AddSystem(ISystem *system);
 
     void UpdateSystems(float deltaTime);
+    void CleanUp();
 
 private:
     SystemManager() = default;
 
     static SystemManager instance;
     std::vector<ISystem *> systems;
-
-    bool isRunning = true;
+    
     void SortSystems();
 };
 

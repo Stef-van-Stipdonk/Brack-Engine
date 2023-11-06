@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include "../../includes/SystemManager.hpp"
 #include "Objects/Scene.hpp"
+#include "../../Logger.hpp"
 
 SystemManager SystemManager::instance;
 
@@ -55,4 +56,11 @@ void SystemManager::SortSystems() {
     }
 
     systems = sorted;
+}
+
+void SystemManager::CleanUp() {
+    std::cout << "Finishing systems" << std::endl;
+    for (auto system: systems) {
+        system->CleanUp();
+    }
 }

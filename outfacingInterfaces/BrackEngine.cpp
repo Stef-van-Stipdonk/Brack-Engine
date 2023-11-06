@@ -14,10 +14,11 @@ BrackEngine::BrackEngine(Config &&config) {
 }
 
 void BrackEngine::Run() {
-//    Logger::Debug("Updating systems");
+    Logger::Debug("Updating systems");
     while (ConfigSingleton::GetInstance().IsRunning()){
         SystemManager::GetInstance().UpdateSystems(GetDeltaTime());
     }
+    SystemManager::GetInstance().CleanUp();
 }
 
 float BrackEngine::GetDeltaTime() {

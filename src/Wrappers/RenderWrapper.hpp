@@ -32,11 +32,11 @@ public:
 
     void RenderFrame();
 
+    static void Cleanup();
+
 private:
 
     bool Initialize();
-
-    void Cleanup();
 
     std::map<std::string, SDL_Texture *> textures;
     std::unique_ptr<SDL_Renderer, void (*)(SDL_Renderer *)> renderer;
