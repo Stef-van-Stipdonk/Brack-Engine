@@ -25,3 +25,8 @@ void RenderingSystem::Update(float deltaTime) {
         std::cout << e.what() << std::endl;
     }
 }
+
+void RenderingSystem::CleanUp() {
+    ISystem::CleanUp();
+    sdl2Wrapper->Cleanup();
+}

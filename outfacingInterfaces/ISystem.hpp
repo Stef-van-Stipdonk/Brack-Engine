@@ -18,6 +18,8 @@ public:
     // Deze MOET iedere frame of gametick worden aangeroepen
     virtual void Update(float deltaTime) = 0;
 
+    virtual void CleanUp() {}
+    
     void AddDependency(ISystem* dependency) {
         if (std::find(dependencies.begin(), dependencies.end(), dependency) == dependencies.end()) {
             dependencies.push_back(dependency);

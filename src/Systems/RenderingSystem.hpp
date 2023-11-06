@@ -15,6 +15,7 @@ public:
     RenderingSystem();
 
     ~RenderingSystem() override;
+    void CleanUp() override;
 
     void Update(float deltaTime) override;
 
