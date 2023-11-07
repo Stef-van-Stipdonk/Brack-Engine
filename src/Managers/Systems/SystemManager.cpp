@@ -7,6 +7,7 @@
 #include "../../includes/SystemManager.hpp"
 #include "Objects/Scene.hpp"
 #include "../../Logger.hpp"
+#include "../../FPSSingleton.hpp"
 
 SystemManager SystemManager::instance;
 
