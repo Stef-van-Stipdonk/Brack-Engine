@@ -3,9 +3,9 @@
 //
 
 #include "BrackEngine.hpp"
-#include "../src/Systems/RenderingSystem.hpp"
-#include "../src/Logger.hpp"
-#include "../src/ConfigSingleton.hpp"
+#include "Systems/RenderingSystem.hpp"
+#include "Logger.hpp"
+#include "ConfigSingleton.hpp"
 
 BrackEngine::BrackEngine(Config &&config) {
     ConfigSingleton::GetInstance().SetIsRunning(config.isRunning);

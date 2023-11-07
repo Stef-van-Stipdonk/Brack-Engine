@@ -2,7 +2,7 @@
 // Created by jesse on 31/10/2023.
 //
 
-#include "Text.hpp"
+#include "Objects/Text.hpp"
 
 void Text::SetText(const char *text) {
 
