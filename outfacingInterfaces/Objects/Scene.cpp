@@ -5,7 +5,7 @@
 #include "Scene.hpp"
 
 void Scene::AddGameObject(GameObject &gameObject) {
-
+    gameObjects.push_back(gameObject);
 }
 
 GameObject &Scene::GetGameObjectByName(char *name) {

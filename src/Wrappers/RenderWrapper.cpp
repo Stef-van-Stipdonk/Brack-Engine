@@ -70,7 +70,48 @@ void RenderWrapper::RenderCamera(CameraComponent* camera) {
 }
 
 void RenderWrapper::RenderSprite(SpriteComponent &sprite) {
+    SDL_Surface* spritesheetSurface = SDL_LoadBMP(sprite.spritePath.c_str());
+    int currentFrame = 0;
+    Uint32 lastFrameTime = 0;
+    const int frameRate = 10;
 
+    if (!spritesheetSurface) {
+        printf("SDL Error: %s\n", SDL_GetError());
+        return;
+    }
+
+    SDL_Texture* spritesheetTexture = SDL_CreateTextureFromSurface(renderer.get(), spritesheetSurface);
+
+    auto spriteSheetHeight = sprite.imageSize->getY();
+    auto spriteSheetWidth = sprite.imageSize->getX();
+    auto spriteWidth = sprite.spriteSize->getX();
+    auto spriteHeight = sprite.spriteSize->getY();
+    int spriteSheetAmount = std::round(spriteSheetWidth/spriteWidth) * std::round(spriteSheetHeight/spriteHeight);
+
+    SDL_Rect spriteRectangles[spriteSheetAmount];
+    int spriteIndex = 0;
+    for (int i = 0; i < spriteSheetHeight; ++i) {
+        for (int j = 0; j < spriteSheetWidth; ++j) {
+            spriteRectangles[spriteIndex] = {static_cast<int>(j * spriteWidth), static_cast<int>(i * spriteHeight), static_cast<int>(spriteWidth), static_cast<int>(spriteHeight)};
+            spriteIndex++;
+            if (spriteIndex >= spriteSheetAmount) {
+                break;
+            }
+        }
+    }
+
+    Uint32 currentTime = SDL_GetTicks();
+
+    if (currentTime - lastFrameTime >= 1000 / frameRate) {
+        currentFrame = (currentFrame + 1) % spriteSheetAmount;
+        lastFrameTime = currentTime;
+    }
+
+    SDL_RenderClear(renderer.get());
+
+    SDL_Rect srcRect = spriteRectangles[currentFrame];
+    SDL_Rect destRect = {static_cast<int>(sprite.position->getX()), static_cast<int>(sprite.position->getY()), srcRect.w, srcRect.h};
+    SDL_RenderCopy(renderer.get(), spritesheetTexture, &srcRect, &destRect);
 }
 
 void RenderWrapper::RenderText(TextComponent &text) {
