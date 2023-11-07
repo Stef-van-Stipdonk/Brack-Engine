@@ -11,7 +11,7 @@
 #include <memory>
 
 struct SpriteComponent : public TransformComponent {
-    explicit SpriteComponent(uint32_t entityId) : TransformComponent(entityId) {}
+    explicit SpriteComponent( ) : TransformComponent() {}
 
     ~SpriteComponent() override = default;
 

@@ -8,7 +8,7 @@
 #include "IComponent.hpp"
 
 struct RigidBodyComponent : public IComponent {
-    explicit RigidBodyComponent(uint32_t entityId) : IComponent(entityId) {}
+    explicit RigidBodyComponent( ) : IComponent() {}
 
     ~RigidBodyComponent() override = default;
 

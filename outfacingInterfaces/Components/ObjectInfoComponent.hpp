@@ -10,7 +10,7 @@
 
 struct ObjectInfoComponent : public IComponent {
 
-    explicit ObjectInfoComponent(uint32_t entityId) : IComponent(entityId) {}
+    explicit ObjectInfoComponent( ) : IComponent() {}
 
     ~ObjectInfoComponent() override = default;
 

@@ -11,7 +11,7 @@
 #include "UIComponent.hpp"
 
 struct TextComponent : public UIComponent {
-    explicit TextComponent(uint32_t entityId) : UIComponent(entityId) {}
+    explicit TextComponent( ) : UIComponent() {}
 
     std::string text, fontPath;
     int fontSize;

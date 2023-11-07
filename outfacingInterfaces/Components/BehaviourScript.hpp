@@ -10,7 +10,7 @@
 
 struct BehaviourScript : public IComponent {
 
-    explicit BehaviourScript(uint32_t entityId) : IComponent(entityId) {}
+    explicit BehaviourScript( ) : IComponent() {}
 
     ~BehaviourScript() override = default;
 

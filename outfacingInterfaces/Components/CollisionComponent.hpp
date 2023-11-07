@@ -8,7 +8,7 @@
 #include "TransformComponent.hpp"
 
 struct CollisionComponent : public TransformComponent {
-    explicit CollisionComponent(uint32_t entityId) : TransformComponent(entityId) {}
+    explicit CollisionComponent() : TransformComponent() {}
 
     virtual ~CollisionComponent() = default;
 };

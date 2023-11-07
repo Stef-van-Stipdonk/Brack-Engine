@@ -9,7 +9,7 @@
 #include "UIComponent.hpp"
 
 struct ButtonComponent : public UIComponent {
-    explicit ButtonComponent(uint32_t entityId) : UIComponent(entityId) {}
+    explicit ButtonComponent( ) : UIComponent() {}
 
     bool interactable;
     std::function<void()> OnClick;

@@ -10,7 +10,7 @@
 
 struct AudioComponent : public IComponent {
 
-    explicit AudioComponent(uint32_t entityId) : IComponent(entityId) {}
+    explicit AudioComponent( ) : IComponent() {}
 
     ~AudioComponent() = default;
 
