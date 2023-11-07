@@ -52,6 +52,8 @@ public:
                 components.erase(it);
                 break;
             } else {
+                // ++It is placed here because if the element is erased, the iterator is invalidated
+                // and ++it will cause a segmentation fault
                 ++it;
             }
         }
