@@ -53,18 +53,9 @@ void GameObject::SetEntityID(uint32_t id) {
     entityID = id;
 }
 
-
-template<typename T>
-void GameObject::AddComponent(T &component) {
-
+std::vector<IComponent> GameObject::GetAllComponents() {
+    return components;
 }
 
-template<typename T>
-bool GameObject::HasComponent(T &component) {
-    return false;
-}
 
-template<typename T>
-T *GameObject::GetComponent(T &component) {
-    return nullptr;
-}
+

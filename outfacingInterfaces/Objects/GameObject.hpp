@@ -17,13 +17,27 @@ public:
     ~GameObject() = default;
 
     template<typename T>
-    void AddComponent(T &component);
+    void AddComponent(T &component) {
+        components.push_back(component);
+    }
 
     template<typename T>
-    T *GetComponent(T &component);
+    bool HasComponent(T &component) {
+        for(auto &comp : components) {
+            if(dynamic_cast<T>(comp))
+                return true;
+        }
+        return false;
+    }
 
     template<typename T>
-    bool HasComponent(T &component);
+    T *GetComponent(T &component) {
+        for(auto &comp : components) {
+            if(dynamic_cast<T>(comp))
+                return comp;
+        }
+        return nullptr;
+    }
 
     GameObject &GetParent();
 
@@ -49,8 +63,11 @@ public:
 
     void SetEntityID(uint32_t id);
 
+    std::vector<IComponent> GetAllComponents();
+
 protected:
     uint32_t entityID = 0;
+    std::vector<IComponent> components;
 };
 
 
