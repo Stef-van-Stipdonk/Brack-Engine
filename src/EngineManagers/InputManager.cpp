@@ -2,7 +2,7 @@
 // Created by jesse on 02/11/2023.
 //
 
-#include "EngineManagers/InputManager.hpp"
+#include "InputManager.hpp"
 
 InputManager InputManager::instance;
 
@@ -47,7 +47,8 @@ bool InputManager::IsMouseReleased(const int key) const {
 }
 
 void InputManager::SetMousePosition(const Vector2 &position) {
-
+    mousePosition.reset();
+    mousePosition = std::make_unique<Vector2>(position);
 }
 
 Vector2 &InputManager::GetMousePosition() const {
