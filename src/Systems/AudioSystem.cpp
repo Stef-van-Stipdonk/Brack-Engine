@@ -15,41 +15,50 @@ AudioSystem::~AudioSystem() {
 void AudioSystem::Update(float deltaTime) {
 }
 
-void AudioSystem::PlayAudio(uint32_t entityID, const std::string& audioFilePath) {
+void AudioSystem::StartSound() {
     if (audioWrapper) {
-        audioWrapper->PlayAudio(entityID, audioFilePath);
+        audioWrapper->StartSound();
     } else {
         Logger::Error("AudioSystem is not initialized.");
     }
 }
 
-void AudioSystem::StopAudio(uint32_t entityID) {
+void AudioSystem::StopSoundChannel() {
     if (audioWrapper) {
-        audioWrapper->StopAudio(entityID);
+        audioWrapper->StopSoundChannel();
     } else {
         Logger::Error("AudioSystem is not initialized.");
     }
 }
 
-void AudioSystem::PlayPause(uint32_t entityID) {
+void AudioSystem::ResumeChannel(int channelID) {
     if (audioWrapper) {
-        audioWrapper->PlayPause(entityID);
+        audioWrapper->ResumeChannel(channelID);
     } else {
         Logger::Error("AudioSystem is not initialized.");
     }
 }
 
-void AudioSystem::SetVolume(uint32_t entityID, float volume) {
+void AudioSystem::PauseChannel(int channelID) {
     if (audioWrapper) {
-        audioWrapper->SetVolume(entityID, volume);
+        audioWrapper->PauseChannel(channelID);
     } else {
         Logger::Error("AudioSystem is not initialized.");
     }
 }
 
-void AudioSystem::SetLooping(uint32_t entityID, bool loop) {
+
+void AudioSystem::SetVolume(int channelID, float volume) {
     if (audioWrapper) {
-        audioWrapper->SetLooping(entityID, loop);
+        audioWrapper->SetVolume(channelID, volume);
+    } else {
+        Logger::Error("AudioSystem is not initialized.");
+    }
+}
+
+void AudioSystem::SetLooping(int channelID, bool loop) {
+    if (audioWrapper) {
+        audioWrapper->SetLooping(channelID, loop);
     } else {
         Logger::Error("AudioSystem is not initialized.");
     }

@@ -55,7 +55,7 @@ void AudioWrapper::StartSound(AudioComponent &audioComponent) {
     audioComponent.channel = channel;
 }
 
-void AudioWrapper::StopSound(int channelIndex) {
+void AudioWrapper::StopSoundChannel(int channelID) {
     if (!system) {
         Logger::Error("FMOD audio system is not initialized.");
         return;
@@ -65,7 +65,7 @@ void AudioWrapper::StopSound(int channelIndex) {
     FMOD::Channel* channel = nullptr;
 
     // Get the channel associated with the index
-    result = system->getChannel(channelIndex, &channel);
+    result = system->getChannel(channelID, &channel);
 
     if (result != FMOD_OK) {
         Logger::Error("Error getting channel: " + std::string(FMOD_ErrorString(result)));
@@ -76,11 +76,36 @@ void AudioWrapper::StopSound(int channelIndex) {
     result = channel->stop();
 
     if (result != FMOD_OK) {
-        Logger::Error("Error stopping channel " + std::to_string(channelIndex) + ": " + std::string(FMOD_ErrorString(result)));
+        Logger::Error("Error stopping channel " + std::to_string(channelID) + ": " + std::string(FMOD_ErrorString(result)));
     }
 }
 
-void AudioWrapper::PauseChannel(int channelIndex) {
+void AudioWrapper::StopAllSoundChannels() {
+    if (!system) {
+        Logger::Error("FMOD audio system is not initialized.");
+        return;
+    }
+
+    FMOD_RESULT result;
+    FMOD::ChannelGroup* masterGroup = nullptr;
+
+    // Get the master channel group
+    result = system->getMasterChannelGroup(&masterGroup);
+
+    if (result != FMOD_OK) {
+        Logger::Error("Error getting master channel group: " + std::string(FMOD_ErrorString(result)));
+        return;
+    }
+
+    // Stop all channels in the master group
+    result = masterGroup->stop();
+
+    if (result != FMOD_OK) {
+        Logger::Error("Error stopping all sound channels: " + std::string(FMOD_ErrorString(result)));
+    }
+}
+
+void AudioWrapper::PauseChannel(int channelID) {
     if (!system) {
         Logger::Error("FMOD audio system is not initialized.");
         return;
@@ -91,7 +116,7 @@ void AudioWrapper::PauseChannel(int channelIndex) {
     FMOD::Channel* channel = nullptr;
 
     // Get the channel associated with the index
-    result = system->getChannel(channelIndex, &channel);
+    result = system->getChannel(channelID, &channel);
 
     if (result != FMOD_OK) {
         Logger::Error("Error getting channel: " + std::string(FMOD_ErrorString(result)));
@@ -102,7 +127,7 @@ void AudioWrapper::PauseChannel(int channelIndex) {
     result = channel->isPlaying(&isPlaying);
 
     if (result != FMOD_OK) {
-        Logger::Error("Error checking playback state for channel " + std::to_string(channelIndex) + ": " + std::string(FMOD_ErrorString(result)));
+        Logger::Error("Error checking playback state for channel " + std::to_string(channelID) + ": " + std::string(FMOD_ErrorString(result)));
         return;
     }
 
@@ -110,12 +135,37 @@ void AudioWrapper::PauseChannel(int channelIndex) {
         // Pause the channel if it's currently playing
         result = channel->setPaused(true);
         if (result != FMOD_OK) {
-            Logger::Error("Error pausing channel " + std::to_string(channelIndex) + ": " + std::string(FMOD_ErrorString(result)));
+            Logger::Error("Error pausing channel " + std::to_string(channelID) + ": " + std::string(FMOD_ErrorString(result)));
         }
     }
 }
 
-void AudioWrapper::ResumeChannel(int channelIndex) {
+void AudioWrapper::PauseAllSoundChannels() {
+    if (!system) {
+        Logger::Error("FMOD audio system is not initialized.");
+        return;
+    }
+
+    FMOD_RESULT result;
+    FMOD::ChannelGroup* masterGroup = nullptr;
+
+    // Get the master channel group
+    result = system->getMasterChannelGroup(&masterGroup);
+
+    if (result != FMOD_OK) {
+        Logger::Error("Error getting master channel group: " + std::string(FMOD_ErrorString(result)));
+        return;
+    }
+
+    // Pause all channels in the master group
+    result = masterGroup->setPaused(true);
+
+    if (result != FMOD_OK) {
+        Logger::Error("Error pausing all sound channels: " + std::string(FMOD_ErrorString(result)));
+    }
+}
+
+void AudioWrapper::ResumeChannel(int channelID) {
     if (!system) {
         Logger::Error("FMOD audio system is not initialized.");
         return;
@@ -125,7 +175,7 @@ void AudioWrapper::ResumeChannel(int channelIndex) {
     FMOD::Channel* channel = nullptr;
 
     // Get the channel associated with the index
-    result = system->getChannel(channelIndex, &channel);
+    result = system->getChannel(channelID, &channel);
 
     if (result != FMOD_OK) {
         Logger::Error("Error getting channel: " + std::string(FMOD_ErrorString(result)));
@@ -136,7 +186,32 @@ void AudioWrapper::ResumeChannel(int channelIndex) {
     result = channel->setPaused(false);
 
     if (result != FMOD_OK) {
-        Logger::Error("Error resuming channel " + std::to_string(channelIndex) + ": " + std::string(FMOD_ErrorString(result)));
+        Logger::Error("Error resuming channel " + std::to_string(channelID) + ": " + std::string(FMOD_ErrorString(result)));
+    }
+}
+
+void AudioWrapper::ResumeAllSoundChannels() {
+    if (!system) {
+        Logger::Error("FMOD audio system is not initialized.");
+        return;
+    }
+
+    FMOD_RESULT result;
+    FMOD::ChannelGroup* masterGroup = nullptr;
+
+    // Get the master channel group
+    result = system->getMasterChannelGroup(&masterGroup);
+
+    if (result != FMOD_OK) {
+        Logger::Error("Error getting master channel group: " + std::string(FMOD_ErrorString(result)));
+        return;
+    }
+
+    // Resume all channels in the master group
+    result = masterGroup->setPaused(false);
+
+    if (result != FMOD_OK) {
+        Logger::Error("Error resuming all sound channels: " + std::string(FMOD_ErrorString(result)));
     }
 }
 
@@ -165,7 +240,61 @@ void AudioWrapper::SetVolume(int channelIndex, float volume) {
     }
 }
 
-void AudioWrapper::SetLooping(int channelIndex, bool loop) {
+void AudioWrapper::SetAllVolume(float volume) {
+    if (!system) {
+        Logger::Error("FMOD audio system is not initialized.");
+        return;
+    }
+
+    FMOD_RESULT result;
+    FMOD::ChannelGroup* masterGroup = nullptr;
+
+    // Get the master channel group
+    result = system->getMasterChannelGroup(&masterGroup);
+
+    if (result != FMOD_OK) {
+        Logger::Error("Error getting master channel group: " + std::string(FMOD_ErrorString(result)));
+        return;
+    }
+
+    // Set the volume for all channels in the master group
+    result = masterGroup->setVolume(volume);
+
+    if (result != FMOD_OK) {
+        Logger::Error("Error setting volume for all sound channels: " + std::string(FMOD_ErrorString(result)));
+    }
+}
+
+float AudioWrapper::GetVolume(int channelId) {
+    if (!system) {
+        Logger::Error("FMOD audio system is not initialized.");
+        return -1.0f; // Return a default value or handle the error as needed.
+    }
+
+    FMOD_RESULT result;
+    FMOD::Channel* channel = nullptr;
+    float volume = -1.0f; // Initialize with a default value.
+
+    // Get the channel associated with the channelId
+    result = system->getChannel(channelId, &channel);
+
+    if (result != FMOD_OK) {
+        Logger::Error("Error getting channel: " + std::string(FMOD_ErrorString(result)));
+        return volume; // Return the default value or handle the error as needed.
+    }
+
+    // Get the volume of the channel
+    result = channel->getVolume(&volume);
+
+    if (result != FMOD_OK) {
+        Logger::Error("Error getting volume for channel " + std::to_string(channelId) + ": " + std::string(FMOD_ErrorString(result)));
+        return volume; // Return the default value or handle the error as needed.
+    }
+
+    return volume;
+}
+
+void AudioWrapper::SetLooping(int channelID, bool loop) {
     if (!system) {
         Logger::Error("FMOD audio system is not initialized.");
         return;
@@ -175,7 +304,7 @@ void AudioWrapper::SetLooping(int channelIndex, bool loop) {
     FMOD::Channel* channel = nullptr;
 
     // Get the channel associated with the index
-    result = system->getChannel(channelIndex, &channel);
+    result = system->getChannel(channelID, &channel);
 
     if (result != FMOD_OK) {
         Logger::Error("Error getting channel: " + std::string(FMOD_ErrorString(result)));
@@ -186,7 +315,7 @@ void AudioWrapper::SetLooping(int channelIndex, bool loop) {
     result = channel->setMode(loop ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF);
 
     if (result != FMOD_OK) {
-        Logger::Error("Error setting looping mode for channel " + std::to_string(channelIndex) + ": " + std::string(FMOD_ErrorString(result)));
+        Logger::Error("Error setting looping mode for channel " + std::to_string(channelID) + ": " + std::string(FMOD_ErrorString(result)));
     }
 }
 

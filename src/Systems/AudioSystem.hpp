@@ -22,11 +22,12 @@ public:
 
     void Update(float deltaTime) override;
 
-    void PlayAudio(uint32_t entityID, const std::string& audioFilePath);
-    void StopAudio(uint32_t entityID);
-    void PlayPause(uint32_t entityID);
-    void SetVolume(uint32_t entityID, float volume);
-    void SetLooping(uint32_t entityID, bool loop);
+    void StartSound();
+    void StopSoundChannel();
+    void ResumeChannel(int channelID);
+    void PauseChannel(int channelID);
+    void SetVolume(int channelID, float volume);
+    void SetLooping(int channelID, bool loop);
 
 private:
     std::unique_ptr<AudioWrapper> audioWrapper;
