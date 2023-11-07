@@ -7,8 +7,8 @@
 #include "../Logger.hpp"
 
 
-AudioWrapper::AudioWrapper() {
-    FMOD_RESULT result = FMOD::System_Create(&system); // Use FMOD::System_Create
+AudioWrapper::AudioWrapper() : system(nullptr) {
+    FMOD_RESULT result = FMOD::System_Create(&system);
     if (result != FMOD_OK) {
         Logger::Error("FMOD system creation failed: " + std::string(FMOD_ErrorString(result)));
     } else {
@@ -77,31 +77,6 @@ void AudioWrapper::StopSound(AudioComponent &audioComponent) {
     }
 }
 
-void AudioWrapper::StopAll() {
-    if (!system) {
-        Logger::Error("FMOD audio system is not initialized.");
-        return;
-    }
-
-    FMOD_RESULT result;
-    FMOD::ChannelGroup* masterGroup = nullptr;
-
-    // Get the master channel group
-    result = system->getMasterChannelGroup(&masterGroup);
-
-    if (result != FMOD_OK) {
-        Logger::Error("Error getting master channel group: " + std::string(FMOD_ErrorString(result)));
-        return;
-    }
-
-    // Stop all channels in the master group
-    result = masterGroup->stop();
-
-    if (result != FMOD_OK) {
-        Logger::Error("Error stopping all sound channels: " + std::string(FMOD_ErrorString(result)));
-    }
-}
-
 void AudioWrapper::PauseSound(AudioComponent &audioComponent) {
     if (!system) {
         Logger::Error("FMOD audio system is not initialized.");
@@ -130,31 +105,8 @@ void AudioWrapper::PauseSound(AudioComponent &audioComponent) {
     if (result != FMOD_OK) {
         Logger::Error("Error toggling pause for the channel: " + std::string(FMOD_ErrorString(result)));
     }
-}
 
-void AudioWrapper::PauseAll() {
-    if (!system) {
-        Logger::Error("FMOD audio system is not initialized.");
-        return;
-    }
-
-    FMOD_RESULT result;
-    FMOD::ChannelGroup* masterGroup = nullptr;
-
-    // Get the master channel group
-    result = system->getMasterChannelGroup(&masterGroup);
-
-    if (result != FMOD_OK) {
-        Logger::Error("Error getting master channel group: " + std::string(FMOD_ErrorString(result)));
-        return;
-    }
-
-    // Pause all channels in the master group
-    result = masterGroup->setPaused(true);
-
-    if (result != FMOD_OK) {
-        Logger::Error("Error pausing all sound channels: " + std::string(FMOD_ErrorString(result)));
-    }
+    audioComponent.isPlaying = false;
 }
 
 void AudioWrapper::ResumeSound(AudioComponent &audioComponent) {
@@ -177,31 +129,8 @@ void AudioWrapper::ResumeSound(AudioComponent &audioComponent) {
     if (result != FMOD_OK) {
         Logger::Error("Error resuming the channel: " + std::string(FMOD_ErrorString(result)));
     }
-}
 
-void AudioWrapper::ResumeAll() {
-    if (!system) {
-        Logger::Error("FMOD audio system is not initialized.");
-        return;
-    }
-
-    FMOD_RESULT result;
-    FMOD::ChannelGroup* masterGroup = nullptr;
-
-    // Get the master channel group
-    result = system->getMasterChannelGroup(&masterGroup);
-
-    if (result != FMOD_OK) {
-        Logger::Error("Error getting master channel group: " + std::string(FMOD_ErrorString(result)));
-        return;
-    }
-
-    // Resume all channels in the master group
-    result = masterGroup->setPaused(false);
-
-    if (result != FMOD_OK) {
-        Logger::Error("Error resuming all sound channels: " + std::string(FMOD_ErrorString(result)));
-    }
+    audioComponent.isPlaying = true;
 }
 
 void AudioWrapper::SetVolume(AudioComponent &audioComponent, float volume) {
@@ -226,31 +155,6 @@ void AudioWrapper::SetVolume(AudioComponent &audioComponent, float volume) {
     }
 
     audioComponent.volume = volume;
-}
-
-void AudioWrapper::SetVolumeAll(float volume) {
-    if (!system) {
-        Logger::Error("FMOD audio system is not initialized.");
-        return;
-    }
-
-    FMOD_RESULT result;
-    FMOD::ChannelGroup* masterGroup = nullptr;
-
-    // Get the master channel group
-    result = system->getMasterChannelGroup(&masterGroup);
-
-    if (result != FMOD_OK) {
-        Logger::Error("Error getting master channel group: " + std::string(FMOD_ErrorString(result)));
-        return;
-    }
-
-    // Set the volume for all channels in the master group
-    result = masterGroup->setVolume(volume);
-
-    if (result != FMOD_OK) {
-        Logger::Error("Error setting volume for all sound channels: " + std::string(FMOD_ErrorString(result)));
-    }
 }
 
 void AudioWrapper::SetLooping(AudioComponent &audioComponent, bool loop) {

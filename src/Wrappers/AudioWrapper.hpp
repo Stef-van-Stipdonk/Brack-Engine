@@ -11,6 +11,7 @@
 #include <fmod.h>
 #include <memory>
 
+
 class AudioWrapper {
 public:
     AudioWrapper();
@@ -21,19 +22,11 @@ public:
 
     void StopSound(AudioComponent &audioComponent);
 
-    void StopAll();
-
     void PauseSound(AudioComponent &audioComponent);
-
-    void PauseAll();
 
     void ResumeSound(AudioComponent &audioComponent);
 
-    void ResumeAll();
-
     void SetVolume(AudioComponent &audioComponent, float volume);
-
-    void SetVolumeAll(float volume);
 
     void SetLooping(AudioComponent &audioComponent, bool loop);
 

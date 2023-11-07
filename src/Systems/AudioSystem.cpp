@@ -3,8 +3,6 @@
 //
 
 #include "AudioSystem.hpp"
-#include "fmod.hpp"
-#include "../includes/ComponentStore.hpp"
 
 AudioSystem::AudioSystem() {
 }

@@ -15,6 +15,8 @@ struct AudioComponent : public IComponent {
 
     ~AudioComponent() = default;
 
+    uint32_t entityID;
+
     std::string audioPath;
     bool isLooping, isPlaying;
     float volume;
