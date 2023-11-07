@@ -19,3 +19,11 @@ void AudioSystem::Update(float deltaTime) {
 void AudioSystem::PlayPause(uint32_t entityID) {
 
 }
+
+const std::string AudioSystem::GetName() const {
+    return "AudioSystem";
+}
+
+void AudioSystem::CleanUp() {
+
+}

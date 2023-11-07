@@ -17,3 +17,11 @@ void InputSystem::Update(float deltaTime) {
     InputManager::GetInstance().UpdateEvents();
     inputWrapper->HandleEvents();
 }
+
+const std::string InputSystem::GetName() const {
+    return "InputSystem";
+}
+
+void InputSystem::CleanUp() {
+
+}

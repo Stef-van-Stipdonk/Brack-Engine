@@ -14,6 +14,9 @@ public:
 
     ~CollisionSystem() override;
 
+    const std::string GetName() const override;
+    void CleanUp() override;
+
     void Update(float deltaTime) override;
 };
 
