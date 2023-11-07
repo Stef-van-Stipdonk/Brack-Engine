@@ -128,7 +128,7 @@ void SystemManager::PrintDependencyGraph() const {
 }
 
 
-void SystemManager::CleanUp()
+void SystemManager::CleanUp(){
     for (auto system: systems) {
         system->CleanUp();
     }
