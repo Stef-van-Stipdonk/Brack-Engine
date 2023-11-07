@@ -2,7 +2,7 @@
 // Created by jesse on 31/10/2023.
 //
 
-#include "UIObject.hpp"
+#include "Objects/UIObject.hpp"
 
 Vector2 &UIObject::GetSize() const {
     return *new Vector2();

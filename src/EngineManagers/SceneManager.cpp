@@ -3,9 +3,9 @@
 //
 
 #include <iostream>
-#include "SceneManager.hpp"
-#include "../outfacingInterfaces/Objects/Scene.hpp"
-#include "../../src/GameObjectConverter.hpp"
+#include "EngineManagers/SceneManager.hpp"
+#include "Objects/Scene.hpp"
+#include "../GameObjectConverter.hpp"
 
 SceneManager SceneManager::instance;
 
