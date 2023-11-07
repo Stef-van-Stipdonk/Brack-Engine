@@ -5,6 +5,7 @@
 #include <typeindex>
 #include <vector>
 #include <memory>
+#include "Components/IComponent.hpp"
 
 //// Forward declaration of IComponent
 //struct IComponent {
