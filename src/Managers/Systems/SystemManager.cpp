@@ -95,6 +95,26 @@ void SystemManager::SortSystems() {
 }
 
 
+void SystemManager::PrintDependencyGraph() const {
+#if CURRENT_LOG_LEVEL > LOG_LEVEL_ERROR
+    std::cout << "===========================\n";
+    std::cout << "Dependency Graph:" << std::endl;
+
+    for (const auto* system : systems) {
+        std::cout << system->GetName() << " depends on: ";
+
+        if (!system->outgoingEdges.empty()) {
+            for (const auto* dependency : system->outgoingEdges) {
+                std::cout << dependency->GetName() << ", ";
+            }
+        } else {
+            std::cout << "No dependencies";
+        }
+        std::cout << "\n";
+    }
+    std::cout << "===========================\n";
+#endif
+}
 
 
 
