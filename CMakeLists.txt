@@ -87,6 +87,8 @@ add_library(${PROJECT_NAME} SHARED
         src/Logger.cpp
         src/ConfigSingleton.cpp
         src/Config.cpp
+        outfacingInterfaces/Helpers/KeyMap.hpp
+        outfacingInterfaces/Helpers/MouseMap.hpp
 )
 
 # Define an option for logging to a file

@@ -48,9 +48,10 @@ public:
     void SetMousePosition(const Vector2 &position);
 
     Vector2 &GetMousePosition() const;
+    void UpdateEvents();
 
 private:
-    InputManager() = default;
+    InputManager();
 
     static InputManager instance;
 

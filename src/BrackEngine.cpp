@@ -2,6 +2,8 @@
 // Created by jesse on 02/11/2023.
 //
 
+#include <Helpers/KeyMap.hpp>
+#include <Helpers/MouseMap.hpp>
 #include "BrackEngine.hpp"
 #include "Systems/RenderingSystem.hpp"
 #include "Logger.hpp"
