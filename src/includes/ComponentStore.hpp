@@ -53,6 +53,18 @@ public:
         }
     }
 
+    template<typename T>
+    std::vector<uint32_t> GetEntitiesWithComponent() {
+        std::vector<uint32_t> entities;
+        auto itType = components.find(typeid(T));
+        if (itType != components.end()) {
+            for (auto &pair : itType->second) {
+                entities.push_back(pair.first);
+            }
+        }
+        return entities;
+    }
+
 private:
     std::unordered_map<std::type_index, std::unordered_map<uint32_t, IComponent*>> components;
 };

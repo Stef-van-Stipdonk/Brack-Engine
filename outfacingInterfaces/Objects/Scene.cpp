@@ -3,12 +3,18 @@
 //
 
 #include "Scene.hpp"
+#include <algorithm>
 
 void Scene::AddGameObject(GameObject &gameObject) {
-
+    gameObjects.push_back(gameObject);
 }
 
 GameObject &Scene::GetGameObjectByName(char *name) {
+    for (auto &gameObject : gameObjects) {
+        if (gameObject.GetName() == name)
+            return gameObject;
+    }
+    //TODO: throw exception
     return *new GameObject();
 }
 
@@ -17,7 +23,7 @@ std::vector<GameObject> Scene::GetGameObjectsByTag(char *tag) {
 }
 
 std::vector<GameObject> Scene::GetAllGameObjects() {
-    return std::vector<GameObject>();
+    return gameObjects;
 }
 
 void Scene::RemoveGameObject(GameObject &gameObject) {
