@@ -2,6 +2,7 @@
 // Created by jesse on 31/10/2023.
 //
 
+#include <algorithm>
 #include "Objects/Scene.hpp"
 
 void Scene::AddGameObject(GameObject &gameObject) {
@@ -9,7 +10,7 @@ void Scene::AddGameObject(GameObject &gameObject) {
 }
 
 GameObject &Scene::GetGameObjectByName(char *name) {
-    for (auto &gameObject : gameObjects) {
+    for (auto &gameObject: gameObjects) {
         if (gameObject.GetName() == name)
             return gameObject;
     }
@@ -26,7 +27,10 @@ std::vector<GameObject> Scene::GetAllGameObjects() {
 }
 
 void Scene::RemoveGameObject(GameObject &gameObject) {
-
+    auto it = std::find(gameObjects.begin(), gameObjects.end(), gameObject);
+    if (it != gameObjects.end()) {
+        gameObjects.erase(it);
+    }
 }
 
 Camera &Scene::GetMainCamera() {
