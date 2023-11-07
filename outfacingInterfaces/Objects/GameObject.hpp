@@ -46,10 +46,13 @@ public:
 
     template<typename T>
     void RemoveComponent() {
-        for (auto it = components.begin(); it != components.end(); ++it) {
-            if (typeid(*it) == typeid(T)) {
+        for (auto it = components.begin(); it != components.end();) {
+            auto &component = *it;
+            if (typeid(component) == typeid(T)) {
                 components.erase(it);
                 break;
+            } else {
+                ++it;
             }
         }
     }
