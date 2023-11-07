@@ -9,18 +9,26 @@
 
 SystemManager SystemManager::instance;
 
-void SystemManager::AddSystems(std::vector<ISystem*> systems) {
+void SystemManager::AddSystems(std::vector<ISystem*> systems, bool printGraph) {
     for (auto system : systems) {
         this->systems.push_back(system);
         Logger::Info("Added system " + system->GetName());
     }
+
+    if (printGraph)
+        PrintDependencyGraph();
+
     SortSystems();
 }
 
 
-void SystemManager::AddSystem(ISystem* system) {
+void SystemManager::AddSystem(ISystem* system, bool printGraph) {
     systems.push_back(system);
     Logger::Info("Added system " + system->GetName());
+
+    if (printGraph)
+        PrintDependencyGraph();
+
     SortSystems();
 }
 
@@ -65,6 +73,8 @@ void SystemManager::SortSystems() {
         }
     }
 
+    std::string errorString;
+
     for (auto& pair : edgeCopy) {
         if (!pair.second.empty()) {
             std::string systemName = pair.first->GetName(); // Assuming GetName is valid
@@ -78,15 +88,13 @@ void SystemManager::SortSystems() {
                 }
             }
 
-            Logger::Error(std::string("Graph has a cycle. System '") += systemName +=
-                                     std::string("' has ") += std::to_string(edgeCount) +
-                                     " incoming edge(s) from: " += incomingEdgeNames);
-
-            throw std::runtime_error("Graph has a cycle, look at the log for more information."
-                                     "The program will now exit.");
+            errorString += std::string("Graph has a cycle. System '") += systemName += std::string("' has ") += std::to_string(edgeCount) + " incoming edge(s) from: " += incomingEdgeNames + "\n";
         }
     }
 
+    if (errorString.size() > 0) {
+        Logger::Error(errorString);
+    }
 
 
     std::reverse(sortedList.begin(), sortedList.end());
