@@ -54,7 +54,7 @@ public:
     }
 
     template<typename T>
-    std::vector<uint32_t> GetEntitiesWithComponent() {
+    std::vector<uint32_t> getEntitiesWithComponent() {
         std::vector<uint32_t> entities;
         auto itType = components.find(typeid(T));
         if (itType != components.end()) {
