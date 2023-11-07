@@ -18,6 +18,8 @@ public:
 
     ~AudioWrapper();
 
+    void CleanUp();
+
     void StartSound(AudioComponent &audioComponent);
 
     void StopSound(AudioComponent &audioComponent);

@@ -4,7 +4,7 @@
 
 #include "AudioSystem.hpp"
 
-AudioSystem::AudioSystem() {
+AudioSystem::AudioSystem() : audioWrapper(new AudioWrapper()) {
 }
 
 AudioSystem::~AudioSystem() {
@@ -68,4 +68,5 @@ const std::string AudioSystem::GetName() const {
 }
 
 void AudioSystem::CleanUp() {
+    audioWrapper->CleanUp()
 }

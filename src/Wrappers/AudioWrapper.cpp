@@ -28,6 +28,16 @@ AudioWrapper::~AudioWrapper() {
     }
 }
 
+void AudioWrapper::CleanUp() {
+    if (system) {
+        FMOD_RESULT result = system->release();
+        if (result != FMOD_OK) {
+            Logger::Error("Failed to release FMOD system: " + std::string(FMOD_ErrorString(result)));
+        }
+        system = nullptr;
+    }
+}
+
 
 void AudioWrapper::StartSound(AudioComponent &audioComponent) {
     if (!system) {
