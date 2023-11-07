@@ -30,6 +30,9 @@ public:
 
     const std::unordered_set<uint32_t> &GetAllEntities() const;
 
+    void ClearAllEntities();
+
+
 private:
     static EntityManager instance;
 

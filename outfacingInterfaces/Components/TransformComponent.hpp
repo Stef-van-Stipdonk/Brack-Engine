@@ -11,7 +11,7 @@
 
 struct TransformComponent : public IComponent {
 
-    explicit TransformComponent(uint32_t entityId) : IComponent(entityId) {}
+    explicit TransformComponent( ) : IComponent() {}
 
     ~TransformComponent() override = default;
 

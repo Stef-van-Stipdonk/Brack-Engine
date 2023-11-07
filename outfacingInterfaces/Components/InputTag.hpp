@@ -8,7 +8,7 @@
 #include "IComponent.hpp"
 
 struct InputTag : public IComponent {
-    explicit InputTag(uint32_t entityId) : IComponent(entityId) {}
+    explicit InputTag( ) : IComponent() {}
 
     ~InputTag() override = default;
 };

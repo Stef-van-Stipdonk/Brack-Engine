@@ -10,7 +10,7 @@
 
 struct AnimationComponent : public SpriteComponent {
 
-    explicit AnimationComponent(uint32_t entityId) : SpriteComponent(entityId) {}
+    explicit AnimationComponent() : SpriteComponent() {}
 
     ~AnimationComponent() override = default;
 

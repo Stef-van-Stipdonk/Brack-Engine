@@ -16,7 +16,8 @@ RenderingSystem::~RenderingSystem() {
 void RenderingSystem::Update(float deltaTime) {
     //Render camera
     try {
-        auto component = ComponentStore::GetInstance().getComponent<CameraComponent>(1);
+        auto cameraId = ComponentStore::GetInstance().getEntitiesWithComponent<CameraComponent>()[0];
+        auto component = ComponentStore::GetInstance().getComponent<CameraComponent>(cameraId);
 //        Logger::Debug(std::string(reinterpret_cast<const char *>(component->entityID)));
         sdl2Wrapper->RenderCamera(component);
         sdl2Wrapper->Run();

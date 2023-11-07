@@ -9,7 +9,7 @@
 
 struct ParentComponent : public IComponent {
 
-    explicit ParentComponent(uint32_t entityId) : IComponent(entityId) {}
+    explicit ParentComponent( ) : IComponent() {}
 
     ~ParentComponent() override = default;
 

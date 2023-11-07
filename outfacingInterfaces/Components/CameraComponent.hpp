@@ -10,7 +10,7 @@
 #include "VelocityComponent.hpp"
 
 struct CameraComponent : public VelocityComponent {
-    explicit CameraComponent(uint32_t entityId) : VelocityComponent(entityId) {}
+    explicit CameraComponent() : VelocityComponent() {}
 
     ~CameraComponent() override = default;
 
