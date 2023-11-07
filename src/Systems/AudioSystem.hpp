@@ -22,9 +22,13 @@ public:
 
     void Update(float deltaTime) override;
 
-private:
+    void PlayAudio(uint32_t entityID, const std::string& audioFilePath);
+    void StopAudio(uint32_t entityID);
     void PlayPause(uint32_t entityID);
+    void SetVolume(uint32_t entityID, float volume);
+    void SetLooping(uint32_t entityID, bool loop);
 
+private:
     std::unique_ptr<AudioWrapper> audioWrapper;
 };
 

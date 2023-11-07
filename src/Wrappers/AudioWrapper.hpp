@@ -19,12 +19,18 @@ public:
 
     void StartSound(AudioComponent &audioComponent);
 
-    void TogglePauseChannel(int channelIndex);
+    void StopSound(int channelIndex);
 
-    void StopPauseChannel(int channelIndex);
+    void PauseChannel(int channelIndex);
+
+    void ResumeChannel(int channelIndex);
+
+    void SetVolume(int channelIndex, float volume);
+
+    void SetLooping(int channelIndex, bool loop);
 
 private:
-    FMOD_SYSTEM *system;
+    FMOD::System *system;
 };
 
 

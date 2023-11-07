@@ -5,75 +5,60 @@
 #include "AudioSystem.hpp"
 #include "fmod.hpp"
 #include "../includes/ComponentStore.hpp"
-#include "fmod_errors.h"
-
-FMOD::System* audioSystem = nullptr;;
 
 AudioSystem::AudioSystem() {
-    FMOD_RESULT result;
-    result = FMOD::System_Create(&audioSystem);
-
-    if (result != FMOD_OK) {
-        Logger::Error("FMOD system creation failed: " + std::string(FMOD_ErrorString(result)));
-    }
-    else {
-        result = audioSystem->init(32, FMOD_INIT_NORMAL, nullptr);
-        if (result != FMOD_OK) {
-            Logger::Error("FMOD system initialization failed: " + std::string(FMOD_ErrorString(result)));
-        }
-    }
 }
 
 AudioSystem::~AudioSystem() {
 }
 
 void AudioSystem::Update(float deltaTime) {
-    audioSystem->update();
+}
+
+void AudioSystem::PlayAudio(uint32_t entityID, const std::string& audioFilePath) {
+    if (audioWrapper) {
+        audioWrapper->PlayAudio(entityID, audioFilePath);
+    } else {
+        Logger::Error("AudioSystem is not initialized.");
+    }
+}
+
+void AudioSystem::StopAudio(uint32_t entityID) {
+    if (audioWrapper) {
+        audioWrapper->StopAudio(entityID);
+    } else {
+        Logger::Error("AudioSystem is not initialized.");
+    }
 }
 
 void AudioSystem::PlayPause(uint32_t entityID) {
-    AudioComponent* audioComponent = ComponentStore::GetInstance().getComponent<AudioComponent>(entityID);
-
-    if (!audioComponent) {
-        Logger::Error("AudioComponent not found for entityID: " + std::to_string(entityID));
-        return;
-    }
-
-    FMOD_RESULT result;
-    bool isPlaying = false;
-
-    if (audioComponent->channel) {
-        result = audioComponent->channel->isPlaying(&isPlaying);
-
-        if (result != FMOD_OK) {
-            const char* errorMessage = FMOD_ErrorString(result);
-            Logger::Error("Error checking playback state: " + std::string(errorMessage));
-            return;
-        }
-
-        if (isPlaying) {
-            result = audioComponent->channel->setPaused(true);
-            if (result != FMOD_OK) {
-                const char* errorMessage = FMOD_ErrorString(result);
-                Logger::Error("Error pausing audio: " + std::string(errorMessage));
-            }
-        } else {
-            result = audioComponent->channel->setPaused(false);
-            if (result != FMOD_OK) {
-                const char* errorMessage = FMOD_ErrorString(result);
-                Logger::Error("Error resuming audio playback: " + std::string(errorMessage));
-            }
-        }
+    if (audioWrapper) {
+        audioWrapper->PlayPause(entityID);
+    } else {
+        Logger::Error("AudioSystem is not initialized.");
     }
 }
+
+void AudioSystem::SetVolume(uint32_t entityID, float volume) {
+    if (audioWrapper) {
+        audioWrapper->SetVolume(entityID, volume);
+    } else {
+        Logger::Error("AudioSystem is not initialized.");
+    }
+}
+
+void AudioSystem::SetLooping(uint32_t entityID, bool loop) {
+    if (audioWrapper) {
+        audioWrapper->SetLooping(entityID, loop);
+    } else {
+        Logger::Error("AudioSystem is not initialized.");
+    }
+}
+
 
 const std::string AudioSystem::GetName() const {
     return "AudioSystem";
 }
 
 void AudioSystem::CleanUp() {
-    if (audioSystem) {
-        audioSystem->release();
-        audioSystem = nullptr;
-    }
 }
