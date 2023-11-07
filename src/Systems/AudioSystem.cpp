@@ -15,50 +15,50 @@ AudioSystem::~AudioSystem() {
 void AudioSystem::Update(float deltaTime) {
 }
 
-void AudioSystem::StartSound() {
+void AudioSystem::StartSound(AudioComponent &audioComponent) {
     if (audioWrapper) {
-        audioWrapper->StartSound();
+        audioWrapper->StartSound(audioComponent);
     } else {
         Logger::Error("AudioSystem is not initialized.");
     }
 }
 
-void AudioSystem::StopSoundChannel() {
+void AudioSystem::StopSound(AudioComponent &audioComponent) {
     if (audioWrapper) {
-        audioWrapper->StopSoundChannel();
+        audioWrapper->StopSound(audioComponent);
     } else {
         Logger::Error("AudioSystem is not initialized.");
     }
 }
 
-void AudioSystem::ResumeChannel(int channelID) {
+void AudioSystem::ResumeSound(AudioComponent &audioComponent) {
     if (audioWrapper) {
-        audioWrapper->ResumeChannel(channelID);
+        audioWrapper->ResumeSound(audioComponent);
     } else {
         Logger::Error("AudioSystem is not initialized.");
     }
 }
 
-void AudioSystem::PauseChannel(int channelID) {
+void AudioSystem::PauseSound(AudioComponent &audioComponent) {
     if (audioWrapper) {
-        audioWrapper->PauseChannel(channelID);
+        audioWrapper->PauseSound(audioComponent);
     } else {
         Logger::Error("AudioSystem is not initialized.");
     }
 }
 
 
-void AudioSystem::SetVolume(int channelID, float volume) {
+void AudioSystem::SetVolume(AudioComponent &audioComponent, float volume) {
     if (audioWrapper) {
-        audioWrapper->SetVolume(channelID, volume);
+        audioWrapper->SetVolume(audioComponent, volume);
     } else {
         Logger::Error("AudioSystem is not initialized.");
     }
 }
 
-void AudioSystem::SetLooping(int channelID, bool loop) {
+void AudioSystem::SetLooping(AudioComponent &audioComponent, bool loop) {
     if (audioWrapper) {
-        audioWrapper->SetLooping(channelID, loop);
+        audioWrapper->SetLooping(audioComponent, loop);
     } else {
         Logger::Error("AudioSystem is not initialized.");
     }

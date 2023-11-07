@@ -19,25 +19,23 @@ public:
 
     void StartSound(AudioComponent &audioComponent);
 
-    void StopSoundChannel(int channelID);
+    void StopSound(AudioComponent &audioComponent);
 
-    void StopAllSoundChannels();
+    void StopAll();
 
-    void PauseChannel(int channelID);
+    void PauseSound(AudioComponent &audioComponent);
 
-    void PauseAllSoundChannels();
+    void PauseAll();
 
-    void ResumeChannel(int channelID);
+    void ResumeSound(AudioComponent &audioComponent);
 
-    void ResumeAllSoundChannels();
+    void ResumeAll();
 
-    void SetVolume(int channelID, float volume);
+    void SetVolume(AudioComponent &audioComponent, float volume);
 
-    void SetAllVolume(float volume);
+    void SetVolumeAll(float volume);
 
-    float GetVolume(int channelId);
-
-    void SetLooping(int channelID, bool loop);
+    void SetLooping(AudioComponent &audioComponent, bool loop);
 
 private:
     FMOD::System *system;

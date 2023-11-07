@@ -22,12 +22,12 @@ public:
 
     void Update(float deltaTime) override;
 
-    void StartSound();
-    void StopSoundChannel();
-    void ResumeChannel(int channelID);
-    void PauseChannel(int channelID);
-    void SetVolume(int channelID, float volume);
-    void SetLooping(int channelID, bool loop);
+    void StartSound(AudioComponent &audioComponent);
+    void StopSound(AudioComponent &audioComponent);
+    void ResumeSound(AudioComponent &audioComponent);
+    void PauseSound(AudioComponent &audioComponent);
+    void SetVolume(AudioComponent &audioComponent, float volume);
+    void SetLooping(AudioComponent &audioComponent, bool loop);
 
 private:
     std::unique_ptr<AudioWrapper> audioWrapper;
