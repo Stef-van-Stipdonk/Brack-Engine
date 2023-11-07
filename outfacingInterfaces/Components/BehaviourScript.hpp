@@ -14,8 +14,9 @@ struct BehaviourScript : public IComponent {
 
     ~BehaviourScript() override = default;
 
-    std::function<void()> OnStart;
-    std::function<void(float)> OnUpdate;
+    virtual void OnStart() = 0;
+
+    virtual void OnUpdate(float deltaTime) = 0;
 };
 
 
