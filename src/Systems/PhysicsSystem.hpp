@@ -18,6 +18,9 @@ public:
 
     void Update(float deltaTime) override;
 
+    const std::string GetName() const override;
+    void CleanUp() override;
+
 private:
     std::unique_ptr <PhysicsWrapper> physicsWrapper;
 };

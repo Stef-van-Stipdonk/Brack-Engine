@@ -27,6 +27,9 @@ void RenderingSystem::Update(float deltaTime) {
 }
 
 void RenderingSystem::CleanUp() {
-    ISystem::CleanUp();
     sdl2Wrapper->Cleanup();
+}
+
+const std::string RenderingSystem::GetName() const {
+    return "RenderingSystem";
 }

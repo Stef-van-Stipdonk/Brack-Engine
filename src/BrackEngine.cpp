@@ -9,7 +9,8 @@
 
 BrackEngine::BrackEngine(Config &&config) {
     ConfigSingleton::GetInstance().SetIsRunning(config.isRunning);
-    SystemManager::GetInstance().AddSystem(new RenderingSystem());
+    auto renderingSystem = new RenderingSystem();
+    SystemManager::GetInstance().AddSystem(renderingSystem);
     lastTime = std::chrono::high_resolution_clock::now();
 }
 

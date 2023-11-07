@@ -15,6 +15,9 @@ public:
     ~LoadSystem() override;
 
     void Update(float deltaTime) override;
+
+    const std::string GetName() const override;
+    void CleanUp() override;
 };
 
 
