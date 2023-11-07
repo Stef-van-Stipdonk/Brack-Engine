@@ -20,6 +20,10 @@ const std::unordered_set<uint32_t> &EntityManager::GetAllEntities() const {
     return entities;
 }
 
+void EntityManager::ClearAllEntities() {
+    entities.clear();
+}
+
 
 EntityManager &EntityManager::GetInstance() {
     return instance;
