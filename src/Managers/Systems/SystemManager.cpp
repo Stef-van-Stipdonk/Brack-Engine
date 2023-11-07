@@ -7,6 +7,7 @@
 #include "../../includes/SystemManager.hpp"
 #include "Objects/Scene.hpp"
 #include "../../Logger.hpp"
+#include "../../FPSSingleton.hpp"
 
 SystemManager SystemManager::instance;
 
@@ -127,8 +128,7 @@ void SystemManager::PrintDependencyGraph() const {
 }
 
 
-void SystemManager::CleanUp() {
-    std::cout << "Finishing systems" << std::endl;
+void SystemManager::CleanUp(){
     for (auto system: systems) {
         system->CleanUp();
     }
