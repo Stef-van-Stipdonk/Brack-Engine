@@ -15,3 +15,11 @@ BehaviourScriptSystem::~BehaviourScriptSystem() {
 void BehaviourScriptSystem::Update(float deltaTime) {
 
 }
+
+std::string BehaviourScriptSystem::GetName() {
+    return "BehaviourScriptSystem";
+}
+
+void BehaviourScriptSystem::CleanUp() {
+
+}

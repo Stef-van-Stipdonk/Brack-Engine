@@ -17,6 +17,9 @@ public:
 
     ~AudioSystem() override;
 
+    std::string GetName() override;
+    void CleanUp() override;
+
     void Update(float deltaTime) override;
 
 private:

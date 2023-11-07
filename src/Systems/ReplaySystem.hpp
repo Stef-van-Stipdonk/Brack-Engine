@@ -17,6 +17,9 @@ public:
 
     void Update(float deltaTime) override;
 
+    std::string GetName() override;
+    void CleanUp() override;
+
     std::string path;
     bool isReplaying;
 private:

@@ -23,3 +23,11 @@ void ReplaySystem::SaveReplay() {
 void ReplaySystem::LoadReplay() {
 
 }
+
+std::string ReplaySystem::GetName() {
+    return "ReplaySystem";
+}
+
+void ReplaySystem::CleanUp() {
+
+}

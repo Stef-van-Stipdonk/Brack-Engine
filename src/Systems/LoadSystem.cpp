@@ -15,3 +15,11 @@ LoadSystem::~LoadSystem() {
 void LoadSystem::Update(float deltaTime) {
 
 }
+
+std::string LoadSystem::GetName() {
+    return "LoadSystem";
+}
+
+void LoadSystem::CleanUp() {
+
+}

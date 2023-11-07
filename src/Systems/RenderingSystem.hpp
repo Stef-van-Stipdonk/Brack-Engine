@@ -17,6 +17,8 @@ public:
     ~RenderingSystem() override;
     void CleanUp() override;
 
+    std::string GetName() override;
+
     void Update(float deltaTime) override;
 
 private:

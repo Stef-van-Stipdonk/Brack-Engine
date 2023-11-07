@@ -15,3 +15,11 @@ PhysicsSystem::~PhysicsSystem() {
 void PhysicsSystem::Update(float deltaTime) {
 
 }
+
+std::string PhysicsSystem::GetName() {
+    return "PhysicsSystem";
+}
+
+void PhysicsSystem::CleanUp() {
+
+}

@@ -12,13 +12,16 @@ class ISystem {
 public:
     virtual ~ISystem() = default;
 
-    // Wordt aangeroepen wanneer het system wordt geadd aan de gameloop, hoeft niet overschreven te worden
+    // Wordt aangeroepen wanneer het system wordt geadd raan de gameloop, hoeft niet overschreven te worden
     virtual void Init() {}
 
     // Deze MOET iedere frame of gametick worden aangeroepen
     virtual void Update(float deltaTime) = 0;
 
     virtual void CleanUp() {}
+    virtual std::string GetName() = 0;
+
+    virtual void CleanUp() = 0;
     
     void AddDependency(ISystem* dependency) {
         if (std::find(dependencies.begin(), dependencies.end(), dependency) == dependencies.end()) {

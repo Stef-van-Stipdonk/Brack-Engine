@@ -15,6 +15,9 @@ public:
     ~ParticleSystem() override;
 
     void Update(float deltaTime) override;
+
+    std::string GetName() override;
+    void CleanUp() override;
 };
 
 

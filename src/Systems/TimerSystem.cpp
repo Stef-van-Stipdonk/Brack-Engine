@@ -15,3 +15,11 @@ TimerSystem::~TimerSystem() {
 void TimerSystem::Update(float deltaTime) {
 
 }
+
+std::string TimerSystem::GetName() {
+    return "TimerSystem";
+}
+
+void TimerSystem::CleanUp() {
+
+}

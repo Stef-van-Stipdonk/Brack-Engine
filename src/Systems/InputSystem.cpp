@@ -15,3 +15,11 @@ InputSystem::~InputSystem() {
 void InputSystem::Update(float deltaTime) {
 
 }
+
+std::string InputSystem::GetName() {
+    return "InputSystem";
+}
+
+void InputSystem::CleanUp() {
+
+}

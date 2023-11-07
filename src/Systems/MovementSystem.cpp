@@ -15,3 +15,11 @@ MovementSystem::~MovementSystem() {
 void MovementSystem::Update(float deltaTime) {
 
 }
+
+std::string MovementSystem::GetName() {
+    return "MovementSystem";
+}
+
+void MovementSystem::CleanUp() {
+
+}
