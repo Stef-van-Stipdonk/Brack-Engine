@@ -10,19 +10,7 @@
 BrackEngine::BrackEngine(Config &&config) {
     ConfigSingleton::GetInstance().SetIsRunning(config.isRunning);
     auto renderingSystem = new RenderingSystem();
-    auto audioSystem = new AudioSystem();
-    auto physicsSystem = new PhysicsSystem();
-    auto replaySystem = new ReplaySystem();
-    renderingSystem->AddDependency(audioSystem);
-    renderingSystem->AddDependency(replaySystem);
-    physicsSystem->AddDependency(renderingSystem);
-    physicsSystem->AddDependency(audioSystem);
-    audioSystem->AddDependency(physicsSystem);
-    audioSystem->AddDependency(replaySystem);
     SystemManager::GetInstance().AddSystem(renderingSystem);
-    SystemManager::GetInstance().AddSystem(audioSystem);
-    SystemManager::GetInstance().AddSystem(physicsSystem);
-    SystemManager::GetInstance().AddSystem(replaySystem);
     lastTime = std::chrono::high_resolution_clock::now();
 }
 
