@@ -18,12 +18,7 @@ void SceneManager::SetActiveScene(Scene &scene) {
     }
 }
 
-void SceneManager::RemoveActiveScene(Scene &scene) {
 
-    for (auto &gameObject : scene.GetAllGameObjects()) {
-        GameObjectConverter::RemoveGameObject(gameObject);
-    }
-}
 
 
 SceneManager &SceneManager::GetInstance() {
