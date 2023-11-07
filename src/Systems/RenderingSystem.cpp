@@ -30,6 +30,6 @@ void RenderingSystem::CleanUp() {
     sdl2Wrapper->Cleanup();
 }
 
-std::string RenderingSystem::GetName() {
+const std::string RenderingSystem::GetName() const {
     return "RenderingSystem";
 }

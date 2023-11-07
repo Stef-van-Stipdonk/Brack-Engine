@@ -16,7 +16,7 @@ void MovementSystem::Update(float deltaTime) {
 
 }
 
-std::string MovementSystem::GetName() {
+const std::string MovementSystem::GetName() const {
     return "MovementSystem";
 }
 

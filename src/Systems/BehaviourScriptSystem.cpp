@@ -16,7 +16,7 @@ void BehaviourScriptSystem::Update(float deltaTime) {
 
 }
 
-std::string BehaviourScriptSystem::GetName() {
+const std::string BehaviourScriptSystem::GetName() const {
     return "BehaviourScriptSystem";
 }
 

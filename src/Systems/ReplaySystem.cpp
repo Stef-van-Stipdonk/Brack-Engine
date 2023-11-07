@@ -24,7 +24,7 @@ void ReplaySystem::LoadReplay() {
 
 }
 
-std::string ReplaySystem::GetName() {
+const std::string ReplaySystem::GetName() const {
     return "ReplaySystem";
 }
 

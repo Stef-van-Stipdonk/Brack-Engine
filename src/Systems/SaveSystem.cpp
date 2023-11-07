@@ -16,7 +16,7 @@ void SaveSystem::Update(float deltaTime) {
 
 }
 
-std::string SaveSystem::GetName() {
+const std::string SaveSystem::GetName() const {
     return "SaveSystem";
 }
 

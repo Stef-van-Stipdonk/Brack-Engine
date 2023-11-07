@@ -20,7 +20,7 @@ void AudioSystem::PlayPause(uint32_t entityID) {
 
 }
 
-std::string AudioSystem::GetName() {
+const std::string AudioSystem::GetName() const {
     return "AudioSystem";
 }
 

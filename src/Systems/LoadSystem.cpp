@@ -16,7 +16,7 @@ void LoadSystem::Update(float deltaTime) {
 
 }
 
-std::string LoadSystem::GetName() {
+const std::string LoadSystem::GetName() const {
     return "LoadSystem";
 }
 

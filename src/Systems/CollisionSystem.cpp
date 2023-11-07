@@ -16,7 +16,7 @@ void CollisionSystem::Update(float deltaTime) {
 
 }
 
-std::string CollisionSystem::GetName() {
+const std::string CollisionSystem::GetName() const {
     return "CollisionSystem";
 }
 

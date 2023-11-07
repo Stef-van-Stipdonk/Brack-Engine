@@ -16,7 +16,7 @@ void AnimationSystem::Update(float deltaTime) {
 
 }
 
-std::string AnimationSystem::GetName() {
+const std::string AnimationSystem::GetName() const {
     return "AnimationSystem";
 }
 

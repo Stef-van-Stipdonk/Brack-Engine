@@ -16,7 +16,7 @@ void AISystem::Update(float deltaTime) {
 
 }
 
-std::string AISystem::GetName() {
+const std::string AISystem::GetName() const {
     return "AISystem";
 }
 

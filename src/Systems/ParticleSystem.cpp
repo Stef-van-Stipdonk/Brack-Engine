@@ -16,7 +16,7 @@ void ParticleSystem::Update(float deltaTime) {
 
 }
 
-std::string ParticleSystem::GetName() {
+const std::string ParticleSystem::GetName() const {
     return "ParticleSystem";
 }
 

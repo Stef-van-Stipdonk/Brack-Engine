@@ -16,7 +16,7 @@ void PhysicsSystem::Update(float deltaTime) {
 
 }
 
-std::string PhysicsSystem::GetName() {
+const std::string PhysicsSystem::GetName() const {
     return "PhysicsSystem";
 }
 

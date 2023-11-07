@@ -14,7 +14,7 @@ public:
 
     ~AISystem() override;
 
-    std::string GetName() override;
+    const std::string GetName() const override;
     void CleanUp() override;
 
     void Update(float deltaTime) override;

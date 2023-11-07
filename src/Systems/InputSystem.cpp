@@ -16,7 +16,7 @@ void InputSystem::Update(float deltaTime) {
 
 }
 
-std::string InputSystem::GetName() {
+const std::string InputSystem::GetName() const {
     return "InputSystem";
 }
 

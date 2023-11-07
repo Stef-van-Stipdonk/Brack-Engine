@@ -16,7 +16,7 @@ void TimerSystem::Update(float deltaTime) {
 
 }
 
-std::string TimerSystem::GetName() {
+const std::string TimerSystem::GetName() const {
     return "TimerSystem";
 }
 
