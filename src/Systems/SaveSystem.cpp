@@ -15,3 +15,11 @@ SaveSystem::~SaveSystem() {
 void SaveSystem::Update(float deltaTime) {
 
 }
+
+const std::string SaveSystem::GetName() const {
+    return "SaveSystem";
+}
+
+void SaveSystem::CleanUp() {
+
+}
