@@ -3,14 +3,15 @@
 //
 
 #include <stdexcept>
+#include <unordered_map>
 #include "../../includes/SystemManager.hpp"
 #include "Objects/Scene.hpp"
 #include "../../Logger.hpp"
 
 SystemManager SystemManager::instance;
 
-void SystemManager::AddSystems(std::vector<ISystem*> systems, bool printGraph) {
-    for (auto system : systems) {
+void SystemManager::AddSystems(std::vector<ISystem *> systems, bool printGraph) {
+    for (auto system: systems) {
         this->systems.push_back(system);
         Logger::Info("Added system " + system->GetName());
     }
@@ -22,7 +23,7 @@ void SystemManager::AddSystems(std::vector<ISystem*> systems, bool printGraph) {
 }
 
 
-void SystemManager::AddSystem(ISystem* system, bool printGraph) {
+void SystemManager::AddSystem(ISystem *system, bool printGraph) {
     systems.push_back(system);
     Logger::Info("Added system " + system->GetName());
 
@@ -43,12 +44,12 @@ SystemManager &SystemManager::GetInstance() {
 }
 
 void SystemManager::SortSystems() {
-    std::vector<ISystem*> sortedList;
-    std::vector<ISystem*> nodesWithoutIncomingEdges;
-    std::unordered_map<ISystem*, std::vector<ISystem*>> edgeCopy;
+    std::vector<ISystem *> sortedList;
+    std::vector<ISystem *> nodesWithoutIncomingEdges;
+    std::unordered_map<ISystem *, std::vector<ISystem *>> edgeCopy;
 
     // Backup the original incoming edges and initialize a copy for sorting
-    for (auto system : systems) {
+    for (auto system: systems) {
         edgeCopy[system] = system->incomingEdges;
         if (system->incomingEdges.empty()) {
             nodesWithoutIncomingEdges.push_back(system);
@@ -61,8 +62,8 @@ void SystemManager::SortSystems() {
         sortedList.push_back(node);
 
         auto outgoingEdges = node->outgoingEdges;
-        for (auto dependency : outgoingEdges) {
-            auto& depIncomingEdgesCopy = edgeCopy[dependency];
+        for (auto dependency: outgoingEdges) {
+            auto &depIncomingEdgesCopy = edgeCopy[dependency];
             depIncomingEdgesCopy.erase(
                     std::remove(depIncomingEdgesCopy.begin(), depIncomingEdgesCopy.end(), node),
                     depIncomingEdgesCopy.end());
@@ -75,20 +76,21 @@ void SystemManager::SortSystems() {
 
     std::string errorString;
 
-    for (auto& pair : edgeCopy) {
+    for (auto &pair: edgeCopy) {
         if (!pair.second.empty()) {
             std::string systemName = pair.first->GetName(); // Assuming GetName is valid
             int edgeCount = pair.second.size();
             std::string incomingEdgeNames;
-            for (auto* incomingEdgeSystem : pair.second) {
-                if(incomingEdgeSystem) {
+            for (auto *incomingEdgeSystem: pair.second) {
+                if (incomingEdgeSystem) {
                     incomingEdgeNames += incomingEdgeSystem->GetName() + " ";
                 } else {
                     incomingEdgeNames += "UnknownSystem ";
                 }
             }
 
-            errorString += std::string("Graph has a cycle. System '") += systemName += std::string("' has ") += std::to_string(edgeCount) + " incoming edge(s) from: " += incomingEdgeNames + "\n";
+            errorString += std::string("Graph has a cycle. System '") += systemName += std::string("' has ") +=
+            std::to_string(edgeCount) + " incoming edge(s) from: " += incomingEdgeNames + "\n";
         }
     }
 
@@ -108,11 +110,11 @@ void SystemManager::PrintDependencyGraph() const {
     std::cout << "===========================\n";
     std::cout << "Dependency Graph:" << std::endl;
 
-    for (const auto* system : systems) {
+    for (const auto *system: systems) {
         std::cout << system->GetName() << " depends on: ";
 
         if (!system->outgoingEdges.empty()) {
-            for (const auto* dependency : system->outgoingEdges) {
+            for (const auto *dependency: system->outgoingEdges) {
                 std::cout << dependency->GetName() << ", ";
             }
         } else {
@@ -123,7 +125,6 @@ void SystemManager::PrintDependencyGraph() const {
     std::cout << "===========================\n";
 #endif
 }
-
 
 
 void SystemManager::CleanUp() {
