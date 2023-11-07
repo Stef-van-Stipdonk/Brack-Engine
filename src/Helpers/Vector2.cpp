@@ -2,7 +2,7 @@
 // Created by jesse on 31/10/2023.
 //
 
-#include "Vector2.hpp"
+#include "Helpers/Vector2.hpp"
 
 float Vector2::getX() const {
     return x;

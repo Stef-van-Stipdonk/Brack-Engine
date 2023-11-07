@@ -2,7 +2,7 @@
 // Created by jesse on 02/11/2023.
 //
 
-#include "InputManager.hpp"
+#include "EngineManagers/InputManager.hpp"
 
 InputManager InputManager::instance;
 
