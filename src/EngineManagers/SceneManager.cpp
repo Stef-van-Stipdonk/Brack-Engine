@@ -3,7 +3,7 @@
 //
 
 #include <iostream>
-#include "EngineManagers/SceneManager.hpp"
+#include "SceneManager.hpp"
 #include "Objects/Scene.hpp"
 #include "../GameObjectConverter.hpp"
 
