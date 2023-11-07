@@ -13,6 +13,7 @@ std::string GameObject::GetName() {
     return std::string();
 }
 
+
 void GameObject::SetName(char *name) {
 
 }
@@ -53,7 +54,7 @@ void GameObject::SetEntityID(uint32_t id) {
     entityID = id;
 }
 
-std::vector<IComponent> GameObject::GetAllComponents() {
+std::vector<IComponent> &GameObject::GetAllComponents() {
     return components;
 }
 
