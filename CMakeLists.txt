@@ -115,7 +115,6 @@ endif()
 # Now, add the definition for the CURRENT_LOG_LEVEL
 add_compile_definitions(CURRENT_LOG_LEVEL=${CURRENT_LOG_LEVEL})
 
-
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/FMod/include)
 
 target_include_directories(Brack_Engine PUBLIC outfacingInterfaces)
