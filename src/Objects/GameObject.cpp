@@ -2,8 +2,16 @@
 // Created by jesse on 31/10/2023.
 //
 
+#include <Components/TransformComponent.hpp>
+#include <Components/ObjectInfoComponent.hpp>
 #include "Objects/GameObject.hpp"
 
+GameObject::GameObject() {
+    TransformComponent transFormComponent = TransformComponent();
+    ObjectInfoComponent objectInfoComponent = ObjectInfoComponent();
+    AddComponent(transFormComponent);
+    AddComponent(objectInfoComponent);
+}
 
 std::vector<GameObject> GameObject::GetChildren() {
     return std::vector<GameObject>();
@@ -57,6 +65,8 @@ void GameObject::SetEntityID(uint32_t id) {
 std::vector<IComponent> &GameObject::GetAllComponents() {
     return components;
 }
+
+
 
 
 
