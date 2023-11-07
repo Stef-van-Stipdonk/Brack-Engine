@@ -6,6 +6,7 @@
 #define BRACK_ENGINE_AUDIOCOMPONENT_HPP
 
 #include "IComponent.hpp"
+#include "fmod.hpp"
 #include <string>
 
 struct AudioComponent : public IComponent {
@@ -17,7 +18,7 @@ struct AudioComponent : public IComponent {
     std::string audioPath;
     bool isLooping, isPlaying;
     float volume;
-    int channel;
+    FMOD::Channel* channel;
 };
 
 #endif //BRACK_ENGINE_AUDIOCOMPONENT_HPP
