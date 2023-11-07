@@ -39,18 +39,33 @@ public:
 
     SystemManager &operator=(SystemManager &&) = delete;
 
+    /// <summary>
+    /// Adds a system to the system manager
+    /// Should be used when you want to add a single system
+    /// If adding multiple systems at once which are dependent on each other, use AddSystems
+    /// </summary>
+    /// <param name="system">The system to add</param>
     void AddSystem(ISystem *system);
 
     void UpdateSystems(float deltaTime);
     void CleanUp();
 
+
+    /// <summary>
+    /// Adds a list of systems to the system manager
+    /// Should be used when you want to add multiple systems at once
+    /// </summary>
+    /// <param name="systems">The list of systems to add</param>
+    void AddSystems(std::vector<ISystem *> systems);
+
 private:
+    void SortSystems();
+
     SystemManager() = default;
 
     static SystemManager instance;
     std::vector<ISystem *> systems;
-    
-    void SortSystems();
+
 };
 
 

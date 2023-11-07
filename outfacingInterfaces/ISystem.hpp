@@ -22,19 +22,14 @@ public:
     virtual std::string GetName() = 0;
 
     virtual void CleanUp() = 0;
-    
-    void AddDependency(ISystem* dependency) {
-        if(std::find(dependency->outgoingEdges.begin(), dependency->outgoingEdges.end(), this) != dependency->outgoingEdges.end()){
-            Logger::Error(std::string("Trying to add ") + typeid(dependency).name() + std::string(" for ") + typeid(*this).name() + std::string(" would lead to circular dependency"));
-            return;
-        }
 
+    void AddDependency(ISystem* dependency) {
         if (std::find(outgoingEdges.begin(), outgoingEdges.end(), dependency) == outgoingEdges.end()) {
             outgoingEdges.push_back(dependency);
-            Logger::Info(std::string("Dependency added for ") + typeid(*this).name() + ", " + typeid(*this).name() + " now depends on " +
-                         typeid(dependency).name());
+            Logger::Info("Dependency added for " + this->GetName() + ", " + this->GetName() + " now depends on " +
+                         dependency->GetName());
 
-            if(std::find(dependency->incomingEdges.begin(), dependency->incomingEdges.end(), dependency) == dependency->incomingEdges.end())
+            if(std::find(dependency->incomingEdges.begin(), dependency->incomingEdges.end(), this) == dependency->incomingEdges.end())
                 dependency->incomingEdges.push_back(this);
         }
     }
