@@ -37,7 +37,7 @@ add_library(${PROJECT_NAME} SHARED
         outfacingInterfaces/Components/AIComponent.hpp
         outfacingInterfaces/Components/AudioComponent.hpp
         outfacingInterfaces/Components/TransformComponent.hpp
-        outfacingInterfaces/Helpers/Vector2.cpp
+        src/Helpers/Vector2.cpp
         outfacingInterfaces/Components/VelocityComponent.hpp
         outfacingInterfaces/Components/CollisionComponent.hpp
         outfacingInterfaces/Components/BoxCollisionComponent.hpp
@@ -71,22 +71,22 @@ add_library(${PROJECT_NAME} SHARED
         outfacingInterfaces/Components/UIComponent.hpp
         outfacingInterfaces/Components/ButtonComponent.hpp
         outfacingInterfaces/Components/TextComponent.hpp
-        outfacingInterfaces/Objects/GameObject.cpp
-        outfacingInterfaces/Objects/Camera.cpp
-        outfacingInterfaces/Objects/Scene.cpp
-        outfacingInterfaces/Objects/UIObject.cpp
-        outfacingInterfaces/Objects/Button.cpp
-        outfacingInterfaces/Objects/Text.cpp
-        outfacingInterfaces/EngineManagers/SceneManager.cpp
-        outfacingInterfaces/EngineManagers/ReplayManager.cpp
-        outfacingInterfaces/EngineManagers/InputManager.cpp
+        src/Objects/GameObject.cpp
+        src/Objects/Camera.cpp
+        src/Objects/Scene.cpp
+        src/Objects/UIObject.cpp
+        src/Objects/Button.cpp
+        src/Objects/Text.cpp
+        src/EngineManagers/SceneManager.cpp
+        src/EngineManagers/ReplayManager.cpp
+        src/EngineManagers/InputManager.cpp
         outfacingInterfaces/Helpers/InputState.hpp
-        outfacingInterfaces/BrackEngine.cpp
+        src/BrackEngine.cpp
         src/GameObjectConverter.cpp
         src/Logger.hpp
         src/Logger.cpp
         src/ConfigSingleton.cpp
-        outfacingInterfaces/Config.cpp
+        src/Config.cpp
 )
 
 # Define an option for logging to a file
@@ -114,7 +114,6 @@ endif()
 
 # Now, add the definition for the CURRENT_LOG_LEVEL
 add_compile_definitions(CURRENT_LOG_LEVEL=${CURRENT_LOG_LEVEL})
-
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/FMod/include)
 

@@ -2,7 +2,7 @@
 // Created by jesse on 31/10/2023.
 //
 
-#include "Button.hpp"
+#include "Objects/Button.hpp"
 
 bool Button::IsInteractable() const {
     return false;
