@@ -123,14 +123,7 @@ void RenderWrapper::RenderButton(TextComponent &button) {
 }
 
 void RenderWrapper::Run() {
-        // Process events.
-        SDL_Event event;
-        while (SDL_PollEvent(&event)) {
-            // Close the window if the user presses the "X" button.
-            if (event.type == SDL_QUIT) {
-                ConfigSingleton::GetInstance().ToggleIsRunning();
-            }
-    }
+
 }
 
 

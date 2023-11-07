@@ -15,3 +15,11 @@ CollisionSystem::~CollisionSystem() {
 void CollisionSystem::Update(float deltaTime) {
 
 }
+
+const std::string CollisionSystem::GetName() const {
+    return "CollisionSystem";
+}
+
+void CollisionSystem::CleanUp() {
+
+}

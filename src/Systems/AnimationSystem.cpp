@@ -15,3 +15,10 @@ AnimationSystem::~AnimationSystem() {
 void AnimationSystem::Update(float deltaTime) {
 
 }
+
+const std::string AnimationSystem::GetName() const {
+    return "AnimationSystem";
+}
+
+void AnimationSystem::CleanUp() {
+}

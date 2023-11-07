@@ -39,18 +39,39 @@ public:
 
     SystemManager &operator=(SystemManager &&) = delete;
 
-    void AddSystem(ISystem *system);
+    /// <summary>
+    /// Adds a system to the system manager
+    /// Should be used when you want to add a single system
+    /// If adding multiple systems at once which are dependent on each other, use AddSystems
+    /// </summary>
+    /// <param name="system">The system to add</param>
+    /// <param name="printGraph">Whether or not to print the dependency graph after adding the system to see the state of the graph</param>
+    void AddSystem(ISystem *system, bool printGraph = false);
+
+    /// <summary>
+    /// Adds a list of systems to the system manager
+    /// Should be used when you want to add multiple systems at once
+    /// </summary>
+    /// <param name="systems">The list of systems to add</param>
+    /// <param name="printGraph">Whether or not to print the dependency graph after adding the system to see the state of the graph</param>
+    void AddSystems(std::vector<ISystem *> systems, bool printGraph = false);
 
     void UpdateSystems(float deltaTime);
     void CleanUp();
 
+    /// <summary>
+    /// Prints the dependency graph to the console, is not logged to file(not compiled in release mode)
+    /// </summary>
+    void PrintDependencyGraph() const;
+
 private:
+    void SortSystems();
+
     SystemManager() = default;
 
     static SystemManager instance;
     std::vector<ISystem *> systems;
-    
-    void SortSystems();
+
 };
 
 

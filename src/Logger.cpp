@@ -49,6 +49,7 @@ void Logger::OpenLogFile(const std::string& filename) {
 void Logger::Error(const std::string &message) {
 #if CURRENT_LOG_LEVEL >= LOG_LEVEL_ERROR
     GetInstance().LogError(message);
+    throw std::runtime_error(message);
 #endif
 }
 
