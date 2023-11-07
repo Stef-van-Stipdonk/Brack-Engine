@@ -7,6 +7,7 @@
 
 
 #include <memory>
+#include <Components/CameraComponent.hpp>
 #include "GameObject.hpp"
 #include "Helpers/Color.hpp"
 #include "Helpers/Vector2.hpp"
@@ -23,9 +24,15 @@ public:
 
     void SetSize(const Vector2 size);
 
+    CameraComponent *GetCameraComponent();
+
+    void SetCameraComponent(CameraComponent *cameraComponent);
+
 private:
+    CameraComponent *cameraComponent;
     Vector2 size;
     Color backgroundColor;
+
 };
 
 
