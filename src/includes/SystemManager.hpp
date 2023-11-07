@@ -45,18 +45,24 @@ public:
     /// If adding multiple systems at once which are dependent on each other, use AddSystems
     /// </summary>
     /// <param name="system">The system to add</param>
-    void AddSystem(ISystem *system);
-
-    void UpdateSystems(float deltaTime);
-    void CleanUp();
-
+    /// <param name="printGraph">Whether or not to print the dependency graph after adding the system to see the state of the graph</param>
+    void AddSystem(ISystem *system, bool printGraph = false);
 
     /// <summary>
     /// Adds a list of systems to the system manager
     /// Should be used when you want to add multiple systems at once
     /// </summary>
     /// <param name="systems">The list of systems to add</param>
-    void AddSystems(std::vector<ISystem *> systems);
+    /// <param name="printGraph">Whether or not to print the dependency graph after adding the system to see the state of the graph</param>
+    void AddSystems(std::vector<ISystem *> systems, bool printGraph = false);
+
+    void UpdateSystems(float deltaTime);
+    void CleanUp();
+
+    /// <summary>
+    /// Prints the dependency graph to the console, is not logged to file(not compiled in release mode)
+    /// </summary>
+    void PrintDependencyGraph() const;
 
 private:
     void SortSystems();
