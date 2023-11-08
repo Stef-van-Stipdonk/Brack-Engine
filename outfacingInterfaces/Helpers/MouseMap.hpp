@@ -1,0 +1,14 @@
+//
+// Created by SKIKK on 07/11/2023.
+//
+
+#ifndef BRACKOCALYPSE_MOUSEMAP_HPP
+#define BRACKOCALYPSE_MOUSEMAP_HPP
+
+enum MouseMap {
+    LEFT_MOUSE = 1,
+    MIDDLE_MOUSE = 2,
+    RIGHT_MOUSE = 3
+};
+
+#endif //BRACKOCALYPSE_MOUSEMAP_HPP

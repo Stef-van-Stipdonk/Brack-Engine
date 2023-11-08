@@ -2,8 +2,10 @@
 
 #include "Logger.hpp"
 #include <iostream>
-#include <fstream>
 #include <stdexcept>
+#include <iomanip>
+#include <sstream>
+#include <chrono>
 
 // Current log level
 #ifndef CURRENT_LOG_LEVEL
@@ -12,7 +14,24 @@
 
 Logger::Logger() {
 #ifdef LOG_TO_FILE
-    std::string fileName = "default.log";
+    // Get the current time
+    auto now = std::chrono::system_clock::now();
+    auto in_time_t = std::chrono::system_clock::to_time_t(now);
+
+    // Convert the current time to tm struct
+    std::tm bt{};
+#if defined(_MSC_VER)
+    localtime_s(&bt, &in_time_t);
+#else
+    localtime_r(&in_time_t, &bt); // POSIX
+#endif
+
+    // Format the current time to YYYYMMDD_HHMMSS (for example, 20231107_153045)
+    std::ostringstream timeStream;
+    timeStream << std::put_time(&bt, "%Y%m%d_%H%M");
+
+    // Create filename with timestamp prefix
+    std::string fileName = timeStream.str() + "_brack_engine.log";
     OpenLogFile(fileName);
     Initialize();
 #endif
@@ -49,6 +68,7 @@ void Logger::OpenLogFile(const std::string& filename) {
 void Logger::Error(const std::string &message) {
 #if CURRENT_LOG_LEVEL >= LOG_LEVEL_ERROR
     GetInstance().LogError(message);
+    throw std::runtime_error(message);
 #endif
 }
 

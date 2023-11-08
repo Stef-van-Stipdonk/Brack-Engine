@@ -6,6 +6,7 @@
 #define BRACK_ENGINE_INPUTSTATE_HPP
 
 enum InputState {
+    None,
     Clicked,
     Pressed,
     Released
