@@ -15,7 +15,7 @@ struct AudioComponent : public IComponent {
     ~AudioComponent() override = default;
 
     std::string audioPath;
-    bool isLooping, isPlaying;
+    bool isLooping, isPlaying, hasStarted;
     float volume;
     int channel;
 };
