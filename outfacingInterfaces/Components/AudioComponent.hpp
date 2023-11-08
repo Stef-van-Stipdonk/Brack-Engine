@@ -6,21 +6,18 @@
 #define BRACK_ENGINE_AUDIOCOMPONENT_HPP
 
 #include "IComponent.hpp"
-#include "fmod.hpp"
 #include <string>
 
 struct AudioComponent : public IComponent {
 
     explicit AudioComponent( ) : IComponent() {}
 
-    ~AudioComponent() = default;
-
-    uint32_t entityID;
+    ~AudioComponent() override = default;
 
     std::string audioPath;
     bool isLooping, isPlaying;
     float volume;
-    FMOD::Channel* channel;
+    int channel;
 };
 
 #endif //BRACK_ENGINE_AUDIOCOMPONENT_HPP

@@ -3,6 +3,8 @@
 //
 
 #include "AudioSystem.hpp"
+#include "../includes/ComponentStore.hpp"
+#include "../includes/EntityManager.hpp"
 
 AudioSystem::AudioSystem() : audioWrapper(new AudioWrapper()) {
 }
@@ -11,6 +13,25 @@ AudioSystem::~AudioSystem() {
 }
 
 void AudioSystem::Update(float deltaTime) {
+    auto entities = ComponentStore::GetInstance().getEntitiesWithComponent<AudioComponent>();
+
+    for (auto entity : entities) {
+        auto audioComponent = ComponentStore::GetInstance().getComponent<AudioComponent>(entity);
+        Logger::Info( "bbbbbb");
+        if(!audioComponent->audioPath.empty()){
+            StartSound(*audioComponent);
+        }
+
+        if (audioComponent->isPlaying) {
+            ResumeSound(*audioComponent);
+        }
+        else{
+            PauseSound(*audioComponent);
+        }
+
+        SetLooping(*audioComponent, audioComponent->isLooping);
+        SetVolume(*audioComponent, audioComponent->volume);
+    }
 }
 
 void AudioSystem::StartSound(AudioComponent &audioComponent) {
@@ -68,5 +89,11 @@ const std::string AudioSystem::GetName() const {
 }
 
 void AudioSystem::CleanUp() {
-    audioWrapper->CleanUp()
+    auto entities = ComponentStore::GetInstance().getEntitiesWithComponent<AudioComponent>();
+
+    for (auto entity : entities) {
+        auto audioComponent = ComponentStore::GetInstance().getComponent<AudioComponent>(entity);
+        StopSound(*audioComponent);
+    }
+    audioWrapper->CleanUp();
 }

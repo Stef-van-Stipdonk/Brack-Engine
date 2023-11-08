@@ -53,8 +53,8 @@ void AudioWrapper::StartSound(AudioComponent &audioComponent) {
         return;
     }
 
-    FMOD::Channel* channel = nullptr;
-    result = system->playSound(sound, nullptr, false, &channel);
+    FMOD::Channel* fModChannel = nullptr;
+    result = system->playSound(sound, nullptr, false, &fModChannel);
 
     if (result != FMOD_OK) {
         Logger::Error("Failed to play sound: " + std::string(FMOD_ErrorString(result)));
@@ -62,7 +62,10 @@ void AudioWrapper::StartSound(AudioComponent &audioComponent) {
     }
 
     // Store the FMOD Channel in the AudioComponent
-    audioComponent.channel = channel;
+    audioComponent.channel = FindIntChannel(fModChannel);
+
+    // Add the FMOD channel to the channelMap
+    channelMap[audioComponent.channel] = fModChannel;
 }
 
 void AudioWrapper::StopSound(AudioComponent &audioComponent) {
@@ -72,18 +75,24 @@ void AudioWrapper::StopSound(AudioComponent &audioComponent) {
     }
 
     FMOD_RESULT result;
-    FMOD::Channel* channel = audioComponent.channel;
+    FMOD::Channel* fModChannel = FindFMODChannel(audioComponent.channel);
 
-    if (!channel) {
+    if (!fModChannel) {
         Logger::Error("Channel in AudioComponent is not initialized.");
         return;
     }
 
-    // Stop the channel
-    result = channel->stop();
+    // Stop the fModChannel
+    result = fModChannel->stop();
 
-    if (result != FMOD_OK) {
-        Logger::Error("Error stopping the channel: " + std::string(FMOD_ErrorString(result)));
+    if (result == FMOD_OK) {
+        // Erase the channel from the map
+        auto it = channelMap.find(audioComponent.channel);
+        if (it != channelMap.end()) {
+            channelMap.erase(it);
+        }
+    } else {
+        Logger::Error("Error stopping the fModChannel: " + std::string(FMOD_ErrorString(result)));
     }
 }
 
@@ -94,29 +103,27 @@ void AudioWrapper::PauseSound(AudioComponent &audioComponent) {
     }
 
     FMOD_RESULT result;
-    FMOD::Channel* channel = audioComponent.channel;
+    FMOD::Channel* fModChannel = FindFMODChannel(audioComponent.channel);
 
-    if (!channel) {
+    if (!fModChannel) {
         Logger::Error("Channel in AudioComponent is not initialized.");
         return;
     }
 
-    // Check if the channel is playing
-    result = channel->isPlaying(&audioComponent.isPlaying);
+    // Check if the fModChannel is playing
+    result = fModChannel->isPlaying(&audioComponent.isPlaying);
 
     if (result != FMOD_OK) {
-        Logger::Error("Error checking playback state for the channel: " + std::string(FMOD_ErrorString(result)));
+        Logger::Error("Error checking playback state for the fModChannel: " + std::string(FMOD_ErrorString(result)));
         return;
     }
 
-    // Toggle pause for the channel
-    result = channel->setPaused(!audioComponent.isPlaying);
+    // Toggle pause for the fModChannel
+    result = fModChannel->setPaused(!audioComponent.isPlaying);
 
     if (result != FMOD_OK) {
-        Logger::Error("Error toggling pause for the channel: " + std::string(FMOD_ErrorString(result)));
+        Logger::Error("Error toggling pause for the fModChannel: " + std::string(FMOD_ErrorString(result)));
     }
-
-    audioComponent.isPlaying = false;
 }
 
 void AudioWrapper::ResumeSound(AudioComponent &audioComponent) {
@@ -126,21 +133,19 @@ void AudioWrapper::ResumeSound(AudioComponent &audioComponent) {
     }
 
     FMOD_RESULT result;
-    FMOD::Channel* channel = audioComponent.channel;
+    FMOD::Channel* fModChannel = FindFMODChannel(audioComponent.channel);
 
-    if (!channel) {
+    if (!fModChannel) {
         Logger::Error("Channel in AudioComponent is not initialized.");
         return;
     }
 
-    // Resume the channel (unset the pause)
-    result = channel->setPaused(false);
+    // Resume the fModChannel (unset the pause)
+    result = fModChannel->setPaused(false);
 
     if (result != FMOD_OK) {
-        Logger::Error("Error resuming the channel: " + std::string(FMOD_ErrorString(result)));
+        Logger::Error("Error resuming the fModChannel: " + std::string(FMOD_ErrorString(result)));
     }
-
-    audioComponent.isPlaying = true;
 }
 
 void AudioWrapper::SetVolume(AudioComponent &audioComponent, float volume) {
@@ -150,21 +155,19 @@ void AudioWrapper::SetVolume(AudioComponent &audioComponent, float volume) {
     }
 
     FMOD_RESULT result;
-    FMOD::Channel* channel = audioComponent.channel;
+    FMOD::Channel* fModChannel = FindFMODChannel(audioComponent.channel);
 
-    if (!channel) {
+    if (!fModChannel) {
         Logger::Error("Channel in AudioComponent is not initialized.");
         return;
     }
 
-    // Set the volume for the channel
-    result = channel->setVolume(volume);
+    // Set the volume for the fModChannel
+    result = fModChannel->setVolume(volume);
 
     if (result != FMOD_OK) {
-        Logger::Error("Error setting volume for the channel: " + std::string(FMOD_ErrorString(result)));
+        Logger::Error("Error setting volume for the fModChannel: " + std::string(FMOD_ErrorString(result)));
     }
-
-    audioComponent.volume = volume;
 }
 
 void AudioWrapper::SetLooping(AudioComponent &audioComponent, bool loop) {
@@ -174,20 +177,35 @@ void AudioWrapper::SetLooping(AudioComponent &audioComponent, bool loop) {
     }
 
     FMOD_RESULT result;
-    FMOD::Channel* channel = audioComponent.channel;
+    FMOD::Channel* fModChannel = FindFMODChannel(audioComponent.channel);
 
-    if (!channel) {
+    if (!fModChannel) {
         Logger::Error("Channel in AudioComponent is not initialized.");
         return;
     }
 
-    // Set the looping mode for the channel
-    result = channel->setMode(loop ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF);
+    // Set the looping mode for the fModChannel
+    result = fModChannel->setMode(loop ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF);
 
     if (result != FMOD_OK) {
-        Logger::Error("Error setting looping mode for the channel: " + std::string(FMOD_ErrorString(result)));
+        Logger::Error("Error setting looping mode for the fModChannel: " + std::string(FMOD_ErrorString(result)));
     }
-
-    audioComponent.isLooping = loop;
 }
 
+FMOD::Channel* AudioWrapper::FindFMODChannel(int intChannel) {
+    auto it = channelMap.find(intChannel);
+    if (it != channelMap.end()) {
+        return it->second;
+    }
+    return nullptr;
+}
+
+int AudioWrapper::FindIntChannel(FMOD::Channel *fModChannel) {
+    for (const auto &entry : channelMap) {
+        if (entry.second == fModChannel) {
+            return entry.first;
+        }
+    }
+    // If the FMOD channel is not found, return some default or error value.
+    return -1;
+}

@@ -7,9 +7,10 @@
 
 
 #include "Components/AudioComponent.hpp"
+#include "../../lib/FMod/include/fmod.hpp"
 #include <vector>
-#include <fmod.h>
 #include <memory>
+#include <unordered_map>
 
 
 class AudioWrapper {
@@ -34,6 +35,10 @@ public:
 
 private:
     FMOD::System *system;
+
+    std::unordered_map<int, FMOD::Channel*> channelMap;
+    FMOD::Channel* FindFMODChannel(int intChannel);
+    int FindIntChannel(FMOD::Channel* fmodChannel);
 };
 
 
