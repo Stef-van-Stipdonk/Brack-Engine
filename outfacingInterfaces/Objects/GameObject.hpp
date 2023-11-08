@@ -36,7 +36,7 @@ public:
     }
 
     template<typename T>
-    T *GetComponent(T &component) {
+    T *GetComponent() {
         for (auto &comp: components) {
             if (dynamic_cast<T>(comp))
                 return comp;
@@ -46,10 +46,13 @@ public:
 
     template<typename T>
     void RemoveComponent() {
-        for (auto it = components.begin(); it != components.end(); ++it) {
-            if (typeid(*it) == typeid(T)) {
+        for (auto it = components.begin(); it != components.end();) {
+            T *comp = dynamic_cast<T *>(*it);
+            if (comp != nullptr) {
                 components.erase(it);
                 break;
+            } else {
+                ++it;
             }
         }
     }
