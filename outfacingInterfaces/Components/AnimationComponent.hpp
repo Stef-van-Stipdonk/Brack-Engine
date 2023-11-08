@@ -14,6 +14,10 @@ struct AnimationComponent : public SpriteComponent {
 
     ~AnimationComponent() override = default;
 
+    void Accept(IComponentVisitor &visitor) override {
+        visitor.visit(this);
+    }
+
     bool isLooping;
     float animationSpeed;
     int frameCount, currentFrame;

@@ -7,6 +7,7 @@
 #include "includes/EntityManager.hpp"
 #include "includes/ComponentStore.hpp"
 #include "Components/CameraComponent.hpp"
+#include "Components/ComponentVisitor.hpp"
 
 Camera GameObjectConverter::GetMainCamera(uint32_t entityID) {
     return Camera();
@@ -17,11 +18,12 @@ GameObject GameObjectConverter::GetGameObject(uint32_t entityID) {
 }
 
 void GameObjectConverter::AddGameObject(GameObject &gameObject) {
+    ComponentVisitor componentVisitor;
     if (gameObject.GetEntityID() == 0)
         gameObject.SetEntityID(EntityManager::GetInstance().CreateEntity());
     for (auto &component: gameObject.GetAllComponents()) {
         component->entityID = gameObject.GetEntityID();
-        ComponentStore::GetInstance().addComponent(gameObject.GetEntityID(), component);
+        component->Accept(componentVisitor);
     }
 }
 

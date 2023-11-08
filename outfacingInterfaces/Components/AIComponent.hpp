@@ -5,14 +5,19 @@
 #ifndef BRACK_ENGINE_AICOMPONENT_HPP
 #define BRACK_ENGINE_AICOMPONENT_HPP
 
-#include "IComponent.hpp"
+#include "../../src/Components/IComponentVisitor.hpp"
 #include <cstdint>
+#include "IComponent.hpp"
 
 struct AIComponent : public IComponent {
 
-    explicit AIComponent() : IComponent() {}
+    explicit AIComponent() {}
 
     ~AIComponent() override = default;
+
+    void Accept(IComponentVisitor &visitor) override {
+        visitor.visit(this);
+    }
 
     uint32_t destinationEntityID;
 };
