@@ -14,10 +14,8 @@ AudioSystem::~AudioSystem() {
 
 void AudioSystem::Update(float deltaTime) {
     auto entities = ComponentStore::GetInstance().getEntitiesWithComponent<AudioComponent>();
-
     for (auto entity : entities) {
         auto audioComponent = ComponentStore::GetInstance().getComponent<AudioComponent>(entity);
-        Logger::Info( "bbbbbb");
         if(!audioComponent->audioPath.empty()){
             StartSound(*audioComponent);
         }
