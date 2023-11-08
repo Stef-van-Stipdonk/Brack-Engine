@@ -52,6 +52,7 @@ public:
                 components.erase(it);
                 break;
             } else {
+
                 ++it;
             }
         }

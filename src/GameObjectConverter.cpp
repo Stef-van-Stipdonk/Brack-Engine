@@ -10,11 +10,11 @@
 #include "Components/ComponentVisitor.hpp"
 
 Camera GameObjectConverter::GetMainCamera(uint32_t entityID) {
-    return Camera();
+    return {};
 }
 
 GameObject GameObjectConverter::GetGameObject(uint32_t entityID) {
-    return GameObject();
+    return {};
 }
 
 void GameObjectConverter::AddGameObject(GameObject &gameObject) {

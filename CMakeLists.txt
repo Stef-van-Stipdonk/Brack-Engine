@@ -87,6 +87,10 @@ add_library(${PROJECT_NAME} SHARED
         src/Logger.cpp
         src/ConfigSingleton.cpp
         src/Config.cpp
+        outfacingInterfaces/Helpers/KeyMap.hpp
+        outfacingInterfaces/Helpers/MouseMap.hpp
+        src/FPSSingleton.cpp
+        src/Wrappers/FPSWrapper.cpp
         src/Components/IComponentVisitor.cpp
         src/Components/IComponentVisitor.hpp
         src/Components/IComponentVisitor.hpp
@@ -99,24 +103,24 @@ add_library(${PROJECT_NAME} SHARED
 option(LOG_TO_FILE "Enable logging to a file" OFF)
 
 # Check if LOG_TO_FILE option is set to ON and add a compile definition accordingly
-if (LOG_TO_FILE)
+if(LOG_TO_FILE)
     target_compile_definitions(Brack_Engine PRIVATE LOG_TO_FILE)
-endif ()
+endif()
 
-if (NOT DEFINED CURRENT_LOG_LEVEL)
+if(NOT DEFINED CURRENT_LOG_LEVEL)
     # Define a default log level based on the build type
-    if (CMAKE_BUILD_TYPE STREQUAL "Info")
+    if(CMAKE_BUILD_TYPE STREQUAL "Info")
         set(CURRENT_LOG_LEVEL "LOG_LEVEL_INFO")
-    elseif (CMAKE_BUILD_TYPE STREQUAL "None")
+    elseif(CMAKE_BUILD_TYPE STREQUAL "None")
         set(CURRENT_LOG_LEVEL "LOG_LEVEL_NONE")
-    elseif (CMAKE_BUILD_TYPE STREQUAL "Warning")
+    elseif(CMAKE_BUILD_TYPE STREQUAL "Warning")
         set(CURRENT_LOG_LEVEL "LOG_LEVEL_WARNING")
-    elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
+    elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
         set(CURRENT_LOG_LEVEL "LOG_LEVEL_ERROR")
     else ()
         set(CURRENT_LOG_LEVEL "LOG_LEVEL_DEBUG" CACHE STRING "Set the current log level")
-    endif ()
-endif ()
+    endif()
+endif()
 
 # Now, add the definition for the CURRENT_LOG_LEVEL
 add_compile_definitions(CURRENT_LOG_LEVEL=${CURRENT_LOG_LEVEL})
