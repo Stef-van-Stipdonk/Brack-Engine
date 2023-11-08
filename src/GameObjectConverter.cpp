@@ -20,8 +20,8 @@ void GameObjectConverter::AddGameObject(GameObject &gameObject) {
     if (gameObject.GetEntityID() == 0)
         gameObject.SetEntityID(EntityManager::GetInstance().CreateEntity());
     for (auto &component: gameObject.GetAllComponents()) {
-        component.entityID = gameObject.GetEntityID();
-        ComponentStore::GetInstance().addComponent(gameObject.GetEntityID(), &component);
+        component->entityID = gameObject.GetEntityID();
+        ComponentStore::GetInstance().addComponent(gameObject.GetEntityID(), component);
     }
 }
 

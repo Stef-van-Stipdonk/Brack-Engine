@@ -79,12 +79,12 @@ public:
 
     void SetEntityID(uint32_t id);
 
-    std::vector<IComponent> &GetAllComponents();
+    std::vector<IComponent *> &GetAllComponents();
 
 protected:
     std::string name;
     uint32_t entityID = 0;
-    std::vector<IComponent> components;
+    std::vector<IComponent *> components;
 };
 
 
