@@ -25,8 +25,10 @@ bool RenderWrapper::Initialize() {
     // Create a window.
     // You can customize the window size, title, and other settings as needed.
     // For simplicity, this example creates a 800x600 window.
-    SDL_Window *window = SDL_CreateWindow("Brack Engine Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800,
-                                          600, SDL_WINDOW_SHOWN);
+    SDL_Window *window = SDL_CreateWindow(ConfigSingleton::GetInstance().GetWindowTitle().c_str(),
+                                          SDL_WINDOWPOS_CENTERED,
+                                          SDL_WINDOWPOS_CENTERED, ConfigSingleton::GetInstance().GetWindowSize().getX(),
+                                          ConfigSingleton::GetInstance().GetWindowSize().getY(), SDL_WINDOW_SHOWN);
 
     if (window == nullptr) {
         std::cerr << "Window creation failed: " << SDL_GetError() << std::endl;
@@ -57,7 +59,7 @@ void RenderWrapper::Cleanup() {
     SDL_Quit();
 }
 
-void RenderWrapper::RenderCamera(CameraComponent* camera) {
+void RenderWrapper::RenderCamera(CameraComponent *camera) {
     auto &backgroundColor = camera->backgroundColor;
     SDL_SetRenderDrawColor(renderer.get(), backgroundColor.r, backgroundColor.g, backgroundColor.b,
                            backgroundColor.a); // RGBA format

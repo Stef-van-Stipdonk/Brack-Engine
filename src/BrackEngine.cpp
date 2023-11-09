@@ -13,7 +13,7 @@
 #include "Systems/MovementSystem.hpp"
 
 BrackEngine::BrackEngine(Config &&config) {
-    ConfigSingleton::GetInstance().SetIsRunning(config.isRunning);
+    ConfigSingleton::GetInstance().SetConfig(config);
     SystemManager::GetInstance().AddSystem(new InputSystem());
     SystemManager::GetInstance().AddSystem(new MovementSystem());
     SystemManager::GetInstance().AddSystem(new RenderingSystem());
