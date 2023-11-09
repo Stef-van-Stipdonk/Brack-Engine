@@ -76,15 +76,11 @@ InputManager::InputManager() {
 }
 
 void InputManager::UpdateEvents() {
-    // TODO std::cout weg mag als je niet wil zien welke key ingedrukt wordt.
+
     for (auto &item: keyInputs) {
         if (item.second == Clicked) {
-            std::cout << "Clicked: " << static_cast<char>(item.first) << std::endl;
             item.second = Pressed;
-        } else if (item.second == Pressed) {
-            std::cout << "Pressed: " << static_cast<char>(item.first) << std::endl;
         } else if (item.second == Released) {
-            std::cout << "Released: " << static_cast<char>(item.first) << std::endl;
             item.second = None;
         }
     }
