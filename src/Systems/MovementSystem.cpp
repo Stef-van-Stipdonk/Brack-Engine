@@ -25,11 +25,6 @@ void MovementSystem::Update(float deltaTime) {
         transformComponent->position = std::make_unique<Vector2>(
                 *transformComponent->position + velocityComponent->velocity * deltaTime
         );
-
-        Logger::Info("Entity: " + std::to_string(entity) + " Position: " +
-                     std::to_string(transformComponent->position->getX()) + ", " +
-                     std::to_string(transformComponent->position->getY()));
-
     }
 }
 
