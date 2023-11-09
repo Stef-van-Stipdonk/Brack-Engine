@@ -22,7 +22,7 @@ public:
     }
 
     template<typename T>
-    void AddComponent(T &component) {
+    void AddComponent(T *component) {
         components.push_back(component);
     }
 

@@ -5,23 +5,18 @@
 #ifndef BRACKOCALYPSE_COMPONENTVISITOR_HPP
 #define BRACKOCALYPSE_COMPONENTVISITOR_HPP
 
-
-#include <Components/VelocityComponent.hpp>
-#include "IComponentVisitor.hpp"
 #include "../includes/ComponentStore.hpp"
 
-class ComponentVisitor : public IComponentVisitor {
+class ComponentVisitor {
 
 public:
-    void visit(TransformComponent *component) override;
 
-    void visit(AIComponent *component) override;
+    template<typename T>
+    void visit(T *component) {
+        ComponentStore::GetInstance().addComponent(component->entityID, component);
+    }
 
-    void visit(ObjectInfoComponent *component) override;
 
-    void visit(AnimationComponent *component) override;
-
-    void visit(VelocityComponent *component) override;
 };
 
 

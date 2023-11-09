@@ -7,12 +7,18 @@
 
 #include <memory>
 #include "CollisionComponent.hpp"
+#include "../../src/Components/ComponentVisitor.hpp"
+
 
 struct CircleCollisionComponent : public CollisionComponent {
 
     explicit CircleCollisionComponent() : CollisionComponent() {}
 
     ~CircleCollisionComponent() override = default;
+
+    void Accept(ComponentVisitor &visitor) override {
+        visitor.visit<CircleCollisionComponent>(this);
+    }
 
     std::unique_ptr<Vector2> radius;
 };

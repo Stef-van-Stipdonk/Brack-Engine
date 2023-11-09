@@ -14,8 +14,8 @@ struct ObjectInfoComponent : public IComponent {
 
     ~ObjectInfoComponent() override = default;
 
-    void Accept(IComponentVisitor &visitor) override {
-        visitor.visit(this);
+    void Accept(ComponentVisitor &visitor) override {
+        visitor.visit<ObjectInfoComponent>(this);
     }
 
     std::string name, tag;

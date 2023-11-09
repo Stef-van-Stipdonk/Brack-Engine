@@ -8,6 +8,8 @@
 #include <memory>
 #include "IComponent.hpp"
 #include "Helpers/Vector2.hpp"
+#include "../../src/Components/ComponentVisitor.hpp"
+
 
 struct TransformComponent : public IComponent {
 
@@ -15,8 +17,8 @@ struct TransformComponent : public IComponent {
 
     ~TransformComponent() override = default;
 
-    void Accept(IComponentVisitor &visitor) override {
-        visitor.visit(this);
+    void Accept(ComponentVisitor &visitor) override {
+        visitor.visit<TransformComponent>(this);
     }
 
     std::unique_ptr<Vector2> position, scale;

@@ -14,8 +14,8 @@ struct AnimationComponent : public SpriteComponent {
 
     ~AnimationComponent() override = default;
 
-    void Accept(IComponentVisitor &visitor) override {
-        visitor.visit(this);
+    void Accept(ComponentVisitor &visitor) override {
+        visitor.visit<AnimationComponent>(this);
     }
 
     bool isLooping;
