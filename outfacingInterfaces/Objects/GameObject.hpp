@@ -9,21 +9,56 @@
 #include "Components/IComponent.hpp"
 #include <vector>
 #include <string>
+#include <typeinfo>
 
 class GameObject {
 public:
-    GameObject() = default;
+    GameObject();
 
     ~GameObject() = default;
 
-    template<typename T>
-    void AddComponent(T &component);
+    bool operator==(const GameObject &other) const {
+        return (this->name == other.name); // Assuming 'id' is a unique identifier for GameObjects
+    }
 
     template<typename T>
-    T *GetComponent(T &component);
+    void AddComponent(T &component) {
+        components.push_back(component);
+    }
 
     template<typename T>
-    bool HasComponent(T &component);
+    bool HasComponent(T &component) {
+        for (auto &comp: components) {
+            if (dynamic_cast<T>(comp))
+                return true;
+        }
+        return false;
+    }
+
+    template<typename T>
+    T *GetComponent(T &component) {
+        for (auto &comp: components) {
+            if (dynamic_cast<T>(comp))
+                return comp;
+        }
+        return nullptr;
+    }
+
+    template<typename T>
+    void RemoveComponent() {
+        for (auto it = components.begin(); it != components.end();) {
+            auto &component = *it;
+            if (typeid(component) == typeid(T)) {
+                components.erase(it);
+                break;
+            } else {
+                // ++It is placed here because if the element is erased, the iterator is invalidated
+                // and ++it will cause a segmentation fault
+                ++it;
+            }
+        }
+    }
+
 
     GameObject &GetParent();
 
@@ -49,8 +84,12 @@ public:
 
     void SetEntityID(uint32_t id);
 
+    std::vector<IComponent> &GetAllComponents();
+
 protected:
+    std::string name;
     uint32_t entityID = 0;
+    std::vector<IComponent> components;
 };
 
 

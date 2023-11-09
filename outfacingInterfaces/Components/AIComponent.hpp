@@ -10,7 +10,7 @@
 
 struct AIComponent : public IComponent {
 
-    explicit AIComponent(uint32_t entityId) : IComponent(entityId) {}
+    explicit AIComponent() : IComponent() {}
 
     ~AIComponent() override = default;
 

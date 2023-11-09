@@ -10,7 +10,7 @@
 
 struct CircleCollisionComponent : public CollisionComponent {
 
-    explicit CircleCollisionComponent(uint32_t entityId) : CollisionComponent(entityId) {}
+    explicit CircleCollisionComponent() : CollisionComponent() {}
 
     ~CircleCollisionComponent() override = default;
 

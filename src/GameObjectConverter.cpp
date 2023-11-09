@@ -9,25 +9,28 @@
 #include "Components/CameraComponent.hpp"
 
 Camera GameObjectConverter::GetMainCamera(uint32_t entityID) {
-    return Camera();
+    return {};
 }
 
 GameObject GameObjectConverter::GetGameObject(uint32_t entityID) {
-    return GameObject();
+    return {};
 }
 
 void GameObjectConverter::AddGameObject(GameObject &gameObject) {
-
+    if (gameObject.GetEntityID() == 0)
+        gameObject.SetEntityID(EntityManager::GetInstance().CreateEntity());
+    for (auto &component: gameObject.GetAllComponents()) {
+        component.entityID = gameObject.GetEntityID();
+        ComponentStore::GetInstance().addComponent(gameObject.GetEntityID(), &component);
+    }
 }
 
-void GameObjectConverter::RemoveGameObject(GameObject &gameObject) {
-
-}
 
 void GameObjectConverter::AddCamera(Camera &camera) {
     camera.SetEntityID(EntityManager::GetInstance().CreateEntity());
-    auto *cameraComponent = new CameraComponent(camera.GetEntityID());
+    auto *cameraComponent = camera.GetCameraComponent();
+    camera.SetEntityID(camera.GetEntityID());
     cameraComponent->size = camera.GetSize();
     cameraComponent->backgroundColor = camera.GetBackgroundColor();
-    ComponentStore::GetInstance().addComponent(camera.GetEntityID(),cameraComponent);
+    ComponentStore::GetInstance().addComponent(camera.GetEntityID(), cameraComponent);
 }
