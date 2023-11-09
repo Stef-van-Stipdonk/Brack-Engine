@@ -12,7 +12,7 @@
 #include "FPSSingleton.hpp"
 
 BrackEngine::BrackEngine(Config &&config) {
-    ConfigSingleton::GetInstance().SetIsRunning(config.isRunning);
+    ConfigSingleton::GetInstance().SetConfig(config);
     SystemManager::GetInstance().AddSystem(new InputSystem());
     SystemManager::GetInstance().AddSystem(new RenderingSystem());
     lastTime = std::chrono::high_resolution_clock::now();

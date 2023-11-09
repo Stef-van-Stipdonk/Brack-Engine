@@ -21,3 +21,27 @@ void ConfigSingleton::ToggleIsRunning() {
 void ConfigSingleton::SetIsRunning(bool isRunning) {
     ConfigSingleton::isRunning = isRunning;
 }
+
+std::string ConfigSingleton::GetWindowTitle() const {
+    return windowTitle;
+}
+
+Vector2 ConfigSingleton::GetWindowSize() const {
+    return windowSize;
+}
+
+bool ConfigSingleton::IsFullscreen() const {
+    return fullscreen;
+}
+
+std::string ConfigSingleton::GetBaseAssetPath() const {
+    return BaseAssetPath;
+}
+
+void ConfigSingleton::SetConfig(Config config) {
+    isRunning = config.isRunning;
+    windowTitle = config.windowTitle;
+    windowSize = config.windowSize;
+    fullscreen = config.fullscreen;
+    BaseAssetPath = config.BaseAssetPath;
+}
