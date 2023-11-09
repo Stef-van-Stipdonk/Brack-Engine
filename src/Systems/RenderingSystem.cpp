@@ -33,7 +33,8 @@ void RenderingSystem::Update(float deltaTime) {
             sdl2Wrapper->RenderSprite(*sprite);
         }
 
-        sdl2Wrapper->Run();
+        sdl2Wrapper->RenderFrame();
+//        sdl2Wrapper->Run();
     }
     catch (std::exception &e) {
         std::cout << e.what() << std::endl;

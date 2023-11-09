@@ -35,7 +35,7 @@ public:
     static void Cleanup();
 
 private:
-
+    SDL_Texture* texture = nullptr;
     bool Initialize();
 
     std::map<std::string, SDL_Texture *> textures;

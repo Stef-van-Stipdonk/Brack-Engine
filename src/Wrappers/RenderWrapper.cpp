@@ -48,6 +48,8 @@ bool RenderWrapper::Initialize() {
         return false;
     }
 
+    SDL_SetRenderTarget(renderer.get(), texture);
+
     return true;
 }
 
@@ -82,36 +84,24 @@ void RenderWrapper::RenderSprite(SpriteComponent &sprite) {
 
     SDL_Texture* spritesheetTexture = SDL_CreateTextureFromSurface(renderer.get(), spritesheetSurface);
 
-    auto spriteSheetHeight = sprite.imageSize->getY();
-    auto spriteSheetWidth = sprite.imageSize->getX();
-    auto spriteWidth = sprite.spriteSize->getX();
-    auto spriteHeight = sprite.spriteSize->getY();
-    int spriteSheetAmount = std::round(spriteSheetWidth/spriteWidth) * std::round(spriteSheetHeight/spriteHeight);
+    int spriteWidth = sprite.spriteSize->getX();
+    int spriteHeight = sprite.spriteSize->getY();
 
-    SDL_Rect spriteRectangles[spriteSheetAmount];
-    int spriteIndex = 0;
-    for (int i = 0; i < spriteSheetHeight; ++i) {
-        for (int j = 0; j < spriteSheetWidth; ++j) {
-            spriteRectangles[spriteIndex] = {static_cast<int>(j * spriteWidth), static_cast<int>(i * spriteHeight), static_cast<int>(spriteWidth), static_cast<int>(spriteHeight)};
-            spriteIndex++;
-            if (spriteIndex >= spriteSheetAmount) {
-                break;
-            }
-        }
-    }
+    SDL_Rect spriteRectangle;
+    int spriteX = 4;
+    int spriteY = 1;
 
-    Uint32 currentTime = SDL_GetTicks();
-
-    if (currentTime - lastFrameTime >= 1000 / frameRate) {
-        currentFrame = (currentFrame + 1) % spriteSheetAmount;
-        lastFrameTime = currentTime;
-    }
+    spriteRectangle.x = std::round(spriteX * spriteWidth);
+    spriteRectangle.y = std::round(spriteY * spriteHeight);
+    spriteRectangle.w = spriteWidth;
+    spriteRectangle.h = spriteHeight;
 
     SDL_RenderClear(renderer.get());
 
-    SDL_Rect srcRect = spriteRectangles[currentFrame];
+    SDL_Rect srcRect = spriteRectangle;
     SDL_Rect destRect = {static_cast<int>(sprite.position->getX()), static_cast<int>(sprite.position->getY()), srcRect.w, srcRect.h};
     SDL_RenderCopy(renderer.get(), spritesheetTexture, &srcRect, &destRect);
+    SDL_RenderPresent(renderer.get());
 }
 
 void RenderWrapper::RenderText(TextComponent &text) {
@@ -128,5 +118,9 @@ void RenderWrapper::Run() {
 
 
 void RenderWrapper::RenderFrame() {
-    //Render dubble buffered frame
+    SDL_SetRenderTarget(renderer.get(), nullptr);
+    SDL_RenderClear(renderer.get());
+    SDL_RenderCopy(renderer.get(), texture, nullptr, nullptr);
+    SDL_RenderPresent(renderer.get());
+    SDL_SetRenderTarget(renderer.get(), texture);
 }
