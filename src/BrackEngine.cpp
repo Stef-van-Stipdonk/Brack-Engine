@@ -11,12 +11,24 @@
 #include "Systems/InputSystem.hpp"
 #include "FPSSingleton.hpp"
 #include "Systems/MovementSystem.hpp"
+#include "Systems/AISystem.hpp"
 
 BrackEngine::BrackEngine(Config &&config) {
     ConfigSingleton::GetInstance().SetConfig(config);
-    SystemManager::GetInstance().AddSystem(new InputSystem());
-    SystemManager::GetInstance().AddSystem(new MovementSystem());
-    SystemManager::GetInstance().AddSystem(new RenderingSystem());
+    SystemManager::GetInstance().AddSystem(std::make_shared<InputSystem>());
+    SystemManager::GetInstance().AddSystem(std::make_shared<MovementSystem>());
+    SystemManager::GetInstance().AddSystem(std::make_shared<RenderingSystem>());
+
+    auto Ai = std::make_shared<AISystem>();
+    auto movement = SystemManager::GetInstance().FindSystem("MovementSystem");
+    SystemManager::GetInstance().FindSystem("InputSystem")->AddDependency(movement);
+    Ai->AddDependency(movement);
+    SystemManager::GetInstance().AddSystem(Ai);
+    SystemManager::GetInstance().SortSystems();
+
+    SystemManager::GetInstance().PrintDependencyGraph();
+
+
     lastTime = std::chrono::high_resolution_clock::now();
 }
 
