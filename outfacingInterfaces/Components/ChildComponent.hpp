@@ -8,11 +8,18 @@
 #include <cstdint>
 #include <vector>
 #include "IComponent.hpp"
+#include "../../src/Components/ComponentVisitor.hpp"
+
 
 struct ChildComponent : public IComponent {
     explicit ChildComponent() : IComponent() {}
 
     ~ChildComponent() override = default;
+
+
+    void Accept(ComponentVisitor &visitor) override {
+        visitor.visit<ChildComponent>(this);
+    }
 
     std::vector<uint32_t> children;
 };
