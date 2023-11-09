@@ -3,7 +3,7 @@
 //
 
 #include <SDL.h>
-#include "../EngineManagers/InputManager.hpp"
+#include "EngineManagers/InputManager.hpp"
 #include "InputWrapper.hpp"
 #include "../Logger.hpp"
 #include "../ConfigSingleton.hpp"
@@ -25,28 +25,28 @@ void InputWrapper::HandleEvents() {
         ConfigSingleton::GetInstance().ToggleIsRunning();
     }
 
-    if (event.type == SDL_MOUSEMOTION){
+    if (event.type == SDL_MOUSEMOTION) {
         InputManager::GetInstance().SetMousePosition(
-    Vector2(
-            static_cast<float>(event.motion.x),
-            static_cast<float>(event.motion.y)
-            )
+                Vector2(
+                        static_cast<float>(event.motion.x),
+                        static_cast<float>(event.motion.y)
+                )
         );
     }
 
-    if (event.type == SDL_MOUSEBUTTONDOWN){
+    if (event.type == SDL_MOUSEBUTTONDOWN) {
         InputManager::GetInstance().SetMousePressed(event.button.button);
     }
 
-    if (event.type == SDL_MOUSEBUTTONUP){
+    if (event.type == SDL_MOUSEBUTTONUP) {
         InputManager::GetInstance().SetMouseReleased(event.button.button);
     }
 
-    if (event.type == SDL_KEYDOWN){
+    if (event.type == SDL_KEYDOWN) {
         InputManager::GetInstance().SetKeyPressed(event.key.keysym.sym);
     }
 
-    if (event.type == SDL_KEYUP){
+    if (event.type == SDL_KEYUP) {
         InputManager::GetInstance().SetKeyReleased(event.key.keysym.sym);
     }
 }

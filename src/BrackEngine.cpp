@@ -11,10 +11,12 @@
 #include "Systems/InputSystem.hpp"
 #include "FPSSingleton.hpp"
 #include "Systems/MovementSystem.hpp"
+#include "Systems/BehaviourScriptSystem.hpp"
 
 BrackEngine::BrackEngine(Config &&config) {
     ConfigSingleton::GetInstance().SetConfig(config);
     SystemManager::GetInstance().AddSystem(new InputSystem());
+    SystemManager::GetInstance().AddSystem(new BehaviourScriptSystem());
     SystemManager::GetInstance().AddSystem(new MovementSystem());
     SystemManager::GetInstance().AddSystem(new RenderingSystem());
     lastTime = std::chrono::high_resolution_clock::now();

@@ -10,7 +10,6 @@
 #include <functional>
 
 struct BehaviourScript : public IComponent {
-
     explicit BehaviourScript() : IComponent() {}
 
     ~BehaviourScript() override = default;
