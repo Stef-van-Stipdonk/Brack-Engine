@@ -22,9 +22,9 @@ void RenderingSystem::Update(float deltaTime) {
 //        Logger::Debug(std::string(reinterpret_cast<const char *>(component->entityID)));
         sdl2Wrapper->RenderCamera(component);
 
-        auto entities = instance.getEntitiesWithComponent<SpriteComponent>();
+        auto entities = ComponentStore::GetInstance().getEntitiesWithComponent<SpriteComponent>();
         for(auto& entity : entities) {
-            auto sprite = instance.getComponent<SpriteComponent>(entity);
+            auto sprite = ComponentStore::GetInstance().getComponent<SpriteComponent>(entity);
             if(sprite == nullptr)
                 continue;
 
