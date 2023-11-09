@@ -8,9 +8,13 @@
 #include "TransformComponent.hpp"
 
 struct VelocityComponent : public TransformComponent {
-    explicit VelocityComponent( ) : TransformComponent() {}
+    explicit VelocityComponent() : TransformComponent() {}
 
     ~VelocityComponent() = default;
+
+    void Accept(ComponentVisitor &visitor) override {
+        visitor.visit(this);
+    }
 
     Vector2 velocity;
 };

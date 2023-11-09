@@ -7,8 +7,8 @@
 #include "Objects/GameObject.hpp"
 
 GameObject::GameObject() {
-    TransformComponent transFormComponent = TransformComponent();
-    ObjectInfoComponent objectInfoComponent = ObjectInfoComponent();
+    TransformComponent *transFormComponent = new TransformComponent();
+    ObjectInfoComponent *objectInfoComponent = new ObjectInfoComponent();
     AddComponent(transFormComponent);
     AddComponent(objectInfoComponent);
 }
@@ -62,7 +62,7 @@ void GameObject::SetEntityID(uint32_t id) {
     entityID = id;
 }
 
-std::vector<IComponent> &GameObject::GetAllComponents() {
+std::vector<IComponent *> & GameObject::GetAllComponents() {
     return components;
 }
 

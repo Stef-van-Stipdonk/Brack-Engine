@@ -6,11 +6,17 @@
 #define BRACK_ENGINE_PARTICLECOMPONENT_HPP
 
 #include "IComponent.hpp"
+#include "../../src/Components/ComponentVisitor.hpp"
+
 
 struct ParticleComponent : public IComponent {
-    explicit ParticleComponent( ) : IComponent() {}
+    explicit ParticleComponent() : IComponent() {}
 
     ~ParticleComponent() override = default;
+
+    void Accept(ComponentVisitor &visitor) override {
+        visitor.visit<ParticleComponent>(this);
+    }
 
     float lifetimeInSeconds;
 };
