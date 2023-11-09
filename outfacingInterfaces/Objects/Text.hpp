@@ -5,21 +5,24 @@
 #ifndef BRACK_ENGINE_TEXT_HPP
 #define BRACK_ENGINE_TEXT_HPP
 
-
+#include <memory>
 #include "UIObject.hpp"
 #include "Helpers/Color.hpp"
 
 class Text : public UIObject {
 public:
-    Text() = default;
+    Text(std::string text, int fontSize, std::unique_ptr<Color> color, std::string fontPath);
+    Text(std::string text, int fontSize, std::unique_ptr<Color> color);
+    Text(std::string text, int fontSize);
+    Text(std::string text);
 
     ~Text() override = default;
 
-    void SetText(const char *text);
+    void SetText(const std::string text);
 
     std::string GetText() const;
 
-    void SetFont(const char *font);
+    void SetFontPath(const std::string font);
 
     std::string GetFont() const;
 
