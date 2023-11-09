@@ -6,13 +6,18 @@
 #define BRACK_ENGINE_BEHAVIOURSCRIPT_HPP
 
 #include "IComponent.hpp"
+#include "../../src/Components/ComponentVisitor.hpp"
 #include <functional>
 
 struct BehaviourScript : public IComponent {
 
-    explicit BehaviourScript( ) : IComponent() {}
+    explicit BehaviourScript() : IComponent() {}
 
     ~BehaviourScript() override = default;
+
+    void Accept(ComponentVisitor &visitor) override {
+        visitor.visit<BehaviourScript>(this);
+    }
 
     virtual void OnStart() = 0;
 

@@ -6,13 +6,19 @@
 #define BRACK_ENGINE_AUDIOCOMPONENT_HPP
 
 #include "IComponent.hpp"
+#include "../../src/Components/ComponentVisitor.hpp"
 #include <string>
 
 struct AudioComponent : public IComponent {
 
-    explicit AudioComponent( ) : IComponent() {}
+    explicit AudioComponent() : IComponent() {}
 
     ~AudioComponent() = default;
+
+    void Accept(ComponentVisitor &visitor) override {
+        visitor.visit<AudioComponent>(this);
+    }
+
 
     std::string audioPath;
     bool isLooping, isPlaying;

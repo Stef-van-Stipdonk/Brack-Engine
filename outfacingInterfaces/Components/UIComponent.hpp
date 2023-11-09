@@ -8,9 +8,15 @@
 #include <memory>
 #include "IComponent.hpp"
 #include "Helpers/Vector2.hpp"
+#include "../../src/Components/ComponentVisitor.hpp"
+
 
 struct UIComponent : public IComponent {
-    explicit UIComponent( ) : IComponent() {}
+    explicit UIComponent() : IComponent() {}
+
+    void Accept(ComponentVisitor &visitor) override {
+        visitor.visit<UIComponent>(this);
+    }
 
     std::unique_ptr<Vector2> size;
 };

@@ -22,7 +22,7 @@ public:
     }
 
     template<typename T>
-    void AddComponent(T &component) {
+    void AddComponent(T *component) {
         components.push_back(component);
     }
 
@@ -36,7 +36,7 @@ public:
     }
 
     template<typename T>
-    T *GetComponent(T &component) {
+    T *GetComponent() {
         for (auto &comp: components) {
             if (dynamic_cast<T>(comp))
                 return comp;
@@ -47,13 +47,12 @@ public:
     template<typename T>
     void RemoveComponent() {
         for (auto it = components.begin(); it != components.end();) {
-            auto &component = *it;
-            if (typeid(component) == typeid(T)) {
+            T *comp = dynamic_cast<T *>(*it);
+            if (comp != nullptr) {
                 components.erase(it);
                 break;
             } else {
-                // ++It is placed here because if the element is erased, the iterator is invalidated
-                // and ++it will cause a segmentation fault
+
                 ++it;
             }
         }
@@ -84,12 +83,12 @@ public:
 
     void SetEntityID(uint32_t id);
 
-    std::vector<IComponent> &GetAllComponents();
+    std::vector<IComponent *> &GetAllComponents();
 
 protected:
     std::string name;
     uint32_t entityID = 0;
-    std::vector<IComponent> components;
+    std::vector<IComponent *> components;
 };
 
 

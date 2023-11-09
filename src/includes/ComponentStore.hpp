@@ -21,15 +21,16 @@ public:
     }
 
     ~ComponentStore() {
-        for (auto &pair : components) {
-            for (auto &compPair : pair.second) {
-                delete compPair.second;
+        for (auto &pair: components) {
+            for (auto &compPair: pair.second) {
+                if (compPair.second != nullptr)
+                    delete compPair.second;
             }
         }
     }
 
     template<typename T>
-    void addComponent(uint32_t entity, T* component) {
+    void addComponent(uint32_t entity, T *component) {
         components[typeid(T)][entity] = std::move(component);
     }
 
@@ -39,7 +40,7 @@ public:
         if (itType != components.end()) {
             auto itEntity = itType->second.find(entity);
             if (itEntity != itType->second.end()) {
-                return static_cast<T*>(itEntity->second);
+                return static_cast<T *>(itEntity->second);
             }
         }
         return nullptr;
@@ -59,7 +60,7 @@ public:
         std::vector<uint32_t> entities;
         auto itType = components.find(typeid(T));
         if (itType != components.end()) {
-            for (auto &pair : itType->second) {
+            for (auto &pair: itType->second) {
                 entities.push_back(pair.first);
             }
         }
@@ -67,7 +68,7 @@ public:
     }
 
 private:
-    std::unordered_map<std::type_index, std::unordered_map<uint32_t, IComponent*>> components;
+    std::unordered_map<std::type_index, std::unordered_map<uint32_t, IComponent *>> components;
 };
 
 #endif // SIMPLE_COMPONENTSTORE_HPP

@@ -7,12 +7,18 @@
 
 #include <cstdint>
 
+class ComponentVisitor;
+
 struct IComponent {
     virtual ~IComponent() = default;
 
-    explicit IComponent(){};
+    explicit IComponent() {};
+
+    virtual void Accept(ComponentVisitor &visitor) = 0;
+
+
     // Als we nog achter andere overeenkomende dingen komen bij ieder component kunnen we die hier toevoegens
-    uint32_t entityID {0};
+    uint32_t entityID{0};
     bool isActive = true;
 };
 
