@@ -21,7 +21,8 @@ struct TransformComponent : public IComponent {
         visitor.visit<TransformComponent>(this);
     }
 
-    std::unique_ptr<Vector2> position, scale;
+    std::unique_ptr<Vector2> position = std::make_unique<Vector2>(0.0f, 0.0f);
+    std::unique_ptr<Vector2> scale = std::make_unique<Vector2>(1.0f, 1.0f);
     float rotation;
 };
 
