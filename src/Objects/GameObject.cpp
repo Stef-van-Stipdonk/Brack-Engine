@@ -7,9 +7,9 @@
 #include "Objects/GameObject.hpp"
 
 GameObject::GameObject() {
-    TransformComponent *transFormComponent = new TransformComponent();
-    ObjectInfoComponent *objectInfoComponent = new ObjectInfoComponent();
-    AddComponent(transFormComponent);
+    auto *transformComponent = new TransformComponent();
+    auto *objectInfoComponent = new ObjectInfoComponent();
+    AddComponent(transformComponent);
     AddComponent(objectInfoComponent);
 }
 
@@ -18,36 +18,66 @@ std::vector<GameObject> GameObject::GetChildren() {
 }
 
 std::string GameObject::GetName() {
-    return std::string();
+    if (entityID == 0) {
+        return GetComponent<ObjectInfoComponent>()->name;
+    }
+
+    return ComponentStore::GetInstance().getComponent<ObjectInfoComponent>(entityID)->name;
+
 }
 
 
 void GameObject::SetName(char *name) {
-
+    if (entityID == 0) {
+        GetComponent<ObjectInfoComponent>()->name = name;
+    } else {
+        ComponentStore::GetInstance().getComponent<ObjectInfoComponent>(entityID)->name = name;
+    }
 }
 
 std::string GameObject::GetTag() {
-    return std::string();
+    if (entityID == 0) {
+        return GetComponent<ObjectInfoComponent>()->tag;
+    }
+    ComponentStore::GetInstance().getComponent<ObjectInfoComponent>(entityID)->tag;
 }
 
 void GameObject::SetTag(char *tag) {
-
+    if (entityID == 0) {
+        GetComponent<ObjectInfoComponent>()->tag = tag;
+    } else {
+        ComponentStore::GetInstance().getComponent<ObjectInfoComponent>(entityID)->tag = tag;
+    }
 }
 
 bool GameObject::IsActive() {
-    return false;
+    if (entityID == 0) {
+        return GetComponent<ObjectInfoComponent>()->isActive;
+    }
+    return ComponentStore::GetInstance().getComponent<ObjectInfoComponent>(entityID)->isActive;
 }
 
 void GameObject::SetActive(bool active) {
-
+    if (entityID == 0) {
+        GetComponent<ObjectInfoComponent>()->isActive = active;
+    } else {
+        ComponentStore::GetInstance().getComponent<ObjectInfoComponent>(entityID)->isActive = active;
+    }
 }
 
 int GameObject::GetLayer() {
-    return 0;
+    if (entityID == 0) {
+        return GetComponent<ObjectInfoComponent>()->layer;
+    }
+    return ComponentStore::GetInstance().getComponent<ObjectInfoComponent>(entityID)->layer;
 }
 
 void GameObject::SetLayer(int layer) {
-
+    if (entityID == 0) {
+        GetComponent<ObjectInfoComponent>()->layer = layer;
+    } else {
+        ComponentStore::GetInstance().getComponent<ObjectInfoComponent>(entityID)->layer = layer;
+    }
 }
 
 GameObject &GameObject::GetParent() {
@@ -62,7 +92,7 @@ void GameObject::SetEntityID(uint32_t id) {
     entityID = id;
 }
 
-std::vector<IComponent *> & GameObject::GetAllComponents() {
+std::vector<IComponent *> &GameObject::GetAllComponents() {
     return components;
 }
 

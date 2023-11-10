@@ -17,19 +17,11 @@ Vector2 Camera::GetSize() const {
 }
 
 void Camera::SetSize(const Vector2 size) {
-
+//    GetComponent<CameraComponent>()->size = size;
 }
 
 Camera::Camera() : GameObject() {
-    size = Vector2(800, 600);
-    backgroundColor = Color(0, 0, 0, 255);
-    cameraComponent = new CameraComponent();
-}
-
-CameraComponent *Camera::GetCameraComponent() {
-    return cameraComponent;
-}
-
-void Camera::SetCameraComponent(CameraComponent *cameraComponent) {
-    this->cameraComponent = cameraComponent;
+    AddComponent(new CameraComponent());
+    SetSize(Vector2(800, 600));
+    SetBackgroundColor(Color(0, 0, 0, 255));
 }

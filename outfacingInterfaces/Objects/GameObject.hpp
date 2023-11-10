@@ -38,8 +38,9 @@ public:
     template<typename T>
     T *GetComponent() {
         for (auto &comp: components) {
-            if (dynamic_cast<T>(comp))
-                return comp;
+            if (T *castedComp = dynamic_cast<T *>(comp)) {
+                return castedComp;
+            }
         }
         return nullptr;
     }
