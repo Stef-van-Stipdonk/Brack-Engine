@@ -14,6 +14,7 @@
 #include <map>
 #include <memory>
 #include <Components/BoxCollisionComponent.hpp>
+#include <Components/CircleCollisionComponent.hpp>
 
 
 class RenderWrapper {
@@ -33,6 +34,7 @@ public:
     void RenderFrame();
 
     void RenderBoxCollisionComponents(BoxCollisionComponent* boxCollisionComponent, TransformComponent* transformComponent);
+    void RenderCircleCollisionComponents(CircleCollisionComponent* circleCollisionComponent, TransformComponent* transformComponent);
 
     static void Cleanup();
 

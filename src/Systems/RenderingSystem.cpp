@@ -32,6 +32,13 @@ void RenderingSystem::Update(float deltaTime) {
             auto transformComponent = ComponentStore::GetInstance().getComponent<TransformComponent>(entityId);
             sdl2Wrapper->RenderBoxCollisionComponents(boxCollisionComponent,transformComponent);
         }
+
+        auto circleCollisionComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<CircleCollisionComponent>();
+        for (int entityId: circleCollisionComponentIds) {
+            auto circleCollisionComponent = ComponentStore::GetInstance().getComponent<CircleCollisionComponent>(entityId);
+            auto transformComponent = ComponentStore::GetInstance().getComponent<TransformComponent>(entityId);
+            sdl2Wrapper->RenderCircleCollisionComponents(circleCollisionComponent,transformComponent);
+        }
 #endif
         sdl2Wrapper->RenderFrame();
     }

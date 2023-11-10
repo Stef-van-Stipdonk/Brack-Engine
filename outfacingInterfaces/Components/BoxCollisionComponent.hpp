@@ -11,6 +11,7 @@
 
 struct BoxCollisionComponent : public CollisionComponent {
     explicit BoxCollisionComponent(float width, float height) : CollisionComponent(), size(new Vector2(width, height)) {}
+    explicit BoxCollisionComponent(float size) : BoxCollisionComponent(size,size) {}
 
     ~BoxCollisionComponent() override = default;
 

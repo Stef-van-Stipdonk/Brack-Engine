@@ -12,7 +12,8 @@
 
 struct CircleCollisionComponent : public CollisionComponent {
 
-    explicit CircleCollisionComponent() : CollisionComponent() {}
+    explicit CircleCollisionComponent(float xRadius, float yRadius) : CollisionComponent(), radius(new Vector2(xRadius,yRadius)) {}
+    explicit CircleCollisionComponent(float radius) : CircleCollisionComponent(radius,radius) {}
 
     ~CircleCollisionComponent() override = default;
 
