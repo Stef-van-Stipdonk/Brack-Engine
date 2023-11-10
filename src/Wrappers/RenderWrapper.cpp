@@ -1,7 +1,4 @@
-//
-// Created by jesse on 30/10/2023.
-//
-
+#include <SDL_image.h>
 #include "RenderWrapper.hpp"
 #include "../includes/SystemManager.hpp"
 #include "../ConfigSingleton.hpp"
@@ -19,6 +16,13 @@ RenderWrapper::~RenderWrapper() {
 bool RenderWrapper::Initialize() {
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         std::cerr << "SDL2 initialization failed: " << SDL_GetError() << std::endl;
+        return false;
+    }
+
+    // Initialize SDL_image
+    if ((IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG) != IMG_INIT_PNG) {
+        std::cerr << "SDL_image initialization failed: " << IMG_GetError() << std::endl;
+        SDL_Quit();
         return false;
     }
 
@@ -54,8 +58,6 @@ bool RenderWrapper::Initialize() {
         return false;
     }
 
-    SDL_SetRenderTarget(renderer.get(), texture);
-
     return true;
 }
 
@@ -76,36 +78,26 @@ void RenderWrapper::RenderCamera(CameraComponent *camera) {
 }
 
 void RenderWrapper::RenderSprite(SpriteComponent &sprite) {
-    SDL_Surface* spritesheetSurface = SDL_LoadBMP(sprite.spritePath.c_str());
-    int currentFrame = 0;
-    Uint32 lastFrameTime = 0;
-    const int frameRate = 10;
-
-    if (!spritesheetSurface) {
-        printf("SDL Error: %s\n", SDL_GetError());
-        return;
+    auto texture = textures.find(sprite.spritePath);
+    if(texture == textures.end()) {
+        SDL_Surface* surface = SDL_LoadBMP(sprite.spritePath.c_str());
+        std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)> bmpTexture(SDL_CreateTextureFromSurface(renderer.get(), surface), &SDL_DestroyTexture);
+        textures.insert(std::make_pair(sprite.spritePath,std::move(bmpTexture)));
+        SDL_FreeSurface(surface);
     }
-
-    SDL_Texture* spritesheetTexture = SDL_CreateTextureFromSurface(renderer.get(), spritesheetSurface);
-
-    int spriteWidth = sprite.spriteSize->getX();
-    int spriteHeight = sprite.spriteSize->getY();
+    texture = textures.find(sprite.spritePath);
 
     SDL_Rect spriteRectangle;
-    int spriteX = 4;
-    int spriteY = 1;
-
-    spriteRectangle.x = std::round(spriteX * spriteWidth);
-    spriteRectangle.y = std::round(spriteY * spriteHeight);
+    int spriteWidth = sprite.spriteSize->getX();
+    int spriteHeight = sprite.spriteSize->getY();
+    spriteRectangle.x = (sprite.tileOffset->getX() * spriteWidth) + (sprite.margin * sprite.tileOffset->getX());
+    spriteRectangle.y = (sprite.tileOffset->getY() * spriteHeight) + (sprite.margin * sprite.tileOffset->getY());
     spriteRectangle.w = spriteWidth;
     spriteRectangle.h = spriteHeight;
 
-    SDL_RenderClear(renderer.get());
-
     SDL_Rect srcRect = spriteRectangle;
-    SDL_Rect destRect = {static_cast<int>(sprite.position->getX()), static_cast<int>(sprite.position->getY()), srcRect.w, srcRect.h};
-    SDL_RenderCopy(renderer.get(), spritesheetTexture, &srcRect, &destRect);
-    SDL_RenderPresent(renderer.get());
+    SDL_Rect destRect = {static_cast<int>(sprite.position->getX()), static_cast<int>(sprite.position->getY()), static_cast<int>(sprite.spriteSize->getX() * sprite.scale->getX()), static_cast<int>(sprite.spriteSize->getY() * sprite.scale->getY())};
+    SDL_RenderCopy(renderer.get(), texture->second.get(), &srcRect, &destRect);
 }
 
 void RenderWrapper::RenderText(TextComponent* textComponent, TransformComponent* transformComponent) {
