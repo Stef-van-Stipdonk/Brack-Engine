@@ -21,7 +21,7 @@ public:
 
     void CleanUp();
 
-    void StartSound(AudioComponent &audioComponent);
+    void UploadSound(AudioComponent &audioComponent);
 
     void StopSound(AudioComponent &audioComponent);
 
@@ -33,12 +33,15 @@ public:
 
     void SetLooping(AudioComponent &audioComponent, bool loop);
 
+    const std::unordered_map<int, bool>& GetPlaybackStateMap() const;
+    void SetPlaybackState(int entityID, bool state);
+
 private:
     FMOD::System *system;
 
     std::unordered_map<int, FMOD::Channel*> channelMap;
+    std::unordered_map<int, bool> playbackStateMap;
     FMOD::Channel* FindFMODChannel(int intChannel);
-    int FindIntChannel(FMOD::Channel* fmodChannel);
 };
 
 

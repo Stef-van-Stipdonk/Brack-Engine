@@ -3,8 +3,8 @@
 //
 
 #include "AudioSystem.hpp"
-#include "../includes/ComponentStore.hpp"
 #include "../includes/EntityManager.hpp"
+#include <fstream>
 
 AudioSystem::AudioSystem() : audioWrapper(new AudioWrapper()) {
 }
@@ -16,72 +16,42 @@ void AudioSystem::Update(float deltaTime) {
     auto entities = ComponentStore::GetInstance().getEntitiesWithComponent<AudioComponent>();
     for (auto entity : entities) {
         auto audioComponent = ComponentStore::GetInstance().getComponent<AudioComponent>(entity);
-        if(!audioComponent->hasStarted){
-            audioComponent->hasStarted = true;
-            StartSound(*audioComponent);
+
+        // Check if the file exists
+        std::ifstream file(audioComponent->audioPath);
+        if (!file.good()) {
+            Logger::Info("Audio file not found at path: " + audioComponent->audioPath);
+            continue;
+        }
+        // Access the playbackStateMap through the AudioWrapper
+        const auto& playbackStateMap = audioWrapper->GetPlaybackStateMap();
+
+        auto playbackStateIt = playbackStateMap.find(audioComponent->entityID);
+
+        // Check if the sound needs to be uploaded (formerly StartSound)
+        if (playbackStateIt == playbackStateMap.end() || !playbackStateIt->second) {
+            audioWrapper->UploadSound(*audioComponent);
+
+            audioWrapper->SetPlaybackState(audioComponent->entityID, false);
         }
 
-        if (audioComponent->isPlaying) {
-            ResumeSound(*audioComponent);
+        // Check if the sound is playing or not
+        bool isPlaying = playbackStateIt != playbackStateMap.end() && playbackStateIt->second;
+
+        if (audioComponent->isPlaying && !isPlaying) {
+            // If the sound is supposed to play, and it's not playing, start it
+            audioWrapper->ResumeSound(*audioComponent);
+            audioWrapper->SetPlaybackState(audioComponent->entityID, true);
+        } else if (!audioComponent->isPlaying && isPlaying) {
+            // If the sound is not supposed to, and it's playing, pause it
+            audioWrapper->PauseSound(*audioComponent);
+            audioWrapper->SetPlaybackState(audioComponent->entityID, false);
         }
-        else{
-            PauseSound(*audioComponent);
-        }
 
-        SetLooping(*audioComponent, audioComponent->isLooping);
-        SetVolume(*audioComponent, audioComponent->volume);
+        audioWrapper->SetLooping(*audioComponent, audioComponent->isLooping);
+        audioWrapper->SetVolume(*audioComponent, audioComponent->volume);
     }
 }
-
-void AudioSystem::StartSound(AudioComponent &audioComponent) {
-    if (audioWrapper) {
-        audioWrapper->StartSound(audioComponent);
-    } else {
-        Logger::Error("AudioSystem is not initialized.");
-    }
-}
-
-void AudioSystem::StopSound(AudioComponent &audioComponent) {
-    if (audioWrapper) {
-        audioWrapper->StopSound(audioComponent);
-    } else {
-        Logger::Error("AudioSystem is not initialized.");
-    }
-}
-
-void AudioSystem::ResumeSound(AudioComponent &audioComponent) {
-    if (audioWrapper) {
-        audioWrapper->ResumeSound(audioComponent);
-    } else {
-        Logger::Error("AudioSystem is not initialized.");
-    }
-}
-
-void AudioSystem::PauseSound(AudioComponent &audioComponent) {
-    if (audioWrapper) {
-        audioWrapper->PauseSound(audioComponent);
-    } else {
-        Logger::Error("AudioSystem is not initialized.");
-    }
-}
-
-
-void AudioSystem::SetVolume(AudioComponent &audioComponent, float volume) {
-    if (audioWrapper) {
-        audioWrapper->SetVolume(audioComponent, volume);
-    } else {
-        Logger::Error("AudioSystem is not initialized.");
-    }
-}
-
-void AudioSystem::SetLooping(AudioComponent &audioComponent, bool loop) {
-    if (audioWrapper) {
-        audioWrapper->SetLooping(audioComponent, loop);
-    } else {
-        Logger::Error("AudioSystem is not initialized.");
-    }
-}
-
 
 const std::string AudioSystem::GetName() const {
     return "AudioSystem";
@@ -92,7 +62,7 @@ void AudioSystem::CleanUp() {
 
     for (auto entity : entities) {
         auto audioComponent = ComponentStore::GetInstance().getComponent<AudioComponent>(entity);
-        StopSound(*audioComponent);
+        audioWrapper->StopSound(*audioComponent);
     }
     audioWrapper->CleanUp();
 }

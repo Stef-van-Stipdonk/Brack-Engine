@@ -22,7 +22,7 @@ public:
 
     void Update(float deltaTime) override;
 
-    void StartSound(AudioComponent &audioComponent);
+    bool UploadSound(AudioComponent &audioComponent);
     void StopSound(AudioComponent &audioComponent);
     void ResumeSound(AudioComponent &audioComponent);
     void PauseSound(AudioComponent &audioComponent);

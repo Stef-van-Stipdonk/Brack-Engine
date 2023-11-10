@@ -22,7 +22,19 @@ void GameObjectConverter::AddGameObject(GameObject &gameObject) {
     if (gameObject.GetEntityID() == 0)
         gameObject.SetEntityID(EntityManager::GetInstance().CreateEntity());
     for (auto &component: gameObject.GetAllComponents()) {
+        //All components get the same ID as the gameobject now, Unintentional?? ~Jim
+
+        //Use the following to test the audio System.
+        /*
         component->entityID = gameObject.GetEntityID();
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<int> distribution(50, 100);
+        int random_number = distribution(gen);
+        component->entityID = random_number;
+        */
+
+        //component->entityID = gameObject.GetEntityID();
         component->Accept(componentVisitor);
     }
 }
