@@ -20,8 +20,8 @@ BrackEngine::BrackEngine(Config &&config) {
     SystemManager::GetInstance().AddSystem(std::make_shared<RenderingSystem>());
 
     auto Ai = std::make_shared<AISystem>();
-    auto movement = SystemManager::GetInstance().FindSystem("MovementSystem");
-    SystemManager::GetInstance().FindSystem("InputSystem")->AddDependency(movement);
+    auto movement = SystemManager::GetInstance().FindSystem<MovementSystem>();
+    SystemManager::GetInstance().FindSystem<InputSystem>()->AddDependency(movement);
     Ai->AddDependency(movement);
     SystemManager::GetInstance().AddSystem(Ai);
     SystemManager::GetInstance().SortSystems();

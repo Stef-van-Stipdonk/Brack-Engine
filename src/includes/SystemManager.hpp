@@ -40,9 +40,20 @@ public:
     SystemManager &operator=(SystemManager &&) = delete;
 
     /// <summary>
-    /// Finds a system by name
+    /// Finds a system by type
     /// </summary>
-    std::shared_ptr<ISystem> FindSystem(const std::string& name);
+    template<typename T>
+    std::shared_ptr<T> FindSystem() {
+        for (auto& system : systems) {
+            auto castedSystem = std::dynamic_pointer_cast<T>(system);
+            if (castedSystem) {
+                return castedSystem;
+            }
+        }
+
+        Logger::Warning(std::string("System not found: ") + typeid(T).name());
+        return nullptr; // Return nullptr if system not found
+    }
 
     /// <summary>
     /// Adds a system to the system manager
@@ -70,7 +81,6 @@ public:
     void PrintDependencyGraph() const;
 
     void SortSystems();
-
 private:
 
     SystemManager() = default;

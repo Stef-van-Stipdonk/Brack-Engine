@@ -22,7 +22,7 @@ void SystemManager::AddSystems(std::vector<std::shared_ptr<ISystem>> newSystems,
 
 void SystemManager::AddSystem(std::shared_ptr<ISystem> system, bool printGraph) {
     Logger::Info("Added system " + system->GetName());
-    systems.push_back(system); // No need to std::move
+    systems.push_back(system);
 
     if (printGraph)
         PrintDependencyGraph();
@@ -45,11 +45,10 @@ void SystemManager::SortSystems() {
     std::vector<ISystem*> nodesWithoutIncomingEdges;
     std::unordered_map<ISystem*, std::vector<std::weak_ptr<ISystem>>> edgeCopy;
 
-    // Backup the original incoming edges and initialize a copy for sorting
     for (auto &system : systems) {
         std::vector<std::weak_ptr<ISystem>> incomingEdges;
         for (auto &weakEdge : system->incomingEdges) {
-            if (auto edge = weakEdge.lock()) { // Convert weak_ptr to shared_ptr before using
+            if (auto edge = weakEdge.lock()) {
                 incomingEdges.push_back(weakEdge);
             }
         }
@@ -63,7 +62,6 @@ void SystemManager::SortSystems() {
         auto node = nodesWithoutIncomingEdges.back();
         nodesWithoutIncomingEdges.pop_back();
 
-        // Find and remove the shared_ptr from systems
         auto it = std::find_if(systems.begin(), systems.end(),
                                [node](const std::shared_ptr<ISystem> &system) { return system.get() == node; });
         if (it != systems.end()) {
@@ -71,7 +69,6 @@ void SystemManager::SortSystems() {
             systems.erase(it);
         }
 
-        // Update edgeCopy to remove the node from the incoming edges of its dependencies
         for (auto &weakDependency : node->outgoingEdges) {
             if (auto dependency = weakDependency.lock()) {
                 auto &depIncomingEdgesCopy = edgeCopy[dependency.get()];
@@ -91,7 +88,6 @@ void SystemManager::SortSystems() {
         }
     }
 
-    // Check for any remaining edges to detect cycles
     std::string errorString;
     for (auto &pair : edgeCopy) {
         if (!pair.second.empty()) {
@@ -114,7 +110,7 @@ void SystemManager::SortSystems() {
         Logger::Error(errorString);
     }
 
-    systems = std::move(sortedList); // Replace the systems list with the sorted list
+    systems = std::move(sortedList);
 }
 
 void SystemManager::PrintDependencyGraph() const {
@@ -137,18 +133,4 @@ void SystemManager::PrintDependencyGraph() const {
 
 void SystemManager::CleanUp(){
     systems.clear();
-}
-
-std::shared_ptr<ISystem> SystemManager::FindSystem(const std::string &name) {
-    auto it = std::find_if(systems.begin(), systems.end(),
-                           [&name](const std::shared_ptr<ISystem>& system) {
-                               return system->GetName() == name;
-                           });
-
-    if (it != systems.end()) {
-        return *it;
-    } else {
-        Logger::Warning("System not found: " + name);
-        return nullptr; // Return nullptr if system not found
-    }
 }
