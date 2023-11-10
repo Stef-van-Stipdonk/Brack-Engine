@@ -22,11 +22,17 @@ bool RenderWrapper::Initialize() {
         return false;
     }
 
+    if (TTF_Init() == -1) {
+        std::cerr << "SDL_ttf initialization failed: " << TTF_GetError() << std::endl;
+    }
+
     // Create a window.
     // You can customize the window size, title, and other settings as needed.
     // For simplicity, this example creates a 800x600 window.
-    SDL_Window *window = SDL_CreateWindow("Brack Engine Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800,
-                                          600, SDL_WINDOW_SHOWN);
+    SDL_Window *window = SDL_CreateWindow(ConfigSingleton::GetInstance().GetWindowTitle().c_str(),
+                                          SDL_WINDOWPOS_CENTERED,
+                                          SDL_WINDOWPOS_CENTERED, ConfigSingleton::GetInstance().GetWindowSize().getX(),
+                                          ConfigSingleton::GetInstance().GetWindowSize().getY(), SDL_WINDOW_SHOWN);
 
     if (window == nullptr) {
         std::cerr << "Window creation failed: " << SDL_GetError() << std::endl;
@@ -55,37 +61,68 @@ void RenderWrapper::Cleanup() {
     // Perform cleanup as necessary
     Logger::GetInstance().Shutdown();
     SDL_Quit();
+    TTF_Quit();
 }
 
-void RenderWrapper::RenderCamera(CameraComponent* camera) {
+void RenderWrapper::RenderCamera(CameraComponent *camera) {
     auto &backgroundColor = camera->backgroundColor;
     SDL_SetRenderDrawColor(renderer.get(), backgroundColor.r, backgroundColor.g, backgroundColor.b,
                            backgroundColor.a); // RGBA format
 
     // Clear the screen with the background color.
     SDL_RenderClear(renderer.get());
-
-    // Present the renderer (update the window).
-    SDL_RenderPresent(renderer.get());
 }
 
 void RenderWrapper::RenderSprite(SpriteComponent &sprite) {
 
 }
 
-void RenderWrapper::RenderText(TextComponent &text) {
+void RenderWrapper::RenderText(TextComponent* textComponent, TransformComponent* transformComponent) {
+    SDL_Color sdlColor = {
+            static_cast<Uint8>(textComponent->color->r),
+            static_cast<Uint8>(textComponent->color->g),
+            static_cast<Uint8>(textComponent->color->b),
+            static_cast<Uint8>(textComponent->color->a)
+    };
 
+    TTF_Font* font = nullptr;
+    const std::string& fontPath = textComponent->fontPath;
+    int fontSize = textComponent->fontSize;
+
+    auto& sizeMap = fontCache[fontPath];
+    if (sizeMap.count(fontSize) != 0) {
+        font = sizeMap[fontSize];
+    } else {
+        font = TTF_OpenFont(fontPath.c_str(), fontSize);
+        if (!font) {
+            std::string baseFontPath = ConfigSingleton::GetInstance().GetBaseAssetPath() + "Fonts/Arial.ttf";
+            font = TTF_OpenFont(baseFontPath.c_str(), fontSize);
+        }
+        sizeMap[fontSize] = font;
+    }
+
+    SDL_Surface* surface = TTF_RenderText_Solid(font, textComponent->text.c_str(), sdlColor);
+
+    if (!surface) {
+        std::cerr << "TTF_RenderText_Solid Error: " << TTF_GetError() << std::endl;
+    }
+
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer.get(), surface);
+    if (!texture) {
+        std::cerr << "SDL_CreateTextureFromSurface Error: " << SDL_GetError() << std::endl;
+    }
+
+    SDL_Rect rect = { static_cast<int>(transformComponent->position->getX()), static_cast<int>(transformComponent->position->getY()), surface->w, surface->h };
+    SDL_RenderCopy(renderer.get(), texture, nullptr, &rect);
+
+    SDL_FreeSurface(surface);
+    SDL_DestroyTexture(texture);
 }
 
 void RenderWrapper::RenderButton(TextComponent &button) {
 
 }
 
-void RenderWrapper::Run() {
-
-}
-
-
 void RenderWrapper::RenderFrame() {
-    //Render dubble buffered frame
+    SDL_RenderPresent(renderer.get());
 }

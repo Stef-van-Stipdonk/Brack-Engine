@@ -8,14 +8,21 @@
 #include <memory>
 #include "IComponent.hpp"
 #include "Helpers/Vector2.hpp"
+#include "../../src/Components/ComponentVisitor.hpp"
+
 
 struct TransformComponent : public IComponent {
 
-    explicit TransformComponent( ) : IComponent() {}
+    explicit TransformComponent() : IComponent() {}
 
     ~TransformComponent() override = default;
 
-    std::unique_ptr<Vector2> position, scale;
+    void Accept(ComponentVisitor &visitor) override {
+        visitor.visit<TransformComponent>(this);
+    }
+
+    std::unique_ptr<Vector2> position = std::make_unique<Vector2>(0.0f, 0.0f);
+    std::unique_ptr<Vector2> scale = std::make_unique<Vector2>(1.0f, 1.0f);
     float rotation;
 };
 

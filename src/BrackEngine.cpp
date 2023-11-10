@@ -11,10 +11,13 @@
 #include "Systems/InputSystem.hpp"
 #include "FPSSingleton.hpp"
 #include "Systems/AudioSystem.hpp"
+#include "Systems/MovementSystem.hpp"
+
 
 BrackEngine::BrackEngine(Config &&config) {
-    ConfigSingleton::GetInstance().SetIsRunning(config.isRunning);
+    ConfigSingleton::GetInstance().SetConfig(config);
     SystemManager::GetInstance().AddSystem(new InputSystem());
+    SystemManager::GetInstance().AddSystem(new MovementSystem());
     SystemManager::GetInstance().AddSystem(new RenderingSystem());
     SystemManager::GetInstance().AddSystem(new AudioSystem());
     lastTime = std::chrono::high_resolution_clock::now();
@@ -26,7 +29,7 @@ void BrackEngine::Run() {
         FPSSingleton::GetInstance().Start();
         SystemManager::GetInstance().UpdateSystems(GetDeltaTime());
         FPSSingleton::GetInstance().End();
-        Logger::Info("FPS: " + std::to_string(FPSSingleton::GetInstance().GetFPS()));
+//        Logger::Info("FPS: " + std::to_string(FPSSingleton::GetInstance().GetFPS()));
     }
     SystemManager::GetInstance().CleanUp();
 }

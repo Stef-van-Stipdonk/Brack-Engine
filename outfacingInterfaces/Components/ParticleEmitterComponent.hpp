@@ -6,11 +6,16 @@
 #define BRACK_ENGINE_PARTICLEEMITTERCOMPONENT_HPP
 
 #include "IComponent.hpp"
+#include "../../src/Components/ComponentVisitor.hpp"
 
 struct ParticleEmitterComponent : public IComponent {
-    explicit ParticleEmitterComponent( ) : IComponent() {}
+    explicit ParticleEmitterComponent() : IComponent() {}
 
     ~ParticleEmitterComponent() override = default;
+
+    void Accept(ComponentVisitor &visitor) override {
+        visitor.visit<ParticleEmitterComponent>(this);
+    }
 
     int amount;
 };

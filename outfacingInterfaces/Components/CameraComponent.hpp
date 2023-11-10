@@ -8,11 +8,18 @@
 #include <memory>
 #include "Helpers/Color.hpp"
 #include "VelocityComponent.hpp"
+#include "../../src/Components/ComponentVisitor.hpp"
+
 
 struct CameraComponent : public VelocityComponent {
     explicit CameraComponent() : VelocityComponent() {}
 
     ~CameraComponent() override = default;
+
+
+    void Accept(ComponentVisitor &visitor) override {
+        visitor.visit<CameraComponent>(this);
+    }
 
     Vector2 size;
     Color backgroundColor;

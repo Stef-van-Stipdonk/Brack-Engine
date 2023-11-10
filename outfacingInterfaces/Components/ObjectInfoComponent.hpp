@@ -10,9 +10,13 @@
 
 struct ObjectInfoComponent : public IComponent {
 
-    explicit ObjectInfoComponent( ) : IComponent() {}
+    explicit ObjectInfoComponent() : IComponent() {}
 
     ~ObjectInfoComponent() override = default;
+
+    void Accept(ComponentVisitor &visitor) override {
+        visitor.visit<ObjectInfoComponent>(this);
+    }
 
     std::string name, tag;
     int layer;
