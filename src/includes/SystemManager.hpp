@@ -52,7 +52,23 @@ public:
         }
 
         Logger::Warning(std::string("System not found: ") + typeid(T).name());
-        return nullptr; // Return nullptr if system not found
+        return nullptr;
+    }
+
+
+    template<typename T>
+    void RemoveSystem() {
+        auto it = std::remove_if(systems.begin(), systems.end(),
+                                 [](const std::shared_ptr<ISystem>& system) {
+                                     return std::dynamic_pointer_cast<T>(system) != nullptr;
+                                 }
+        );
+
+        if (it != systems.end()) {
+            systems.erase(it, systems.end());
+        } else {
+            Logger::Warning(std::string("System not found: ") + typeid(T).name());
+        }
     }
 
     /// <summary>
