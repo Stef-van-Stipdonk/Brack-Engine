@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include "SDL.h"
+#include <SDL_ttf.h>
 #include "Components/CameraComponent.hpp"
 #include "Components/SpriteComponent.hpp"
 #include "Components/TextComponent.hpp"
@@ -20,13 +21,11 @@ public:
 
     ~RenderWrapper();
 
-    void Run(); //Alleen om te testen
-
     void RenderCamera(CameraComponent* camera);
 
     void RenderSprite(SpriteComponent &sprite);
 
-    void RenderText(TextComponent &text);
+    void RenderText(TextComponent* textComponent, TransformComponent* transformComponent);
 
     void RenderButton(TextComponent &button);
 
@@ -35,9 +34,8 @@ public:
     static void Cleanup();
 
 private:
-    SDL_Texture* texture = nullptr;
     bool Initialize();
-
+    std::unordered_map<std::string, std::map<int, TTF_Font*>> fontCache;
     std::map<std::string, SDL_Texture *> textures;
     std::unique_ptr<SDL_Renderer, void (*)(SDL_Renderer *)> renderer;
 };

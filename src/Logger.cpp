@@ -20,7 +20,7 @@ Logger::Logger() {
 
     // Convert the current time to tm struct
     std::tm bt{};
-#if defined(_MSC_VER)
+#if defined(_WIN32)
     localtime_s(&bt, &in_time_t);
 #else
     localtime_r(&in_time_t, &bt); // POSIX
@@ -47,13 +47,14 @@ Logger::~Logger() {
 #endif
 }
 
-Logger& Logger::GetInstance() {
+Logger &Logger::GetInstance() {
     static Logger instance;
     return instance;
 }
 
 #ifdef LOG_TO_FILE
-void Logger::OpenLogFile(const std::string& filename) {
+
+void Logger::OpenLogFile(const std::string &filename) {
     std::lock_guard<std::mutex> lock(fileMutex);
     if (!logFile.is_open()) {
         logFile.open(filename, std::ios::out | std::ios::app);
@@ -62,6 +63,7 @@ void Logger::OpenLogFile(const std::string& filename) {
         }
     }
 }
+
 #endif
 
 // Static methods to check log level and log if appropriate
@@ -131,7 +133,7 @@ void Logger::ProcessLogQueue() {
             queue_to_write.swap(log_queue_);
         }
 
-        for (const auto &entry : queue_to_write) {
+        for (const auto &entry: queue_to_write) {
 #ifdef LOG_TO_FILE
             if (logFile.is_open()) {
                 logFile << entry << std::endl;

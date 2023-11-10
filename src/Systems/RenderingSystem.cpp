@@ -18,11 +18,15 @@ void RenderingSystem::Update(float deltaTime) {
     //Render camera
     try {
         auto cameraId = ComponentStore::GetInstance().getEntitiesWithComponent<CameraComponent>()[0];
-        auto component = ComponentStore::GetInstance().getComponent<CameraComponent>(cameraId);
-        auto transformId = ComponentStore::GetInstance().getEntitiesWithComponent<TransformComponent>()[0];
-        auto transformComponent = ComponentStore::GetInstance().getComponent<TransformComponent>(transformId);
-//        Logger::Debug(std::string(reinterpret_cast<const char *>(component->entityID)));
-        sdl2Wrapper->RenderCamera(component);
+        auto cameraComponent = ComponentStore::GetInstance().getComponent<CameraComponent>(cameraId);
+        auto textComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<TextComponent>();
+        sdl2Wrapper->RenderCamera(cameraComponent);
+        for (int entityId: textComponentIds) {
+            auto textComponent = ComponentStore::GetInstance().getComponent<TextComponent>(entityId);
+            auto transformComponent = ComponentStore::GetInstance().getComponent<TransformComponent>(entityId);
+            sdl2Wrapper->RenderText(textComponent, transformComponent);
+        }
+        
 
         auto entities = ComponentStore::GetInstance().getEntitiesWithComponent<SpriteComponent>();
         for(auto& entity : entities) {
@@ -32,9 +36,7 @@ void RenderingSystem::Update(float deltaTime) {
 
             sdl2Wrapper->RenderSprite(*sprite);
         }
-
         sdl2Wrapper->RenderFrame();
-//        sdl2Wrapper->Run();
     }
     catch (std::exception &e) {
         std::cout << e.what() << std::endl;
