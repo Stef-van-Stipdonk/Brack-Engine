@@ -3,7 +3,7 @@
 //
 
 #include <SDL.h>
-#include "../EngineManagers/InputManager.hpp"
+#include "EngineManagers/InputManager.hpp"
 #include "InputWrapper.hpp"
 #include "../Logger.hpp"
 #include "../ConfigSingleton.hpp"
@@ -25,45 +25,45 @@ void InputWrapper::HandleEvents() {
     SDL_Event lastKeyDownEvent{};
     SDL_Event lastKeyUpEvent{};
     // Close the window if the user presses the "X" button.
-    while(SDL_PollEvent(&event)){
+    while (SDL_PollEvent(&event)) {
         if (event.type == SDL_QUIT) {
             ConfigSingleton::GetInstance().ToggleIsRunning();
         }
-        if (event.type == SDL_MOUSEMOTION){
+        if (event.type == SDL_MOUSEMOTION) {
             lastMouseMotionEvent = event;
         }
-        if (event.type == SDL_MOUSEBUTTONDOWN){
+        if (event.type == SDL_MOUSEBUTTONDOWN) {
             lastMouseButtonDownEvent = event;
         }
-        if (event.type == SDL_MOUSEBUTTONUP){
+        if (event.type == SDL_MOUSEBUTTONUP) {
             lastMouseButtonUpEvent = event;
         }
-        if (event.type == SDL_KEYDOWN){
+        if (event.type == SDL_KEYDOWN) {
             lastKeyDownEvent = event;
         }
-        if (event.type == SDL_KEYUP){
+        if (event.type == SDL_KEYUP) {
             lastKeyUpEvent = event;
         }
     }
 
-    if (lastMouseMotionEvent.type != 0){
+    if (lastMouseMotionEvent.type != 0) {
         InputManager::GetInstance().SetMousePosition(
-    Vector2(
-            static_cast<float>(lastMouseMotionEvent.motion.x),
-            static_cast<float>(lastMouseMotionEvent.motion.y)
-            )
+                Vector2(
+                        static_cast<float>(lastMouseMotionEvent.motion.x),
+                        static_cast<float>(lastMouseMotionEvent.motion.y)
+                )
         );
     }
-    if (lastMouseButtonDownEvent.type != 0){
+    if (lastMouseButtonDownEvent.type != 0) {
         InputManager::GetInstance().SetMousePressed(lastMouseButtonDownEvent.button.button);
     }
-    if (lastMouseButtonUpEvent.type != 0){
+    if (lastMouseButtonUpEvent.type != 0) {
         InputManager::GetInstance().SetMouseReleased(lastMouseButtonUpEvent.button.button);
     }
-    if (lastKeyDownEvent.type != 0){
+    if (lastKeyDownEvent.type != 0) {
         InputManager::GetInstance().SetKeyPressed(lastKeyDownEvent.key.keysym.sym);
     }
-    if (lastKeyUpEvent.type != 0){
+    if (lastKeyUpEvent.type != 0) {
         InputManager::GetInstance().SetKeyReleased(lastKeyUpEvent.key.keysym.sym);
     }
 }
