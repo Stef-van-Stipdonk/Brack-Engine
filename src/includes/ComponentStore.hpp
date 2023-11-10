@@ -5,7 +5,9 @@
 #include <typeindex>
 #include <vector>
 #include <memory>
+#include <random>
 #include "Components/IComponent.hpp"
+#include "../Logger.hpp"
 
 //// Forward declaration of IComponent
 //struct IComponent {
@@ -15,10 +17,15 @@
 // Simplified ComponentStore
 class ComponentStore {
 public:
-    static ComponentStore &GetInstance() {
-        static ComponentStore instance;
-        return instance;
-    }
+    ComponentStore(const ComponentStore &) = delete;
+
+    ComponentStore &operator=(const ComponentStore &) = delete;
+
+    ComponentStore(ComponentStore &&) = delete;
+
+    ComponentStore &operator=(ComponentStore &&) = delete;
+
+    static ComponentStore &GetInstance();
 
     ~ComponentStore() {
         for (auto &pair: components) {
@@ -67,8 +74,24 @@ public:
         return entities;
     }
 
+    int GetRandom(int min, int max) {
+        std::random_device rd;
+        std::default_random_engine engine{rd()};
+
+        std::uniform_int_distribution<int> distribution{min, max};
+
+        return distribution(engine);
+    }
+
+
 private:
-    std::unordered_map<std::type_index, std::unordered_map<uint32_t, IComponent *>> components;
+    static ComponentStore instance;
+
+    ComponentStore() = default;
+
+
+    uint32_t i = GetRandom(0, 100);
+    std::unordered_map<std::type_index, std::unordered_map<uint32_t, IComponent *>> components = {};
 };
 
 #endif // SIMPLE_COMPONENTSTORE_HPP

@@ -13,7 +13,7 @@ struct VelocityComponent : public TransformComponent {
     ~VelocityComponent() = default;
 
     void Accept(ComponentVisitor &visitor) override {
-        visitor.visit(this);
+        visitor.visit<VelocityComponent>(this);
     }
 
     Vector2 velocity;
