@@ -30,7 +30,7 @@ void GameObjectConverter::AddGameObject(GameObject &gameObject) {
 
 void GameObjectConverter::AddCamera(Camera &camera) {
     camera.SetEntityID(EntityManager::GetInstance().CreateEntity());
-    auto *cameraComponent = camera.GetCameraComponent();
+    auto *cameraComponent = new CameraComponent();
     camera.SetEntityID(camera.GetEntityID());
     cameraComponent->size = camera.GetSize();
     cameraComponent->backgroundColor = camera.GetBackgroundColor();
