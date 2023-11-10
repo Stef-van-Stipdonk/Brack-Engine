@@ -21,12 +21,12 @@ BrackEngine::BrackEngine(Config &&config) {
 
     auto Ai = std::make_shared<AISystem>();
     auto movement = SystemManager::GetInstance().FindSystem<MovementSystem>();
-    SystemManager::GetInstance().FindSystem<InputSystem>()->AddDependency(movement);
+    SystemManager::GetInstance().FindSystem<InputSystem>().lock()->AddDependency(movement);
     Ai->AddDependency(movement);
     SystemManager::GetInstance().AddSystem(Ai);
-    SystemManager::GetInstance().SortSystems();
-
     SystemManager::GetInstance().PrintDependencyGraph();
+
+    SystemManager::GetInstance().RemoveSystem<AISystem>();
 
 
     lastTime = std::chrono::high_resolution_clock::now();

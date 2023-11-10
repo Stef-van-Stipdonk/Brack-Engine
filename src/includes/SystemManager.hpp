@@ -40,36 +40,48 @@ public:
     SystemManager &operator=(SystemManager &&) = delete;
 
     /// <summary>
-    /// Finds a system by type
-    /// </summary>
+/// Finds a system by type and returns a weak pointer to it
+/// </summary>
     template<typename T>
-    std::shared_ptr<T> FindSystem() {
+    std::weak_ptr<T> FindSystem() {
         for (auto& system : systems) {
             auto castedSystem = std::dynamic_pointer_cast<T>(system);
             if (castedSystem) {
-                return castedSystem;
+                return std::weak_ptr<T>(castedSystem);
             }
         }
 
         Logger::Warning(std::string("System not found: ") + typeid(T).name());
-        return nullptr;
+        return std::weak_ptr<T>();
     }
+
 
 
     template<typename T>
     void RemoveSystem() {
-        auto it = std::remove_if(systems.begin(), systems.end(),
-                                 [](const std::shared_ptr<ISystem>& system) {
-                                     return std::dynamic_pointer_cast<T>(system) != nullptr;
-                                 }
-        );
+        // Find the system to remove
+        auto systemToRemoveIt = std::find_if(systems.begin(), systems.end(),
+                                             [](const std::shared_ptr<ISystem>& system) {
+                                                 return std::dynamic_pointer_cast<T>(system) != nullptr;
+                                             });
 
-        if (it != systems.end()) {
-            systems.erase(it, systems.end());
+        if (systemToRemoveIt != systems.end()) {
+            auto systemToRemove = *systemToRemoveIt;
+
+            // Remove this system as a dependency from other systems
+            for (auto& system : systems) {
+                system->RemoveDependency(systemToRemove);
+            }
+
+            // Now remove the system itself
+            systems.erase(systemToRemoveIt);
+            SortSystems();
         } else {
             Logger::Warning(std::string("System not found: ") + typeid(T).name());
         }
     }
+
+
 
     /// <summary>
     /// Adds a system to the system manager
