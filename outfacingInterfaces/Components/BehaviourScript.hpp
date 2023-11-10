@@ -16,6 +16,7 @@ struct BehaviourScript : public IComponent {
 
     void Accept(ComponentVisitor &visitor) override {
         visitor.visit<BehaviourScript>(this);
+        OnStart();
     }
 
     virtual void OnStart() = 0;
