@@ -76,7 +76,7 @@ add_library(${PROJECT_NAME} SHARED
         src/Wrappers/AudioWrapper.cpp
         src/Wrappers/PhysicsWrapper.cpp
         outfacingInterfaces/Components/UIComponent.hpp
-        outfacingInterfaces/Components/ButtonComponent.hpp
+        outfacingInterfaces/Components/ClickableComponent.hpp
         outfacingInterfaces/Components/TextComponent.hpp
         src/Objects/GameObject.cpp
         src/Objects/Camera.cpp
@@ -100,6 +100,8 @@ add_library(${PROJECT_NAME} SHARED
         src/Wrappers/FPSWrapper.cpp
         src/Components/ComponentVisitor.hpp
         src/Components/ComponentVisitor.hpp
+        src/Systems/ClickSystem.cpp
+        src/Systems/ClickSystem.hpp
 )
 
 # Define an option for logging to a file

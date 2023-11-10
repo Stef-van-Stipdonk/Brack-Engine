@@ -25,6 +25,14 @@ void RenderingSystem::Update(float deltaTime) {
             auto transformComponent = ComponentStore::GetInstance().getComponent<TransformComponent>(entityId);
             sdl2Wrapper->RenderText(textComponent, transformComponent);
         }
+#if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
+        auto boxCollisionComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<BoxCollisionComponent>();
+        for (int entityId: boxCollisionComponentIds) {
+            auto boxCollisionComponent = ComponentStore::GetInstance().getComponent<BoxCollisionComponent>(entityId);
+            auto transformComponent = ComponentStore::GetInstance().getComponent<TransformComponent>(entityId);
+            sdl2Wrapper->RenderBoxCollisionComponents(boxCollisionComponent,transformComponent);
+        }
+#endif
         sdl2Wrapper->RenderFrame();
     }
     catch (std::exception &e) {

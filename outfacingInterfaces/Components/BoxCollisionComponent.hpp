@@ -10,7 +10,7 @@
 #include "CollisionComponent.hpp"
 
 struct BoxCollisionComponent : public CollisionComponent {
-    explicit BoxCollisionComponent() : CollisionComponent() {}
+    explicit BoxCollisionComponent(float width, float height) : CollisionComponent(), size(new Vector2(width, height)) {}
 
     ~BoxCollisionComponent() override = default;
 

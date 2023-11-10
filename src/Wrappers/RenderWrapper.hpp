@@ -13,6 +13,7 @@
 #include "Components/TextComponent.hpp"
 #include <map>
 #include <memory>
+#include <Components/BoxCollisionComponent.hpp>
 
 
 class RenderWrapper {
@@ -30,6 +31,8 @@ public:
     void RenderButton(TextComponent &button);
 
     void RenderFrame();
+
+    void RenderBoxCollisionComponents(BoxCollisionComponent* boxCollisionComponent, TransformComponent* transformComponent);
 
     static void Cleanup();
 

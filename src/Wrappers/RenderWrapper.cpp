@@ -119,6 +119,21 @@ void RenderWrapper::RenderText(TextComponent* textComponent, TransformComponent*
     SDL_DestroyTexture(texture);
 }
 
+void RenderWrapper::RenderBoxCollisionComponents(BoxCollisionComponent *boxCollisionComponent,
+                                                 TransformComponent *transformComponent) {
+#if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
+    SDL_Rect buttonRect = {
+            static_cast<int>(transformComponent->position->getX()),
+            static_cast<int>(transformComponent->position->getY()),
+            static_cast<int>(boxCollisionComponent->size->getX()),
+            static_cast<int>(boxCollisionComponent->size->getY()) };
+
+    // Render the button background (you can customize this part)
+    SDL_SetRenderDrawColor(renderer.get(), 255, 0, 0, 255);
+    SDL_RenderDrawRect(renderer.get(), &buttonRect);
+#endif
+}
+
 void RenderWrapper::RenderButton(TextComponent &button) {
 
 }
