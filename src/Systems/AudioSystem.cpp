@@ -26,7 +26,7 @@ void AudioSystem::Update(float deltaTime) {
                     audioWrapper->UploadSound(*audioComponent);
                 }
             }
-            
+
             if (audioWrapper->GetVolume(*audioComponent) != audioComponent->volume) {
                 audioWrapper->SetVolume(*audioComponent, audioComponent->volume);
             }
@@ -40,6 +40,12 @@ void AudioSystem::Update(float deltaTime) {
     }
 }
 
+
+
+
+
+
+//Cannot directly communicate with system. I Made a mistake, bringing back old code
 void AudioSystem::PlaySound(AudioComponent& audioComponent){
     audioWrapper->PlaySound(audioComponent);
     audioComponent.isPlaying = true;
