@@ -82,8 +82,7 @@ public:
 
         return distribution(engine);
     }
-
-    //TODO: GetComponents ()
+    
     template<typename T>
     std::vector<T*> GetComponents(uint32_t entity) {
         std::vector<T*> result;
