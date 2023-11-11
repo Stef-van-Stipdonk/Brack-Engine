@@ -15,12 +15,6 @@ AudioWrapper::AudioWrapper() : system(nullptr) {
         if (result != FMOD_OK) {
             Logger::Error("FMOD system initialization failed: " + std::string(FMOD_ErrorString(result)));
         }
-
-        // Initialize soundTrackChannel to be channel 1
-        result = system->getChannel(soundTrackChannelID, &soundTrackChannel);
-        if (result != FMOD_OK) {
-            Logger::Error("Failed to get soundTrack channel: " + std::string(FMOD_ErrorString(result)));
-        }
     }
 }
 
@@ -285,8 +279,4 @@ const std::unordered_map<int, bool>& AudioWrapper::GetPlaybackStateMap() const {
 
 void AudioWrapper::SetPlaybackState(int channelID, bool state) {
     playbackStateMap[channelID] = state;
-}
-
-int AudioWrapper::GetSoundTrackChannelID() {
-    return soundTrackChannelID;
 }

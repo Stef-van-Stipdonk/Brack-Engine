@@ -41,12 +41,8 @@ public:
 
     void SetPlaybackState(int entityID, bool state);
 
-    int GetSoundTrackChannelID();
-
 private:
     FMOD::System *system;
-    FMOD::Channel* soundTrackChannel;
-    int soundTrackChannelID = 1;
     std::unordered_map<int, FMOD::Channel*> channelMap;
     std::unordered_map<int, bool> playbackStateMap;
     FMOD::Channel* FindAssociatedFMODChannel(int intChannel);
