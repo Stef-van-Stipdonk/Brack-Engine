@@ -39,9 +39,11 @@ public:
 
     void SetLooping(AudioComponent &audioComponent, bool loop);
 
-    const std::unordered_map<int, bool>& GetPlaybackStateMap() const;
-
     bool HasSoundFinished(const AudioComponent& audioComponent);
+
+    bool IsInitialized(const AudioComponent& audioComponent);
+
+    bool IsValidAudioPath(const AudioComponent& audioComponent);
 
 private:
     FMOD::System *system;

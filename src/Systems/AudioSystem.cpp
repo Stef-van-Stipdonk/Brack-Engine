@@ -21,22 +21,12 @@ void AudioSystem::Update(float deltaTime) {
     for (auto entity : temporarySoundEffectEntities) {
         const auto& audioComponents = ComponentStore::GetInstance().GetComponents<SoundEffectComponent>(entity);
         for (const auto& audioComponent : audioComponents) {
-            // Access the playbackStateMap through the AudioWrapper
-            const auto &playbackStateMap = audioWrapper->GetPlaybackStateMap();
-            auto playbackStateIterator = playbackStateMap.find(audioComponent->GetChannel());
-
-            // Check if the sound needs to be uploaded (formerly StartSound)
-            if (playbackStateIterator == playbackStateMap.end() || !playbackStateIterator->second) {
-                // Check if the file exists
-                std::ifstream file(audioComponent->audioPath);
-                if (!file.good()) {
-                    Logger::Error("Audio file not found at path: " + audioComponent->audioPath);
-                    continue;
+            if(!audioWrapper->IsInitialized(*audioComponent)){
+                if(audioWrapper->IsValidAudioPath(*audioComponent)){
+                    audioWrapper->UploadSound(*audioComponent);
                 }
-
-                audioWrapper->UploadSound(*audioComponent);
             }
-
+            
             if (audioWrapper->GetVolume(*audioComponent) != audioComponent->volume) {
                 audioWrapper->SetVolume(*audioComponent, audioComponent->volume);
             }

@@ -3,6 +3,7 @@
 //
 
 #include <fmod_errors.h>
+#include <algorithm>
 #include "AudioWrapper.hpp"
 
 
@@ -328,5 +329,42 @@ FMOD::Channel* AudioWrapper::FindAssociatedFMODChannel(int intChannel) {
         return it->second;
     }
     return nullptr;
+}
+
+bool AudioWrapper::IsInitialized(const AudioComponent& audioComponent) {
+    int channelID = audioComponent.GetChannel();
+
+    auto it = channelMap.find(channelID);
+    return (it != channelMap.end());
+}
+
+bool AudioWrapper::IsValidAudioPath(const AudioComponent& audioComponent){
+    std::ifstream file(audioComponent.audioPath);
+
+    if (!file.good()) {
+        Logger::Error("Audio file not found at path: " + audioComponent.audioPath);
+        return false;
+    }
+
+    // Extract the file extension
+    size_t dotIndex = audioComponent.audioPath.find_last_of('.');
+    if (dotIndex == std::string::npos) {
+        Logger::Error("Invalid audio file path (no file extension): " + audioComponent.audioPath);
+        return false;
+    }
+
+    std::string extension = audioComponent.audioPath.substr(dotIndex + 1);
+    std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
+
+    // List of common audio file extensions
+    const std::vector<std::string> audioExtensions = {"mp3", "wav", "ogg", "flac", "aac", "m4a"};
+
+    // Check if the extension is in the list of common audio file extensions
+    if (std::find(audioExtensions.begin(), audioExtensions.end(), extension) == audioExtensions.end()) {
+        Logger::Error("Invalid audio file extension at path: " + audioComponent.audioPath);
+        return false;
+    }
+
+    return true;
 }
 
