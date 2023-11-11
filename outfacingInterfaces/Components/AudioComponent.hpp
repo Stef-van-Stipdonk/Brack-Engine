@@ -26,7 +26,9 @@ public:
     }
 
     std::string audioPath;
-    bool isLooping, isPlaying;
+    bool isLooping = false;
+    bool isPlaying = false;
+    bool shouldBePlaying = false;
     float volume;
     int duration;
 
