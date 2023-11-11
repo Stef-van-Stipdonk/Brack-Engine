@@ -100,6 +100,8 @@ add_library(${PROJECT_NAME} SHARED
         src/Wrappers/FPSWrapper.cpp
         src/Components/ComponentVisitor.hpp
         src/Components/ComponentVisitor.hpp
+        outfacingInterfaces/Components/SoundEffectComponent.hpp
+        outfacingInterfaces/Components/SoundTrackComponent.hpp
 )
 
 # Define an option for logging to a file

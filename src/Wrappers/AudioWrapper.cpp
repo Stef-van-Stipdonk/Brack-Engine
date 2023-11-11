@@ -58,7 +58,7 @@ void AudioWrapper::UploadSound(AudioComponent &audioComponent) {
         return;
     }
 
-    int channelID = audioComponent.channel;
+    int channelID = audioComponent.GetChannel();
 
     // Create a channel for the sound
     FMOD::Channel* channel = nullptr;
@@ -88,7 +88,7 @@ void AudioWrapper::StopSound(AudioComponent &audioComponent) {
     }
 
     FMOD_RESULT result;
-    FMOD::Channel* fModChannel = FindAssociatedFMODChannel(audioComponent.channel);
+    FMOD::Channel* fModChannel = FindAssociatedFMODChannel(audioComponent.GetChannel());
 
     if (!fModChannel) {
         Logger::Error("Channel in AudioComponent is not initialized.");
@@ -100,12 +100,12 @@ void AudioWrapper::StopSound(AudioComponent &audioComponent) {
 
     if (result == FMOD_OK) {
         // Erase the channel from the map
-        auto it = channelMap.find(audioComponent.channel);
+        auto it = channelMap.find(audioComponent.GetChannel());
         if (it != channelMap.end()) {
             channelMap.erase(it);
 
             // Set the playback state to false
-            playbackStateMap[audioComponent.channel] = false;
+            playbackStateMap[audioComponent.GetChannel()] = false;
         } else {
             Logger::Error("Channel ID not found in channelMap.");
         }
@@ -121,7 +121,7 @@ void AudioWrapper::PauseSound(AudioComponent &audioComponent) {
     }
 
     FMOD_RESULT result;
-    FMOD::Channel* fModChannel = FindAssociatedFMODChannel(audioComponent.channel);
+    FMOD::Channel* fModChannel = FindAssociatedFMODChannel(audioComponent.GetChannel());
 
     if (!fModChannel) {
         Logger::Error("Channel in AudioComponent is not initialized.");
@@ -153,7 +153,7 @@ void AudioWrapper::ResumeSound(AudioComponent &audioComponent) {
     }
 
     FMOD_RESULT result;
-    FMOD::Channel* fModChannel = FindAssociatedFMODChannel(audioComponent.channel);
+    FMOD::Channel* fModChannel = FindAssociatedFMODChannel(audioComponent.GetChannel());
 
     if (!fModChannel) {
         Logger::Error("Channel in AudioComponent is not initialized.");
@@ -184,7 +184,7 @@ float AudioWrapper::GetVolume(AudioComponent &audioComponent) {
         return 0.0f; // Return some default value or handle the error as needed
     }
 
-    FMOD::Channel* fModChannel = FindAssociatedFMODChannel(audioComponent.channel);
+    FMOD::Channel* fModChannel = FindAssociatedFMODChannel(audioComponent.GetChannel());
 
     if (!fModChannel) {
         Logger::Error("Channel in AudioComponent is not initialized.");
@@ -209,7 +209,7 @@ void AudioWrapper::SetVolume(AudioComponent &audioComponent, float volume) {
     }
 
     FMOD_RESULT result;
-    FMOD::Channel* fModChannel = FindAssociatedFMODChannel(audioComponent.channel);
+    FMOD::Channel* fModChannel = FindAssociatedFMODChannel(audioComponent.GetChannel());
 
     if (!fModChannel) {
         Logger::Error("Channel in AudioComponent is not initialized.");
@@ -230,7 +230,7 @@ bool AudioWrapper::GetLooping(const AudioComponent &audioComponent)  {
         return false;  // or handle accordingly
     }
 
-    FMOD::Channel* fModChannel = FindAssociatedFMODChannel(audioComponent.channel);
+    FMOD::Channel* fModChannel = FindAssociatedFMODChannel(audioComponent.GetChannel());
 
     if (!fModChannel) {
         Logger::Error("Channel in AudioComponent is not initialized.");
@@ -256,7 +256,7 @@ void AudioWrapper::SetLooping(AudioComponent &audioComponent, bool loop) {
     }
 
     FMOD_RESULT result;
-    FMOD::Channel* fModChannel = FindAssociatedFMODChannel(audioComponent.channel);
+    FMOD::Channel* fModChannel = FindAssociatedFMODChannel(audioComponent.GetChannel());
 
     if (!fModChannel) {
         Logger::Error("Channel in AudioComponent is not initialized.");
