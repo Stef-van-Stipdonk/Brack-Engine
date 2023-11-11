@@ -20,8 +20,9 @@ struct AudioComponent : public IComponent {
     }
 
     std::string audioPath;
-    bool isLooping, isPlaying;
+    bool isLooping, isPlaying, isClippable, isSoundTrack;
     float volume;
+    int channel;
 };
 
 #endif //BRACK_ENGINE_AUDIOCOMPONENT_HPP

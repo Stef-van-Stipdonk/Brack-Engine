@@ -29,19 +29,27 @@ public:
 
     void ResumeSound(AudioComponent &audioComponent);
 
+    float GetVolume(AudioComponent &audioComponent);
+
     void SetVolume(AudioComponent &audioComponent, float volume);
+
+    bool GetLooping(const AudioComponent &audioComponent) ;
 
     void SetLooping(AudioComponent &audioComponent, bool loop);
 
     const std::unordered_map<int, bool>& GetPlaybackStateMap() const;
+
     void SetPlaybackState(int entityID, bool state);
+
+    int GetSoundTrackChannelID();
 
 private:
     FMOD::System *system;
-
+    FMOD::Channel* soundTrackChannel;
+    int soundTrackChannelID = 1;
     std::unordered_map<int, FMOD::Channel*> channelMap;
     std::unordered_map<int, bool> playbackStateMap;
-    FMOD::Channel* FindFMODChannel(int intChannel);
+    FMOD::Channel* FindAssociatedFMODChannel(int intChannel);
 };
 
 

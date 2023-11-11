@@ -83,6 +83,20 @@ public:
         return distribution(engine);
     }
 
+    template<typename T>
+    std::vector<T*> getComponentsForEntityId(uint32_t entityId) {
+        std::vector<T*> componentsForEntityId;
+        auto itType = components.find(typeid(T));
+        if (itType != components.end()) {
+            auto itEntity = itType->second.find(entityId);
+            if (itEntity != itType->second.end()) {
+                T* component = static_cast<T*>(itEntity->second);
+                componentsForEntityId.push_back(component);
+            }
+        }
+        return componentsForEntityId;
+    }
+
 
 private:
     static ComponentStore instance;

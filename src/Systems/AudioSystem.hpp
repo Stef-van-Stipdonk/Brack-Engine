@@ -22,13 +22,6 @@ public:
 
     void Update(float deltaTime) override;
 
-    bool UploadSound(AudioComponent &audioComponent);
-    void StopSound(AudioComponent &audioComponent);
-    void ResumeSound(AudioComponent &audioComponent);
-    void PauseSound(AudioComponent &audioComponent);
-    void SetVolume(AudioComponent &audioComponent, float volume);
-    void SetLooping(AudioComponent &audioComponent, bool loop);
-
 private:
     std::unique_ptr<AudioWrapper> audioWrapper;
 };
