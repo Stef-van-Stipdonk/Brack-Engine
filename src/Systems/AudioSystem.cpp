@@ -16,9 +16,10 @@ AudioSystem::~AudioSystem() {
 
 void AudioSystem::Update(float deltaTime) {
     auto entities = ComponentStore::GetInstance().getEntitiesWithComponent<AudioComponent>();
-
-    for (auto entity : entities) {
-        const auto& audioComponents = ComponentStore::GetInstance().GetComponents<AudioComponent>(entity);
+    //This should work using audiocomponent, but I cannot seem to get getentitieswithcomponent to work with derived components.
+    auto temporarySoundEffectEntities = ComponentStore::GetInstance().getEntitiesWithComponent<SoundEffectComponent>();
+    for (auto entity : temporarySoundEffectEntities) {
+        const auto& audioComponents = ComponentStore::GetInstance().GetComponents<SoundEffectComponent>(entity);
         for (const auto& audioComponent : audioComponents) {
             // Access the playbackStateMap through the AudioWrapper
             const auto &playbackStateMap = audioWrapper->GetPlaybackStateMap();
@@ -42,24 +43,26 @@ void AudioSystem::Update(float deltaTime) {
             if (audioWrapper->GetLooping(*audioComponent) != audioComponent->isLooping) {
                 audioWrapper->SetLooping(*audioComponent, audioComponent->isLooping);
             }
-
-            // Check if the sound is playing or not
-            bool isPlaying = playbackStateIterator != playbackStateMap.end() && playbackStateIterator->second;
-
-            if (audioComponent->isPlaying && !isPlaying) {
-                // If the sound is supposed to play, and it's not playing, start it
-                audioWrapper->ResumeSound(*audioComponent);
-                audioWrapper->SetPlaybackState(audioComponent->GetChannel(), true);
-            } else if (!audioComponent->isPlaying && isPlaying) {
-                // If the sound is not supposed to, and it's playing, pause it
-                audioWrapper->PauseSound(*audioComponent);
-                audioWrapper->SetPlaybackState(audioComponent->GetChannel(), false);
+            if(audioWrapper->HasSoundFinished(*audioComponent)){
+                audioComponent->isPlaying = false;
             }
-
-            Logger::Debug("Channel: " + std::to_string(audioComponent->GetChannel()) + ", isPlaying: " +
-                          std::to_string(isPlaying));
         }
     }
+}
+
+void AudioSystem::PlaySound(AudioComponent& audioComponent){
+    audioWrapper->PlaySound(audioComponent);
+    audioComponent.isPlaying = true;
+}
+
+void AudioSystem::PauseSound(AudioComponent& audioComponent){
+    audioWrapper->PauseSound(audioComponent);
+    audioComponent.isPlaying = false;
+}
+
+void AudioSystem::StopSound(AudioComponent& audioComponent){
+    audioWrapper->StopSound(audioComponent);
+    audioComponent.isPlaying = false;
 }
 
 const std::string AudioSystem::GetName() const {
@@ -72,7 +75,8 @@ void AudioSystem::CleanUp() {
     for (auto entity : entities) {
         auto audioComponents = ComponentStore::GetInstance().GetComponents<AudioComponent>(entity);
         for (auto audioComponent : audioComponents) {
-            audioWrapper->StopSound(*audioComponent);
+            audioWrapper->RemoveSound(*audioComponent);
+            audioComponent->isPlaying = false;
         }
     }
     audioWrapper->CleanUp();

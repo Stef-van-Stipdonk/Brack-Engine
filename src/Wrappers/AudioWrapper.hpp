@@ -23,11 +23,13 @@ public:
 
     void UploadSound(AudioComponent &audioComponent);
 
-    void StopSound(AudioComponent &audioComponent);
+    void RemoveSound(AudioComponent &audioComponent);
 
     void PauseSound(AudioComponent &audioComponent);
 
-    void ResumeSound(AudioComponent &audioComponent);
+    void PlaySound(AudioComponent &audioComponent);
+
+    void StopSound(AudioComponent &audioComponent);
 
     float GetVolume(AudioComponent &audioComponent);
 
@@ -39,12 +41,11 @@ public:
 
     const std::unordered_map<int, bool>& GetPlaybackStateMap() const;
 
-    void SetPlaybackState(int entityID, bool state);
+    bool HasSoundFinished(const AudioComponent& audioComponent);
 
 private:
     FMOD::System *system;
     std::unordered_map<int, FMOD::Channel*> channelMap;
-    std::unordered_map<int, bool> playbackStateMap;
     FMOD::Channel* FindAssociatedFMODChannel(int intChannel);
 };
 

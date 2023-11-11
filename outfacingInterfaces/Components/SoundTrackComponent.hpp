@@ -15,6 +15,8 @@ struct SoundTrackComponent : AudioComponent {
     void Accept(ComponentVisitor &visitor) override {
         visitor.visit<SoundTrackComponent>(this);
     }
+
+    bool isLooping = true;
 };
 
 #endif //BRACKOCALYPSE_SOUNDTRACKCOMPONENT_HPP

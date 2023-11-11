@@ -22,6 +22,12 @@ public:
 
     void Update(float deltaTime) override;
 
+    void PlaySound(AudioComponent& audioComponent);
+
+    void PauseSound(AudioComponent& audioComponent);
+
+    void StopSound(AudioComponent& audioComponent);
+
 private:
     std::unique_ptr<AudioWrapper> audioWrapper;
 };

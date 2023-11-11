@@ -28,6 +28,7 @@ public:
     std::string audioPath;
     bool isLooping, isPlaying;
     float volume;
+    int duration;
 
     int GetChannel() const {
         return channel;
