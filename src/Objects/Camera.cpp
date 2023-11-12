@@ -16,8 +16,8 @@ Vector2 Camera::GetSize() const {
     return size;
 }
 
-void Camera::SetSize(const Vector2 size) {
-
+void Camera::SetSize(const Vector2 c_size) {
+    size = c_size;
 }
 
 Camera::Camera() : GameObject() {
