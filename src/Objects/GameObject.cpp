@@ -39,7 +39,7 @@ std::string GameObject::GetTag() {
     if (entityID == 0) {
         return GetComponent<ObjectInfoComponent>()->tag;
     }
-    ComponentStore::GetInstance().getComponent<ObjectInfoComponent>(entityID)->tag;
+    return ComponentStore::GetInstance().getComponent<ObjectInfoComponent>(entityID)->tag;
 }
 
 void GameObject::SetTag(char *tag) {
