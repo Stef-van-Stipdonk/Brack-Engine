@@ -53,6 +53,21 @@ public:
         return nullptr;
     }
 
+    template<typename BaseT>
+    std::vector<BaseT*> getAllComponentsOfType() {
+        std::vector<BaseT*> result;
+        for (auto& [type, map] : components) {
+            for (auto& [id, comp] : map) {
+                BaseT* casted = dynamic_cast<BaseT*>(comp);
+                if (casted) {
+                    result.push_back(casted);
+                }
+            }
+        }
+        return result;
+    }
+
+
     template<typename T>
     void removeComponent(uint32_t entity) {
         auto itType = components.find(typeid(T));
