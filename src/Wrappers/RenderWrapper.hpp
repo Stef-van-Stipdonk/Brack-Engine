@@ -15,6 +15,12 @@
 #include <memory>
 
 
+struct SDLWindowDeleter {
+    void operator()(SDL_Window* window) const {
+        SDL_DestroyWindow(window);
+    }
+};
+
 class RenderWrapper {
 public:
     RenderWrapper();
@@ -37,6 +43,7 @@ private:
     bool Initialize();
     std::unordered_map<std::string, std::map<int, TTF_Font*>> fontCache;
     std::map<std::string, SDL_Texture *> textures;
+    std::unique_ptr<SDL_Window, SDLWindowDeleter> window;
     std::unique_ptr<SDL_Renderer, void (*)(SDL_Renderer *)> renderer;
 };
 
