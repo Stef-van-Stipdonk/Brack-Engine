@@ -22,7 +22,7 @@ public:
 
     Vector2 GetSize() const;
 
-    void SetSize(const Vector2 size);
+    void SetSize(const Vector2 c_size);
 
     CameraComponent *GetCameraComponent();
 

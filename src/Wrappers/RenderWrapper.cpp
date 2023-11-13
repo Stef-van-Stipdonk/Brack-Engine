@@ -31,10 +31,13 @@ bool RenderWrapper::Initialize() {
     // Create a window.
     // You can customize the window size, title, and other settings as needed.
     // For simplicity, this example creates a 800x600 window.
-    SDL_Window *window = SDL_CreateWindow(ConfigSingleton::GetInstance().GetWindowTitle().c_str(),
-                                          SDL_WINDOWPOS_CENTERED,
-                                          SDL_WINDOWPOS_CENTERED, ConfigSingleton::GetInstance().GetWindowSize().getX(),
-                                          ConfigSingleton::GetInstance().GetWindowSize().getY(), SDL_WINDOW_SHOWN);
+    std::unique_ptr<SDL_Window, SDLWindowDeleter> tempWindow(
+            SDL_CreateWindow(ConfigSingleton::GetInstance().GetWindowTitle().c_str(),
+                             SDL_WINDOWPOS_CENTERED,
+                             SDL_WINDOWPOS_CENTERED, ConfigSingleton::GetInstance().GetWindowSize().getX(),
+                             ConfigSingleton::GetInstance().GetWindowSize().getY(), SDL_WINDOW_SHOWN)
+    );
+    window = std::move(tempWindow);
 
     if (window == nullptr) {
         std::cerr << "Window creation failed: " << SDL_GetError() << std::endl;
@@ -44,14 +47,14 @@ bool RenderWrapper::Initialize() {
 
     // Perform additional initialization as needed (e.g., renderer setup, resource loading).
     renderer = std::unique_ptr<SDL_Renderer, void (*)(SDL_Renderer *)>(
-            SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED),
+            SDL_CreateRenderer(window.get(), -1, SDL_RENDERER_ACCELERATED),
             [](SDL_Renderer *r) { SDL_DestroyRenderer(r); }
     );
 
     if (renderer == nullptr) {
         std::cerr << "Renderer creation failed: " << SDL_GetError() << std::endl;
         Logger::GetInstance().Shutdown();
-        SDL_DestroyWindow(window);
+        SDL_DestroyWindow(window.get());
         Cleanup();
         return false;
     }
@@ -74,6 +77,16 @@ void RenderWrapper::RenderCamera(CameraComponent *camera) {
 
     // Clear the screen with the background color.
     SDL_RenderClear(renderer.get());
+
+    int windowWidth, windowHeight;
+    SDL_GetWindowSize(window.get(), &windowWidth, &windowHeight);
+
+    if(windowWidth != camera->size.getX() || windowHeight != camera->size.getY()) {
+        int centerX = SDL_WINDOWPOS_CENTERED;
+        int centerY = SDL_WINDOWPOS_CENTERED;
+        SDL_SetWindowSize(window.get(), camera->size.getX(), camera->size.getY());
+        SDL_SetWindowPosition(window.get(), centerX, centerY);
+    }
 }
 
 void RenderWrapper::RenderSprite(SpriteComponent &sprite) {
