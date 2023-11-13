@@ -22,12 +22,7 @@ public:
 
     Vector2 GetSize() const;
 
-    void SetSize(const Vector2 c_size);
-
-private:
-    Vector2 size;
-    Color backgroundColor;
-
+    void SetSize(const Vector2 size);
 };
 
 

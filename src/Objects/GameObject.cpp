@@ -17,7 +17,7 @@ std::vector<GameObject> GameObject::GetChildren() {
     return std::vector<GameObject>();
 }
 
-std::string GameObject::GetName() {
+std::string GameObject::GetName() const{
     if (entityID == 0) {
         return GetComponent<ObjectInfoComponent>()->name;
     }
@@ -35,7 +35,7 @@ void GameObject::SetName(char *name) {
     }
 }
 
-std::string GameObject::GetTag() {
+std::string GameObject::GetTag() const{
     if (entityID == 0) {
         return GetComponent<ObjectInfoComponent>()->tag;
     }
@@ -50,7 +50,7 @@ void GameObject::SetTag(char *tag) {
     }
 }
 
-bool GameObject::IsActive() {
+bool GameObject::IsActive()const {
     if (entityID == 0) {
         return GetComponent<ObjectInfoComponent>()->isActive;
     }
@@ -65,7 +65,7 @@ void GameObject::SetActive(bool active) {
     }
 }
 
-int GameObject::GetLayer() {
+int GameObject::GetLayer() const{
     if (entityID == 0) {
         return GetComponent<ObjectInfoComponent>()->layer;
     }
@@ -84,7 +84,7 @@ GameObject &GameObject::GetParent() {
     return *this;
 }
 
-uint32_t GameObject::GetEntityID() {
+uint32_t GameObject::GetEntityID()const {
     return entityID;
 }
 
