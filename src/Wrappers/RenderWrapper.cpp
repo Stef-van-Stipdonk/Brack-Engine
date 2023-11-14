@@ -99,10 +99,10 @@ void RenderWrapper::RenderRectangle(RectangleComponent *rectangleComponent, Tran
     // Render background
     SDL_SetRenderDrawColor(
             renderer.get(),
-            static_cast<Uint8>(rectangleComponent->fill->r),
-            static_cast<Uint8>(rectangleComponent->fill->g),
-            static_cast<Uint8>(rectangleComponent->fill->b),
-            static_cast<Uint8>(rectangleComponent->fill->a)
+            rectangleComponent->fill->r,
+            rectangleComponent->fill->g,
+            rectangleComponent->fill->b,
+            rectangleComponent->fill->a
             );
     SDL_RenderFillRect(renderer.get(), &rectFill);
 
@@ -110,10 +110,10 @@ void RenderWrapper::RenderRectangle(RectangleComponent *rectangleComponent, Tran
         // Render the border borderWidth times
         SDL_SetRenderDrawColor(
                 renderer.get(),
-               static_cast<Uint8>(rectangleComponent->borderColor->r),
-               static_cast<Uint8>(rectangleComponent->borderColor->g),
-               static_cast<Uint8>(rectangleComponent->borderColor->b),
-               static_cast<Uint8>(rectangleComponent->borderColor->a)
+               rectangleComponent->borderColor->r,
+               rectangleComponent->borderColor->g,
+               rectangleComponent->borderColor->b,
+               rectangleComponent->borderColor->a
                );
         for (int i = 0; i < rectangleComponent->borderWidth; ++i) {
             SDL_Rect rectBorder = {
@@ -143,17 +143,22 @@ void RenderWrapper::RenderSprite(SpriteComponent &sprite) {
     srcRect.h = spriteHeight;
 
     //Create a rectangle were the sprite needs to be rendered on to
-    SDL_Rect destRect = {static_cast<int>(sprite.position->getX()), static_cast<int>(sprite.position->getY()), static_cast<int>(sprite.spriteSize->getX() * sprite.scale->getX()), static_cast<int>(sprite.spriteSize->getY() * sprite.scale->getY())};
+    SDL_Rect destRect = {
+            static_cast<int>(sprite.position->getX()),
+            static_cast<int>(sprite.position->getY()),
+            static_cast<int>(sprite.spriteSize->getX() * sprite.scale->getX()),
+            static_cast<int>(sprite.spriteSize->getY() * sprite.scale->getY())
+    };
 
     SDL_RenderCopy(renderer.get(), texture->second.get(), &srcRect, &destRect);
 }
 
 void RenderWrapper::RenderText(TextComponent* textComponent, TransformComponent* transformComponent) {
     SDL_Color sdlColor = {
-            static_cast<Uint8>(textComponent->color->r),
-            static_cast<Uint8>(textComponent->color->g),
-            static_cast<Uint8>(textComponent->color->b),
-            static_cast<Uint8>(textComponent->color->a)
+            textComponent->color->r,
+            textComponent->color->g,
+            textComponent->color->b,
+            textComponent->color->a
     };
 
     TTF_Font* font = nullptr;
