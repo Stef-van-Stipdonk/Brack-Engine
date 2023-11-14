@@ -10,13 +10,6 @@
 #include <string>
 
 struct AudioComponent : public IComponent {
-private:
-    int channel;
-
-protected:
-    explicit AudioComponent(int initialChannel) : channel(initialChannel) {}
-
-public:
     explicit AudioComponent() : IComponent() {}
 
     ~AudioComponent() override = default;
@@ -31,10 +24,7 @@ public:
     bool shouldBePlaying = false;
     float volume;
     int duration;
-
-    int GetChannel() const {
-        return channel;
-    }
+    int chnanel;
 };
 
 #endif //BRACK_ENGINE_AUDIOCOMPONENT_HPP
