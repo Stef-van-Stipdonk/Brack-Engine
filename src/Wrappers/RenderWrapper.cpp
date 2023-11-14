@@ -72,11 +72,59 @@ void RenderWrapper::Cleanup() {
 
 void RenderWrapper::RenderCamera(CameraComponent *camera) {
     auto &backgroundColor = camera->backgroundColor;
-    SDL_SetRenderDrawColor(renderer.get(), backgroundColor.r, backgroundColor.g, backgroundColor.b,
-                           backgroundColor.a); // RGBA format
+    SDL_SetRenderDrawColor(renderer.get(), backgroundColor->r, backgroundColor->g, backgroundColor->b,
+                           backgroundColor->a); // RGBA format
 
     // Clear the screen with the background color.
     SDL_RenderClear(renderer.get());
+
+    int windowWidth, windowHeight;
+    SDL_GetWindowSize(window.get(), &windowWidth, &windowHeight);
+
+    if(windowWidth != camera->size->getX() || windowHeight != camera->size->getY()) {
+        int centerX = SDL_WINDOWPOS_CENTERED;
+        int centerY = SDL_WINDOWPOS_CENTERED;
+        SDL_SetWindowSize(window.get(), camera->size->getX(), camera->size->getY());
+        SDL_SetWindowPosition(window.get(), centerX, centerY);
+    }
+}
+
+void RenderWrapper::RenderRectangle(RectangleComponent *rectangleComponent, TransformComponent *transformComponent) {
+    SDL_Rect rectFill = {
+            static_cast<int>(transformComponent->position->getX()),
+            static_cast<int>(transformComponent->position->getY()),
+            static_cast<int>(rectangleComponent->size->getX()),
+            static_cast<int>(rectangleComponent->size->getY()) };
+
+    // Render background
+    SDL_SetRenderDrawColor(
+            renderer.get(),
+            rectangleComponent->fill->r,
+            rectangleComponent->fill->g,
+            rectangleComponent->fill->b,
+            rectangleComponent->fill->a
+            );
+    SDL_RenderFillRect(renderer.get(), &rectFill);
+
+    if(rectangleComponent->borderWidth > 0){
+        // Render the border borderWidth times
+        SDL_SetRenderDrawColor(
+                renderer.get(),
+               rectangleComponent->borderColor->r,
+               rectangleComponent->borderColor->g,
+               rectangleComponent->borderColor->b,
+               rectangleComponent->borderColor->a
+               );
+        for (int i = 0; i < rectangleComponent->borderWidth; ++i) {
+            SDL_Rect rectBorder = {
+                    static_cast<int>(transformComponent->position->getX()) + i,
+                    static_cast<int>(transformComponent->position->getY()) + i,
+                    static_cast<int>(rectangleComponent->size->getX()) - (i*2),
+                    static_cast<int>(rectangleComponent->size->getY()) - (i*2)
+            };
+            SDL_RenderDrawRect(renderer.get(), &rectBorder);
+        }
+    }
 }
 
 void RenderWrapper::RenderSprite(SpriteComponent &sprite) {
@@ -95,17 +143,22 @@ void RenderWrapper::RenderSprite(SpriteComponent &sprite) {
     srcRect.h = spriteHeight;
 
     //Create a rectangle were the sprite needs to be rendered on to
-    SDL_Rect destRect = {static_cast<int>(sprite.position->getX()), static_cast<int>(sprite.position->getY()), static_cast<int>(sprite.spriteSize->getX() * sprite.scale->getX()), static_cast<int>(sprite.spriteSize->getY() * sprite.scale->getY())};
+    SDL_Rect destRect = {
+            static_cast<int>(sprite.position->getX()),
+            static_cast<int>(sprite.position->getY()),
+            static_cast<int>(sprite.spriteSize->getX() * sprite.scale->getX()),
+            static_cast<int>(sprite.spriteSize->getY() * sprite.scale->getY())
+    };
 
     SDL_RenderCopy(renderer.get(), texture->second.get(), &srcRect, &destRect);
 }
 
 void RenderWrapper::RenderText(TextComponent* textComponent, TransformComponent* transformComponent) {
     SDL_Color sdlColor = {
-            static_cast<Uint8>(textComponent->color->r),
-            static_cast<Uint8>(textComponent->color->g),
-            static_cast<Uint8>(textComponent->color->b),
-            static_cast<Uint8>(textComponent->color->a)
+            textComponent->color->r,
+            textComponent->color->g,
+            textComponent->color->b,
+            textComponent->color->a
     };
 
     TTF_Font* font = nullptr;
@@ -175,10 +228,6 @@ void RenderWrapper::RenderCircleCollisionComponents(CircleCollisionComponent* ci
         angle += step;
     }
 #endif
-}
-
-void RenderWrapper::RenderButton(TextComponent &button) {
-
 }
 
 void RenderWrapper::RenderFrame() {

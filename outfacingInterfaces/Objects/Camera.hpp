@@ -16,13 +16,9 @@ class Camera : public GameObject {
 public:
     Camera();
 
-    Color GetBackgroundColor() const;
+    void SetBackgroundColor(const Color& color);
 
-    void SetBackgroundColor(const Color color);
-
-    Vector2 GetSize() const;
-
-    void SetSize(const Vector2 size);
+    void SetSize(const Vector2& size);
 };
 
 
