@@ -8,7 +8,7 @@
 #include <Components/IComponent.hpp>
 #include "../../../src/Components/ComponentVisitor.hpp"
 
-class AudioArchetype : public IComponent {
+struct AudioArchetype : public IComponent {
 public:
     explicit AudioArchetype() : IComponent() {}
 

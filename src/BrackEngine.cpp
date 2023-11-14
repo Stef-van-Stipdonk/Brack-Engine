@@ -59,6 +59,12 @@ void BrackEngine::CreateFPS() {
     auto objectInfoComponent = new ObjectInfoComponent();
     auto textComponent = new TextComponent();
 
+    transformComponent->entityID = entityId;
+    objectInfoComponent->entityID = entityId;
+    textComponent->entityID = entityId;
+
+    transformComponent->position = std::make_unique<Vector2>(100, 0);
+
     objectInfoComponent->name = "FPS";
     objectInfoComponent->tag = "FPS";
 

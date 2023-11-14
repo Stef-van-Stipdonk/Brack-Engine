@@ -10,9 +10,10 @@
 #include "../../src/Components/ComponentVisitor.hpp"
 #include <string>
 #include <memory>
+#include <Components/Archetypes/RenderArchetype.hpp>
 
-struct SpriteComponent : public IComponent {
-    explicit SpriteComponent() : IComponent() {}
+struct SpriteComponent : public RenderArchetype {
+    explicit SpriteComponent() : RenderArchetype() {}
 
     ~SpriteComponent() override = default;
 
@@ -24,7 +25,6 @@ struct SpriteComponent : public IComponent {
     std::unique_ptr<Vector2> imageSize, spriteSize, tileOffset;
     std::unique_ptr<Color> color;
     bool flipX, flipY;
-    int sortingLayer, orderInLayer;
     int margin;
 };
 

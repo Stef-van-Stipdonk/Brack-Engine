@@ -59,7 +59,7 @@ bool RenderWrapper::Initialize() {
         return false;
     }
 
-    SDL_SetRenderDrawBlendMode(renderer.get(), SDL_BLENDMODE_BLEND);
+//    SDL_SetRenderDrawBlendMode(renderer.get(), SDL_BLENDMODE_BLEND);
     renderTexture = std::unique_ptr<SDL_Texture, void (*)(SDL_Texture *)>(
             SDL_CreateTexture(renderer.get(), SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,
                               ConfigSingleton::GetInstance().GetWindowSize().getX(),
@@ -208,12 +208,19 @@ void RenderWrapper::RenderButton(TextComponent &button) {
 }
 
 void RenderWrapper::RenderFrame() {
+    SDL_SetRenderTarget(renderer.get(), renderTexture.get());
+    for (auto &cameraTexture: cameraTextures) {
+        SDL_RenderCopy(renderer.get(), cameraTexture.second.second.get(), nullptr,
+                       &cameraTexture.second.first);
+    }
+
     SDL_SetRenderTarget(renderer.get(), nullptr);
     SDL_SetRenderDrawColor(renderer.get(), 0, 0, 0, 255); // RGBA format
     SDL_RenderClear(renderer.get());
     SDL_RenderCopy(renderer.get(), renderTexture.get(), nullptr, nullptr);
     SDL_RenderPresent(renderer.get());
     SDL_SetRenderTarget(renderer.get(), renderTexture.get());
+    SDL_SetRenderDrawColor(renderer.get(), 0, 0, 255, 255); // RGBA format
     SDL_RenderClear(renderer.get());
 }
 
@@ -252,13 +259,15 @@ std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)> RenderWrapper::GetSp
     return std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)>(nullptr, &SDL_DestroyTexture);
 }
 
-void RenderWrapper::RenderCamera(CameraComponent *cameraComponent) {
+void RenderWrapper::RenderCamera(CameraComponent *cameraComponent, TransformComponent *transformComponent) {
     auto &backgroundColor = cameraComponent->backgroundColor;
     SDL_SetRenderDrawColor(renderer.get(), backgroundColor->r, backgroundColor->g, backgroundColor->b,
                            backgroundColor->a); // RGBA format
 
-    // Clear the screen with the background color.
-//    SDL_RenderClear(renderer.get());
+
+    auto &texturePair = GetCameraTexturePair(cameraComponent, transformComponent);
+
+    SDL_SetRenderTarget(renderer.get(), texturePair.second.get());
 
     auto width = cameraComponent->size->getX();
     auto height = cameraComponent->size->getY();
@@ -277,7 +286,46 @@ void RenderWrapper::RenderComponent(CameraComponent *cameraComponent, SpriteComp
 
 void RenderWrapper::RenderComponent(CameraComponent *cameraComponent, TextComponent *textComponent,
                                     TransformComponent *transformComponent) {
+    SDL_Color sdlColor = {
+            static_cast<Uint8>(textComponent->color->r),
+            static_cast<Uint8>(textComponent->color->g),
+            static_cast<Uint8>(textComponent->color->b),
+            static_cast<Uint8>(textComponent->color->a)
+    };
 
+    TTF_Font *font = nullptr;
+    const std::string &fontPath = textComponent->fontPath;
+    int fontSize = textComponent->fontSize;
+
+    auto &sizeMap = fontCache[fontPath];
+    if (sizeMap.count(fontSize) != 0) {
+        font = sizeMap[fontSize];
+    } else {
+        font = TTF_OpenFont(fontPath.c_str(), fontSize);
+        if (!font) {
+            std::string baseFontPath = ConfigSingleton::GetInstance().GetBaseAssetPath() + "Fonts/Arial.ttf";
+            font = TTF_OpenFont(baseFontPath.c_str(), fontSize);
+        }
+        sizeMap[fontSize] = font;
+    }
+
+    SDL_Surface *surface = TTF_RenderText_Solid(font, textComponent->text.c_str(), sdlColor);
+
+    if (!surface) {
+        std::cerr << "TTF_RenderText_Solid Error: " << TTF_GetError() << std::endl;
+    }
+
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer.get(), surface);
+    if (!texture) {
+        std::cerr << "SDL_CreateTextureFromSurface Error: " << SDL_GetError() << std::endl;
+    }
+
+    SDL_Rect rect = {static_cast<int>(transformComponent->position->getX()),
+                     static_cast<int>(transformComponent->position->getY()), surface->w, surface->h};
+    SDL_RenderCopy(renderer.get(), texture, nullptr, &rect);
+
+    SDL_FreeSurface(surface);
+    SDL_DestroyTexture(texture);
 }
 
 void RenderWrapper::RenderComponent(CameraComponent *cameraComponent, BoxCollisionComponent *boxCollisionComponent,
@@ -289,4 +337,28 @@ void
 RenderWrapper::RenderComponent(CameraComponent *cameraComponent, CircleCollisionComponent *circleCollisionComponent,
                                TransformComponent *transformComponent) {
 
+}
+
+std::pair<SDL_Rect, std::unique_ptr<SDL_Texture, void (*)(SDL_Texture *)>> &
+RenderWrapper::GetCameraTexturePair(CameraComponent *cameraComponent, TransformComponent *transformComponent) {
+    auto cameraTexture = cameraTextures.find(cameraComponent->entityID);
+    if (cameraTexture == cameraTextures.end()) {
+        auto width = cameraComponent->size->getX();
+        auto height = cameraComponent->size->getY();
+        auto xPosition = cameraComponent->onScreenPosition->getX() - width / 2;
+        auto yPosition = cameraComponent->onScreenPosition->getY() - height / 2;
+
+        SDL_Rect rect = {static_cast<int>(xPosition), static_cast<int>(yPosition), static_cast<int>(width),
+                         static_cast<int>(height)};
+        cameraTextures.insert(
+                std::make_pair(cameraComponent->entityID,
+                               std::make_pair(rect, std::unique_ptr<SDL_Texture, void (*)(SDL_Texture *)>(
+                                       SDL_CreateTexture(renderer.get(), SDL_PIXELFORMAT_RGBA8888,
+                                                         SDL_TEXTUREACCESS_TARGET,
+                                                         cameraComponent->size->getX(),
+                                                         cameraComponent->size->getY()),
+                                       [](SDL_Texture *t) { SDL_DestroyTexture(t); }))));
+    }
+    cameraTexture = cameraTextures.find(cameraComponent->entityID);
+    return cameraTexture->second;
 }

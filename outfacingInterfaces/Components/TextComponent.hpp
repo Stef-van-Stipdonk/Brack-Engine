@@ -9,11 +9,10 @@
 #include <memory>
 #include "Helpers/Color.hpp"
 #include "../../src/Components/ComponentVisitor.hpp"
-#include "UIComponent.hpp"
+#include "Components/Archetypes/RenderArchetype.hpp"
 
-struct TextComponent : public IComponent {
-    explicit TextComponent() : IComponent() {}
-
+struct TextComponent : public RenderArchetype {
+    explicit TextComponent() : RenderArchetype() {}
 
     void Accept(ComponentVisitor &visitor) override {
         visitor.visit<TextComponent>(this);
