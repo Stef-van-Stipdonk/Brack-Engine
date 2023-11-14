@@ -7,14 +7,13 @@
 
 #include <functional>
 #include <utility>
-#include "UIComponent.hpp"
+#include "IComponent.hpp"
 #include "../../src/Components/ComponentVisitor.hpp"
 
 
 struct ClickableComponent : public IComponent {
-    explicit ClickableComponent(std::function<void()> func) : IComponent() {
-        OnClick = std::move(func);
-
+    ClickableComponent() : IComponent() {}
+    
     virtual std::unique_ptr<IComponent> clone() const override {
         return std::make_unique<ClickableComponent>(*this);
 
@@ -22,7 +21,7 @@ struct ClickableComponent : public IComponent {
 
     ~ClickableComponent() override = default;
 
-    ClickableComponent(const ClickableComponent &other) : UIComponent(other) {
+    ClickableComponent(const ClickableComponent &other) : IComponent(other) {
         OnClick = other.OnClick;
     }
 

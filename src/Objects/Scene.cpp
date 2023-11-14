@@ -37,6 +37,14 @@ std::vector<GameObject*> Scene::GetAllGameObjects() {
     return gameObjectsPtrs;
 }
 
+std::vector<Camera *> Scene::GetAllCameras() {
+    std::vector<Camera*> camerasPtrs;
+    for(auto &camera: cameras) {
+        camerasPtrs.push_back(camera.get());
+    }
+    return camerasPtrs;
+}
+
 void Scene::RemoveGameObject(GameObject &gameObject) {
     auto it = std::find_if(gameObjects.begin(), gameObjects.end(),
                            [&gameObject](const std::unique_ptr<GameObject>& ptr) {
@@ -55,11 +63,13 @@ Scene::Scene() {
     AddCamera(Camera());
 }
 
-std::vector<Camera> Scene::GetCameras() {
+std::vector<std::unique_ptr<Camera>>& Scene::GetCameras() {
     return cameras;
 }
 
 void Scene::AddCamera(Camera &&camera) {
-    cameras.push_back(camera);
+    cameras.push_back(std::make_unique<Camera>(camera));
 }
+
+
 

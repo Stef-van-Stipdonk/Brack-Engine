@@ -17,7 +17,7 @@ public:
 
     static void AddGameObject(GameObject* gameObject);
 
-    static void AddCamera(Camera &camera);
+    static void AddCamera(Camera *camera);
 
     static void RemoveGameObject(GameObject &gameObject);
 };

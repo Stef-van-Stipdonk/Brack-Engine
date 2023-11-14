@@ -29,33 +29,33 @@ public:
 
     ~RenderWrapper();
 
-    void RenderCamera(CameraComponent *cameraComponent, TransformComponent *transformComponent);
+    void RenderCamera(CameraComponent &cameraComponent, TransformComponent &transformComponent);
 
-    void RenderComponent(CameraComponent *cameraComponent, SpriteComponent *spriteComponent,
-                         TransformComponent *transformComponent);
+    void RenderComponent(CameraComponent &cameraComponent, const SpriteComponent &spriteComponent,
+                         TransformComponent &transformComponent);
 
-    void RenderComponent(CameraComponent *cameraComponent, TextComponent *textComponent,
-                         TransformComponent *transformComponent);
+    void RenderComponent(CameraComponent &cameraComponent, const TextComponent &textComponent,
+                         TransformComponent &transformComponent);
 
-    void RenderComponent(CameraComponent *cameraComponent, BoxCollisionComponent *boxCollisionComponent,
-                         TransformComponent *transformComponent);
+    void RenderComponent(CameraComponent &cameraComponent, BoxCollisionComponent &boxCollisionComponent,
+                         TransformComponent &transformComponent);
 
-    void RenderComponent(CameraComponent *cameraComponent, CircleCollisionComponent *circleCollisionComponent,
-                         TransformComponent *transformComponent);
+    void RenderComponent(CameraComponent &cameraComponent, CircleCollisionComponent &circleCollisionComponent,
+                         TransformComponent &transformComponent);
 
     void RenderSprite(SpriteComponent &sprite);
 
-    void RenderText(TextComponent *textComponent, TransformComponent *transformComponent);
+    void RenderText(TextComponent &textComponent, TransformComponent &transformComponent);
 
     void RenderButton(TextComponent &button);
 
     void RenderFrame();
 
     void
-    RenderBoxCollisionComponents(BoxCollisionComponent *boxCollisionComponent, TransformComponent *transformComponent);
+    RenderBoxCollisionComponents(BoxCollisionComponent &boxCollisionComponent, TransformComponent &transformComponent);
 
-    void RenderCircleCollisionComponents(CircleCollisionComponent *circleCollisionComponent,
-                                         TransformComponent *transformComponent);
+    void RenderCircleCollisionComponents(CircleCollisionComponent &circleCollisionComponent,
+                                         TransformComponent &transformComponent);
     
     static void Cleanup();
 
@@ -67,7 +67,7 @@ private:
     std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)> GetSpriteTexture(std::string filePath);
 
     std::pair<SDL_Rect, std::unique_ptr<SDL_Texture, void (*)(SDL_Texture *)>> &
-    GetCameraTexturePair(CameraComponent *cameraComponent, TransformComponent *transformComponent);
+    GetCameraTexturePair(CameraComponent &cameraComponent, TransformComponent &transformComponent);
 
     std::map<uint32_t, std::pair<SDL_Rect, std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)>>> cameraTextures;
     std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)> renderTexture;

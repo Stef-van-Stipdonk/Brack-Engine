@@ -13,11 +13,11 @@
 
 
 struct CompareByLayer {
-    bool operator()(RenderArchetype *lhs, const RenderArchetype *rhs) const {
-        if (lhs->sortingLayer == rhs->sortingLayer) {
-            return lhs->orderInLayer < rhs->orderInLayer;
+    bool operator()(const RenderArchetype& lhs, const RenderArchetype& rhs) const {
+        if (lhs.sortingLayer == rhs.sortingLayer) {
+            return lhs.orderInLayer < rhs.orderInLayer;
         }
-        return lhs->sortingLayer < rhs->sortingLayer;
+        return lhs.sortingLayer < rhs.sortingLayer;
     }
 };
 
@@ -36,7 +36,7 @@ public:
 private:
     void SortRenderComponents();
 
-    std::set<RenderArchetype *, CompareByLayer> components;
+    std::set<RenderArchetype, CompareByLayer> components;
     std::unique_ptr<RenderWrapper> sdl2Wrapper;
 };
 

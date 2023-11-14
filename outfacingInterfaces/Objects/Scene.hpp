@@ -26,10 +26,11 @@ public:
     std::vector<GameObject*> GetGameObjectsByTag(const std::string& tag);
 
     std::vector<GameObject*> GetAllGameObjects();
+    std::vector<Camera*> GetAllCameras();
 
     void RemoveGameObject(GameObject &gameObject);
 
-    std::vector<Camera> GetCameras();
+    std::vector<std::unique_ptr<Camera>>& GetCameras();
 
     void AddCamera(Camera &&camera);
 

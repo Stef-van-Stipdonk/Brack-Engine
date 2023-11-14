@@ -33,7 +33,7 @@ struct SpriteComponent : public RenderArchetype {
         return std::make_unique<SpriteComponent>(*this);
     }
 
-    SpriteComponent(const SpriteComponent &other) : TransformComponent(other) {
+    SpriteComponent(const SpriteComponent &other) : RenderArchetype(other) {
         spritePath = other.spritePath;
         if(other.imageSize != nullptr)
             imageSize = std::make_unique<Vector2>(*other.imageSize);

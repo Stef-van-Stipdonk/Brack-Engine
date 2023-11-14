@@ -25,7 +25,7 @@ struct CircleCollisionComponent : public IComponent {
             radius = nullptr;
     };
 
-    CircleCollisionComponent(const CircleCollisionComponent &other) : CollisionComponent(other) {
+    CircleCollisionComponent(const CircleCollisionComponent &other) : IComponent(other) {
         if(other.radius != nullptr)
             radius = std::make_unique<Vector2>(*other.radius);
     }
