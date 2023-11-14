@@ -66,6 +66,11 @@ void AudioWrapper::UploadSound(AudioComponent &audioComponent) {
         return;
     }
 
+    if (audioComponent.channel == 0) {
+        Logger::Error("Channel is not set for the AudioComponent.");
+        return;
+    }
+
     FMOD::Sound* sound = nullptr;
     FMOD_RESULT result = system->createSound(audioComponent.audioPath.c_str(), FMOD_DEFAULT, 0, &sound);
 
@@ -100,8 +105,7 @@ void AudioWrapper::UploadSound(AudioComponent &audioComponent) {
         Logger::Debug("Uploaded sound to Soundtrack Channel: " + std::to_string(soundTrackChannelPair.first) + ", Path: " + audioComponent.audioPath);
     } else {
         int channelID = audioComponent.channel;
-
-        if (channelID == soundTrackChannelPair.first) {
+        if (channelID == soundTrackChannel) {
             Logger::Error("Cannot upload sound to the Soundtrack Channel using a regular channel.");
             return;
         }
@@ -359,7 +363,16 @@ bool AudioWrapper::IsInitialized(const AudioComponent& audioComponent) {
     int channelID = audioComponent.channel;
 
     auto it = soundEffectsChannelMap.find(channelID);
-    return (it != soundEffectsChannelMap.end());
+    if (it != soundEffectsChannelMap.end()) {
+        return true;
+    }
+
+    // Check if the audioComponent is a soundtrack and if its channel matches
+    if (audioComponent.isSoundTrack && channelID == soundTrackChannel) {
+        return soundTrackChannelPair.second != nullptr;
+    }
+
+    return false;
 }
 
 bool AudioWrapper::IsValidAudioPath(const AudioComponent& audioComponent){

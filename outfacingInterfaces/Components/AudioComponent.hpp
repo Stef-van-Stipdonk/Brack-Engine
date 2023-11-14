@@ -10,7 +10,7 @@
 #include <string>
 
 struct AudioComponent : public IComponent {
-    explicit AudioComponent() : IComponent() {}
+    explicit AudioComponent() : IComponent(), channel(0) {}
 
     ~AudioComponent() override = default;
 
