@@ -107,7 +107,6 @@ add_library(${PROJECT_NAME} SHARED
         src/Helpers/UserLogger.cpp
         outfacingInterfaces/Helpers/UserLogger.hpp
         outfacingInterfaces/Components/RectangleComponent.hpp
-        outfacingInterfaces/Components/CircleComponent.hpp
 )
 
 option(USER_LOG_TO_FILE "Enable user logging to a file" OFF)
