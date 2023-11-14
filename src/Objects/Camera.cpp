@@ -3,6 +3,7 @@
 //
 
 #include "Objects/Camera.hpp"
+#include "../ConfigSingleton.hpp"
 
 #include <memory>
 
@@ -10,7 +11,8 @@
 Camera::Camera() : GameObject() {
     AddComponent(new CameraComponent());
     SetBackgroundColor(Color(0, 0, 0, 255));
-    SetSize(Vector2(800, 600));
+    auto size = ConfigSingleton::GetInstance().GetWindowSize();
+    SetSize(size);
 }
 
 void Camera::SetBackgroundColor(const Color& color) {

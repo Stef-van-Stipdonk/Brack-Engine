@@ -267,3 +267,8 @@ std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)> RenderWrapper::getTe
 
     return std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)>(nullptr, &SDL_DestroyTexture);
 }
+
+void RenderWrapper::ResizeWindow(Vector2 size) {
+    SDL_SetWindowSize(window.get(),(int)size.getX(),(int)size.getY());
+    ConfigSingleton::GetInstance().SetWindowSize(size);
+}
