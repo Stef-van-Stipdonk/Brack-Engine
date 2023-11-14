@@ -77,16 +77,6 @@ void RenderWrapper::RenderCamera(CameraComponent *camera) {
 
     // Clear the screen with the background color.
     SDL_RenderClear(renderer.get());
-
-    int windowWidth, windowHeight;
-    SDL_GetWindowSize(window.get(), &windowWidth, &windowHeight);
-
-    if(windowWidth != camera->size.getX() || windowHeight != camera->size.getY()) {
-        int centerX = SDL_WINDOWPOS_CENTERED;
-        int centerY = SDL_WINDOWPOS_CENTERED;
-        SDL_SetWindowSize(window.get(), camera->size.getX(), camera->size.getY());
-        SDL_SetWindowPosition(window.get(), centerX, centerY);
-    }
 }
 
 void RenderWrapper::RenderSprite(SpriteComponent &sprite) {
@@ -227,4 +217,9 @@ std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)> RenderWrapper::getTe
     }
 
     return std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)>(nullptr, &SDL_DestroyTexture);
+}
+
+void RenderWrapper::ResizeWindow(Vector2 size) {
+    SDL_SetWindowSize(window.get(),(int)size.getX(),(int)size.getY());
+    ConfigSingleton::GetInstance().SetWindowSize(size);
 }

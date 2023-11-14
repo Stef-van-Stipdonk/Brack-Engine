@@ -50,3 +50,7 @@ void ConfigSingleton::SetConfig(Config config) {
 bool ConfigSingleton::ShowFPS() const {
     return showFPS;
 }
+
+void ConfigSingleton::SetWindowSize(Vector2 size) const {
+    size = size;
+}

@@ -44,6 +44,8 @@ public:
 
     static void Cleanup();
 
+    void ResizeWindow(Vector2 size);
+
 private:
     bool Initialize();
     std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)> getTexture(std::string filePath);
