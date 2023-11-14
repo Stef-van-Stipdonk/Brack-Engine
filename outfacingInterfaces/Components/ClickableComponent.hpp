@@ -16,9 +16,12 @@ struct ClickableComponent : public UIComponent {
         OnClick = std::move(func);
     }
 
+    ClickableComponent(const ClickableComponent &other) : UIComponent(other) {
+        OnClick = other.OnClick;
+    }
 
     void Accept(ComponentVisitor &visitor) override {
-        visitor.visit<ClickableComponent>(this);
+        visitor.visit(*this);
     }
 
     bool disabled = false;

@@ -16,9 +16,10 @@ struct CameraComponent : public VelocityComponent {
 
     ~CameraComponent() override = default;
 
+    CameraComponent(const CameraComponent &other) = default;
 
     void Accept(ComponentVisitor &visitor) override {
-        visitor.visit<CameraComponent>(this);
+        visitor.visit(*this);
     }
 
     Vector2 size;

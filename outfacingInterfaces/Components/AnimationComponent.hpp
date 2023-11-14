@@ -15,7 +15,15 @@ struct AnimationComponent : public SpriteComponent {
     ~AnimationComponent() override = default;
 
     void Accept(ComponentVisitor &visitor) override {
-        visitor.visit<AnimationComponent>(this);
+        visitor.visit(*this);
+    }
+
+    AnimationComponent(const AnimationComponent& other) {
+        isLooping = other.isLooping;
+        animationSpeed = other.animationSpeed;
+        frameCount = other.frameCount;
+        currentFrame = other.currentFrame;
+        startPosition = std::make_unique<Vector2>(*other.startPosition);
     }
 
     bool isLooping;

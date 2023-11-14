@@ -18,7 +18,15 @@ struct TransformComponent : public IComponent {
     ~TransformComponent() override = default;
 
     void Accept(ComponentVisitor &visitor) override {
-        visitor.visit<TransformComponent>(this);
+        visitor.visit(*this);
+    }
+
+    TransformComponent(const TransformComponent& other) {
+        if (other.position)
+            position = std::make_unique<Vector2>(*other.position);
+        if (other.scale)
+            scale = std::make_unique<Vector2>(*other.scale);
+        rotation = other.rotation;
     }
 
     std::unique_ptr<Vector2> position = std::make_unique<Vector2>(0.0f, 0.0f);

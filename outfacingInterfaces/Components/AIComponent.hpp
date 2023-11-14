@@ -16,7 +16,7 @@ struct AIComponent : public IComponent {
     ~AIComponent() override = default;
 
     void Accept(ComponentVisitor &visitor) override {
-        visitor.visit<AIComponent>(this);
+        visitor.visit(*this);
     }
 
     uint32_t destinationEntityID;

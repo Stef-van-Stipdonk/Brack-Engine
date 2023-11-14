@@ -15,7 +15,7 @@ struct CollisionComponent : public TransformComponent {
     virtual ~CollisionComponent() = default;
 
     void Accept(ComponentVisitor &visitor) override {
-        visitor.visit<CollisionComponent>(this);
+        visitor.visit(*this);
     }
 };
 

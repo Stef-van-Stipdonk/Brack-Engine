@@ -16,8 +16,21 @@ struct SpriteComponent : public TransformComponent {
 
     ~SpriteComponent() override = default;
 
+    SpriteComponent(const SpriteComponent &other) : TransformComponent(other) {
+        spritePath = other.spritePath;
+        imageSize = std::make_unique<Vector2>(*other.imageSize);
+        spriteSize = std::make_unique<Vector2>(*other.spriteSize);
+        tileOffset = std::make_unique<Vector2>(*other.tileOffset);
+        color = std::make_unique<Color>(*other.color);
+        flipX = other.flipX;
+        flipY = other.flipY;
+        sortingLayer = other.sortingLayer;
+        orderInLayer = other.orderInLayer;
+        margin = other.margin;
+    }
+
     void Accept(ComponentVisitor &visitor) override {
-        visitor.visit<SpriteComponent>(this);
+        visitor.visit(*this);
     }
 
     std::string spritePath;

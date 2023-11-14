@@ -19,7 +19,7 @@ void ClickSystem::Update(float deltaTime) {
     auto& mousePosition = InputManager::GetInstance().GetMousePosition();
     auto clickableComponentIds = componentStore.getEntitiesWithComponent<ClickableComponent>();
     for (int entityId: clickableComponentIds) {
-        auto* clickableComponent = componentStore.getComponent<ClickableComponent>(entityId);
+        auto* clickableComponent = componentStore.tryGetComponent<ClickableComponent>(entityId);
         if(clickableComponent->disabled) continue;
         CheckBoxCollision(*clickableComponent, mousePosition);
         CheckCircleCollision(*clickableComponent,mousePosition);
@@ -27,9 +27,11 @@ void ClickSystem::Update(float deltaTime) {
 }
 
 void ClickSystem::CheckBoxCollision(const ClickableComponent& clickableComponent, const Vector2& mousePosition) {
-    auto boxColliderComponent = ComponentStore::GetInstance().getComponent<BoxCollisionComponent>(clickableComponent.entityID);
+    auto boxColliderComponent = ComponentStore::GetInstance().tryGetComponent<BoxCollisionComponent>(
+            clickableComponent.entityID);
     if(boxColliderComponent == nullptr) return;
-    auto transformComponent = ComponentStore::GetInstance().getComponent<TransformComponent>(clickableComponent.entityID);
+    auto transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(
+            clickableComponent.entityID);
     if(
             mousePosition.getX() >= transformComponent->position->getX() &&
             mousePosition.getX() <= transformComponent->position->getX() + boxColliderComponent->size->getX() &&
@@ -41,9 +43,11 @@ void ClickSystem::CheckBoxCollision(const ClickableComponent& clickableComponent
 }
 
 void ClickSystem::CheckCircleCollision(const ClickableComponent &clickableComponent, const Vector2 &mousePosition) {
-    auto circleCollisionComponent = ComponentStore::GetInstance().getComponent<CircleCollisionComponent>(clickableComponent.entityID);
+    auto circleCollisionComponent = ComponentStore::GetInstance().tryGetComponent<CircleCollisionComponent>(
+            clickableComponent.entityID);
     if(circleCollisionComponent == nullptr) return;
-    auto transformComponent = ComponentStore::GetInstance().getComponent<TransformComponent>(clickableComponent.entityID);
+    auto transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(
+            clickableComponent.entityID);
     auto x = mousePosition.getX();
     auto y = mousePosition.getY();
     auto a = circleCollisionComponent->radius->getX();

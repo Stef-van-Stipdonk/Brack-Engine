@@ -14,8 +14,12 @@
 struct UIComponent : public IComponent {
     explicit UIComponent() : IComponent() {}
 
+    UIComponent(const UIComponent &other) : IComponent(other) {
+        size = std::make_unique<Vector2>(*other.size);
+    }
+
     void Accept(ComponentVisitor &visitor) override {
-        visitor.visit<UIComponent>(this);
+        visitor.visit(*this);
     }
 
     std::unique_ptr<Vector2> size;

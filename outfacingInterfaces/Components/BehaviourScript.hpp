@@ -15,13 +15,13 @@ struct BehaviourScript : public IComponent {
     ~BehaviourScript() override = default;
 
     void Accept(ComponentVisitor &visitor) override {
-        visitor.visit<BehaviourScript>(this);
+        visitor.visit(*this);
         OnStart();
     }
 
-    virtual void OnStart() = 0;
+    virtual void OnStart() {};
 
-    virtual void OnUpdate(float deltaTime) = 0;
+    virtual void OnUpdate(float deltaTime) {};
 };
 
 

@@ -22,8 +22,8 @@ public:
     }
 
     template<typename T>
-    void AddComponent(T *component) {
-        components.push_back(component);
+    void AddComponent(std::unique_ptr<T> component) {
+        components.push_back(std::move(component));
     }
 
     template<typename T>
@@ -36,29 +36,28 @@ public:
     }
 
     template<typename T>
-    T *GetComponent() const {
-        for (auto &comp: components) {
-            if (T *castedComp = dynamic_cast<T *>(comp)) {
-                return castedComp;
+    const std::unique_ptr<T>& TryGetComponent() const {
+        for (const auto &comp : components) {
+            if (auto castedComp = dynamic_cast<T*>(comp.get())) {
+                return std::unique_ptr<T>(castedComp);
             }
         }
-        return nullptr;
+        static const std::unique_ptr<T> nullPtr = nullptr;
+        return nullPtr;
     }
+
 
     template<typename T>
     void RemoveComponent() {
         for (auto it = components.begin(); it != components.end();) {
-            T *comp = dynamic_cast<T *>(*it);
+            T* comp = dynamic_cast<T*>(it->get());
             if (comp != nullptr) {
-                components.erase(it);
-                break;
+                it = components.erase(it);
             } else {
-
                 ++it;
             }
         }
     }
-
 
     GameObject &GetParent();
 
@@ -66,11 +65,11 @@ public:
 
     std::string GetName() const;
 
-    void SetName(char *name);
+    void SetName(std::string name);
 
     std::string GetTag() const;
 
-    void SetTag(char *tag);
+    void SetTag(std::string name);
 
     bool IsActive() const;
 
@@ -84,11 +83,11 @@ public:
 
     void SetEntityID(uint32_t id);
 
-    std::vector<IComponent *> &GetAllComponents();
+    std::vector<std::unique_ptr<IComponent>>&GetAllComponents();
 
 protected:
     uint32_t entityID = 0;
-    std::vector<IComponent *> components;
+    std::vector<std::unique_ptr<IComponent>> components;
 };
 
 

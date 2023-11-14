@@ -17,7 +17,7 @@ struct AudioComponent : public AudioArchetype {
     ~AudioComponent() = default;
 
     void Accept(ComponentVisitor &visitor) override {
-        visitor.visit<AudioComponent>(this);
+        visitor.visit(*this);
     }
 
 

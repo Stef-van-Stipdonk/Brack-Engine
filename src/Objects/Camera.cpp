@@ -6,35 +6,35 @@
 
 
 Camera::Camera() : GameObject() {
-    AddComponent(new CameraComponent());
+    AddComponent(std::make_unique<CameraComponent>());
     SetBackgroundColor(Color(0, 0, 0, 255));
     SetSize(Vector2(800, 600));
 }
 
 Color Camera::GetBackgroundColor() const {
     if (entityID == 0) {
-        return GetComponent<CameraComponent>()->backgroundColor;
+        return TryGetComponent<CameraComponent>()->backgroundColor;
     }
-    return ComponentStore::GetInstance().getComponent<CameraComponent>(entityID)->backgroundColor;
+    return ComponentStore::GetInstance().tryGetComponent<CameraComponent>(entityID).backgroundColor;
 }
 
 void Camera::SetBackgroundColor(const Color color) {
     if (entityID == 0) {
-        GetComponent<CameraComponent>()->backgroundColor = color;
+        TryGetComponent<CameraComponent>()->backgroundColor = color;
     } else
-    ComponentStore::GetInstance().getComponent<CameraComponent>(entityID)->backgroundColor = color;
+        ComponentStore::GetInstance().tryGetComponent<CameraComponent>(entityID).backgroundColor = color;
 }
 
 Vector2 Camera::GetSize() const {
     if (entityID == 0){
-        return GetComponent<CameraComponent>()->size;
+        return TryGetComponent<CameraComponent>()->size;
     }
-    return ComponentStore::GetInstance().getComponent<CameraComponent>(entityID)->size;
+    return ComponentStore::GetInstance().tryGetComponent<CameraComponent>(entityID).size;
 }
 
 void Camera::SetSize(const Vector2 size) {
     if (entityID == 0) {
-        GetComponent<CameraComponent>()->size = size;
+        TryGetComponent<CameraComponent>()->size = size;
     } else
-    ComponentStore::GetInstance().getComponent<CameraComponent>(entityID)->size = size;
+        ComponentStore::GetInstance().tryGetComponent<CameraComponent>(entityID).size = size;
 }

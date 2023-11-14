@@ -15,7 +15,7 @@ public:
     ~AudioArchetype() override = default;
 
     void Accept(ComponentVisitor &visitor) override {
-        visitor.visit<AudioArchetype>(this);
+        visitor.visit(*this);
     }
 };
 

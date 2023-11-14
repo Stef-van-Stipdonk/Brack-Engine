@@ -7,7 +7,7 @@
 #include "../ConfigSingleton.hpp"
 
 Text::Text(std::string text, int fontSize, std::unique_ptr<Color> color, std::string fontPath) {
-    TextComponent* textComponent = new TextComponent();
+    std::unique_ptr<TextComponent> textComponent = std::make_unique<TextComponent>();
     textComponent->text = text;
     textComponent->fontSize = fontSize;
     textComponent->color = std::move(color);

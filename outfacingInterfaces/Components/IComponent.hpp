@@ -14,7 +14,7 @@ struct IComponent {
 
     explicit IComponent() {};
 
-    virtual void Accept(ComponentVisitor &visitor) = 0;
+    virtual void Accept(ComponentVisitor &visitor) {};
 
 
     // Als we nog achter andere overeenkomende dingen komen bij ieder component kunnen we die hier toevoegens

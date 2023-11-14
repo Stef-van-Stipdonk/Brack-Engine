@@ -11,8 +11,9 @@ class ComponentVisitor {
 
 public:
     template<typename T>
-    void visit(T *component) {
-        ComponentStore::GetInstance().addComponent(component->entityID, component);
+    void visit(T& component) {
+        auto componentPtr = std::make_unique<T>(component); // Creating a unique_ptr
+        ComponentStore::GetInstance().addComponent(component.entityID, std::move(componentPtr));
     }
 };
 

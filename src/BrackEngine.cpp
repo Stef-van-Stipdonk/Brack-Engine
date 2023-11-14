@@ -72,6 +72,6 @@ void BrackEngine::CreateFPS() {
 }
 
 void BrackEngine::UpdateFPS() {
-    auto textComponent = ComponentStore::GetInstance().getComponent<TextComponent>(1);
+    auto textComponent = ComponentStore::GetInstance().tryGetComponent<TextComponent>(1);
     textComponent->text = std::to_string(FPSSingleton::GetInstance().GetFPS());
 }
