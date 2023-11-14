@@ -88,7 +88,7 @@ public:
 
 protected:
     uint32_t entityID = 0;
-    std::vector<IComponent *> components;
+    std::vector<IComponent*> components;
 };
 
 

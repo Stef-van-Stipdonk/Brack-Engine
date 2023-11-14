@@ -9,8 +9,7 @@
 #include "CollisionComponent.hpp"
 
 struct BoxCollisionComponent : public CollisionComponent {
-    explicit BoxCollisionComponent(float width, float height) : CollisionComponent(), size(new Vector2(width, height)) {}
-    explicit BoxCollisionComponent(float size) : BoxCollisionComponent(size,size) {}
+    explicit BoxCollisionComponent(Vector2 size) : CollisionComponent(), size(std::make_unique<Vector2>(size)) {}
 
     ~BoxCollisionComponent() override = default;
 

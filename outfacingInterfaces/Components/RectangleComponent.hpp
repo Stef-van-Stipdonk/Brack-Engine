@@ -8,6 +8,7 @@
 #include <Helpers/Vector2.hpp>
 #include <memory>
 #include "IComponent.hpp"
+#include "Helpers/Color.hpp"
 #include "../../src/Components/ComponentVisitor.hpp"
 
 struct RectangleComponent : public IComponent {
@@ -15,7 +16,6 @@ struct RectangleComponent : public IComponent {
     explicit RectangleComponent(Vector2 size) : RectangleComponent(size, Color(0,0,0,0)) {}
 
     ~RectangleComponent() override = default;
-
 
     void Accept(ComponentVisitor &visitor) override {
         visitor.visit<RectangleComponent>(this);

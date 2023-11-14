@@ -3,6 +3,7 @@
 //
 
 #include <Components/TextComponent.hpp>
+#include <Components/RectangleComponent.hpp>
 #include "Objects/Text.hpp"
 #include "../ConfigSingleton.hpp"
 
