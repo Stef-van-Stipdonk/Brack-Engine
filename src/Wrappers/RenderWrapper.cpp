@@ -72,8 +72,8 @@ void RenderWrapper::Cleanup() {
 
 void RenderWrapper::RenderCamera(CameraComponent *camera) {
     auto &backgroundColor = camera->backgroundColor;
-    SDL_SetRenderDrawColor(renderer.get(), backgroundColor.r, backgroundColor.g, backgroundColor.b,
-                           backgroundColor.a); // RGBA format
+    SDL_SetRenderDrawColor(renderer.get(), backgroundColor->r, backgroundColor->g, backgroundColor->b,
+                           backgroundColor->a); // RGBA format
 
     // Clear the screen with the background color.
     SDL_RenderClear(renderer.get());
@@ -81,10 +81,10 @@ void RenderWrapper::RenderCamera(CameraComponent *camera) {
     int windowWidth, windowHeight;
     SDL_GetWindowSize(window.get(), &windowWidth, &windowHeight);
 
-    if(windowWidth != camera->size.getX() || windowHeight != camera->size.getY()) {
+    if(windowWidth != camera->size->getX() || windowHeight != camera->size->getY()) {
         int centerX = SDL_WINDOWPOS_CENTERED;
         int centerY = SDL_WINDOWPOS_CENTERED;
-        SDL_SetWindowSize(window.get(), camera->size.getX(), camera->size.getY());
+        SDL_SetWindowSize(window.get(), camera->size->getX(), camera->size->getY());
         SDL_SetWindowPosition(window.get(), centerX, centerY);
     }
 }
