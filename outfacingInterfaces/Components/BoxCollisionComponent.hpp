@@ -6,7 +6,6 @@
 #define BRACK_ENGINE_BOXCOLLISIONCOMPONENT_HPP
 
 #include <memory>
-#include "../../src/Components/ComponentVisitor.hpp"
 #include "CollisionComponent.hpp"
 
 struct BoxCollisionComponent : public CollisionComponent {

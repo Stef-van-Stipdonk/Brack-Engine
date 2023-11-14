@@ -89,6 +89,44 @@ void RenderWrapper::RenderCamera(CameraComponent *camera) {
     }
 }
 
+void RenderWrapper::RenderRectangle(RectangleComponent *rectangleComponent, TransformComponent *transformComponent) {
+    SDL_Rect rectFill = {
+            static_cast<int>(transformComponent->position->getX()),
+            static_cast<int>(transformComponent->position->getY()),
+            static_cast<int>(rectangleComponent->size->getX()),
+            static_cast<int>(rectangleComponent->size->getY()) };
+
+    // Render background
+    SDL_SetRenderDrawColor(
+            renderer.get(),
+            static_cast<Uint8>(rectangleComponent->fill->r),
+            static_cast<Uint8>(rectangleComponent->fill->g),
+            static_cast<Uint8>(rectangleComponent->fill->b),
+            static_cast<Uint8>(rectangleComponent->fill->a)
+            );
+    SDL_RenderFillRect(renderer.get(), &rectFill);
+
+    if(rectangleComponent->borderWidth > 0){
+        // Render the border borderWidth times
+        SDL_SetRenderDrawColor(
+                renderer.get(),
+               static_cast<Uint8>(rectangleComponent->borderColor->r),
+               static_cast<Uint8>(rectangleComponent->borderColor->g),
+               static_cast<Uint8>(rectangleComponent->borderColor->b),
+               static_cast<Uint8>(rectangleComponent->borderColor->a)
+               );
+        for (int i = 0; i < rectangleComponent->borderWidth; ++i) {
+            SDL_Rect rectBorder = {
+                    static_cast<int>(transformComponent->position->getX()) + i,
+                    static_cast<int>(transformComponent->position->getY()) + i,
+                    static_cast<int>(rectangleComponent->size->getX()) - (i*2),
+                    static_cast<int>(rectangleComponent->size->getY()) - (i*2)
+            };
+            SDL_RenderDrawRect(renderer.get(), &rectBorder);
+        }
+    }
+}
+
 void RenderWrapper::RenderSprite(SpriteComponent &sprite) {
     //Check if the texture is already created. If not add it to the created textures
     if(textures.find(sprite.spritePath) == textures.end())
@@ -185,10 +223,6 @@ void RenderWrapper::RenderCircleCollisionComponents(CircleCollisionComponent* ci
         angle += step;
     }
 #endif
-}
-
-void RenderWrapper::RenderButton(TextComponent &button) {
-
 }
 
 void RenderWrapper::RenderFrame() {

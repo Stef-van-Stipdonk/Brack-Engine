@@ -15,6 +15,8 @@
 #include <memory>
 #include <Components/BoxCollisionComponent.hpp>
 #include <Components/CircleCollisionComponent.hpp>
+#include <Components/RectangleComponent.hpp>
+#include <Components/CircleComponent.hpp>
 
 
 struct SDLWindowDeleter {
@@ -30,18 +32,14 @@ public:
     ~RenderWrapper();
 
     void RenderCamera(CameraComponent* camera);
-
     void RenderSprite(SpriteComponent &sprite);
-
     void RenderText(TextComponent* textComponent, TransformComponent* transformComponent);
-
-    void RenderButton(TextComponent &button);
-
-    void RenderFrame();
-
+    void RenderRectangle(RectangleComponent* rectangleComponent, TransformComponent* transformComponent);
+    void RenderCircle(CircleComponent* circleComponent, TransformComponent* transformComponent);
     void RenderBoxCollisionComponents(BoxCollisionComponent* boxCollisionComponent, TransformComponent* transformComponent);
     void RenderCircleCollisionComponents(CircleCollisionComponent* circleCollisionComponent, TransformComponent* transformComponent);
 
+    void RenderFrame();
     static void Cleanup();
 
 private:
