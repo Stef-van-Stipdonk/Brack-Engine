@@ -17,8 +17,19 @@ struct RectangleComponent : public IComponent {
 
     ~RectangleComponent() override = default;
 
+    RectangleComponent(const RectangleComponent &other) {
+        size = std::make_unique<Vector2>(*other.size);
+        fill = std::make_unique<Color>(*other.fill);
+        borderWidth = other.borderWidth;
+        borderColor = std::make_unique<Color>(*other.borderColor);
+    }
+
+    virtual std::unique_ptr<IComponent> clone() const override {
+        return std::make_unique<RectangleComponent>(*this);
+    }
+
     void Accept(ComponentVisitor &visitor) override {
-        visitor.visit<RectangleComponent>(this);
+        visitor.visit<RectangleComponent>(*this);
     }
 
     std::unique_ptr<Vector2> size;

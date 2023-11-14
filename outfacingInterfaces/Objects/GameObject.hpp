@@ -10,20 +10,46 @@
 #include <vector>
 #include <string>
 #include <typeinfo>
+#include <stdexcept>
 
 class GameObject {
 public:
     GameObject();
 
-    ~GameObject() = default;
+    ~GameObject() {
+        components.clear();
+    };
+
+    GameObject& operator=(const GameObject &other) {
+        if (this != &other) {
+            entityID = other.entityID;
+            components.clear();
+            for (const auto &comp : other.components) {
+                components.push_back(comp->clone());
+            }
+        }
+        return *this;
+    }
+
+    std::unique_ptr<GameObject> clone() {
+        return std::make_unique<GameObject>(*this);
+    }
 
     bool operator==(const GameObject &other) const {
         return (this->entityID == other.entityID); // Assuming 'id' is a unique identifier for GameObjects
     }
 
     template<typename T>
-    void AddComponent(T *component) {
-        components.push_back(component);
+    void AddComponent(std::unique_ptr<T> component) {
+        components.push_back(std::move(component));
+    }
+
+    GameObject(const GameObject &other) {
+        entityID = other.entityID;
+        components = std::vector<std::unique_ptr<IComponent>>();
+        for (auto &comp : other.components) {
+            components.push_back(comp->clone());
+        }
     }
 
     template<typename T>
@@ -36,29 +62,26 @@ public:
     }
 
     template<typename T>
-    T *GetComponent() const {
-        for (auto &comp: components) {
-            if (T *castedComp = dynamic_cast<T *>(comp)) {
-                return castedComp;
+    T& TryGetComponent() const {
+        for (const auto &comp : components) {
+            if (auto castedComp = dynamic_cast<T*>(comp.get())) {
+                return *castedComp; // dereference the pointer to return a reference
             }
         }
-        return nullptr;
+        throw std::runtime_error("Component not found"); // throw an exception if not found
     }
 
     template<typename T>
     void RemoveComponent() {
         for (auto it = components.begin(); it != components.end();) {
-            T *comp = dynamic_cast<T *>(*it);
+            T* comp = dynamic_cast<T*>(it->get());
             if (comp != nullptr) {
-                components.erase(it);
-                break;
+                it = components.erase(it);
             } else {
-
                 ++it;
             }
         }
     }
-
 
     GameObject &GetParent();
 
@@ -66,11 +89,11 @@ public:
 
     std::string GetName() const;
 
-    void SetName(char *name);
+    void SetName(std::string name);
 
     std::string GetTag() const;
 
-    void SetTag(char *tag);
+    void SetTag(std::string name);
 
     bool IsActive() const;
 
@@ -84,11 +107,11 @@ public:
 
     void SetEntityID(uint32_t id);
 
-    std::vector<IComponent *> &GetAllComponents();
+    std::vector<std::unique_ptr<IComponent>>&GetAllComponents();
 
 protected:
     uint32_t entityID = 0;
-    std::vector<IComponent*> components;
+    std::vector<std::unique_ptr<IComponent>> components;
 };
 
 

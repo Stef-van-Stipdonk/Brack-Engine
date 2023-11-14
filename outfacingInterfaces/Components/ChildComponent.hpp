@@ -14,11 +14,15 @@
 struct ChildComponent : public IComponent {
     explicit ChildComponent() : IComponent() {}
 
+    virtual std::unique_ptr<IComponent> clone() const override {
+        return std::make_unique<ChildComponent>(*this);
+    }
+
     ~ChildComponent() override = default;
 
 
     void Accept(ComponentVisitor &visitor) override {
-        visitor.visit<ChildComponent>(this);
+        visitor.visit(*this);
     }
 
     std::vector<uint32_t> children;

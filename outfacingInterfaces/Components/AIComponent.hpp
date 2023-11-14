@@ -16,7 +16,11 @@ struct AIComponent : public IComponent {
     ~AIComponent() override = default;
 
     void Accept(ComponentVisitor &visitor) override {
-        visitor.visit<AIComponent>(this);
+        visitor.visit(*this);
+    }
+
+    virtual std::unique_ptr<IComponent> clone() const override {
+        return std::make_unique<AIComponent>(*this);
     }
 
     uint32_t destinationEntityID;
