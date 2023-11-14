@@ -44,4 +44,9 @@ void ConfigSingleton::SetConfig(Config config) {
     windowSize = config.windowSize;
     fullscreen = config.fullscreen;
     BaseAssetPath = config.BaseAssetPath;
+    showFPS = config.showFPS;
+}
+
+bool ConfigSingleton::ShowFPS() const {
+    return showFPS;
 }

@@ -23,16 +23,6 @@ public:
     Vector2 GetSize() const;
 
     void SetSize(const Vector2 size);
-
-    CameraComponent *GetCameraComponent();
-
-    void SetCameraComponent(CameraComponent *cameraComponent);
-
-private:
-    CameraComponent *cameraComponent;
-    Vector2 size;
-    Color backgroundColor;
-
 };
 
 
