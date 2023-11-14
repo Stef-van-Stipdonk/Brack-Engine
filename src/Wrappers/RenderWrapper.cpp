@@ -1,7 +1,4 @@
-//
-// Created by jesse on 30/10/2023.
-//
-
+#include <SDL_image.h>
 #include "RenderWrapper.hpp"
 #include "../includes/SystemManager.hpp"
 #include "../ConfigSingleton.hpp"
@@ -26,13 +23,21 @@ bool RenderWrapper::Initialize() {
         std::cerr << "SDL_ttf initialization failed: " << TTF_GetError() << std::endl;
     }
 
+    if (IMG_Init(IMG_INIT_PNG) != IMG_INIT_PNG) {
+        std::cerr << "SDL2_image initialization failed: " << IMG_GetError() << std::endl;
+        SDL_Quit();
+    }
+
     // Create a window.
     // You can customize the window size, title, and other settings as needed.
     // For simplicity, this example creates a 800x600 window.
-    SDL_Window *window = SDL_CreateWindow(ConfigSingleton::GetInstance().GetWindowTitle().c_str(),
-                                          SDL_WINDOWPOS_CENTERED,
-                                          SDL_WINDOWPOS_CENTERED, ConfigSingleton::GetInstance().GetWindowSize().getX(),
-                                          ConfigSingleton::GetInstance().GetWindowSize().getY(), SDL_WINDOW_SHOWN);
+    std::unique_ptr<SDL_Window, SDLWindowDeleter> tempWindow(
+            SDL_CreateWindow(ConfigSingleton::GetInstance().GetWindowTitle().c_str(),
+                             SDL_WINDOWPOS_CENTERED,
+                             SDL_WINDOWPOS_CENTERED, ConfigSingleton::GetInstance().GetWindowSize().getX(),
+                             ConfigSingleton::GetInstance().GetWindowSize().getY(), SDL_WINDOW_SHOWN)
+    );
+    window = std::move(tempWindow);
 
     if (window == nullptr) {
         std::cerr << "Window creation failed: " << SDL_GetError() << std::endl;
@@ -42,14 +47,14 @@ bool RenderWrapper::Initialize() {
 
     // Perform additional initialization as needed (e.g., renderer setup, resource loading).
     renderer = std::unique_ptr<SDL_Renderer, void (*)(SDL_Renderer *)>(
-            SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED),
+            SDL_CreateRenderer(window.get(), -1, SDL_RENDERER_ACCELERATED),
             [](SDL_Renderer *r) { SDL_DestroyRenderer(r); }
     );
 
     if (renderer == nullptr) {
         std::cerr << "Renderer creation failed: " << SDL_GetError() << std::endl;
         Logger::GetInstance().Shutdown();
-        SDL_DestroyWindow(window);
+        SDL_DestroyWindow(window.get());
         Cleanup();
         return false;
     }
@@ -62,6 +67,7 @@ void RenderWrapper::Cleanup() {
     Logger::GetInstance().Shutdown();
     SDL_Quit();
     TTF_Quit();
+    IMG_Quit();
 }
 
 void RenderWrapper::RenderCamera(CameraComponent *camera) {
@@ -71,10 +77,37 @@ void RenderWrapper::RenderCamera(CameraComponent *camera) {
 
     // Clear the screen with the background color.
     SDL_RenderClear(renderer.get());
+
+    int windowWidth, windowHeight;
+    SDL_GetWindowSize(window.get(), &windowWidth, &windowHeight);
+
+    if(windowWidth != camera->size.getX() || windowHeight != camera->size.getY()) {
+        int centerX = SDL_WINDOWPOS_CENTERED;
+        int centerY = SDL_WINDOWPOS_CENTERED;
+        SDL_SetWindowSize(window.get(), camera->size.getX(), camera->size.getY());
+        SDL_SetWindowPosition(window.get(), centerX, centerY);
+    }
 }
 
 void RenderWrapper::RenderSprite(SpriteComponent &sprite) {
+    //Check if the texture is already created. If not add it to the created textures
+    if(textures.find(sprite.spritePath) == textures.end())
+        textures.insert(std::make_pair(sprite.spritePath, getTexture(sprite.spritePath)));
+    auto texture = textures.find(sprite.spritePath);
 
+    //Fill in a rectangle for the current sprite IN
+    SDL_Rect srcRect;
+    int spriteWidth = sprite.spriteSize->getX();
+    int spriteHeight = sprite.spriteSize->getY();
+    srcRect.x = (sprite.tileOffset->getX() * spriteWidth) + (sprite.margin * sprite.tileOffset->getX());
+    srcRect.y = (sprite.tileOffset->getY() * spriteHeight) + (sprite.margin * sprite.tileOffset->getY());
+    srcRect.w = spriteWidth;
+    srcRect.h = spriteHeight;
+
+    //Create a rectangle were the sprite needs to be rendered on to
+    SDL_Rect destRect = {static_cast<int>(sprite.position->getX()), static_cast<int>(sprite.position->getY()), static_cast<int>(sprite.spriteSize->getX() * sprite.scale->getX()), static_cast<int>(sprite.spriteSize->getY() * sprite.scale->getY())};
+
+    SDL_RenderCopy(renderer.get(), texture->second.get(), &srcRect, &destRect);
 }
 
 void RenderWrapper::RenderText(TextComponent* textComponent, TransformComponent* transformComponent) {
@@ -160,4 +193,38 @@ void RenderWrapper::RenderButton(TextComponent &button) {
 
 void RenderWrapper::RenderFrame() {
     SDL_RenderPresent(renderer.get());
+}
+
+std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)> RenderWrapper::getTexture(std::string filePath) {
+    // Get the file extension
+    size_t dotPos = filePath.find_last_of('.');
+    if (dotPos == std::string::npos) {
+        std::cerr << "Error: Invalid file path (no file extension)" << std::endl;
+        return std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)>(nullptr, &SDL_DestroyTexture);
+    }
+
+    std::string extension = filePath.substr(dotPos + 1);
+
+    if (extension == "bmp") {
+        SDL_Surface* surface = SDL_LoadBMP(filePath.c_str());
+        if (surface) {
+            std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)> bmpTexture(SDL_CreateTextureFromSurface(renderer.get(), surface), &SDL_DestroyTexture);
+            SDL_FreeSurface(surface);
+            return std::move(bmpTexture);
+        } else {
+            std::cerr << "Error: Failed to load BMP file: " << SDL_GetError() << std::endl;
+        }
+    } else if (extension == "png") {
+        SDL_Texture* pngTexture = IMG_LoadTexture(renderer.get(), filePath.c_str());
+        std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)> texture(pngTexture, &SDL_DestroyTexture);
+        if (pngTexture) {
+            return std::move(texture);
+        } else {
+            std::cerr << "Error: Failed to load PNG file: " << IMG_GetError() << std::endl;
+        }
+    } else {
+        std::cerr << "Error: Unsupported file type: " << extension << std::endl;
+    }
+
+    return std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)>(nullptr, &SDL_DestroyTexture);
 }

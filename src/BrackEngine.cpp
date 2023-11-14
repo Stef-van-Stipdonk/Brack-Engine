@@ -4,6 +4,7 @@
 
 #include <Helpers/KeyMap.hpp>
 #include <Helpers/MouseMap.hpp>
+#include <Components/ObjectInfoComponent.hpp>
 #include "BrackEngine.hpp"
 #include "Systems/RenderingSystem.hpp"
 #include "Logger.hpp"
@@ -22,6 +23,9 @@ BrackEngine::BrackEngine(Config &&config) {
     SystemManager::GetInstance().AddSystem(new MovementSystem());
     SystemManager::GetInstance().AddSystem(new RenderingSystem());
     lastTime = std::chrono::high_resolution_clock::now();
+
+    if (ConfigSingleton::GetInstance().ShowFPS())
+        CreateFPS();
 }
 
 void BrackEngine::Run() {
@@ -31,6 +35,8 @@ void BrackEngine::Run() {
         SystemManager::GetInstance().UpdateSystems(GetDeltaTime());
         FPSSingleton::GetInstance().End();
 //        Logger::Info("FPS: " + std::to_string(FPSSingleton::GetInstance().GetFPS()));
+        if (ConfigSingleton::GetInstance().ShowFPS())
+            UpdateFPS();
     }
     SystemManager::GetInstance().CleanUp();
 }
@@ -43,4 +49,28 @@ float BrackEngine::GetDeltaTime() {
 
     float deltaTimeInSeconds = deltaTime.count();
     return deltaTimeInSeconds;
+
+}
+
+void BrackEngine::CreateFPS() {
+    auto entityId = EntityManager::GetInstance().CreateEntity();
+    auto transformComponent = new TransformComponent();
+    auto objectInfoComponent = new ObjectInfoComponent();
+    auto textComponent = new TextComponent();
+
+    objectInfoComponent->name = "FPS";
+    objectInfoComponent->tag = "FPS";
+
+    textComponent->text = "0";
+    textComponent->fontSize = 32;
+    textComponent->color = std::make_unique<Color>(255, 0, 0, 255);
+
+    ComponentStore::GetInstance().addComponent(entityId, transformComponent);
+    ComponentStore::GetInstance().addComponent(entityId, objectInfoComponent);
+    ComponentStore::GetInstance().addComponent(entityId, textComponent);
+}
+
+void BrackEngine::UpdateFPS() {
+    auto textComponent = ComponentStore::GetInstance().getComponent<TextComponent>(1);
+    textComponent->text = std::to_string(FPSSingleton::GetInstance().GetFPS());
 }

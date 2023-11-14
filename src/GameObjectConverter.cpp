@@ -29,10 +29,11 @@ void GameObjectConverter::AddGameObject(GameObject &gameObject) {
 
 
 void GameObjectConverter::AddCamera(Camera &camera) {
-    camera.SetEntityID(EntityManager::GetInstance().CreateEntity());
-    auto *cameraComponent = camera.GetCameraComponent();
-    camera.SetEntityID(camera.GetEntityID());
-    cameraComponent->size = camera.GetSize();
-    cameraComponent->backgroundColor = camera.GetBackgroundColor();
-    ComponentStore::GetInstance().addComponent(camera.GetEntityID(), cameraComponent);
+    ComponentVisitor componentVisitor;
+    if (camera.GetEntityID() == 0)
+        camera.SetEntityID(EntityManager::GetInstance().CreateEntity());
+    for (auto &component: camera.GetAllComponents()) {
+        component->entityID = camera.GetEntityID();
+        component->Accept(componentVisitor);
+    }
 }

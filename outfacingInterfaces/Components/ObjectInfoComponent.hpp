@@ -6,6 +6,7 @@
 #define BRACK_ENGINE_OBJECTINFOCOMPONENT_HPP
 
 #include "IComponent.hpp"
+#include "../../src/Components/ComponentVisitor.hpp"
 #include <string>
 
 struct ObjectInfoComponent : public IComponent {
@@ -20,7 +21,7 @@ struct ObjectInfoComponent : public IComponent {
 
     std::string name, tag;
     int layer;
-    bool isActive;
+    bool isActive = true;
 };
 
 #endif //BRACK_ENGINE_OBJECTINFOCOMPONENT_HPP

@@ -5,6 +5,7 @@
 #include "RenderingSystem.hpp"
 #include "../includes/ComponentStore.hpp"
 #include "../Logger.hpp"
+#include "../includes/EntityManager.hpp"
 
 RenderingSystem::RenderingSystem() : sdl2Wrapper(new RenderWrapper()) {
 }
@@ -25,6 +26,16 @@ void RenderingSystem::Update(float deltaTime) {
             auto transformComponent = ComponentStore::GetInstance().getComponent<TransformComponent>(entityId);
             sdl2Wrapper->RenderText(textComponent, transformComponent);
         }
+
+        auto entities = ComponentStore::GetInstance().getEntitiesWithComponent<SpriteComponent>();
+        for(auto& entity : entities) {
+            auto sprite = ComponentStore::GetInstance().getComponent<SpriteComponent>(entity);
+            if(sprite == nullptr)
+                continue;
+
+            sdl2Wrapper->RenderSprite(*sprite);
+        }
+
 #if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
         auto boxCollisionComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<BoxCollisionComponent>();
         for (int entityId: boxCollisionComponentIds) {

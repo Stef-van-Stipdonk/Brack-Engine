@@ -18,7 +18,7 @@ public:
     ~GameObject() = default;
 
     bool operator==(const GameObject &other) const {
-        return (this->name == other.name); // Assuming 'id' is a unique identifier for GameObjects
+        return (this->entityID == other.entityID); // Assuming 'id' is a unique identifier for GameObjects
     }
 
     template<typename T>
@@ -36,10 +36,11 @@ public:
     }
 
     template<typename T>
-    T *GetComponent() {
+    T *GetComponent() const {
         for (auto &comp: components) {
-            if (dynamic_cast<T>(comp))
-                return comp;
+            if (T *castedComp = dynamic_cast<T *>(comp)) {
+                return castedComp;
+            }
         }
         return nullptr;
     }
@@ -63,30 +64,29 @@ public:
 
     std::vector<GameObject> GetChildren();
 
-    std::string GetName();
+    std::string GetName() const;
 
     void SetName(char *name);
 
-    std::string GetTag();
+    std::string GetTag() const;
 
     void SetTag(char *tag);
 
-    bool IsActive();
+    bool IsActive() const;
 
     void SetActive(bool active);
 
-    int GetLayer();
+    int GetLayer() const;
 
     void SetLayer(int layer);
 
-    uint32_t GetEntityID();
+    uint32_t GetEntityID() const;
 
     void SetEntityID(uint32_t id);
 
     std::vector<IComponent *> &GetAllComponents();
 
 protected:
-    std::string name;
     uint32_t entityID = 0;
     std::vector<IComponent *> components;
 };
