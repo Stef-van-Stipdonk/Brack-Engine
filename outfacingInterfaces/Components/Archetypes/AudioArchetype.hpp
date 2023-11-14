@@ -14,6 +14,10 @@ public:
 
     ~AudioArchetype() override = default;
 
+    virtual std::unique_ptr<IComponent> clone() const override {
+        return std::make_unique<AudioArchetype>(*this);
+    }
+
     void Accept(ComponentVisitor &visitor) override {
         visitor.visit(*this);
     }

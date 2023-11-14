@@ -12,12 +12,6 @@
 class UIObject : public GameObject {
 public:
     UIObject() = default;
-
-    virtual ~UIObject() = default;
-
-    Vector2 &GetSize() const;
-
-    void SetSize(const Vector2 &size);
 };
 
 

@@ -4,7 +4,6 @@
 
 #include <Components/BehaviourScript.hpp>
 #include "BehaviourScriptSystem.hpp"
-#include "../includes/ComponentStore.hpp"
 
 BehaviourScriptSystem::BehaviourScriptSystem() {
 

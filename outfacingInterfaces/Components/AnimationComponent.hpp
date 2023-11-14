@@ -12,10 +12,17 @@ struct AnimationComponent : public SpriteComponent {
 
     explicit AnimationComponent() : SpriteComponent() {}
 
-    ~AnimationComponent() override = default;
+    ~AnimationComponent() override {
+        if(startPosition != nullptr)
+            startPosition = nullptr;
+    };
 
     void Accept(ComponentVisitor &visitor) override {
         visitor.visit(*this);
+    }
+
+    virtual std::unique_ptr<IComponent> clone() const override {
+        return std::make_unique<AnimationComponent>(*this);
     }
 
     AnimationComponent(const AnimationComponent& other) {
@@ -23,7 +30,8 @@ struct AnimationComponent : public SpriteComponent {
         animationSpeed = other.animationSpeed;
         frameCount = other.frameCount;
         currentFrame = other.currentFrame;
-        startPosition = std::make_unique<Vector2>(*other.startPosition);
+        if(other.startPosition != nullptr)
+            startPosition = std::make_unique<Vector2>(*other.startPosition);
     }
 
     bool isLooping;

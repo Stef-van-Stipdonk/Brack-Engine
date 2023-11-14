@@ -20,6 +20,9 @@ struct AudioComponent : public AudioArchetype {
         visitor.visit(*this);
     }
 
+    virtual std::unique_ptr<IComponent> clone() const override {
+        return std::make_unique<AudioComponent>(*this);
+    }
 
     std::string audioPath;
     bool isLooping, isPlaying;

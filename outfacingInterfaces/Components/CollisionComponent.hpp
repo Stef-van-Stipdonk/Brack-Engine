@@ -12,6 +12,10 @@
 struct CollisionComponent : public TransformComponent {
     explicit CollisionComponent() : TransformComponent() {}
 
+    virtual std::unique_ptr<IComponent> clone() const override {
+        return std::make_unique<CollisionComponent>(*this);
+    }
+
     virtual ~CollisionComponent() = default;
 
     void Accept(ComponentVisitor &visitor) override {

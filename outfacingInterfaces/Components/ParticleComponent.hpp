@@ -14,8 +14,12 @@ struct ParticleComponent : public IComponent {
 
     ~ParticleComponent() override = default;
 
+    virtual std::unique_ptr<IComponent> clone() const override {
+        return std::make_unique<ParticleComponent>(*this);
+    }
+
     void Accept(ComponentVisitor &visitor) override {
-        visitor.visit<ParticleComponent>(this);
+        visitor.visit(*this);
     }
 
     float lifetimeInSeconds;

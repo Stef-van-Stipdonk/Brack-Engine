@@ -13,7 +13,6 @@ AudioSystem::~AudioSystem() {
 }
 
 void AudioSystem::Update(float deltaTime) {
-    auto fak = ComponentStore::GetInstance().getAllComponentsOfType<AudioComponent>();
 }
 
 void AudioSystem::PlayPause(uint32_t entityID) {

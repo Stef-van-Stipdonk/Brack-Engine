@@ -15,7 +15,24 @@ class GameObject {
 public:
     GameObject();
 
-    ~GameObject() = default;
+    ~GameObject() {
+        components.clear();
+    };
+
+    GameObject& operator=(const GameObject &other) {
+        if (this != &other) {
+            entityID = other.entityID;
+            components.clear();
+            for (const auto &comp : other.components) {
+                components.push_back(comp->clone());
+            }
+        }
+        return *this;
+    }
+
+    std::unique_ptr<GameObject> clone() {
+        return std::make_unique<GameObject>(*this);
+    }
 
     bool operator==(const GameObject &other) const {
         return (this->entityID == other.entityID); // Assuming 'id' is a unique identifier for GameObjects
@@ -24,6 +41,14 @@ public:
     template<typename T>
     void AddComponent(std::unique_ptr<T> component) {
         components.push_back(std::move(component));
+    }
+
+    GameObject(const GameObject &other) {
+        entityID = other.entityID;
+        components = std::vector<std::unique_ptr<IComponent>>();
+        for (auto &comp : other.components) {
+            components.push_back(comp->clone());
+        }
     }
 
     template<typename T>
@@ -36,16 +61,14 @@ public:
     }
 
     template<typename T>
-    const std::unique_ptr<T>& TryGetComponent() const {
+    T& TryGetComponent() const {
         for (const auto &comp : components) {
             if (auto castedComp = dynamic_cast<T*>(comp.get())) {
-                return std::unique_ptr<T>(castedComp);
+                return *castedComp; // dereference the pointer to return a reference
             }
         }
-        static const std::unique_ptr<T> nullPtr = nullptr;
-        return nullPtr;
+        throw std::runtime_error("Component not found"); // throw an exception if not found
     }
-
 
     template<typename T>
     void RemoveComponent() {

@@ -19,24 +19,23 @@ void ClickSystem::Update(float deltaTime) {
     auto& mousePosition = InputManager::GetInstance().GetMousePosition();
     auto clickableComponentIds = componentStore.getEntitiesWithComponent<ClickableComponent>();
     for (int entityId: clickableComponentIds) {
-        auto* clickableComponent = componentStore.tryGetComponent<ClickableComponent>(entityId);
-        if(clickableComponent->disabled) continue;
-        CheckBoxCollision(*clickableComponent, mousePosition);
-        CheckCircleCollision(*clickableComponent,mousePosition);
+        auto clickableComponent = componentStore.tryGetComponent<ClickableComponent>(entityId);
+        if(clickableComponent.disabled) continue;
+        CheckBoxCollision(clickableComponent, mousePosition);
+        CheckCircleCollision(clickableComponent,mousePosition);
     }
 }
 
 void ClickSystem::CheckBoxCollision(const ClickableComponent& clickableComponent, const Vector2& mousePosition) {
     auto boxColliderComponent = ComponentStore::GetInstance().tryGetComponent<BoxCollisionComponent>(
             clickableComponent.entityID);
-    if(boxColliderComponent == nullptr) return;
     auto transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(
             clickableComponent.entityID);
     if(
-            mousePosition.getX() >= transformComponent->position->getX() &&
-            mousePosition.getX() <= transformComponent->position->getX() + boxColliderComponent->size->getX() &&
-            mousePosition.getY() >= transformComponent->position->getY() &&
-            mousePosition.getY() <= transformComponent->position->getY() + boxColliderComponent->size->getY()
+            mousePosition.getX() >= transformComponent.position->getX() &&
+            mousePosition.getX() <= transformComponent.position->getX() + boxColliderComponent.size->getX() &&
+            mousePosition.getY() >= transformComponent.position->getY() &&
+            mousePosition.getY() <= transformComponent.position->getY() + boxColliderComponent.size->getY()
             ){
         clickableComponent.OnClick();
     }
@@ -45,15 +44,14 @@ void ClickSystem::CheckBoxCollision(const ClickableComponent& clickableComponent
 void ClickSystem::CheckCircleCollision(const ClickableComponent &clickableComponent, const Vector2 &mousePosition) {
     auto circleCollisionComponent = ComponentStore::GetInstance().tryGetComponent<CircleCollisionComponent>(
             clickableComponent.entityID);
-    if(circleCollisionComponent == nullptr) return;
     auto transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(
             clickableComponent.entityID);
     auto x = mousePosition.getX();
     auto y = mousePosition.getY();
-    auto a = circleCollisionComponent->radius->getX();
-    auto b = circleCollisionComponent->radius->getY();
-    auto h = transformComponent->position->getX() + circleCollisionComponent->radius->getX();
-    auto k = transformComponent->position->getY() + circleCollisionComponent->radius->getY();
+    auto a = circleCollisionComponent.radius->getX();
+    auto b = circleCollisionComponent.radius->getY();
+    auto h = transformComponent.position->getX() + circleCollisionComponent.radius->getX();
+    auto k = transformComponent.position->getY() + circleCollisionComponent.radius->getY();
     // Calculate the left-hand side of the ellipse equation
     double lhs = ((x - h) * (x - h)) / (a * a) + ((y - k) * (y - k)) / (b * b);
 

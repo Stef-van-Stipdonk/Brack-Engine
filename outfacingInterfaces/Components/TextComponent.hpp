@@ -14,11 +14,17 @@
 struct TextComponent : public UIComponent {
     explicit TextComponent() : UIComponent() {}
 
+    virtual std::unique_ptr<IComponent> clone() const override {
+        return std::make_unique<TextComponent>(*this);
+    }
+
     TextComponent(const TextComponent &other) : UIComponent(other) {
         text = other.text;
         fontPath = other.fontPath;
         fontSize = other.fontSize;
-        color = std::make_unique<Color>(*other.color);
+
+        if (other.color != nullptr)
+            color = std::make_unique<Color>(*other.color);
     }
 
     void Accept(ComponentVisitor &visitor) override {

@@ -13,28 +13,28 @@ Camera::Camera() : GameObject() {
 
 Color Camera::GetBackgroundColor() const {
     if (entityID == 0) {
-        return TryGetComponent<CameraComponent>()->backgroundColor;
+        return TryGetComponent<CameraComponent>().backgroundColor;
     }
     return ComponentStore::GetInstance().tryGetComponent<CameraComponent>(entityID).backgroundColor;
 }
 
 void Camera::SetBackgroundColor(const Color color) {
     if (entityID == 0) {
-        TryGetComponent<CameraComponent>()->backgroundColor = color;
+        TryGetComponent<CameraComponent>().backgroundColor = color;
     } else
         ComponentStore::GetInstance().tryGetComponent<CameraComponent>(entityID).backgroundColor = color;
 }
 
 Vector2 Camera::GetSize() const {
     if (entityID == 0){
-        return TryGetComponent<CameraComponent>()->size;
+        return TryGetComponent<CameraComponent>().size;
     }
     return ComponentStore::GetInstance().tryGetComponent<CameraComponent>(entityID).size;
 }
 
 void Camera::SetSize(const Vector2 size) {
     if (entityID == 0) {
-        TryGetComponent<CameraComponent>()->size = size;
+        TryGetComponent<CameraComponent>().size = size;
     } else
         ComponentStore::GetInstance().tryGetComponent<CameraComponent>(entityID).size = size;
 }

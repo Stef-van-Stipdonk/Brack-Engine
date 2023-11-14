@@ -30,10 +30,7 @@ void RenderingSystem::Update(float deltaTime) {
         auto entities = ComponentStore::GetInstance().getEntitiesWithComponent<SpriteComponent>();
         for(auto& entity : entities) {
             auto sprite = ComponentStore::GetInstance().tryGetComponent<SpriteComponent>(entity);
-            if(sprite == nullptr)
-                continue;
-
-            sdl2Wrapper->RenderSprite(*sprite);
+            sdl2Wrapper->RenderSprite(sprite);
         }
 
 #if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG

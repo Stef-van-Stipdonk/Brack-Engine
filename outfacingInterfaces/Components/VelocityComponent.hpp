@@ -12,6 +12,10 @@ struct VelocityComponent : public TransformComponent {
 
     ~VelocityComponent() = default;
 
+    virtual std::unique_ptr<IComponent> clone() const override {
+        return std::make_unique<VelocityComponent>(*this);
+    }
+
     VelocityComponent(const VelocityComponent &other) = default;
 
     void Accept(ComponentVisitor &visitor) override {

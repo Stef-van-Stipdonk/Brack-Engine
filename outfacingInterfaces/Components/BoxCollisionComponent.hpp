@@ -13,11 +13,23 @@ struct BoxCollisionComponent : public CollisionComponent {
     explicit BoxCollisionComponent(float width, float height) : CollisionComponent(), size(new Vector2(width, height)) {}
     explicit BoxCollisionComponent(float size) : BoxCollisionComponent(size,size) {}
 
-    ~BoxCollisionComponent() override = default;
+    virtual std::unique_ptr<IComponent> clone() const override {
+        return std::make_unique<BoxCollisionComponent>(*this);
+    }
+
+    ~BoxCollisionComponent() override {
+        if(size != nullptr)
+            size = nullptr;
+    };
+
+    BoxCollisionComponent(const BoxCollisionComponent &other) : CollisionComponent(other) {
+        if(other.size != nullptr)
+            size = std::make_unique<Vector2>(*other.size);
+    }
 
 
     void Accept(ComponentVisitor &visitor) override {
-        visitor.visit<BoxCollisionComponent>(this);
+        visitor.visit(*this);
     }
 
     std::unique_ptr<Vector2> size;

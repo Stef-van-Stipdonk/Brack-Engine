@@ -17,7 +17,7 @@ std::vector<GameObject> GameObject::GetChildren() {
 
 std::string GameObject::GetName() const{
     if (entityID == 0) {
-        return TryGetComponent<ObjectInfoComponent>()->name;
+        return TryGetComponent<ObjectInfoComponent>().name;
     }
 
     return ComponentStore::GetInstance().tryGetComponent<ObjectInfoComponent>(entityID).name;
@@ -27,7 +27,7 @@ std::string GameObject::GetName() const{
 
 void GameObject::SetName(std::string name) {
     if (entityID == 0) {
-        TryGetComponent<ObjectInfoComponent>()->name = name;
+        TryGetComponent<ObjectInfoComponent>().name = name;
     } else {
         ComponentStore::GetInstance().tryGetComponent<ObjectInfoComponent>(entityID).name = name;
     }
@@ -35,14 +35,14 @@ void GameObject::SetName(std::string name) {
 
 std::string GameObject::GetTag() const{
     if (entityID == 0) {
-        return TryGetComponent<ObjectInfoComponent>()->tag;
+        return TryGetComponent<ObjectInfoComponent>().tag;
     }
     return ComponentStore::GetInstance().tryGetComponent<ObjectInfoComponent>(entityID).tag;
 }
 
 void GameObject::SetTag(std::string tag) {
     if (entityID == 0) {
-        TryGetComponent<ObjectInfoComponent>()->tag = tag;
+        TryGetComponent<ObjectInfoComponent>().tag = tag;
     } else {
         ComponentStore::GetInstance().tryGetComponent<ObjectInfoComponent>(entityID).tag = tag;
     }
@@ -50,14 +50,14 @@ void GameObject::SetTag(std::string tag) {
 
 bool GameObject::IsActive()const {
     if (entityID == 0) {
-        return TryGetComponent<ObjectInfoComponent>()->isActive;
+        return TryGetComponent<ObjectInfoComponent>().isActive;
     }
     return ComponentStore::GetInstance().tryGetComponent<ObjectInfoComponent>(entityID).isActive;
 }
 
 void GameObject::SetActive(bool active) {
     if (entityID == 0) {
-        TryGetComponent<ObjectInfoComponent>()->isActive = active;
+        TryGetComponent<ObjectInfoComponent>().isActive = active;
     } else {
         ComponentStore::GetInstance().tryGetComponent<ObjectInfoComponent>(entityID).isActive = active;
     }
@@ -65,14 +65,14 @@ void GameObject::SetActive(bool active) {
 
 int GameObject::GetLayer() const{
     if (entityID == 0) {
-        return TryGetComponent<ObjectInfoComponent>()->layer;
+        return TryGetComponent<ObjectInfoComponent>().layer;
     }
     return ComponentStore::GetInstance().tryGetComponent<ObjectInfoComponent>(entityID).layer;
 }
 
 void GameObject::SetLayer(int layer) {
     if (entityID == 0) {
-        TryGetComponent<ObjectInfoComponent>()->layer = layer;
+        TryGetComponent<ObjectInfoComponent>().layer = layer;
     } else {
         ComponentStore::GetInstance().tryGetComponent<ObjectInfoComponent>(entityID).layer = layer;
     }

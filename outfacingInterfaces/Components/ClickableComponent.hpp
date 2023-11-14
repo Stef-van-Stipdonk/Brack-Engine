@@ -16,6 +16,12 @@ struct ClickableComponent : public UIComponent {
         OnClick = std::move(func);
     }
 
+    virtual std::unique_ptr<IComponent> clone() const override {
+        return std::make_unique<ClickableComponent>(*this);
+    }
+
+    ~ClickableComponent() override = default;
+
     ClickableComponent(const ClickableComponent &other) : UIComponent(other) {
         OnClick = other.OnClick;
     }
