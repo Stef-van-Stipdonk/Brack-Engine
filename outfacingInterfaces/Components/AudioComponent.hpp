@@ -9,10 +9,11 @@
 #include "../../src/Components/ComponentVisitor.hpp"
 #include <string>
 #include <Components/Archetypes/AudioArchetype.hpp>
+#include <utility>
 
 struct AudioComponent : public AudioArchetype {
 
-    explicit AudioComponent() : AudioArchetype(), channel(0)  {}
+    explicit AudioComponent(std::string  path, const int channel, bool isSoundTrack) : AudioArchetype(), audioPath(std::move(path)), channel(channel), isSoundTrack(isSoundTrack) {}
 
     ~AudioComponent() = default;
 
