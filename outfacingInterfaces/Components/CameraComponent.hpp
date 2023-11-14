@@ -21,8 +21,8 @@ struct CameraComponent : public VelocityComponent {
         visitor.visit<CameraComponent>(this);
     }
 
-    Vector2 size;
-    Color backgroundColor;
+    std::unique_ptr<Vector2> size;
+    std::unique_ptr<Color> backgroundColor;
 };
 
 #endif //BRACK_ENGINE_CAMERACOMPONENT_HPP

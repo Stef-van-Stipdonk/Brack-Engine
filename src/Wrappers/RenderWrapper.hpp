@@ -13,7 +13,15 @@
 #include "Components/TextComponent.hpp"
 #include <map>
 #include <memory>
+#include <Components/BoxCollisionComponent.hpp>
+#include <Components/CircleCollisionComponent.hpp>
+#include <Components/RectangleComponent.hpp>
 
+struct SDLWindowDeleter {
+    void operator()(SDL_Window* window) const {
+        SDL_DestroyWindow(window);
+    }
+};
 
 class RenderWrapper {
 public:
@@ -22,21 +30,23 @@ public:
     ~RenderWrapper();
 
     void RenderCamera(CameraComponent* camera);
-
     void RenderSprite(SpriteComponent &sprite);
-
     void RenderText(TextComponent* textComponent, TransformComponent* transformComponent);
-
-    void RenderButton(TextComponent &button);
+    void RenderRectangle(RectangleComponent* rectangleComponent, TransformComponent* transformComponent);
+    void RenderBoxCollisionComponents(BoxCollisionComponent* boxCollisionComponent, TransformComponent* transformComponent);
+    void RenderCircleCollisionComponents(CircleCollisionComponent* circleCollisionComponent, TransformComponent* transformComponent);
 
     void RenderFrame();
-
     static void Cleanup();
+
+    void ResizeWindow(Vector2 size);
 
 private:
     bool Initialize();
+    std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)> getTexture(std::string filePath);
     std::unordered_map<std::string, std::map<int, TTF_Font*>> fontCache;
-    std::map<std::string, SDL_Texture *> textures;
+    std::map<std::string, std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)>> textures;
+    std::unique_ptr<SDL_Window, SDLWindowDeleter> window;
     std::unique_ptr<SDL_Renderer, void (*)(SDL_Renderer *)> renderer;
 };
 

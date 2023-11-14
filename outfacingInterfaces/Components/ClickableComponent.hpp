@@ -6,19 +6,20 @@
 #define BRACK_ENGINE_BUTTONCOMPONENT_HPP
 
 #include <functional>
+#include <utility>
 #include "UIComponent.hpp"
 #include "../../src/Components/ComponentVisitor.hpp"
 
 
-struct ButtonComponent : public UIComponent {
-    explicit ButtonComponent() : UIComponent() {}
+struct ClickableComponent : public UIComponent {
+    explicit ClickableComponent() : UIComponent() {}
 
 
     void Accept(ComponentVisitor &visitor) override {
-        visitor.visit<ButtonComponent>(this);
+        visitor.visit<ClickableComponent>(this);
     }
 
-    bool interactable;
+    bool disabled = false;
     std::function<void()> OnClick;
 };
 

@@ -28,9 +28,13 @@ public:
 
     bool IsRunning() const;
 
+    bool ShowFPS() const;
+
     std::string GetWindowTitle() const;
 
     Vector2 GetWindowSize() const;
+
+    void SetWindowSize(Vector2 size) const;
 
     bool IsFullscreen() const;
 
@@ -49,6 +53,7 @@ private:
     Vector2 windowSize = Vector2(800, 600);
     bool fullscreen = false;
     std::string BaseAssetPath = "../../Brackocalypse/Assets/";
+    bool showFPS = true;
 };
 
 

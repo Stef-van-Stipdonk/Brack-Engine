@@ -9,16 +9,17 @@ add_subdirectory(lib/Box2d)
 if (WIN32 OR WIN64)
     set(SDL2_PATH "${CMAKE_CURRENT_SOURCE_DIR}/lib/SDL")
     set(SDL2_TTF_PATH "${CMAKE_CURRENT_SOURCE_DIR}/lib/SDL")
+    set(SDL2_IMAGE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/lib/SDL")
 
-    include_directories(${SDL2_INCLUDE_DIR} ${SDL2_TTF_INCLUDE_DIR})
+    include_directories(${SDL2_INCLUDE_DIR} ${SDL2_TTF_INCLUDE_DIR} ${SDL2_IMAGE_DIR})
 
     find_package(SDL2 REQUIRED)
     find_package(SDL2_ttf REQUIRED)
-
-
+    find_package(SDL2_image REQUIRED)
 else ()
     find_package(PkgConfig REQUIRED)
     find_package(SDL2_ttf REQUIRED)
+    find_package(SDL2_image REQUIRED)
     pkg_check_modules(SDL2 REQUIRED sdl2)
     include_directories(${SDL2_INCLUDE_DIRS})
     link_directories(${SDL2_LIBRARY_DIRS})
@@ -76,7 +77,7 @@ add_library(${PROJECT_NAME} SHARED
         src/Wrappers/AudioWrapper.cpp
         src/Wrappers/PhysicsWrapper.cpp
         outfacingInterfaces/Components/UIComponent.hpp
-        outfacingInterfaces/Components/ButtonComponent.hpp
+        outfacingInterfaces/Components/ClickableComponent.hpp
         outfacingInterfaces/Components/TextComponent.hpp
         src/Objects/GameObject.cpp
         src/Objects/Camera.cpp
@@ -100,7 +101,36 @@ add_library(${PROJECT_NAME} SHARED
         src/Wrappers/FPSWrapper.cpp
         src/Components/ComponentVisitor.hpp
         src/Components/ComponentVisitor.hpp
+        src/Systems/ClickSystem.cpp
+        src/Systems/ClickSystem.hpp
+        outfacingInterfaces/Components/Archetypes/AudioArchetype.hpp
+        src/Helpers/UserLogger.cpp
+        outfacingInterfaces/Helpers/UserLogger.hpp
+        outfacingInterfaces/Components/RectangleComponent.hpp
 )
+
+option(USER_LOG_TO_FILE "Enable user logging to a file" OFF)
+
+if (USER_LOG_TO_FILE)
+    target_compile_definitions(Brack_Engine PRIVATE USER_LOG_TO_FILE)
+endif ()
+
+if (NOT DEFINED USER_CURRENT_LOG_LEVEL)
+    # Define a default log level based on the build type
+    if (CMAKE_BUILD_TYPE STREQUAL "Info")
+        set(USER_CURRENT_LOG_LEVEL "LOG_LEVEL_INFO")
+    elseif (CMAKE_BUILD_TYPE STREQUAL "None")
+        set(USER_CURRENT_LOG_LEVEL "LOG_LEVEL_NONE")
+    elseif (CMAKE_BUILD_TYPE STREQUAL "Warning")
+        set(USER_CURRENT_LOG_LEVEL "LOG_LEVEL_WARNING")
+    elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
+        set(USER_CURRENT_LOG_LEVEL "LOG_LEVEL_ERROR")
+    else ()
+        set(USER_CURRENT_LOG_LEVEL "LOG_LEVEL_DEBUG" CACHE STRING "Set the current log level")
+    endif ()
+endif ()
+
+add_compile_definitions(USER_CURRENT_LOG_LEVEL=${USER_CURRENT_LOG_LEVEL})
 
 # Define an option for logging to a file
 option(LOG_TO_FILE "Enable logging to a file" OFF)
@@ -138,6 +168,9 @@ set(LIBRARY_FILES ${CMAKE_CURRENT_SOURCE_DIR}/lib/dll)
 if (WIN32 OR WIN64)
     target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARY})
 
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_IMAGE_LIBRARY})
+
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
     add_custom_command(
             TARGET ${PROJECT_NAME}
             POST_BUILD
@@ -147,7 +180,7 @@ if (WIN32 OR WIN64)
     )
 else ()
     target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARIES})
-
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_IMAGE_LIBRARIES})
 endif ()
 
 target_link_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/FMod)

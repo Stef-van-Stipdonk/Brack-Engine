@@ -2,19 +2,16 @@
 // Created by Stef van Stipdonk on 29/10/2023.
 //
 
-#include <stdexcept>
 #include <unordered_map>
 #include "../../includes/SystemManager.hpp"
 #include "Objects/Scene.hpp"
-#include "../../Logger.hpp"
-#include "../../FPSSingleton.hpp"
 
 SystemManager SystemManager::instance;
 
-void SystemManager::AddSystems(std::vector<ISystem *> systems, bool printGraph) {
-    for (auto system: systems) {
-        this->systems.push_back(system);
+void SystemManager::AddSystems(std::vector<std::shared_ptr<ISystem>> newSystems, bool printGraph) {
+    for (auto &system: newSystems) {
         Logger::Info("Added system " + system->GetName());
+        systems.push_back(system); // No need to std::move
     }
 
     if (printGraph)
@@ -23,10 +20,9 @@ void SystemManager::AddSystems(std::vector<ISystem *> systems, bool printGraph) 
     SortSystems();
 }
 
-
-void SystemManager::AddSystem(ISystem *system, bool printGraph) {
-    systems.push_back(system);
+void SystemManager::AddSystem(std::shared_ptr<ISystem> system, bool printGraph) {
     Logger::Info("Added system " + system->GetName());
+    systems.push_back(system);
 
     if (printGraph)
         PrintDependencyGraph();
@@ -35,7 +31,7 @@ void SystemManager::AddSystem(ISystem *system, bool printGraph) {
 }
 
 void SystemManager::UpdateSystems(float deltaTime) {
-    for (auto system: systems) {
+    for (auto &system: systems) {
         system->Update(deltaTime);
     }
 }
@@ -45,81 +41,89 @@ SystemManager &SystemManager::GetInstance() {
 }
 
 void SystemManager::SortSystems() {
-    std::vector<ISystem *> sortedList;
-    std::vector<ISystem *> nodesWithoutIncomingEdges;
-    std::unordered_map<ISystem *, std::vector<ISystem *>> edgeCopy;
+    std::vector<std::shared_ptr<ISystem>> sortedList;
+    std::vector<ISystem*> nodesWithoutIncomingEdges;
+    std::unordered_map<ISystem*, std::vector<std::weak_ptr<ISystem>>> edgeCopy;
 
-    // Backup the original incoming edges and initialize a copy for sorting
-    for (auto system: systems) {
-        edgeCopy[system] = system->incomingEdges;
-        if (system->incomingEdges.empty()) {
-            nodesWithoutIncomingEdges.push_back(system);
+    for (auto &system : systems) {
+        std::vector<std::weak_ptr<ISystem>> incomingEdges;
+        for (auto &weakEdge : system->incomingEdges) {
+            if (auto edge = weakEdge.lock()) {
+                incomingEdges.push_back(weakEdge);
+            }
+        }
+        edgeCopy[system.get()] = incomingEdges;
+        if (incomingEdges.empty()) {
+            nodesWithoutIncomingEdges.push_back(system.get());
         }
     }
 
     while (!nodesWithoutIncomingEdges.empty()) {
         auto node = nodesWithoutIncomingEdges.back();
         nodesWithoutIncomingEdges.pop_back();
-        sortedList.push_back(node);
 
-        auto outgoingEdges = node->outgoingEdges;
-        for (auto dependency: outgoingEdges) {
-            auto &depIncomingEdgesCopy = edgeCopy[dependency];
-            depIncomingEdgesCopy.erase(
-                    std::remove(depIncomingEdgesCopy.begin(), depIncomingEdgesCopy.end(), node),
-                    depIncomingEdgesCopy.end());
+        auto it = std::find_if(systems.begin(), systems.end(),
+                               [node](const std::shared_ptr<ISystem> &system) { return system.get() == node; });
+        if (it != systems.end()) {
+            sortedList.push_back(*it); // No need to std::move
+            systems.erase(it);
+        }
 
-            if (depIncomingEdgesCopy.empty()) {
-                nodesWithoutIncomingEdges.push_back(dependency);
+        for (auto &weakDependency : node->outgoingEdges) {
+            if (auto dependency = weakDependency.lock()) {
+                auto &depIncomingEdgesCopy = edgeCopy[dependency.get()];
+                depIncomingEdgesCopy.erase(
+                        std::remove_if(depIncomingEdgesCopy.begin(), depIncomingEdgesCopy.end(),
+                                       [node](const std::weak_ptr<ISystem> &weakPtr) {
+                                           auto ptr = weakPtr.lock();
+                                           return ptr.get() == node;
+                                       }),
+                        depIncomingEdgesCopy.end()
+                );
+
+                if (depIncomingEdgesCopy.empty()) {
+                    nodesWithoutIncomingEdges.push_back(dependency.get());
+                }
             }
         }
     }
 
     std::string errorString;
-
-    for (auto &pair: edgeCopy) {
+    for (auto &pair : edgeCopy) {
         if (!pair.second.empty()) {
-            std::string systemName = pair.first->GetName(); // Assuming GetName is valid
+            std::string systemName = pair.first->GetName();
             int edgeCount = pair.second.size();
             std::string incomingEdgeNames;
-            for (auto *incomingEdgeSystem: pair.second) {
-                if (incomingEdgeSystem) {
+            for (auto &weakIncomingEdgeSystem : pair.second) {
+                if (auto incomingEdgeSystem = weakIncomingEdgeSystem.lock()) {
                     incomingEdgeNames += incomingEdgeSystem->GetName() + " ";
                 } else {
                     incomingEdgeNames += "UnknownSystem ";
                 }
             }
-
-            errorString += std::string("Graph has a cycle. System '") += systemName += std::string("' has ") +=
-            std::to_string(edgeCount) + " incoming edge(s) from: " += incomingEdgeNames + "\n";
+            errorString += "Graph has a cycle. System '" + systemName + "' has " +
+                           std::to_string(edgeCount) + " incoming edge(s) from: " + incomingEdgeNames + "\n";
         }
     }
 
-    if (errorString.size() > 0) {
+    if (!errorString.empty()) {
         Logger::Error(errorString);
     }
 
-
-    std::reverse(sortedList.begin(), sortedList.end());
-
-    systems = sortedList;
+    systems = std::move(sortedList);
 }
-
 
 void SystemManager::PrintDependencyGraph() const {
 #if CURRENT_LOG_LEVEL > LOG_LEVEL_ERROR
     std::cout << "===========================\n";
     std::cout << "Dependency Graph:" << std::endl;
 
-    for (const auto *system: systems) {
+    for (const auto & system: systems) {
         std::cout << system->GetName() << " depends on: ";
-
-        if (!system->outgoingEdges.empty()) {
-            for (const auto *dependency: system->outgoingEdges) {
-                std::cout << dependency->GetName() << ", ";
+        for (const auto &dependency: system->GetDependencies()) {
+            if (auto dep = dependency.lock()) { // Lock the weak_ptr to get a shared_ptr
+                std::cout << dep->GetName() << ", ";
             }
-        } else {
-            std::cout << "No dependencies";
         }
         std::cout << "\n";
     }
@@ -127,9 +131,6 @@ void SystemManager::PrintDependencyGraph() const {
 #endif
 }
 
-
 void SystemManager::CleanUp(){
-    for (auto system: systems) {
-        system->CleanUp();
-    }
+    systems.clear();
 }
