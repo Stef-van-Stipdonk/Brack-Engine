@@ -25,13 +25,22 @@ void AudioSystem::Update(float deltaTime) {
 
         if(audioComponent.shouldBePlaying && !audioComponent.isPlaying){
             audioWrapper->PlaySound(audioComponent);
+            audioComponent.isPlaying = true;
         }
+
+        if(!audioComponent.shouldBePlaying && audioComponent.isPlaying){
+            audioWrapper->PauseSound(audioComponent);
+            audioComponent.isPlaying = false;
+        }
+
         if (audioWrapper->GetVolume(audioComponent) != audioComponent.volume) {
             audioWrapper->SetVolume(audioComponent, audioComponent.volume);
         }
+
         if (audioWrapper->GetLooping(audioComponent) != audioComponent.isLooping) {
             audioWrapper->SetLooping(audioComponent, audioComponent.isLooping);
         }
+
         if(!audioComponent.isLooping){
             if(audioWrapper->HasSoundFinished(audioComponent)){
                 audioComponent.isPlaying = false;
