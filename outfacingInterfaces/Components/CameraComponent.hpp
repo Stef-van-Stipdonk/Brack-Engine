@@ -16,8 +16,9 @@ struct CameraComponent : public IComponent {
 
     ~CameraComponent() override = default;
 
-    CameraComponent(const CameraComponent &other) {
+    CameraComponent(const CameraComponent &other) : IComponent(other) {
         size = std::make_unique<Vector2>(*other.size);
+        onScreenPosition = std::make_unique<Vector2>(*other.onScreenPosition);
         backgroundColor = std::make_unique<Color>(*other.backgroundColor);
     }
 
@@ -30,7 +31,7 @@ struct CameraComponent : public IComponent {
     }
 
     std::unique_ptr<Vector2> size = std::make_unique<Vector2>(100, 100);
-    std::unique_ptr<Vector2> onScreenPosition = std::make_unique<Vector2>(0, 0);
+    std::unique_ptr<Vector2> onScreenPosition = std::make_unique<Vector2>(0, 50);
     std::unique_ptr<Color> backgroundColor = std::make_unique<Color>(0, 0, 0, 255);
 };
 
