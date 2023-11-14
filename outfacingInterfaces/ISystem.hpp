@@ -9,36 +9,114 @@
 #include "vector"
 #include "../src/Logger.hpp"
 
-class ISystem {
+class ISystem : public std::enable_shared_from_this<ISystem> {
 public:
     virtual ~ISystem() = default;
-
-    // Wordt aangeroepen wanneer het system wordt geadd raan de gameloop, hoeft niet overschreven te worden
     virtual void Init() {}
-
-    // Deze MOET iedere frame of gametick worden aangeroepen
     virtual void Update(float deltaTime) = 0;
-
     virtual const std::string GetName() const = 0;
-
     virtual void CleanUp() = 0;
 
-    void AddDependency(ISystem* dependency) {
-        if (std::find(outgoingEdges.begin(), outgoingEdges.end(), dependency) == outgoingEdges.end()) {
+    void AddDependency(std::shared_ptr<ISystem> dependency) {
+        auto thisPtr = shared_from_this();
+
+        bool dependencyExists = std::any_of(outgoingEdges.begin(), outgoingEdges.end(),
+                                            [&dependency](const std::weak_ptr<ISystem>& weakPtr) {
+                                                auto sharedPtr = weakPtr.lock();
+                                                return sharedPtr == dependency;
+                                            }
+        );
+
+        if (!dependencyExists) {
             outgoingEdges.push_back(dependency);
             Logger::Info("Dependency added for " + this->GetName() + ", " + this->GetName() + " now depends on " +
                          dependency->GetName());
 
-            if(std::find(dependency->incomingEdges.begin(), dependency->incomingEdges.end(), this) == dependency->incomingEdges.end())
-                dependency->incomingEdges.push_back(this);
+            bool backLinkExists = std::any_of(dependency->incomingEdges.begin(), dependency->incomingEdges.end(),
+                                              [thisPtr](const std::weak_ptr<ISystem>& weakPtr) {
+                                                  auto sharedPtr = weakPtr.lock();
+                                                  return sharedPtr == thisPtr;
+                                              }
+            );
+
+            if (!backLinkExists) {
+                dependency->incomingEdges.push_back(thisPtr);
+            }
         }
     }
 
-    std::vector<ISystem*> outgoingEdges;
-    std::vector<ISystem*> incomingEdges;
+    void RemoveDependency(std::shared_ptr<ISystem> dependency) {
+        for (auto& outgoingEdge : dependency->outgoingEdges) {
+            auto targetSystem = outgoingEdge.lock();
+            if (targetSystem) {
+                targetSystem->incomingEdges.erase(
+                        std::remove_if(targetSystem->incomingEdges.begin(), targetSystem->incomingEdges.end(),
+                                       [&dependency](const std::weak_ptr<ISystem>& weakPtr) {
+                                           return weakPtr.lock() == dependency;
+                                       }),
+                        targetSystem->incomingEdges.end()
+                );
+            }
+        }
+
+        for (auto& incomingEdge : dependency->incomingEdges) {
+            auto sourceSystem = incomingEdge.lock();
+            if (sourceSystem) {
+                sourceSystem->outgoingEdges.erase(
+                        std::remove_if(sourceSystem->outgoingEdges.begin(), sourceSystem->outgoingEdges.end(),
+                                       [&dependency](const std::weak_ptr<ISystem>& weakPtr) {
+                                           return weakPtr.lock() == dependency;
+                                       }),
+                        sourceSystem->outgoingEdges.end()
+                );
+            }
+        }
+
+        Logger::Info("Dependency removed for " + dependency->GetName());
+    }
 
 
-    const std::vector<ISystem*>& GetDependencies() const { return outgoingEdges; }
+
+    void AddDependency(std::weak_ptr<ISystem> weakDependency) {
+        auto thisPtr = shared_from_this();
+
+        // Lock the weak pointer to get a shared pointer for comparison
+        auto dependency = weakDependency.lock();
+        if (!dependency) {
+            Logger::Error("Dependency is expired or invalid.");
+            return;
+        }
+
+        bool dependencyExists = std::any_of(outgoingEdges.begin(), outgoingEdges.end(),
+                                            [&weakDependency](const std::weak_ptr<ISystem>& existingWeakPtr) {
+                                                return existingWeakPtr.lock() == weakDependency.lock();
+                                            }
+        );
+
+        if (!dependencyExists) {
+            outgoingEdges.push_back(weakDependency);
+            Logger::Info("Dependency added for " + this->GetName() + ", " + this->GetName() + " now depends on " +
+                         dependency->GetName());
+
+            bool backLinkExists = std::any_of(dependency->incomingEdges.begin(), dependency->incomingEdges.end(),
+                                              [thisPtr](const std::weak_ptr<ISystem>& weakPtr) {
+                                                  return weakPtr.lock() == thisPtr;
+                                              }
+            );
+
+            if (!backLinkExists) {
+                dependency->incomingEdges.push_back(thisPtr);
+            }
+        }
+    }
+
+
+
+    std::vector<std::weak_ptr<ISystem>> outgoingEdges;
+    std::vector<std::weak_ptr<ISystem>> incomingEdges;
+
+
+    const std::vector<std::weak_ptr<ISystem>>& GetDependencies() const { return outgoingEdges; }
 
 private:
 

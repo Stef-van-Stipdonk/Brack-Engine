@@ -8,14 +8,20 @@
 #include "IComponent.hpp"
 #include "../../src/Components/ComponentVisitor.hpp"
 #include <string>
+#include <Components/Archetypes/AudioArchetype.hpp>
 
-struct AudioComponent : public IComponent {
-    explicit AudioComponent() : IComponent(), channel(0) {}
+struct AudioComponent : public AudioArchetype {
 
-    ~AudioComponent() override = default;
+    explicit AudioComponent() : AudioArchetype(), channel(0)  {}
+
+    ~AudioComponent() = default;
 
     void Accept(ComponentVisitor &visitor) override {
-        visitor.visit<AudioComponent>(this);
+        visitor.visit(*this);
+    }
+
+    virtual std::unique_ptr<IComponent> clone() const override {
+        return std::make_unique<AudioComponent>(*this);
     }
 
     std::string audioPath;

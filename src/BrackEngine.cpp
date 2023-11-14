@@ -2,8 +2,7 @@
 // Created by jesse on 02/11/2023.
 //
 
-#include <Helpers/KeyMap.hpp>
-#include <Helpers/MouseMap.hpp>
+#include <Components/ObjectInfoComponent.hpp>
 #include "BrackEngine.hpp"
 #include "Systems/RenderingSystem.hpp"
 #include "Logger.hpp"
@@ -12,15 +11,23 @@
 #include "FPSSingleton.hpp"
 #include "Systems/AudioSystem.hpp"
 #include "Systems/MovementSystem.hpp"
+#include "Systems/BehaviourScriptSystem.hpp"
+#include "Systems/ClickSystem.hpp"
+#include "Systems/AudioSystem.hpp"
 
 
 BrackEngine::BrackEngine(Config &&config) {
     ConfigSingleton::GetInstance().SetConfig(config);
-    SystemManager::GetInstance().AddSystem(new InputSystem());
-    SystemManager::GetInstance().AddSystem(new MovementSystem());
-    SystemManager::GetInstance().AddSystem(new RenderingSystem());
-    SystemManager::GetInstance().AddSystem(new AudioSystem());
+    SystemManager::GetInstance().AddSystem(std::make_shared<InputSystem>());
+    SystemManager::GetInstance().AddSystem(std::make_shared<ClickSystem>());
+    SystemManager::GetInstance().AddSystem(std::make_shared<AudioSystem>());
+    SystemManager::GetInstance().AddSystem(std::make_shared<BehaviourScriptSystem>());
+    SystemManager::GetInstance().AddSystem(std::make_shared<MovementSystem>());
+    SystemManager::GetInstance().AddSystem(std::make_shared<RenderingSystem>());
     lastTime = std::chrono::high_resolution_clock::now();
+
+    if (ConfigSingleton::GetInstance().ShowFPS())
+        CreateFPS();
 }
 
 void BrackEngine::Run() {
@@ -29,8 +36,11 @@ void BrackEngine::Run() {
         FPSSingleton::GetInstance().Start();
         SystemManager::GetInstance().UpdateSystems(GetDeltaTime());
         FPSSingleton::GetInstance().End();
-//        Logger::Info("FPS: " + std::to_string(FPSSingleton::GetInstance().GetFPS()));
+        Logger::Info("FPS: " + std::to_string(FPSSingleton::GetInstance().GetFPS()));
+        if (ConfigSingleton::GetInstance().ShowFPS())
+            UpdateFPS();
     }
+
     SystemManager::GetInstance().CleanUp();
 }
 
@@ -42,28 +52,30 @@ float BrackEngine::GetDeltaTime() {
 
     float deltaTimeInSeconds = deltaTime.count();
     return deltaTimeInSeconds;
+
 }
 
-SceneManager &BrackEngine::GetSceneManager() const {
-    return SceneManager::GetInstance();
+void BrackEngine::CreateFPS() {
+    auto entityId = EntityManager::GetInstance().CreateEntity();
+    auto transformComponent = std::make_unique<TransformComponent>();
+    auto objectInfoComponent = std::make_unique<ObjectInfoComponent>();
+    auto textComponent = std::make_unique<TextComponent>();
+
+    objectInfoComponent->name = "FPS";
+    objectInfoComponent->tag = "FPS";
+
+    textComponent->text = "0";
+    textComponent->fontSize = 32;
+    textComponent->color = std::make_unique<Color>(255, 0, 0, 255);
+
+    ComponentStore::GetInstance().addComponent(entityId, std::move(transformComponent));
+    ComponentStore::GetInstance().addComponent(entityId, std::move(objectInfoComponent));
+    ComponentStore::GetInstance().addComponent(entityId, std::move(textComponent));
 }
 
-InputManager &BrackEngine::GetInputManager() const {
-    return InputManager::GetInstance();
-}
+void BrackEngine::UpdateFPS() {
+    auto& textComponent = ComponentStore::GetInstance().tryGetComponent<TextComponent>(1);
+    auto fakk = std::to_string(FPSSingleton::GetInstance().GetFPS());
 
-ComponentStore &BrackEngine::GetComponentStore() const {
-    return ComponentStore::GetInstance();
-}
-
-EntityManager &BrackEngine::GetEntityManager() const {
-    return EntityManager::GetInstance();
-}
-
-ReplayManager &BrackEngine::GetReplayManager() const {
-    return ReplayManager::GetInstance();
-}
-
-SystemManager &BrackEngine::GetSystemManager() const {
-    return SystemManager::GetInstance();
+    textComponent.text = fakk;
 }

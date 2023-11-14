@@ -3,33 +3,28 @@
 //
 
 #include "Objects/Camera.hpp"
+#include "../ConfigSingleton.hpp"
 
-Color Camera::GetBackgroundColor() const {
-    return backgroundColor;
-}
+#include <memory>
 
-void Camera::SetBackgroundColor(const Color color) {
-    backgroundColor = color;
-}
-
-Vector2 Camera::GetSize() const {
-    return size;
-}
-
-void Camera::SetSize(const Vector2 size) {
-
-}
 
 Camera::Camera() : GameObject() {
-    size = Vector2(800, 600);
-    backgroundColor = Color(0, 0, 0, 255);
-    cameraComponent = new CameraComponent();
+    AddComponent(std::make_unique<CameraComponent>());
+    SetBackgroundColor(Color(0, 0, 0, 255));
+    auto size = ConfigSingleton::GetInstance().GetWindowSize();
+    SetSize(size);
 }
 
-CameraComponent *Camera::GetCameraComponent() {
-    return cameraComponent;
+void Camera::SetBackgroundColor(const Color& color) {
+    if (entityID == 0) {
+        TryGetComponent<CameraComponent>().backgroundColor = std::make_unique<Color>(color);
+    } else
+    ComponentStore::GetInstance().tryGetComponent<CameraComponent>(entityID).backgroundColor = std::make_unique<Color>(color);
 }
 
-void Camera::SetCameraComponent(CameraComponent *cameraComponent) {
-    this->cameraComponent = cameraComponent;
+void Camera::SetSize(const Vector2& size) {
+    if (entityID == 0) {
+        TryGetComponent<CameraComponent>().size = std::make_unique<Vector2>(size);
+    } else
+    ComponentStore::GetInstance().tryGetComponent<CameraComponent>(entityID).size = std::make_unique<Vector2>(size);
 }

@@ -15,8 +15,12 @@ struct ParentComponent : public IComponent {
 
     ~ParentComponent() override = default;
 
+    virtual std::unique_ptr<IComponent> clone() const override {
+        return std::make_unique<ParentComponent>(*this);
+    }
+
     void Accept(ComponentVisitor &visitor) override {
-        visitor.visit<ParentComponent>(this);
+        visitor.visit(*this);
     }
 
     uint32_t parentID;

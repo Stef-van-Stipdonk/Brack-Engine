@@ -16,13 +16,21 @@ struct CameraComponent : public VelocityComponent {
 
     ~CameraComponent() override = default;
 
-
-    void Accept(ComponentVisitor &visitor) override {
-        visitor.visit<CameraComponent>(this);
+    CameraComponent(const CameraComponent &other) {
+        size = std::make_unique<Vector2>(*other.size);
+        backgroundColor = std::make_unique<Color>(*other.backgroundColor);
     }
 
-    Vector2 size;
-    Color backgroundColor;
+    virtual std::unique_ptr<IComponent> clone() const override {
+        return std::make_unique<CameraComponent>(*this);
+    }
+
+    void Accept(ComponentVisitor &visitor) override {
+        visitor.visit(*this);
+    }
+
+    std::unique_ptr<Vector2> size;
+    std::unique_ptr<Color> backgroundColor;
 };
 
 #endif //BRACK_ENGINE_CAMERACOMPONENT_HPP

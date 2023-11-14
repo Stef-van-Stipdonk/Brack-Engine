@@ -10,18 +10,22 @@
 #include <functional>
 
 struct BehaviourScript : public IComponent {
-
-    explicit BehaviourScript() : IComponent() {}
+    explicit BehaviourScript() = default;
 
     ~BehaviourScript() override = default;
 
-    void Accept(ComponentVisitor &visitor) override {
-        visitor.visit<BehaviourScript>(this);
+    virtual std::unique_ptr<IComponent> clone() const override {
+        return std::make_unique<BehaviourScript>(*this);
     }
 
-    virtual void OnStart() = 0;
+    void Accept(ComponentVisitor &visitor) override {
+        visitor.visit(*this);
+        OnStart();
+    }
 
-    virtual void OnUpdate(float deltaTime) = 0;
+    virtual void OnStart() {};
+
+    virtual void OnUpdate(float deltaTime) {};
 };
 
 

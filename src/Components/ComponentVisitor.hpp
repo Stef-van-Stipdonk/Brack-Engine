@@ -10,13 +10,10 @@
 class ComponentVisitor {
 
 public:
-
     template<typename T>
-    void visit(T *component) {
-        ComponentStore::GetInstance().addComponent(component->entityID, component);
+    void visit(T& component) {
+        ComponentStore::GetInstance().addComponent(component.entityID, std::move(std::make_unique<T>(component)));
     }
-
-
 };
 
 
