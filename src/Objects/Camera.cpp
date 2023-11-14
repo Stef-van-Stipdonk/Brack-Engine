@@ -17,14 +17,14 @@ Camera::Camera() : GameObject() {
 
 void Camera::SetBackgroundColor(const Color& color) {
     if (entityID == 0) {
-        GetComponent<CameraComponent>()->backgroundColor = std::make_unique<Color>(color);
+        TryGetComponent<CameraComponent>().backgroundColor = std::make_unique<Color>(color);
     } else
-    ComponentStore::GetInstance().getComponent<CameraComponent>(entityID)->backgroundColor = std::make_unique<Color>(color);
+    ComponentStore::GetInstance().tryGetComponent<CameraComponent>(entityID).backgroundColor = std::make_unique<Color>(color);
 }
 
 void Camera::SetSize(const Vector2& size) {
     if (entityID == 0) {
-        GetComponent<CameraComponent>()->size = std::make_unique<Vector2>(size);
+        TryGetComponent<CameraComponent>().size = std::make_unique<Vector2>(size);
     } else
-    ComponentStore::GetInstance().getComponent<CameraComponent>(entityID)->size = std::make_unique<Vector2>(size);
+    ComponentStore::GetInstance().tryGetComponent<CameraComponent>(entityID).size = std::make_unique<Vector2>(size);
 }

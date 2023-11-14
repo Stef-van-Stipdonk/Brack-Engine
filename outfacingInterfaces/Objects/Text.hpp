@@ -13,7 +13,7 @@ class Text : public UIObject {
 public:
     explicit Text(const std::string& text);
 
-    ~Text() override = default;
+    ~Text()  = default;
 
     void SetText(const std::string& text);
 

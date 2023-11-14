@@ -33,7 +33,7 @@ struct TextComponent : public UIComponent {
 
     std::string text, fontPath;
     int fontSize;
-    std::unique_ptr<Color> color;
+    std::unique_ptr<Color> color = std::make_unique<Color> (0,0,0,255);
 };
 
 #endif //BRACK_ENGINE_TEXTCOMPONENT_HPP

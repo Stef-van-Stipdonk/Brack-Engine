@@ -18,29 +18,26 @@ void RenderingSystem::Update(float deltaTime) {
     //Render camera
     try {
         auto cameraId = ComponentStore::GetInstance().getEntitiesWithComponent<CameraComponent>()[0];
-        auto cameraComponent = ComponentStore::GetInstance().getComponent<CameraComponent>(cameraId);
+        auto cameraComponent = ComponentStore::GetInstance().tryGetComponent<CameraComponent>(cameraId);
         sdl2Wrapper->RenderCamera(cameraComponent);
 
         auto rectangleComponentsIds = ComponentStore::GetInstance().getEntitiesWithComponent<RectangleComponent>();
         for(auto entityId : rectangleComponentsIds){
-            auto* rectangleComponent = ComponentStore::GetInstance().getComponent<RectangleComponent>(entityId);
-            auto* transformComponent = ComponentStore::GetInstance().getComponent<TransformComponent>(entityId);
+            auto rectangleComponent = ComponentStore::GetInstance().tryGetComponent<RectangleComponent>(entityId);
+            auto transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(entityId);
             sdl2Wrapper->RenderRectangle(rectangleComponent,transformComponent);
         }
 
         auto entities = ComponentStore::GetInstance().getEntitiesWithComponent<SpriteComponent>();
         for(auto& entity : entities) {
-            auto* sprite = ComponentStore::GetInstance().getComponent<SpriteComponent>(entity);
-            if(sprite == nullptr)
-                continue;
-
-            sdl2Wrapper->RenderSprite(*sprite);
+            auto sprite = ComponentStore::GetInstance().tryGetComponent<SpriteComponent>(entity);
+            sdl2Wrapper->RenderSprite(sprite);
         }
 
         auto textComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<TextComponent>();
         for (int entityId: textComponentIds) {
-            auto textComponent = ComponentStore::GetInstance().getComponent<TextComponent>(entityId);
-            auto transformComponent = ComponentStore::GetInstance().getComponent<TransformComponent>(entityId);
+            auto textComponent = ComponentStore::GetInstance().tryGetComponent<TextComponent>(entityId);
+            auto transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(entityId);
             sdl2Wrapper->RenderText(textComponent, transformComponent);
         }
 

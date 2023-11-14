@@ -29,12 +29,12 @@ public:
 
     ~RenderWrapper();
 
-    void RenderCamera(CameraComponent* camera);
+    void RenderCamera(CameraComponent& camera);
     void RenderSprite(SpriteComponent &sprite);
-    void RenderText(TextComponent* textComponent, TransformComponent* transformComponent);
-    void RenderRectangle(RectangleComponent* rectangleComponent, TransformComponent* transformComponent);
-    void RenderBoxCollisionComponents(BoxCollisionComponent* boxCollisionComponent, TransformComponent* transformComponent);
-    void RenderCircleCollisionComponents(CircleCollisionComponent* circleCollisionComponent, TransformComponent* transformComponent);
+    void RenderText(TextComponent& textComponent, TransformComponent& transformComponent);
+    void RenderRectangle(RectangleComponent& rectangleComponent, TransformComponent& transformComponent);
+    void RenderBoxCollisionComponents(BoxCollisionComponent& boxCollisionComponent, TransformComponent& transformComponent);
+    void RenderCircleCollisionComponents(CircleCollisionComponent& circleCollisionComponent, TransformComponent& transformComponent);
 
     void RenderFrame();
     static void Cleanup();
