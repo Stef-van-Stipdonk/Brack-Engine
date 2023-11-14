@@ -12,9 +12,7 @@
 
 
 struct ClickableComponent : public UIComponent {
-    explicit ClickableComponent(std::function<void()> func) : UIComponent() {
-        OnClick = std::move(func);
-    }
+    explicit ClickableComponent() : UIComponent() {}
 
     virtual std::unique_ptr<IComponent> clone() const override {
         return std::make_unique<ClickableComponent>(*this);

@@ -11,10 +11,18 @@
 
 class Text : public UIObject {
 public:
-    Text(std::string text, int fontSize, Color color, std::string fontPath);
-    Text(std::string text, int fontSize, Color color);
-    Text(std::string text, int fontSize);
-    Text(std::string text);
+    explicit Text(const std::string& text);
+
+    ~Text() override = default;
+
+    void SetText(const std::string& text);
+
+    void SetFontPath(const std::string& font);
+
+    void SetFontSize(int fontSize);
+
+    void SetColor(const Color& color);
+
 };
 
 

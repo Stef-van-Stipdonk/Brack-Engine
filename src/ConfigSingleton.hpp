@@ -34,6 +34,8 @@ public:
 
     Vector2 GetWindowSize() const;
 
+    void SetWindowSize(Vector2 size) const;
+
     bool IsFullscreen() const;
 
     std::string GetBaseAssetPath() const;

@@ -70,10 +70,10 @@ void RenderWrapper::Cleanup() {
     IMG_Quit();
 }
 
-void RenderWrapper::RenderCamera(CameraComponent& camera) {
-    auto &backgroundColor = camera.backgroundColor;
-    SDL_SetRenderDrawColor(renderer.get(), backgroundColor.r, backgroundColor.g, backgroundColor.b,
-                           backgroundColor.a); // RGBA format
+void RenderWrapper::RenderCamera(CameraComponent *camera) {
+    auto &backgroundColor = camera->backgroundColor;
+    SDL_SetRenderDrawColor(renderer.get(), backgroundColor->r, backgroundColor->g, backgroundColor->b,
+                           backgroundColor->a); // RGBA format
 
     // Clear the screen with the background color.
     SDL_RenderClear(renderer.get());
@@ -81,11 +81,49 @@ void RenderWrapper::RenderCamera(CameraComponent& camera) {
     int windowWidth, windowHeight;
     SDL_GetWindowSize(window.get(), &windowWidth, &windowHeight);
 
-    if(windowWidth != camera.size.getX() || windowHeight != camera.size.getY()) {
+    if(windowWidth != camera->size->getX() || windowHeight != camera->size->getY()) {
         int centerX = SDL_WINDOWPOS_CENTERED;
         int centerY = SDL_WINDOWPOS_CENTERED;
-        SDL_SetWindowSize(window.get(), camera.size.getX(), camera.size.getY());
+        SDL_SetWindowSize(window.get(), camera->size->getX(), camera->size->getY());
         SDL_SetWindowPosition(window.get(), centerX, centerY);
+    }
+}
+
+void RenderWrapper::RenderRectangle(RectangleComponent *rectangleComponent, TransformComponent *transformComponent) {
+    SDL_Rect rectFill = {
+            static_cast<int>(transformComponent->position->getX()),
+            static_cast<int>(transformComponent->position->getY()),
+            static_cast<int>(rectangleComponent->size->getX()),
+            static_cast<int>(rectangleComponent->size->getY()) };
+
+    // Render background
+    SDL_SetRenderDrawColor(
+            renderer.get(),
+            rectangleComponent->fill->r,
+            rectangleComponent->fill->g,
+            rectangleComponent->fill->b,
+            rectangleComponent->fill->a
+            );
+    SDL_RenderFillRect(renderer.get(), &rectFill);
+
+    if(rectangleComponent->borderWidth > 0){
+        // Render the border borderWidth times
+        SDL_SetRenderDrawColor(
+                renderer.get(),
+               rectangleComponent->borderColor->r,
+               rectangleComponent->borderColor->g,
+               rectangleComponent->borderColor->b,
+               rectangleComponent->borderColor->a
+               );
+        for (int i = 0; i < rectangleComponent->borderWidth; ++i) {
+            SDL_Rect rectBorder = {
+                    static_cast<int>(transformComponent->position->getX()) + i,
+                    static_cast<int>(transformComponent->position->getY()) + i,
+                    static_cast<int>(rectangleComponent->size->getX()) - (i*2),
+                    static_cast<int>(rectangleComponent->size->getY()) - (i*2)
+            };
+            SDL_RenderDrawRect(renderer.get(), &rectBorder);
+        }
     }
 }
 
@@ -105,27 +143,27 @@ void RenderWrapper::RenderSprite(SpriteComponent &sprite) {
     srcRect.h = spriteHeight;
 
     //Create a rectangle were the sprite needs to be rendered on to
-    SDL_Rect destRect = {static_cast<int>(sprite.position->getX()), static_cast<int>(sprite.position->getY()), static_cast<int>(sprite.spriteSize->getX() * sprite.scale->getX()), static_cast<int>(sprite.spriteSize->getY() * sprite.scale->getY())};
+    SDL_Rect destRect = {
+            static_cast<int>(sprite.position->getX()),
+            static_cast<int>(sprite.position->getY()),
+            static_cast<int>(sprite.spriteSize->getX() * sprite.scale->getX()),
+            static_cast<int>(sprite.spriteSize->getY() * sprite.scale->getY())
+    };
 
     SDL_RenderCopy(renderer.get(), texture->second.get(), &srcRect, &destRect);
 }
 
-void RenderWrapper::RenderText(TextComponent& textComponent, TransformComponent& transformComponent) {
-
-    SDL_Color sdlColor;
-    if(textComponent.color == nullptr)
-        sdlColor = {
-            static_cast<Uint8>(textComponent.color->r),
-            static_cast<Uint8>(textComponent.color->g),
-            static_cast<Uint8>(textComponent.color->b),
-            static_cast<Uint8>(textComponent.color->a)
-        };
-    else
-        sdlColor = {0, 0, 0, 255};
+void RenderWrapper::RenderText(TextComponent* textComponent, TransformComponent* transformComponent) {
+    SDL_Color sdlColor = {
+            textComponent->color->r,
+            textComponent->color->g,
+            textComponent->color->b,
+            textComponent->color->a
+    };
 
     TTF_Font* font = nullptr;
-    const std::string& fontPath = textComponent.fontPath;
-    int fontSize = textComponent.fontSize;
+    const std::string& fontPath = textComponent->fontPath;
+    int fontSize = textComponent->fontSize;
 
     auto& sizeMap = fontCache[fontPath];
     if (sizeMap.count(fontSize) != 0) {
@@ -139,7 +177,7 @@ void RenderWrapper::RenderText(TextComponent& textComponent, TransformComponent&
         sizeMap[fontSize] = font;
     }
 
-    SDL_Surface* surface = TTF_RenderText_Solid(font, textComponent.text.c_str(), sdlColor);
+    SDL_Surface* surface = TTF_RenderText_Solid(font, textComponent->text.c_str(), sdlColor);
 
     if (!surface) {
         std::cerr << "TTF_RenderText_Solid Error: " << TTF_GetError() << std::endl;
@@ -150,21 +188,21 @@ void RenderWrapper::RenderText(TextComponent& textComponent, TransformComponent&
         std::cerr << "SDL_CreateTextureFromSurface Error: " << SDL_GetError() << std::endl;
     }
 
-    SDL_Rect rect = { static_cast<int>(transformComponent.position->getX()), static_cast<int>(transformComponent.position->getY()), surface->w, surface->h };
+    SDL_Rect rect = { static_cast<int>(transformComponent->position->getX()), static_cast<int>(transformComponent->position->getY()), surface->w, surface->h };
     SDL_RenderCopy(renderer.get(), texture, nullptr, &rect);
 
     SDL_FreeSurface(surface);
     SDL_DestroyTexture(texture);
 }
 
-void RenderWrapper::RenderBoxCollisionComponents(BoxCollisionComponent& boxCollisionComponent,
-                                                 TransformComponent& transformComponent) {
+void RenderWrapper::RenderBoxCollisionComponents(BoxCollisionComponent *boxCollisionComponent,
+                                                 TransformComponent *transformComponent) {
 #if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
     SDL_Rect buttonRect = {
-            static_cast<int>(transformComponent.position->getX()),
-            static_cast<int>(transformComponent.position->getY()),
-            static_cast<int>(boxCollisionComponent.size->getX()),
-            static_cast<int>(boxCollisionComponent.size->getY()) };
+            static_cast<int>(transformComponent->position->getX()),
+            static_cast<int>(transformComponent->position->getY()),
+            static_cast<int>(boxCollisionComponent->size->getX()),
+            static_cast<int>(boxCollisionComponent->size->getY()) };
 
     // Render the button background (you can customize this part)
     SDL_SetRenderDrawColor(renderer.get(), 255, 0, 0, 255);
@@ -172,28 +210,24 @@ void RenderWrapper::RenderBoxCollisionComponents(BoxCollisionComponent& boxColli
 #endif
 }
 
-void RenderWrapper::RenderCircleCollisionComponents(CircleCollisionComponent& circleCollisionComponent, TransformComponent& transformComponent){
+void RenderWrapper::RenderCircleCollisionComponents(CircleCollisionComponent* circleCollisionComponent, TransformComponent* transformComponent){
 #if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
     SDL_SetRenderDrawColor(renderer.get(), 255, 0, 0, 255);
     double angle = 0.0;
     double step = 0.005;  // Angle step for plotting points
 
-    auto centerX = transformComponent.position->getX() + circleCollisionComponent.radius->getX();
-    auto centerY = transformComponent.position->getY() + circleCollisionComponent.radius->getY();
+    auto centerX = transformComponent->position->getX() + circleCollisionComponent->radius->getX();
+    auto centerY = transformComponent->position->getY() + circleCollisionComponent->radius->getY();
     // Plot points along the ellipse boundary
     while (angle < 2 * M_PI) {
-        int x = static_cast<int>(centerX + circleCollisionComponent.radius->getX() * cos(angle));
-        int y = static_cast<int>(centerY + circleCollisionComponent.radius->getY() * sin(angle));
+        int x = static_cast<int>(centerX + circleCollisionComponent->radius->getX() * cos(angle));
+        int y = static_cast<int>(centerY + circleCollisionComponent->radius->getY() * sin(angle));
 
         SDL_RenderDrawPoint(renderer.get(), x, y);
 
         angle += step;
     }
 #endif
-}
-
-void RenderWrapper::RenderButton(TextComponent &button) {
-
 }
 
 void RenderWrapper::RenderFrame() {
@@ -232,4 +266,9 @@ std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)> RenderWrapper::getTe
     }
 
     return std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)>(nullptr, &SDL_DestroyTexture);
+}
+
+void RenderWrapper::ResizeWindow(Vector2 size) {
+    SDL_SetWindowSize(window.get(),(int)size.getX(),(int)size.getY());
+    ConfigSingleton::GetInstance().SetWindowSize(size);
 }

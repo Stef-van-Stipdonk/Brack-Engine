@@ -3,18 +3,41 @@
 //
 
 #include <Components/TextComponent.hpp>
+#include <Components/RectangleComponent.hpp>
+#include <utility>
 #include "Objects/Text.hpp"
 #include "../ConfigSingleton.hpp"
 
-Text::Text(std::string text, int fontSize, Color color, std::string fontPath) {
-    std::unique_ptr<TextComponent> textComponent = std::make_unique<TextComponent>();
+Text::Text(const std::string& text) : UIObject() {
+    auto* textComponent = new TextComponent();
     textComponent->text = text;
-    textComponent->fontSize = fontSize;
-    textComponent->color = std::make_unique<Color>(color);
-    textComponent->fontPath = fontPath;
-    AddComponent(std::move(textComponent));
+    AddComponent(textComponent);
 }
 
-Text::Text(std::string text, int fontSize, Color color) : Text(text, fontSize, color, ConfigSingleton::GetInstance().GetBaseAssetPath() + "Fonts/Arial.ttf") {}
-Text::Text(std::string text, int fontSize) : Text(text, fontSize, Color(0,0,0,255)) {}
-Text::Text(std::string text) : Text(text, 24) {}
+void Text::SetFontSize(int fontSize) {
+    if (entityID == 0) {
+        GetComponent<TextComponent>()->fontSize = fontSize;
+    } else
+        ComponentStore::GetInstance().getComponent<TextComponent>(entityID)->fontSize = fontSize;
+}
+
+void Text::SetColor(const Color &color) {
+    if (entityID == 0) {
+        GetComponent<TextComponent>()->color = std::make_unique<Color>(color);
+    } else
+        ComponentStore::GetInstance().getComponent<TextComponent>(entityID)->color = std::make_unique<Color>(color);
+}
+
+void Text::SetFontPath(const std::string &font) {
+    if (entityID == 0) {
+        GetComponent<TextComponent>()->fontPath = font;
+    } else
+        ComponentStore::GetInstance().getComponent<TextComponent>(entityID)->fontPath = font;
+}
+
+void Text::SetText(const std::string &text) {
+    if (entityID == 0) {
+        GetComponent<TextComponent>()->text = text;
+    } else
+        ComponentStore::GetInstance().getComponent<TextComponent>(entityID)->text = text;
+}

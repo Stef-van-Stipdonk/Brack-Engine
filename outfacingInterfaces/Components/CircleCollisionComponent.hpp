@@ -7,7 +7,6 @@
 
 #include <memory>
 #include "CollisionComponent.hpp"
-#include "../../src/Components/ComponentVisitor.hpp"
 
 
 struct CircleCollisionComponent : public CollisionComponent {
