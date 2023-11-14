@@ -24,7 +24,7 @@ struct AudioComponent : public IComponent {
     bool shouldBePlaying = false;
     float volume;
     int duration;
-    int chnanel;
+    int channel;
 };
 
 #endif //BRACK_ENGINE_AUDIOCOMPONENT_HPP
