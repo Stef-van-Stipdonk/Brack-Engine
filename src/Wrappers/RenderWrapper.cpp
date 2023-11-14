@@ -135,6 +135,7 @@ void RenderWrapper::RenderBoxCollisionComponents(BoxCollisionComponent *boxColli
 }
 
 void RenderWrapper::RenderCircleCollisionComponents(CircleCollisionComponent* circleCollisionComponent, TransformComponent* transformComponent){
+#if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
     SDL_SetRenderDrawColor(renderer.get(), 255, 0, 0, 255);
     double angle = 0.0;
     double step = 0.005;  // Angle step for plotting points
@@ -150,6 +151,7 @@ void RenderWrapper::RenderCircleCollisionComponents(CircleCollisionComponent* ci
 
         angle += step;
     }
+#endif
 }
 
 void RenderWrapper::RenderButton(TextComponent &button) {
