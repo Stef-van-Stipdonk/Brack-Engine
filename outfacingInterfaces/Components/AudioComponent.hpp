@@ -8,10 +8,11 @@
 #include "IComponent.hpp"
 #include "../../src/Components/ComponentVisitor.hpp"
 #include <string>
+#include <Components/Archetypes/AudioArchetype.hpp>
 
-struct AudioComponent : public IComponent {
+struct AudioComponent : public AudioArchetype {
 
-    explicit AudioComponent() : IComponent() {}
+    explicit AudioComponent() : AudioArchetype() {}
 
     ~AudioComponent() = default;
 
