@@ -14,10 +14,22 @@ struct CircleCollisionComponent : public CollisionComponent {
     explicit CircleCollisionComponent(float xRadius, float yRadius) : CollisionComponent(), radius(new Vector2(xRadius,yRadius)) {}
     explicit CircleCollisionComponent(float radius) : CircleCollisionComponent(radius,radius) {}
 
-    ~CircleCollisionComponent() override = default;
+    virtual std::unique_ptr<IComponent> clone() const override {
+        return std::make_unique<CircleCollisionComponent>(*this);
+    }
+
+    ~CircleCollisionComponent() override {
+        if(radius != nullptr)
+            radius = nullptr;
+    };
+
+    CircleCollisionComponent(const CircleCollisionComponent &other) : CollisionComponent(other) {
+        if(other.radius != nullptr)
+            radius = std::make_unique<Vector2>(*other.radius);
+    }
 
     void Accept(ComponentVisitor &visitor) override {
-        visitor.visit<CircleCollisionComponent>(this);
+        visitor.visit(*this);
     }
 
     std::unique_ptr<Vector2> radius;

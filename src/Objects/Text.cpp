@@ -9,35 +9,35 @@
 #include "../ConfigSingleton.hpp"
 
 Text::Text(const std::string& text) : UIObject() {
-    auto* textComponent = new TextComponent();
+    auto textComponent = std::make_unique<TextComponent>();
     textComponent->text = text;
-    AddComponent(textComponent);
+    AddComponent(std::move(textComponent));
 }
 
 void Text::SetFontSize(int fontSize) {
     if (entityID == 0) {
-        GetComponent<TextComponent>()->fontSize = fontSize;
+        TryGetComponent<TextComponent>().fontSize = fontSize;
     } else
-        ComponentStore::GetInstance().getComponent<TextComponent>(entityID)->fontSize = fontSize;
+        ComponentStore::GetInstance().tryGetComponent<TextComponent>(entityID).fontSize = fontSize;
 }
 
 void Text::SetColor(const Color &color) {
     if (entityID == 0) {
-        GetComponent<TextComponent>()->color = std::make_unique<Color>(color);
+        TryGetComponent<TextComponent>().color = std::make_unique<Color>(color);
     } else
-        ComponentStore::GetInstance().getComponent<TextComponent>(entityID)->color = std::make_unique<Color>(color);
+        ComponentStore::GetInstance().tryGetComponent<TextComponent>(entityID).color = std::make_unique<Color>(color);
 }
 
 void Text::SetFontPath(const std::string &font) {
     if (entityID == 0) {
-        GetComponent<TextComponent>()->fontPath = font;
+        TryGetComponent<TextComponent>().fontPath = font;
     } else
-        ComponentStore::GetInstance().getComponent<TextComponent>(entityID)->fontPath = font;
+        ComponentStore::GetInstance().tryGetComponent<TextComponent>(entityID).fontPath = font;
 }
 
 void Text::SetText(const std::string &text) {
     if (entityID == 0) {
-        GetComponent<TextComponent>()->text = text;
+        TryGetComponent<TextComponent>().text = text;
     } else
-        ComponentStore::GetInstance().getComponent<TextComponent>(entityID)->text = text;
+        ComponentStore::GetInstance().tryGetComponent<TextComponent>(entityID).text = text;
 }

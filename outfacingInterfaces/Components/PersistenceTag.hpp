@@ -13,8 +13,12 @@ struct PersistenceTag : public IComponent {
 
     ~PersistenceTag() override = default;
 
+    virtual std::unique_ptr<IComponent> clone() const override {
+        return std::make_unique<PersistenceTag>(*this);
+    }
+
     void Accept(ComponentVisitor &visitor) override {
-        visitor.visit<PersistenceTag>(this);
+        visitor.visit(*this);
     }
 };
 

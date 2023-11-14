@@ -6,15 +6,18 @@
 #define BRACK_ENGINE_ICOMPONENT_HPP
 
 #include <cstdint>
+#include <memory>
 
 class ComponentVisitor;
 
 struct IComponent {
-    virtual ~IComponent() = default;
+    virtual ~IComponent() {};
 
     explicit IComponent() {};
 
-    virtual void Accept(ComponentVisitor &visitor) = 0;
+    virtual std::unique_ptr<IComponent> clone() const = 0;
+
+    virtual void Accept(ComponentVisitor &visitor) {};
 
 
     // Als we nog achter andere overeenkomende dingen komen bij ieder component kunnen we die hier toevoegens

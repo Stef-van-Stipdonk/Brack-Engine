@@ -27,30 +27,24 @@ public:
 
     static ComponentStore &GetInstance();
 
-    ~ComponentStore() {
-        for (auto &pair: components) {
-            for (auto &compPair: pair.second) {
-                if (compPair.second != nullptr)
-                    delete compPair.second;
-            }
-        }
-    }
+    ~ComponentStore() = default;
 
     template<typename T>
-    void addComponent(uint32_t entity, T *component) {
+    void addComponent(uint32_t entity, std::unique_ptr<T> component) {
         components[typeid(T)][entity] = std::move(component);
     }
 
     template<typename T>
-    T *getComponent(uint32_t entity) {
+    T& tryGetComponent(uint32_t entity) {
         auto itType = components.find(typeid(T));
         if (itType != components.end()) {
             auto itEntity = itType->second.find(entity);
             if (itEntity != itType->second.end()) {
-                return static_cast<T *>(itEntity->second);
+                // Cast and return a reference to the managed object
+                return *static_cast<T*>(itEntity->second.get());
             }
         }
-        return nullptr;
+        throw std::runtime_error("Component not found");
     }
 
     template<typename BaseT>
@@ -58,7 +52,7 @@ public:
         std::vector<BaseT*> result;
         for (auto& [type, map] : components) {
             for (auto& [id, comp] : map) {
-                BaseT* casted = dynamic_cast<BaseT*>(comp);
+                BaseT* casted = dynamic_cast<BaseT*>(comp.get());
                 if (casted) {
                     result.push_back(casted);
                 }
@@ -68,11 +62,11 @@ public:
     }
 
 
+
     template<typename T>
     void removeComponent(uint32_t entity) {
         auto itType = components.find(typeid(T));
         if (itType != components.end()) {
-            delete itType->second[entity];
             itType->second.erase(entity);
         }
     }
@@ -89,24 +83,11 @@ public:
         return entities;
     }
 
-    int GetRandom(int min, int max) {
-        std::random_device rd;
-        std::default_random_engine engine{rd()};
-
-        std::uniform_int_distribution<int> distribution{min, max};
-
-        return distribution(engine);
-    }
-
 
 private:
     static ComponentStore instance;
-
     ComponentStore() = default;
-
-
-    uint32_t i = GetRandom(0, 100);
-    std::unordered_map<std::type_index, std::unordered_map<uint32_t, IComponent *>> components = {};
+    std::unordered_map<std::type_index, std::unordered_map<uint32_t, std::unique_ptr<IComponent>>> components;
 };
 
 #endif // SIMPLE_COMPONENTSTORE_HPP

@@ -13,8 +13,12 @@ struct RigidBodyComponent : public IComponent {
 
     ~RigidBodyComponent() override = default;
 
+     virtual std::unique_ptr<IComponent> clone() const {
+         return std::make_unique<RigidBodyComponent>(*this);
+     }
+
     void Accept(ComponentVisitor &visitor) override {
-        visitor.visit<RigidBodyComponent>(this);
+        visitor.visit(*this);
     }
 
     float mass, gravityScale;

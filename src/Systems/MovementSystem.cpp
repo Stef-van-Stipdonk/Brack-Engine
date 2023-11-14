@@ -17,13 +17,13 @@ MovementSystem::~MovementSystem() {
 void MovementSystem::Update(float deltaTime) {
     auto entities = ComponentStore::GetInstance().getEntitiesWithComponent<VelocityComponent>();
     for (auto entity: entities) {
-        auto velocityComponent = ComponentStore::GetInstance().getComponent<VelocityComponent>(entity);
-        if (velocityComponent->velocity == Vector2(0, 0)) {
+        auto velocityComponent = ComponentStore::GetInstance().tryGetComponent<VelocityComponent>(entity);
+        if (velocityComponent.velocity == Vector2(0, 0)) {
             continue;
         }
-        auto transformComponent = ComponentStore::GetInstance().getComponent<TransformComponent>(entity);
-        transformComponent->position = std::make_unique<Vector2>(
-                *transformComponent->position + velocityComponent->velocity * deltaTime
+        auto transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(entity);
+        transformComponent.position = std::make_unique<Vector2>(
+                *transformComponent.position + velocityComponent.velocity * deltaTime
         );
     }
 }
