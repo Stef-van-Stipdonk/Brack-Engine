@@ -16,11 +16,11 @@ class Camera : public GameObject {
 public:
     Camera();
 
-    void SetBackgroundColor(const Color color);
+    void SetBackgroundColor(const Color& color);
 
-    void SetOnScreenPosition(const Vector2 position);
+    void SetOnScreenPosition(const Vector2& position);
 
-    void SetSize(const Vector2 size);
+    void SetSize(const Vector2& size);
 };
 
 

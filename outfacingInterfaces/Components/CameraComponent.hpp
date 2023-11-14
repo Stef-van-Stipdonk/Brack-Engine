@@ -16,11 +16,19 @@ struct CameraComponent : public IComponent {
 
     ~CameraComponent() override = default;
 
+    CameraComponent(const CameraComponent &other) {
+        size = std::make_unique<Vector2>(*other.size);
+        backgroundColor = std::make_unique<Color>(*other.backgroundColor);
+    }
+
+    virtual std::unique_ptr<IComponent> clone() const override {
+        return std::make_unique<CameraComponent>(*this);
+    }
 
     void Accept(ComponentVisitor &visitor) override {
-        visitor.visit<CameraComponent>(this);
+        visitor.visit(*this);
     }
-    
+
     std::unique_ptr<Vector2> size = std::make_unique<Vector2>(100, 100);
     std::unique_ptr<Vector2> onScreenPosition = std::make_unique<Vector2>(0, 0);
     std::unique_ptr<Color> backgroundColor = std::make_unique<Color>(0, 0, 0, 255);

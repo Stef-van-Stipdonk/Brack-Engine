@@ -15,10 +15,47 @@
 struct SpriteComponent : public RenderArchetype {
     explicit SpriteComponent() : RenderArchetype() {}
 
-    ~SpriteComponent() override = default;
+    ~SpriteComponent() override {
+        if(imageSize != nullptr)
+            imageSize = nullptr;
+
+        if(spriteSize != nullptr)
+            spriteSize = nullptr;
+
+        if(tileOffset != nullptr)
+            tileOffset = nullptr;
+
+        if(color != nullptr)
+            color = nullptr;
+    };
+
+    std::unique_ptr<IComponent> clone() const override {
+        return std::make_unique<SpriteComponent>(*this);
+    }
+
+    SpriteComponent(const SpriteComponent &other) : TransformComponent(other) {
+        spritePath = other.spritePath;
+        if(other.imageSize != nullptr)
+            imageSize = std::make_unique<Vector2>(*other.imageSize);
+
+        if(other.spriteSize != nullptr)
+            spriteSize = std::make_unique<Vector2>(*other.spriteSize);
+
+        if(other.tileOffset != nullptr)
+            tileOffset = std::make_unique<Vector2>(*other.tileOffset);
+
+        if(other.color != nullptr)
+            color = std::make_unique<Color>(*other.color);
+
+        flipX = other.flipX;
+        flipY = other.flipY;
+        sortingLayer = other.sortingLayer;
+        orderInLayer = other.orderInLayer;
+        margin = other.margin;
+    }
 
     void Accept(ComponentVisitor &visitor) override {
-        visitor.visit<SpriteComponent>(this);
+        visitor.visit(*this);
     }
 
     std::string spritePath;

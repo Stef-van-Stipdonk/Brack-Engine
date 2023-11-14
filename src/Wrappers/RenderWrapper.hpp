@@ -15,7 +15,7 @@
 #include <memory>
 #include <Components/BoxCollisionComponent.hpp>
 #include <Components/CircleCollisionComponent.hpp>
-
+#include <Components/RectangleComponent.hpp>
 
 struct SDLWindowDeleter {
     void operator()(SDL_Window *window) const {
@@ -56,8 +56,10 @@ public:
 
     void RenderCircleCollisionComponents(CircleCollisionComponent *circleCollisionComponent,
                                          TransformComponent *transformComponent);
-
+    
     static void Cleanup();
+
+    void ResizeWindow(Vector2 size);
 
 private:
     bool Initialize();

@@ -14,11 +14,20 @@
 struct ClickableComponent : public IComponent {
     explicit ClickableComponent(std::function<void()> func) : IComponent() {
         OnClick = std::move(func);
+
+    virtual std::unique_ptr<IComponent> clone() const override {
+        return std::make_unique<ClickableComponent>(*this);
+
     }
 
+    ~ClickableComponent() override = default;
+
+    ClickableComponent(const ClickableComponent &other) : UIComponent(other) {
+        OnClick = other.OnClick;
+    }
 
     void Accept(ComponentVisitor &visitor) override {
-        visitor.visit<ClickableComponent>(this);
+        visitor.visit(*this);
     }
 
     bool disabled = false;
