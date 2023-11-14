@@ -21,7 +21,7 @@ struct ClickableComponent : public UIComponent {
         visitor.visit<ClickableComponent>(this);
     }
 
-    bool disabled;
+    bool disabled = false;
     std::function<void()> OnClick;
 };
 
