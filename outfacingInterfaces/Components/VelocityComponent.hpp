@@ -7,8 +7,8 @@
 
 #include "TransformComponent.hpp"
 
-struct VelocityComponent : public TransformComponent {
-    explicit VelocityComponent() : TransformComponent() {}
+struct VelocityComponent : public IComponent {
+    explicit VelocityComponent() : IComponent() {}
 
     ~VelocityComponent() = default;
 

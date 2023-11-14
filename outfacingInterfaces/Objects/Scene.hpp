@@ -29,13 +29,13 @@ public:
 
     void RemoveGameObject(GameObject &gameObject);
 
-    Camera &GetMainCamera();
+    std::vector<Camera> GetCameras();
 
-    void SetCamera(Camera &camera);
+    void AddCamera(Camera &&camera);
 
 private:
     std::vector<GameObject> gameObjects;
-    Camera mainCamera;
+    std::vector<Camera> cameras;
 };
 
 

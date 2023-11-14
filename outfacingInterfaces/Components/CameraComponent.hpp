@@ -11,8 +11,8 @@
 #include "../../src/Components/ComponentVisitor.hpp"
 
 
-struct CameraComponent : public VelocityComponent {
-    explicit CameraComponent() : VelocityComponent() {}
+struct CameraComponent : public IComponent {
+    explicit CameraComponent() : IComponent() {}
 
     ~CameraComponent() override = default;
 
@@ -20,9 +20,10 @@ struct CameraComponent : public VelocityComponent {
     void Accept(ComponentVisitor &visitor) override {
         visitor.visit<CameraComponent>(this);
     }
-
-    Vector2 size;
-    Color backgroundColor;
+    
+    std::unique_ptr<Vector2> size = std::make_unique<Vector2>(100, 100);
+    std::unique_ptr<Vector2> onScreenPosition = std::make_unique<Vector2>(0, 0);
+    std::unique_ptr<Color> backgroundColor = std::make_unique<Color>(0, 0, 0, 255);
 };
 
 #endif //BRACK_ENGINE_CAMERACOMPONENT_HPP

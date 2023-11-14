@@ -9,9 +9,12 @@
 #include "../../src/Components/ComponentVisitor.hpp"
 #include "CollisionComponent.hpp"
 
-struct BoxCollisionComponent : public CollisionComponent {
-    explicit BoxCollisionComponent(float width, float height) : CollisionComponent(), size(new Vector2(width, height)) {}
-    explicit BoxCollisionComponent(float size) : BoxCollisionComponent(size,size) {}
+struct BoxCollisionComponent : public IComponent {
+    explicit BoxCollisionComponent(float width, float height)
+            : IComponent(), size(new Vector2(width, height)) {}
+
+    explicit BoxCollisionComponent(float size) : BoxCollisionComponent(size, size) {}
+
 
     ~BoxCollisionComponent() override = default;
 

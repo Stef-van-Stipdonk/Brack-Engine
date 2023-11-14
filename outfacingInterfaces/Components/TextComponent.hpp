@@ -11,8 +11,8 @@
 #include "../../src/Components/ComponentVisitor.hpp"
 #include "UIComponent.hpp"
 
-struct TextComponent : public UIComponent {
-    explicit TextComponent() : UIComponent() {}
+struct TextComponent : public IComponent {
+    explicit TextComponent() : IComponent() {}
 
 
     void Accept(ComponentVisitor &visitor) override {

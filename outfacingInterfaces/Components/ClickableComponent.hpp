@@ -11,8 +11,8 @@
 #include "../../src/Components/ComponentVisitor.hpp"
 
 
-struct ClickableComponent : public UIComponent {
-    explicit ClickableComponent(std::function<void()> func) : UIComponent() {
+struct ClickableComponent : public IComponent {
+    explicit ClickableComponent(std::function<void()> func) : IComponent() {
         OnClick = std::move(func);
     }
 

@@ -18,7 +18,7 @@
 
 
 struct SDLWindowDeleter {
-    void operator()(SDL_Window* window) const {
+    void operator()(SDL_Window *window) const {
         SDL_DestroyWindow(window);
     }
 };
@@ -29,25 +29,43 @@ public:
 
     ~RenderWrapper();
 
-    void RenderCamera(CameraComponent* camera);
+    void RenderCamera(CameraComponent *cameraComponent);
+
+    void RenderComponent(CameraComponent *cameraComponent, SpriteComponent *spriteComponent,
+                         TransformComponent *transformComponent);
+
+    void RenderComponent(CameraComponent *cameraComponent, TextComponent *textComponent,
+                         TransformComponent *transformComponent);
+
+    void RenderComponent(CameraComponent *cameraComponent, BoxCollisionComponent *boxCollisionComponent,
+                         TransformComponent *transformComponent);
+
+    void RenderComponent(CameraComponent *cameraComponent, CircleCollisionComponent *circleCollisionComponent,
+                         TransformComponent *transformComponent);
 
     void RenderSprite(SpriteComponent &sprite);
 
-    void RenderText(TextComponent* textComponent, TransformComponent* transformComponent);
+    void RenderText(TextComponent *textComponent, TransformComponent *transformComponent);
 
     void RenderButton(TextComponent &button);
 
     void RenderFrame();
 
-    void RenderBoxCollisionComponents(BoxCollisionComponent* boxCollisionComponent, TransformComponent* transformComponent);
-    void RenderCircleCollisionComponents(CircleCollisionComponent* circleCollisionComponent, TransformComponent* transformComponent);
+    void
+    RenderBoxCollisionComponents(BoxCollisionComponent *boxCollisionComponent, TransformComponent *transformComponent);
+
+    void RenderCircleCollisionComponents(CircleCollisionComponent *circleCollisionComponent,
+                                         TransformComponent *transformComponent);
 
     static void Cleanup();
 
 private:
     bool Initialize();
-    std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)> getTexture(std::string filePath);
-    std::unordered_map<std::string, std::map<int, TTF_Font*>> fontCache;
+
+    std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)> GetSpriteTexture(std::string filePath);
+
+    std::unique_ptr<SDL_Texture, void (*)(SDL_Texture *)> renderTexture;
+    std::unordered_map<std::string, std::map<int, TTF_Font *>> fontCache;
     std::map<std::string, std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)>> textures;
     std::unique_ptr<SDL_Window, SDLWindowDeleter> window;
     std::unique_ptr<SDL_Renderer, void (*)(SDL_Renderer *)> renderer;

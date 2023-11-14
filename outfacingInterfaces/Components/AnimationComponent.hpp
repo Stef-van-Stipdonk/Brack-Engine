@@ -8,9 +8,9 @@
 #include <memory>
 #include "SpriteComponent.hpp"
 
-struct AnimationComponent : public SpriteComponent {
+struct AnimationComponent : public IComponent {
 
-    explicit AnimationComponent() : SpriteComponent() {}
+    explicit AnimationComponent() : IComponent() {}
 
     ~AnimationComponent() override = default;
 

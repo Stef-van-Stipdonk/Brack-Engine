@@ -10,10 +10,12 @@
 #include "../../src/Components/ComponentVisitor.hpp"
 
 
-struct CircleCollisionComponent : public CollisionComponent {
+struct CircleCollisionComponent : public IComponent {
 
-    explicit CircleCollisionComponent(float xRadius, float yRadius) : CollisionComponent(), radius(new Vector2(xRadius,yRadius)) {}
-    explicit CircleCollisionComponent(float radius) : CircleCollisionComponent(radius,radius) {}
+    explicit CircleCollisionComponent(float xRadius, float yRadius)
+            : IComponent(), radius(new Vector2(xRadius, yRadius)) {}
+
+    explicit CircleCollisionComponent(float radius) : CircleCollisionComponent(radius, radius) {}
 
     ~CircleCollisionComponent() override = default;
 

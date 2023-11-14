@@ -11,8 +11,8 @@
 #include <string>
 #include <memory>
 
-struct SpriteComponent : public TransformComponent {
-    explicit SpriteComponent() : TransformComponent() {}
+struct SpriteComponent : public IComponent {
+    explicit SpriteComponent() : IComponent() {}
 
     ~SpriteComponent() override = default;
 
