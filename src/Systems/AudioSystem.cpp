@@ -23,7 +23,7 @@ void AudioSystem::Update(float deltaTime) {
             }
         }
 
-        if(audioComponent->shouldBePlaying){
+        if(audioComponent->shouldBePlaying && !audioComponent->isPlaying){
             audioWrapper->PlaySound(*audioComponent);
         }
 

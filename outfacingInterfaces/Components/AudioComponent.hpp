@@ -22,6 +22,7 @@ struct AudioComponent : public IComponent {
     bool isLooping = false;
     bool isPlaying = false;
     bool shouldBePlaying = false;
+    bool isSoundTrack = false;
     float volume;
     int duration;
     int channel;

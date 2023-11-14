@@ -47,7 +47,9 @@ public:
 
 private:
     FMOD::System *system;
-    std::unordered_map<int, FMOD::Channel*> channelMap;
+    std::unordered_map<int, FMOD::Channel*> soundEffectsChannelMap;
+    std::pair<int, FMOD::Channel*> soundTrackChannelPair;
+    int soundTrackChannel = 1;
     FMOD::Channel* FindAssociatedFMODChannel(int intChannel);
 };
 
