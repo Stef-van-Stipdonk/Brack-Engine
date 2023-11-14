@@ -4,6 +4,8 @@
 
 #include <Helpers/KeyMap.hpp>
 #include <Helpers/MouseMap.hpp>
+#include <box2d/b2_math.h>
+#include <box2d/box2d.h>
 #include "BrackEngine.hpp"
 #include "Systems/RenderingSystem.hpp"
 #include "Logger.hpp"
@@ -14,6 +16,8 @@
 #include "Systems/BehaviourScriptSystem.hpp"
 
 BrackEngine::BrackEngine(Config &&config) {
+    b2Vec2 gravity(0.0f, -9.8f);
+    b2World world(gravity);
     ConfigSingleton::GetInstance().SetConfig(config);
     SystemManager::GetInstance().AddSystem(new InputSystem());
     SystemManager::GetInstance().AddSystem(new BehaviourScriptSystem());

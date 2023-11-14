@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules")
 
-
+add_subdirectory(lib/Box2d)
 if (WIN32 OR WIN64)
     set(SDL2_PATH "${CMAKE_CURRENT_SOURCE_DIR}/lib/SDL")
     set(SDL2_TTF_PATH "${CMAKE_CURRENT_SOURCE_DIR}/lib/SDL")
@@ -138,8 +138,6 @@ set(LIBRARY_FILES ${CMAKE_CURRENT_SOURCE_DIR}/lib/dll)
 if (WIN32 OR WIN64)
     target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARY})
 
-
-    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
     add_custom_command(
             TARGET ${PROJECT_NAME}
             POST_BUILD
@@ -155,6 +153,7 @@ endif ()
 target_link_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/FMod)
 target_link_libraries(${PROJECT_NAME} PRIVATE fmod)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_TTF_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} PRIVATE box2d)
 
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/outfacingInterfaces)
