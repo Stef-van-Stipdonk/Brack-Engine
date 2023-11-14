@@ -2,8 +2,6 @@
 // Created by jesse on 02/11/2023.
 //
 
-#include <Helpers/KeyMap.hpp>
-#include <Helpers/MouseMap.hpp>
 #include <Components/ObjectInfoComponent.hpp>
 #include "BrackEngine.hpp"
 #include "Systems/RenderingSystem.hpp"
@@ -13,15 +11,18 @@
 #include "FPSSingleton.hpp"
 #include "Systems/MovementSystem.hpp"
 #include "Systems/BehaviourScriptSystem.hpp"
+#include "Systems/ClickSystem.hpp"
 #include "Systems/AudioSystem.hpp"
 
 BrackEngine::BrackEngine(Config &&config) {
     ConfigSingleton::GetInstance().SetConfig(config);
     SystemManager::GetInstance().AddSystem(std::make_shared<InputSystem>());
+    SystemManager::GetInstance().AddSystem(std::make_shared<ClickSystem>());
     SystemManager::GetInstance().AddSystem(std::make_shared<AudioSystem>());
     SystemManager::GetInstance().AddSystem(std::make_shared<BehaviourScriptSystem>());
     SystemManager::GetInstance().AddSystem(std::make_shared<MovementSystem>());
     SystemManager::GetInstance().AddSystem(std::make_shared<RenderingSystem>());
+
     lastTime = std::chrono::high_resolution_clock::now();
 
     if (ConfigSingleton::GetInstance().ShowFPS())
@@ -34,6 +35,7 @@ void BrackEngine::Run() {
         FPSSingleton::GetInstance().Start();
         SystemManager::GetInstance().UpdateSystems(GetDeltaTime());
         FPSSingleton::GetInstance().End();
+//        Logger::Info("FPS: " + std::to_string(FPSSingleton::GetInstance().GetFPS()));
         if (ConfigSingleton::GetInstance().ShowFPS())
             UpdateFPS();
     }
@@ -48,30 +50,7 @@ float BrackEngine::GetDeltaTime() {
 
     float deltaTimeInSeconds = deltaTime.count();
     return deltaTimeInSeconds;
-}
 
-SceneManager &BrackEngine::GetSceneManager() const {
-    return SceneManager::GetInstance();
-}
-
-InputManager &BrackEngine::GetInputManager() const {
-    return InputManager::GetInstance();
-}
-
-ComponentStore &BrackEngine::GetComponentStore() const {
-    return ComponentStore::GetInstance();
-}
-
-EntityManager &BrackEngine::GetEntityManager() const {
-    return EntityManager::GetInstance();
-}
-
-ReplayManager &BrackEngine::GetReplayManager() const {
-    return ReplayManager::GetInstance();
-}
-
-SystemManager &BrackEngine::GetSystemManager() const {
-    return SystemManager::GetInstance();
 }
 
 void BrackEngine::CreateFPS() {

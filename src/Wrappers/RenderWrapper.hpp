@@ -13,6 +13,8 @@
 #include "Components/TextComponent.hpp"
 #include <map>
 #include <memory>
+#include <Components/BoxCollisionComponent.hpp>
+#include <Components/CircleCollisionComponent.hpp>
 
 
 struct SDLWindowDeleter {
@@ -36,6 +38,9 @@ public:
     void RenderButton(TextComponent &button);
 
     void RenderFrame();
+
+    void RenderBoxCollisionComponents(BoxCollisionComponent* boxCollisionComponent, TransformComponent* transformComponent);
+    void RenderCircleCollisionComponents(CircleCollisionComponent* circleCollisionComponent, TransformComponent* transformComponent);
 
     static void Cleanup();
 

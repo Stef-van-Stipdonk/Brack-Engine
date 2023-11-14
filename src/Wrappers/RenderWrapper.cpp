@@ -152,6 +152,41 @@ void RenderWrapper::RenderText(TextComponent* textComponent, TransformComponent*
     SDL_DestroyTexture(texture);
 }
 
+void RenderWrapper::RenderBoxCollisionComponents(BoxCollisionComponent *boxCollisionComponent,
+                                                 TransformComponent *transformComponent) {
+#if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
+    SDL_Rect buttonRect = {
+            static_cast<int>(transformComponent->position->getX()),
+            static_cast<int>(transformComponent->position->getY()),
+            static_cast<int>(boxCollisionComponent->size->getX()),
+            static_cast<int>(boxCollisionComponent->size->getY()) };
+
+    // Render the button background (you can customize this part)
+    SDL_SetRenderDrawColor(renderer.get(), 255, 0, 0, 255);
+    SDL_RenderDrawRect(renderer.get(), &buttonRect);
+#endif
+}
+
+void RenderWrapper::RenderCircleCollisionComponents(CircleCollisionComponent* circleCollisionComponent, TransformComponent* transformComponent){
+#if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
+    SDL_SetRenderDrawColor(renderer.get(), 255, 0, 0, 255);
+    double angle = 0.0;
+    double step = 0.005;  // Angle step for plotting points
+
+    auto centerX = transformComponent->position->getX() + circleCollisionComponent->radius->getX();
+    auto centerY = transformComponent->position->getY() + circleCollisionComponent->radius->getY();
+    // Plot points along the ellipse boundary
+    while (angle < 2 * M_PI) {
+        int x = static_cast<int>(centerX + circleCollisionComponent->radius->getX() * cos(angle));
+        int y = static_cast<int>(centerY + circleCollisionComponent->radius->getY() * sin(angle));
+
+        SDL_RenderDrawPoint(renderer.get(), x, y);
+
+        angle += step;
+    }
+#endif
+}
+
 void RenderWrapper::RenderButton(TextComponent &button) {
 
 }

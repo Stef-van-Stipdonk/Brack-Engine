@@ -27,7 +27,6 @@ void RenderingSystem::Update(float deltaTime) {
             sdl2Wrapper->RenderText(textComponent, transformComponent);
         }
 
-
         auto entities = ComponentStore::GetInstance().getEntitiesWithComponent<SpriteComponent>();
         for(auto& entity : entities) {
             auto sprite = ComponentStore::GetInstance().getComponent<SpriteComponent>(entity);
@@ -36,6 +35,22 @@ void RenderingSystem::Update(float deltaTime) {
 
             sdl2Wrapper->RenderSprite(*sprite);
         }
+
+#if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
+        auto boxCollisionComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<BoxCollisionComponent>();
+        for (int entityId: boxCollisionComponentIds) {
+            auto boxCollisionComponent = ComponentStore::GetInstance().getComponent<BoxCollisionComponent>(entityId);
+            auto transformComponent = ComponentStore::GetInstance().getComponent<TransformComponent>(entityId);
+            sdl2Wrapper->RenderBoxCollisionComponents(boxCollisionComponent,transformComponent);
+        }
+
+        auto circleCollisionComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<CircleCollisionComponent>();
+        for (int entityId: circleCollisionComponentIds) {
+            auto circleCollisionComponent = ComponentStore::GetInstance().getComponent<CircleCollisionComponent>(entityId);
+            auto transformComponent = ComponentStore::GetInstance().getComponent<TransformComponent>(entityId);
+            sdl2Wrapper->RenderCircleCollisionComponents(circleCollisionComponent,transformComponent);
+        }
+#endif
         sdl2Wrapper->RenderFrame();
     }
     catch (std::exception &e) {
