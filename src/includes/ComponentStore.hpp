@@ -89,23 +89,10 @@ public:
         return entities;
     }
 
-    int GetRandom(int min, int max) {
-        std::random_device rd;
-        std::default_random_engine engine{rd()};
-
-        std::uniform_int_distribution<int> distribution{min, max};
-
-        return distribution(engine);
-    }
-
 
 private:
     static ComponentStore instance;
-
     ComponentStore() = default;
-
-
-    uint32_t i = GetRandom(0, 100);
     std::unordered_map<std::type_index, std::unordered_map<uint32_t, IComponent *>> components = {};
 };
 
