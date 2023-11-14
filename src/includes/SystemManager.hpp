@@ -40,13 +40,57 @@ public:
     SystemManager &operator=(SystemManager &&) = delete;
 
     /// <summary>
+/// Finds a system by type and returns a weak pointer to it
+/// </summary>
+    template<typename T>
+    std::weak_ptr<T> FindSystem() {
+        for (auto& system : systems) {
+            auto castedSystem = std::dynamic_pointer_cast<T>(system);
+            if (castedSystem) {
+                return std::weak_ptr<T>(castedSystem);
+            }
+        }
+
+        Logger::Warning(std::string("System not found: ") + typeid(T).name());
+        return std::weak_ptr<T>();
+    }
+
+
+
+    template<typename T>
+    void RemoveSystem() {
+        // Find the system to remove
+        auto systemToRemoveIt = std::find_if(systems.begin(), systems.end(),
+                                             [](const std::shared_ptr<ISystem>& system) {
+                                                 return std::dynamic_pointer_cast<T>(system) != nullptr;
+                                             });
+
+        if (systemToRemoveIt != systems.end()) {
+            auto systemToRemove = *systemToRemoveIt;
+
+            // Remove this system as a dependency from other systems
+            for (auto& system : systems) {
+                system->RemoveDependency(systemToRemove);
+            }
+
+            // Now remove the system itself
+            systems.erase(systemToRemoveIt);
+            SortSystems();
+        } else {
+            Logger::Warning(std::string("System not found: ") + typeid(T).name());
+        }
+    }
+
+
+
+    /// <summary>
     /// Adds a system to the system manager
     /// Should be used when you want to add a single system
     /// If adding multiple systems at once which are dependent on each other, use AddSystems
     /// </summary>
     /// <param name="system">The system to add</param>
     /// <param name="printGraph">Whether or not to print the dependency graph after adding the system to see the state of the graph</param>
-    void AddSystem(ISystem *system, bool printGraph = false);
+    void AddSystem(std::shared_ptr<ISystem> system, bool printGraph = false);
 
     /// <summary>
     /// Adds a list of systems to the system manager
@@ -54,7 +98,7 @@ public:
     /// </summary>
     /// <param name="systems">The list of systems to add</param>
     /// <param name="printGraph">Whether or not to print the dependency graph after adding the system to see the state of the graph</param>
-    void AddSystems(std::vector<ISystem *> systems, bool printGraph = false);
+    void AddSystems(std::vector<std::shared_ptr<ISystem>> newSystems, bool printGraph = false);
 
     void UpdateSystems(float deltaTime);
     void CleanUp();
@@ -64,14 +108,13 @@ public:
     /// </summary>
     void PrintDependencyGraph() const;
 
-private:
     void SortSystems();
+private:
 
     SystemManager() = default;
 
     static SystemManager instance;
-    std::vector<ISystem *> systems;
-
+    std::vector<std::shared_ptr<ISystem>> systems;
 };
 
 

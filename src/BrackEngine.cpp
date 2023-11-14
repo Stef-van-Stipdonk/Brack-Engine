@@ -2,8 +2,6 @@
 // Created by jesse on 02/11/2023.
 //
 
-#include <Helpers/KeyMap.hpp>
-#include <Helpers/MouseMap.hpp>
 #include <Components/ObjectInfoComponent.hpp>
 #include "BrackEngine.hpp"
 #include "Systems/RenderingSystem.hpp"
@@ -14,14 +12,17 @@
 #include "Systems/MovementSystem.hpp"
 #include "Systems/BehaviourScriptSystem.hpp"
 #include "Systems/ClickSystem.hpp"
+#include "Systems/AudioSystem.hpp"
 
 BrackEngine::BrackEngine(Config &&config) {
     ConfigSingleton::GetInstance().SetConfig(config);
-    SystemManager::GetInstance().AddSystem(new InputSystem());
-    SystemManager::GetInstance().AddSystem(new BehaviourScriptSystem());
-    SystemManager::GetInstance().AddSystem(new ClickSystem());
-    SystemManager::GetInstance().AddSystem(new MovementSystem());
-    SystemManager::GetInstance().AddSystem(new RenderingSystem());
+    SystemManager::GetInstance().AddSystem(std::make_shared<InputSystem>());
+    SystemManager::GetInstance().AddSystem(std::make_shared<ClickSystem>());
+    SystemManager::GetInstance().AddSystem(std::make_shared<AudioSystem>());
+    SystemManager::GetInstance().AddSystem(std::make_shared<BehaviourScriptSystem>());
+    SystemManager::GetInstance().AddSystem(std::make_shared<MovementSystem>());
+    SystemManager::GetInstance().AddSystem(std::make_shared<RenderingSystem>());
+
     lastTime = std::chrono::high_resolution_clock::now();
 
     if (ConfigSingleton::GetInstance().ShowFPS())

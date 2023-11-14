@@ -103,7 +103,33 @@ add_library(${PROJECT_NAME} SHARED
         src/Components/ComponentVisitor.hpp
         src/Systems/ClickSystem.cpp
         src/Systems/ClickSystem.hpp
+        outfacingInterfaces/Components/Archetypes/AudioArchetype.hpp
+        src/Helpers/UserLogger.cpp
+        outfacingInterfaces/Helpers/UserLogger.hpp
 )
+
+option(USER_LOG_TO_FILE "Enable user logging to a file" OFF)
+
+if (USER_LOG_TO_FILE)
+    target_compile_definitions(Brack_Engine PRIVATE USER_LOG_TO_FILE)
+endif ()
+
+if (NOT DEFINED USER_CURRENT_LOG_LEVEL)
+    # Define a default log level based on the build type
+    if (CMAKE_BUILD_TYPE STREQUAL "Info")
+        set(USER_CURRENT_LOG_LEVEL "LOG_LEVEL_INFO")
+    elseif (CMAKE_BUILD_TYPE STREQUAL "None")
+        set(USER_CURRENT_LOG_LEVEL "LOG_LEVEL_NONE")
+    elseif (CMAKE_BUILD_TYPE STREQUAL "Warning")
+        set(USER_CURRENT_LOG_LEVEL "LOG_LEVEL_WARNING")
+    elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
+        set(USER_CURRENT_LOG_LEVEL "LOG_LEVEL_ERROR")
+    else ()
+        set(USER_CURRENT_LOG_LEVEL "LOG_LEVEL_DEBUG" CACHE STRING "Set the current log level")
+    endif ()
+endif ()
+
+add_compile_definitions(USER_CURRENT_LOG_LEVEL=${USER_CURRENT_LOG_LEVEL})
 
 # Define an option for logging to a file
 option(LOG_TO_FILE "Enable logging to a file" OFF)
