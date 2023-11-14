@@ -10,6 +10,7 @@
 #include <vector>
 #include <string>
 #include <typeinfo>
+#include <stdexcept>
 
 class GameObject {
 public:
