@@ -277,15 +277,15 @@ void RenderWrapper::RenderCircleCollision(const CameraComponent &cameraComponent
 #if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
     auto &cameraPosition = cameraTransformComponent.position;
     auto &cameraSize = cameraComponent.size;
-    auto &spritePosition = transformComponent.position;
+    auto &circlePosition = transformComponent.position;
     auto &circleSize = circleCollisionComponent.radius;
     auto sizeX = circleSize->getX() * transformComponent.scale->getX();
     auto sizeY = circleSize->getY() * transformComponent.scale->getY();
 
-    if (spritePosition->getX() + sizeX / 2 < cameraPosition->getX() - cameraSize->getX() / 2 ||
-        spritePosition->getX() - sizeX / 2 > cameraPosition->getX() + cameraSize->getX() / 2 ||
-        spritePosition->getY() + sizeY / 2 < cameraPosition->getY() - cameraSize->getY() / 2 ||
-        spritePosition->getY() - sizeY / 2 > cameraPosition->getY() + cameraSize->getY() / 2)
+    if (circlePosition->getX() + sizeX / 2 < cameraPosition->getX() - cameraSize->getX() / 2 ||
+        circlePosition->getX() - sizeX / 2 > cameraPosition->getX() + cameraSize->getX() / 2 ||
+        circlePosition->getY() + sizeY / 2 < cameraPosition->getY() - cameraSize->getY() / 2 ||
+        circlePosition->getY() - sizeY / 2 > cameraPosition->getY() + cameraSize->getY() / 2)
         return;
 
     SDL_SetRenderDrawColor(renderer.get(), 255, 0, 0, 255);
@@ -298,8 +298,10 @@ void RenderWrapper::RenderCircleCollision(const CameraComponent &cameraComponent
                    cameraComponent.size->getY() / 2;
     // Plot points along the ellipse boundary
     while (angle < 2 * M_PI) {
-        int x = static_cast<int>(centerX + circleCollisionComponent.radius->getX() * cos(angle));
-        int y = static_cast<int>(centerY + circleCollisionComponent.radius->getY() * sin(angle));
+        int x = static_cast<int>(centerX + circleCollisionComponent.radius->getX() * cos(angle) *
+                                           transformComponent.scale->getX() / 2);
+        int y = static_cast<int>(centerY + circleCollisionComponent.radius->getY() * sin(angle) *
+                                           transformComponent.scale->getY() / 2);
 
         SDL_RenderDrawPoint(renderer.get(), x, y);
 
@@ -312,7 +314,32 @@ void RenderWrapper::RenderBoxCollision(const CameraComponent &cameraComponent,
                                        const TransformComponent &cameraTransformComponent,
                                        const BoxCollisionComponent &boxCollisionComponent,
                                        const TransformComponent &transformComponent) {
+#if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
+    auto &cameraPosition = cameraTransformComponent.position;
+    auto &cameraSize = cameraComponent.size;
+    auto &boxPosition = transformComponent.position;
+    auto &size = boxCollisionComponent.size;
+    auto sizeX = size->getX() * transformComponent.scale->getX();
+    auto sizeY = size->getY() * transformComponent.scale->getY();
 
+    if (boxPosition->getX() + sizeX / 2 < cameraPosition->getX() - cameraSize->getX() / 2 ||
+        boxPosition->getX() - sizeX / 2 > cameraPosition->getX() + cameraSize->getX() / 2 ||
+        boxPosition->getY() + sizeY / 2 < cameraPosition->getY() - cameraSize->getY() / 2 ||
+        boxPosition->getY() - sizeY / 2 > cameraPosition->getY() + cameraSize->getY() / 2)
+        return;
+
+    SDL_Rect squareRect = {
+            static_cast<int>(transformComponent.position->getX() - cameraTransformComponent.position->getX() +
+                             cameraComponent.size->getX() / 2 - sizeX / 2),
+            static_cast<int>(transformComponent.position->getY() - cameraTransformComponent.position->getY() +
+                             cameraComponent.size->getY() / 2 - sizeY / 2),
+            static_cast<int>(sizeX),
+            static_cast<int>(sizeY)};
+
+    // Render the button background (you can customize this part)
+    SDL_SetRenderDrawColor(renderer.get(), 255, 0, 0, 255);
+    SDL_RenderDrawRect(renderer.get(), &squareRect);
+#endif
 }
 
 void
@@ -436,6 +463,7 @@ RenderWrapper::RenderSprite(const CameraComponent &cameraComponent, const Transf
                              cameraComponent.size->getY() / 2 - height / 2),
             static_cast<int>(width),
             static_cast<int>(height)};
+
 
     SDL_RenderCopy(renderer.get(), texture->second.get(), &srcRect, &destRect);
 }
