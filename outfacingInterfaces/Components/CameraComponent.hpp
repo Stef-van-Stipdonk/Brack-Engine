@@ -16,6 +16,7 @@ struct CameraComponent : public IComponent {
 
     ~CameraComponent() override = default;
 
+
     CameraComponent(const CameraComponent &other) : IComponent(other) {
         size = std::make_unique<Vector2>(*other.size);
         onScreenPosition = std::make_unique<Vector2>(*other.onScreenPosition);

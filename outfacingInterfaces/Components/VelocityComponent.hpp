@@ -16,7 +16,9 @@ struct VelocityComponent : public IComponent {
         return std::make_unique<VelocityComponent>(*this);
     }
 
-    VelocityComponent(const VelocityComponent &other) = default;
+    VelocityComponent(const VelocityComponent &other) : TransformComponent(other) {
+        velocity = other.velocity;
+    }
 
     void Accept(ComponentVisitor &visitor) override {
         visitor.visit(*this);

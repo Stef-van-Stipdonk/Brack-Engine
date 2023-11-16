@@ -24,6 +24,14 @@ struct AudioComponent : public AudioArchetype {
         return std::make_unique<AudioComponent>(*this);
     }
 
+    AudioComponent(const AudioComponent &other) : AudioArchetype(other) {
+        audioPath = other.audioPath;
+        isLooping = other.isLooping;
+        isPlaying = other.isPlaying;
+        volume = other.volume;
+        channel = other.channel;
+    }
+
     std::string audioPath;
     bool isLooping, isPlaying;
     float volume;

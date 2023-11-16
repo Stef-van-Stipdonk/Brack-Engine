@@ -17,7 +17,7 @@ struct RectangleComponent : public IComponent {
 
     ~RectangleComponent() override = default;
 
-    RectangleComponent(const RectangleComponent &other) {
+    RectangleComponent(const RectangleComponent &other) : IComponent(other){
         size = std::make_unique<Vector2>(*other.size);
         fill = std::make_unique<Color>(*other.fill);
         borderWidth = other.borderWidth;

@@ -14,7 +14,7 @@ GameObject GameObjectConverter::GetGameObject(uint32_t entityID) {
     return {};
 }
 
-void GameObjectConverter::AddGameObject(GameObject* gameObject) {
+void GameObjectConverter::AddGameObject(GameObject *gameObject) {
     ComponentVisitor componentVisitor;
     if (gameObject->GetEntityID() == 0)
         gameObject->SetEntityID(EntityManager::GetInstance().CreateEntity());
@@ -25,7 +25,7 @@ void GameObjectConverter::AddGameObject(GameObject* gameObject) {
 }
 
 
-void GameObjectConverter::AddCamera(Camera *camera) {
+void GameObjectConverter::AddCamera(std::unique_ptr<Camera> camera) {
     ComponentVisitor componentVisitor;
     if (camera->GetEntityID() == 0)
         camera->SetEntityID(EntityManager::GetInstance().CreateEntity());

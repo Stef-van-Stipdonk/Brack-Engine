@@ -25,7 +25,7 @@ struct AnimationComponent : public IComponent {
         return std::make_unique<AnimationComponent>(*this);
     }
 
-    AnimationComponent(const AnimationComponent& other) {
+    AnimationComponent(const AnimationComponent& other)  : SpriteComponent(other) {
         isLooping = other.isLooping;
         animationSpeed = other.animationSpeed;
         frameCount = other.frameCount;
