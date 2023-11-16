@@ -40,13 +40,18 @@ public:
     }
 
     template<typename T>
-    void AddComponent(std::unique_ptr<T> component) {
+    typename std::enable_if<std::is_base_of<IComponent, T>::value>::type
+    AddComponent(std::unique_ptr<T> component) {
         components.push_back(std::move(component));
     }
 
+    template<typename T>
+    typename std::enable_if<std::is_base_of<IComponent, T>::value>::type
     AddComponent(T component){
         AddComponent(std::make_unique<T>(component));
     }
+
+
     GameObject(const GameObject &other) {
         entityID = other.entityID;
         components = std::vector<std::unique_ptr<IComponent>>();
@@ -56,7 +61,8 @@ public:
     }
 
     template<typename T>
-    bool HasComponent(T &component) {
+    typename std::enable_if<std::is_base_of<IComponent, T>::value, bool>::type
+    HasComponent(T &component) {
         for (auto &comp: components) {
             if (dynamic_cast<T>(comp))
                 return true;
@@ -65,7 +71,8 @@ public:
     }
 
     template<typename T>
-    T& TryGetComponent() const {
+    typename std::enable_if<std::is_base_of<IComponent, T>::value, T&>::type
+    TryGetComponent() const {
         for (const auto &comp : components) {
             if (auto castedComp = dynamic_cast<T*>(comp.get())) {
                 return *castedComp; // dereference the pointer to return a reference
@@ -75,7 +82,8 @@ public:
     }
 
     template<typename T>
-    void RemoveComponent() {
+    typename std::enable_if<std::is_base_of<IComponent, T>::value>::type
+    RemoveComponent() {
         for (auto it = components.begin(); it != components.end();) {
             T* comp = dynamic_cast<T*>(it->get());
             if (comp != nullptr) {

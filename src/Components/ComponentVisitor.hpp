@@ -10,7 +10,8 @@
 class ComponentVisitor {
 public:
     template<typename T>
-    void visit(T& component) {
+    typename std::enable_if<std::is_base_of<IComponent, T>::value>::type
+    visit(T& component) {
         ComponentStore::GetInstance().addComponent<T>(component);
     }
 };
