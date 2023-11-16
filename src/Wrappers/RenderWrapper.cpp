@@ -465,10 +465,81 @@ RenderWrapper::RenderText(const CameraComponent &cameraComponent, const Transfor
                              cameraComponent.size->getY() / 2 - sizeY / 2),
             static_cast<int>(sizeX),
             static_cast<int>(sizeY)};
-    
+
     SDL_RenderCopy(renderer.get(), texture, nullptr, &rect);
 
     SDL_FreeSurface(surface);
     SDL_DestroyTexture(texture);
+}
+
+void RenderWrapper::RenderRectangle(const CameraComponent &cameraComponent,
+                                    const TransformComponent &cameraTransformComponent,
+                                    const RectangleComponent &rectangleComponent,
+                                    const TransformComponent &transformComponent) {
+    auto &cameraPosition = cameraTransformComponent.position;
+    auto &cameraSize = cameraComponent.size;
+    auto &rectanglePosition = transformComponent.position;
+    auto &rectangleSize = rectangleComponent.size;
+    auto sizeX = rectangleSize->getX() * transformComponent.scale->getX();
+    auto sizeY = rectangleSize->getY() * transformComponent.scale->getY();
+
+    if (rectanglePosition->getX() + sizeX / 2 < cameraPosition->getX() - cameraSize->getX() / 2 ||
+        rectanglePosition->getX() - sizeX / 2 > cameraPosition->getX() + cameraSize->getX() / 2 ||
+        rectanglePosition->getY() + sizeY / 2 < cameraPosition->getY() - cameraSize->getY() / 2 ||
+        rectanglePosition->getY() - sizeY / 2 > cameraPosition->getY() + cameraSize->getY() / 2)
+        return;
+
+    SDL_Rect rect = {
+            static_cast<int>(transformComponent.position->getX() - cameraTransformComponent.position->getX() +
+                             cameraComponent.size->getX() / 2 - sizeX / 2),
+            static_cast<int>(transformComponent.position->getY() - cameraTransformComponent.position->getY() +
+                             cameraComponent.size->getY() / 2 - sizeY / 2),
+            static_cast<int>(sizeX),
+            static_cast<int>(sizeY)};
+
+    SDL_SetRenderDrawColor(renderer.get(), rectangleComponent.fill->r, rectangleComponent.fill->g,
+                           rectangleComponent.fill->b, rectangleComponent.fill->a);
+    SDL_RenderFillRect(renderer.get(), &rect);
+
+    if (rectangleComponent.borderWidth > 0) {
+        SDL_SetRenderDrawColor(renderer.get(), rectangleComponent.borderColor->r, rectangleComponent.borderColor->g,
+                               rectangleComponent.borderColor->b, rectangleComponent.borderColor->a);
+        for (int i = 0; i < rectangleComponent.borderWidth; ++i) {
+            SDL_Rect borderRect = {
+                    static_cast<int>(transformComponent.position->getX() - cameraTransformComponent.position->getX() +
+                                     cameraComponent.size->getX() / 2 - sizeX / 2 - i),
+                    static_cast<int>(transformComponent.position->getY() - cameraTransformComponent.position->getY() +
+                                     cameraComponent.size->getY() / 2 - sizeY / 2 - i),
+                    static_cast<int>(sizeX + i * 2),
+                    static_cast<int>(sizeY + i * 2)};
+            SDL_RenderDrawRect(renderer.get(), &borderRect);
+        }
+
+    }
+}
+
+void RenderWrapper::RenderUiRectangle(const RectangleComponent &rectangleComponent,
+                                      const TransformComponent &transformComponent) {
+    SDL_Rect rect = {static_cast<int>(transformComponent.position->getX()),
+                     static_cast<int>(transformComponent.position->getY()),
+                     static_cast<int>(rectangleComponent.size->getX() * transformComponent.scale->getX()),
+                     static_cast<int>(rectangleComponent.size->getY() * transformComponent.scale->getY())};
+
+    SDL_SetRenderDrawColor(renderer.get(), rectangleComponent.fill->r, rectangleComponent.fill->g,
+                           rectangleComponent.fill->b, rectangleComponent.fill->a);
+    SDL_RenderFillRect(renderer.get(), &rect);
+
+    if (rectangleComponent.borderWidth > 0) {
+        SDL_SetRenderDrawColor(renderer.get(), rectangleComponent.borderColor->r, rectangleComponent.borderColor->g,
+                               rectangleComponent.borderColor->b, rectangleComponent.borderColor->a);
+        for (int i = 0; i < rectangleComponent.borderWidth; ++i) {
+            SDL_Rect borderRect = {
+                    static_cast<int>(transformComponent.position->getX() - i),
+                    static_cast<int>(transformComponent.position->getY() - i),
+                    static_cast<int>(rectangleComponent.size->getX() * transformComponent.scale->getX() + i * 2),
+                    static_cast<int>(rectangleComponent.size->getY() * transformComponent.scale->getY() + i * 2)};
+            SDL_RenderDrawRect(renderer.get(), &borderRect);
+        }
+    }
 }
 

@@ -33,6 +33,9 @@ void RenderingSystem::Update(float deltaTime) {
                                           transformComponent);
             else if (auto *textComponent = dynamic_cast<const TextComponent *>(component))
                 sdl2Wrapper->RenderText(cameraComponent, cameraTransformComponent, *textComponent, transformComponent);
+            else if (auto *rectangleComponent = dynamic_cast<const RectangleComponent *>(component))
+                sdl2Wrapper->RenderRectangle(cameraComponent, cameraTransformComponent, *rectangleComponent,
+                                             transformComponent);
         }
     }
 
@@ -45,6 +48,8 @@ void RenderingSystem::Update(float deltaTime) {
             sdl2Wrapper->RenderUiSprite(*spriteComponent, transformComponent);
         else if (auto *textComponent = dynamic_cast<const TextComponent *>(component))
             sdl2Wrapper->RenderUiText(*textComponent, transformComponent);
+        else if (auto *rectangleComponent = dynamic_cast<const RectangleComponent *>(component))
+            sdl2Wrapper->RenderUiRectangle(*rectangleComponent, transformComponent);
     }
 
 #if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
@@ -78,6 +83,7 @@ const std::string RenderingSystem::GetName() const {
 void RenderingSystem::SortRenderComponents() {
     components.clear();
     uiComponents.clear();
+
     auto spriteComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<SpriteComponent>();
     for (uint32_t entityId: spriteComponentIds) {
         auto &spriteComponent = ComponentStore::GetInstance().tryGetComponent<SpriteComponent>(entityId);
@@ -97,5 +103,15 @@ void RenderingSystem::SortRenderComponents() {
             uiComponents.insert(&textComponent);
         else
             components.insert(&textComponent);
+    }
+    auto RectangleComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<RectangleComponent>();
+    for (uint32_t entityId: RectangleComponentIds) {
+        auto &rectangleComponent = ComponentStore::GetInstance().tryGetComponent<RectangleComponent>(entityId);
+        if (!rectangleComponent.isActive)
+            continue;
+        if (rectangleComponent.sortingLayer == 0) // UI layer
+            uiComponents.insert(&rectangleComponent);
+        else
+            components.insert(&rectangleComponent);
     }
 }

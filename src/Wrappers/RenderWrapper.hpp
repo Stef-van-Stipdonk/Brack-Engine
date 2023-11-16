@@ -37,6 +37,9 @@ public:
     void RenderText(const CameraComponent &cameraComponent, const TransformComponent &cameraTransformComponent,
                     const TextComponent &textComponent, const TransformComponent &transformComponent);
 
+    void RenderRectangle(const CameraComponent &cameraComponent, const TransformComponent &cameraTransformComponent,
+                         const RectangleComponent &rectangleComponent, const TransformComponent &transformComponent);
+
     void RenderBoxCollision(const CameraComponent &cameraComponent, const TransformComponent &cameraTransformComponent,
                             const BoxCollisionComponent &boxCollisionComponent,
                             const TransformComponent &transformComponent);
@@ -50,6 +53,8 @@ public:
     void RenderUiSprite(const SpriteComponent &spriteComponent, const TransformComponent &transformComponent);
 
     void RenderUiText(const TextComponent &textComponent, const TransformComponent &transformComponent);
+
+    void RenderUiRectangle(const RectangleComponent &rectangleComponent, const TransformComponent &transformComponent);
 
     void RenderSprite(SpriteComponent &sprite);
 

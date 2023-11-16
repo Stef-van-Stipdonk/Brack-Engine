@@ -33,9 +33,10 @@ struct TextComponent : public RenderArchetype {
         visitor.visit(*this);
     }
 
-    std::string text, fontPath;
-    int fontSize;
-    std::unique_ptr<Color> color = std::make_unique<Color> (0,0,0,255);
+    std::string text = "";
+    std::string fontPath = "";
+    int fontSize = 10;
+    std::unique_ptr<Color> color = std::make_unique<Color>(0, 0, 0, 255);
 };
 
 #endif //BRACK_ENGINE_TEXTCOMPONENT_HPP

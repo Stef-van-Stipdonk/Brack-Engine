@@ -18,12 +18,17 @@ public:
     virtual std::unique_ptr<IComponent> clone() const override {
         return std::make_unique<RenderArchetype>(*this);
     }
-    
+
     void Accept(ComponentVisitor &visitor) override {
         visitor.visit<RenderArchetype>(*this);
     }
 
-    int sortingLayer = 0; 
+    RenderArchetype(const RenderArchetype &other) : IComponent(other) {
+        sortingLayer = other.sortingLayer;
+        orderInLayer = other.orderInLayer;
+    }
+
+    int sortingLayer = 0;
     int orderInLayer = 0;
 };
 
