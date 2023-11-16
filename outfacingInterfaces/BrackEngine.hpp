@@ -24,18 +24,6 @@ public:
 
     void Run();
 
-    SceneManager &GetSceneManager() const;
-
-    InputManager &GetInputManager() const;
-
-    ReplayManager &GetReplayManager() const;
-
-    EntityManager &GetEntityManager() const;
-
-    SystemManager &GetSystemManager() const;
-
-    ComponentStore &GetComponentStore() const;
-
 private:
     float GetDeltaTime();
 

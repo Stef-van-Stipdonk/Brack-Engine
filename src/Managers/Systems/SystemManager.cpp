@@ -42,12 +42,12 @@ SystemManager &SystemManager::GetInstance() {
 
 void SystemManager::SortSystems() {
     std::vector<std::shared_ptr<ISystem>> sortedList;
-    std::vector<ISystem*> nodesWithoutIncomingEdges;
-    std::unordered_map<ISystem*, std::vector<std::weak_ptr<ISystem>>> edgeCopy;
+    std::vector<ISystem *> nodesWithoutIncomingEdges;
+    std::unordered_map<ISystem *, std::vector<std::weak_ptr<ISystem>>> edgeCopy;
 
-    for (auto &system : systems) {
+    for (auto &system: systems) {
         std::vector<std::weak_ptr<ISystem>> incomingEdges;
-        for (auto &weakEdge : system->incomingEdges) {
+        for (auto &weakEdge: system->incomingEdges) {
             if (auto edge = weakEdge.lock()) {
                 incomingEdges.push_back(weakEdge);
             }
@@ -69,7 +69,7 @@ void SystemManager::SortSystems() {
             systems.erase(it);
         }
 
-        for (auto &weakDependency : node->outgoingEdges) {
+        for (auto &weakDependency: node->outgoingEdges) {
             if (auto dependency = weakDependency.lock()) {
                 auto &depIncomingEdgesCopy = edgeCopy[dependency.get()];
                 depIncomingEdgesCopy.erase(
@@ -89,12 +89,12 @@ void SystemManager::SortSystems() {
     }
 
     std::string errorString;
-    for (auto &pair : edgeCopy) {
+    for (auto &pair: edgeCopy) {
         if (!pair.second.empty()) {
             std::string systemName = pair.first->GetName();
             int edgeCount = pair.second.size();
             std::string incomingEdgeNames;
-            for (auto &weakIncomingEdgeSystem : pair.second) {
+            for (auto &weakIncomingEdgeSystem: pair.second) {
                 if (auto incomingEdgeSystem = weakIncomingEdgeSystem.lock()) {
                     incomingEdgeNames += incomingEdgeSystem->GetName() + " ";
                 } else {
@@ -118,7 +118,7 @@ void SystemManager::PrintDependencyGraph() const {
     std::cout << "===========================\n";
     std::cout << "Dependency Graph:" << std::endl;
 
-    for (const auto & system: systems) {
+    for (const auto &system: systems) {
         std::cout << system->GetName() << " depends on: ";
         for (const auto &dependency: system->GetDependencies()) {
             if (auto dep = dependency.lock()) { // Lock the weak_ptr to get a shared_ptr
@@ -131,6 +131,6 @@ void SystemManager::PrintDependencyGraph() const {
 #endif
 }
 
-void SystemManager::CleanUp(){
+void SystemManager::CleanUp() {
     systems.clear();
 }
