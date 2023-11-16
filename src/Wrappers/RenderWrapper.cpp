@@ -103,25 +103,7 @@ void RenderWrapper::Cleanup() {
 
 void RenderWrapper::RenderSprite(SpriteComponent &sprite) {
     //Check if the texture is already created. If not add it to the created textures
-//    if (textures.find(sprite.spritePath) == textures.end())
-//        textures.insert(std::make_pair(sprite.spritePath, GetSpriteTexture(sprite.spritePath)));
-//    auto texture = textures.find(sprite.spritePath);
-//
-//    //Fill in a rectangle for the current sprite IN
-//    SDL_Rect srcRect;
-//    int spriteWidth = sprite.spriteSize->getX();
-//    int spriteHeight = sprite.spriteSize->getY();
-//    srcRect.x = (sprite.tileOffset->getX() * spriteWidth) + (sprite.margin * sprite.tileOffset->getX());
-//    srcRect.y = (sprite.tileOffset->getY() * spriteHeight) + (sprite.margin * sprite.tileOffset->getY());
-//    srcRect.w = spriteWidth;
-//    srcRect.h = spriteHeight;
-//
-//    //Create a rectangle were the sprite needs to be rendered on to
-//    SDL_Rect destRect = {static_cast<int>(sprite.position->getX()), static_cast<int>(sprite.position->getY()),
-//                         static_cast<int>(sprite.spriteSize->getX() * sprite.scale->getX()),
-//                         static_cast<int>(sprite.spriteSize->getY() * sprite.scale->getY())};
-//
-//    SDL_RenderCopy(renderer.get(), texture->second.get(), &srcRect, &destRect);
+
 }
 
 void RenderWrapper::RenderText(TextComponent &textComponent, TransformComponent &transformComponent) {
@@ -203,39 +185,31 @@ void RenderWrapper::RenderCircleCollisionComponents(CircleCollisionComponent &ci
 #endif
 }
 
-void RenderWrapper::RenderButton(TextComponent &button) {
-
-}
-
 void RenderWrapper::RenderFrame() {
-    SDL_SetRenderTarget(renderer.get(), renderTexture.get());
-    for (auto &cameraTexture: cameraTextures) {
-        SDL_RenderCopy(renderer.get(), cameraTexture.second.second.get(), nullptr,
-                       &cameraTexture.second.first);
-    }
-
     SDL_SetRenderTarget(renderer.get(), nullptr);
     SDL_SetRenderDrawColor(renderer.get(), 0, 0, 0, 255); // RGBA format
     SDL_RenderClear(renderer.get());
     SDL_RenderCopy(renderer.get(), renderTexture.get(), nullptr, nullptr);
     SDL_RenderPresent(renderer.get());
     SDL_SetRenderTarget(renderer.get(), renderTexture.get());
-    SDL_SetRenderDrawColor(renderer.get(), 0, 0, 255, 255); // RGBA format
+    SDL_SetRenderDrawColor(renderer.get(), 0, 0, 0, 255); // RGBA format
     SDL_RenderClear(renderer.get());
 }
 
 std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)> RenderWrapper::GetSpriteTexture(std::string filePath) {
     // Get the file extension
-    size_t dotPos = filePath.find_last_of('.');
+    auto newPath = ConfigSingleton::GetInstance().GetBaseAssetPath() + filePath;
+
+    size_t dotPos = newPath.find_last_of('.');
     if (dotPos == std::string::npos) {
         std::cerr << "Error: Invalid file path (no file extension)" << std::endl;
         return std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)>(nullptr, &SDL_DestroyTexture);
     }
 
-    std::string extension = filePath.substr(dotPos + 1);
+    std::string extension = newPath.substr(dotPos + 1);
 
     if (extension == "bmp") {
-        SDL_Surface *surface = SDL_LoadBMP(filePath.c_str());
+        SDL_Surface *surface = SDL_LoadBMP(newPath.c_str());
         if (surface) {
             std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)> bmpTexture(
                     SDL_CreateTextureFromSurface(renderer.get(), surface), &SDL_DestroyTexture);
@@ -245,7 +219,7 @@ std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)> RenderWrapper::GetSp
             std::cerr << "Error: Failed to load BMP file: " << SDL_GetError() << std::endl;
         }
     } else if (extension == "png") {
-        SDL_Texture *pngTexture = IMG_LoadTexture(renderer.get(), filePath.c_str());
+        SDL_Texture *pngTexture = IMG_LoadTexture(renderer.get(), newPath.c_str());
         std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)> texture(pngTexture, &SDL_DestroyTexture);
         if (pngTexture) {
             return std::move(texture);
@@ -259,7 +233,7 @@ std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)> RenderWrapper::GetSp
     return std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)>(nullptr, &SDL_DestroyTexture);
 }
 
-void RenderWrapper::RenderCamera(CameraComponent &cameraComponent, TransformComponent &transformComponent) {
+void RenderWrapper::RenderCamera(const CameraComponent &cameraComponent, const TransformComponent &transformComponent) {
     auto &backgroundColor = cameraComponent.backgroundColor;
     SDL_SetRenderDrawColor(renderer.get(), backgroundColor->r, backgroundColor->g, backgroundColor->b,
                            backgroundColor->a); // RGBA format
@@ -268,24 +242,75 @@ void RenderWrapper::RenderCamera(CameraComponent &cameraComponent, TransformComp
     auto &texturePair = GetCameraTexturePair(cameraComponent, transformComponent);
 
     SDL_SetRenderTarget(renderer.get(), texturePair.second.get());
-
-    auto width = cameraComponent.size->getX();
-    auto height = cameraComponent.size->getY();
-    auto xPosition = cameraComponent.onScreenPosition->getX() - width / 2;
-    auto yPosition = cameraComponent.onScreenPosition->getY() - height / 2;
-
-    SDL_Rect clearRect = {static_cast<int>(xPosition), static_cast<int>(yPosition), static_cast<int>(width),
-                          static_cast<int>(height)};
-    SDL_RenderFillRect(renderer.get(), &clearRect);
+    SDL_RenderClear(renderer.get());
 }
 
-void RenderWrapper::RenderComponent(CameraComponent &cameraComponent, const SpriteComponent &spriteComponent,
-                                    TransformComponent &transformComponent) {
+std::pair<SDL_Rect, std::unique_ptr<SDL_Texture, void (*)(SDL_Texture *)>> &
+RenderWrapper::GetCameraTexturePair(const CameraComponent &cameraComponent,
+                                    const TransformComponent &transformComponent) {
+    auto cameraTexture = cameraTextures.find(cameraComponent.entityID);
+    if (cameraTexture == cameraTextures.end()) {
+        auto width = cameraComponent.size->getX();
+        auto height = cameraComponent.size->getY();
+        auto xPosition = cameraComponent.onScreenPosition->getX() - width / 2;
+        auto yPosition = cameraComponent.onScreenPosition->getY() - height / 2;
+
+        SDL_Rect rect = {static_cast<int>(xPosition), static_cast<int>(yPosition), static_cast<int>(width),
+                         static_cast<int>(height)};
+        cameraTextures.insert(
+                std::make_pair(cameraComponent.entityID,
+                               std::make_pair(rect, std::unique_ptr<SDL_Texture, void (*)(SDL_Texture *)>(
+                                       SDL_CreateTexture(renderer.get(), SDL_PIXELFORMAT_RGBA8888,
+                                                         SDL_TEXTUREACCESS_TARGET,
+                                                         cameraComponent.size->getX(),
+                                                         cameraComponent.size->getY()),
+                                       [](SDL_Texture *t) { SDL_DestroyTexture(t); }))));
+    }
+    cameraTexture = cameraTextures.find(cameraComponent.entityID);
+    return cameraTexture->second;
+}
+
+void RenderWrapper::RenderCircleCollision(const CameraComponent &cameraComponent,
+                                          const TransformComponent cameraTransformComponent,
+                                          const CircleCollisionComponent &circleCollisionComponent,
+                                          const TransformComponent &transformComponent) {
 
 }
 
-void RenderWrapper::RenderComponent(CameraComponent &cameraComponent, const TextComponent &textComponent,
-                                    TransformComponent &transformComponent) {
+void RenderWrapper::RenderBoxCollision(const CameraComponent &cameraComponent,
+                                       const TransformComponent &cameraTransformComponent,
+                                       const BoxCollisionComponent &boxCollisionComponent,
+                                       const TransformComponent &transformComponent) {
+
+}
+
+void
+RenderWrapper::RenderUiSprite(const SpriteComponent &spriteComponent, const TransformComponent &transformComponent) {
+    if (textures.find(spriteComponent.spritePath) == textures.end())
+        textures.insert(std::make_pair(spriteComponent.spritePath, GetSpriteTexture(spriteComponent.spritePath)));
+    auto texture = textures.find(spriteComponent.spritePath);
+
+    //Fill in a rectangle for the current sprite IN
+    SDL_Rect srcRect;
+    int spriteWidth = spriteComponent.spriteSize->getX();
+    int spriteHeight = spriteComponent.spriteSize->getY();
+    srcRect.x = (spriteComponent.tileOffset->getX() * spriteWidth) +
+                (spriteComponent.margin * spriteComponent.tileOffset->getX());
+    srcRect.y = (spriteComponent.tileOffset->getY() * spriteHeight) +
+                (spriteComponent.margin * spriteComponent.tileOffset->getY());
+    srcRect.w = spriteWidth;
+    srcRect.h = spriteHeight;
+
+    //Create a rectangle were the sprite needs to be rendered on to
+    SDL_Rect destRect = {static_cast<int>(transformComponent.position->getX()),
+                         static_cast<int>(transformComponent.position->getY()),
+                         static_cast<int>(spriteComponent.spriteSize->getX() * transformComponent.scale->getX()),
+                         static_cast<int>(spriteComponent.spriteSize->getY() * transformComponent.scale->getY())};
+
+    SDL_RenderCopy(renderer.get(), texture->second.get(), &srcRect, &destRect);
+}
+
+void RenderWrapper::RenderUiText(const TextComponent &textComponent, const TransformComponent &transformComponent) {
     SDL_Color sdlColor = {
             static_cast<Uint8>(textComponent.color->r),
             static_cast<Uint8>(textComponent.color->g),
@@ -328,38 +353,63 @@ void RenderWrapper::RenderComponent(CameraComponent &cameraComponent, const Text
     SDL_DestroyTexture(texture);
 }
 
-void RenderWrapper::RenderComponent(CameraComponent &cameraComponent, BoxCollisionComponent &boxCollisionComponent,
-                                    TransformComponent &transformComponent) {
+void RenderWrapper::RenderToMainTexture() {
+    SDL_SetRenderTarget(renderer.get(), renderTexture.get());
 
+    for (auto &cameraTexture: cameraTextures) {
+        SDL_RenderCopy(renderer.get(), cameraTexture.second.second.get(), nullptr,
+                       &cameraTexture.second.first);
+    }
 }
 
 void
-RenderWrapper::RenderComponent(CameraComponent &cameraComponent, CircleCollisionComponent &circleCollisionComponent,
-                               TransformComponent &transformComponent) {
+RenderWrapper::RenderSprite(const CameraComponent &cameraComponent, const TransformComponent &cameraTransformComponent,
+                            const SpriteComponent &spriteComponent, const TransformComponent &transformComponent) {
 
+    auto &cameraPosition = cameraTransformComponent.position;
+    auto &cameraSize = cameraComponent.size;
+    auto &spritePosition = transformComponent.position;
+    auto &spriteSize = spriteComponent.spriteSize;
+
+    if (spritePosition->getX() + spriteSize->getX() / 2 < cameraPosition->getX() - cameraSize->getX() / 2 ||
+        spritePosition->getX() - spriteSize->getX() / 2 > cameraPosition->getX() + cameraSize->getX() / 2 ||
+        spritePosition->getY() + spriteSize->getY() / 2 < cameraPosition->getY() - cameraSize->getY() / 2 ||
+        spritePosition->getY() - spriteSize->getY() / 2 > cameraPosition->getY() + cameraSize->getY() / 2)
+        return;
+
+    if (textures.find(spriteComponent.spritePath) == textures.end())
+        textures.insert(std::make_pair(spriteComponent.spritePath, GetSpriteTexture(spriteComponent.spritePath)));
+    auto texture = textures.find(spriteComponent.spritePath);
+
+    //Fill in a rectangle for the current sprite IN
+    SDL_Rect srcRect;
+    int spriteWidth = spriteComponent.spriteSize->getX();
+    int spriteHeight = spriteComponent.spriteSize->getY();
+    srcRect.x = (spriteComponent.tileOffset->getX() * spriteWidth) +
+                (spriteComponent.margin * spriteComponent.tileOffset->getX());
+    srcRect.y = (spriteComponent.tileOffset->getY() * spriteHeight) +
+                (spriteComponent.margin * spriteComponent.tileOffset->getY());
+    srcRect.w = spriteWidth;
+    srcRect.h = spriteHeight;
+
+
+    auto width = spriteComponent.spriteSize->getX() * transformComponent.scale->getX();
+    auto height = spriteComponent.spriteSize->getY() * transformComponent.scale->getY();
+    //Create a rectangle were the sprite needs to be rendered on to
+    SDL_Rect destRect = {
+            static_cast<int>(transformComponent.position->getX() - cameraTransformComponent.position->getX() +
+                             cameraComponent.size->getX() / 2 - width / 2),
+            static_cast<int>(transformComponent.position->getY() - cameraTransformComponent.position->getY() +
+                             cameraComponent.size->getY() / 2 - height / 2),
+            static_cast<int>(width),
+            static_cast<int>(height)};
+
+    SDL_RenderCopy(renderer.get(), texture->second.get(), &srcRect, &destRect);
 }
 
-std::pair<SDL_Rect, std::unique_ptr<SDL_Texture, void (*)(SDL_Texture *)>> &
-RenderWrapper::GetCameraTexturePair(CameraComponent &cameraComponent, TransformComponent &transformComponent) {
-    auto cameraTexture = cameraTextures.find(cameraComponent.entityID);
-    if (cameraTexture == cameraTextures.end()) {
-        auto width = cameraComponent.size->getX();
-        auto height = cameraComponent.size->getY();
-        auto xPosition = cameraComponent.onScreenPosition->getX() - width / 2;
-        auto yPosition = cameraComponent.onScreenPosition->getY() - height / 2;
+void
+RenderWrapper::RenderText(const CameraComponent &cameraComponent, const TransformComponent &cameraTransformComponent,
+                          const TextComponent &textComponent, const TransformComponent &transformComponent) {
 
-        SDL_Rect rect = {static_cast<int>(xPosition), static_cast<int>(yPosition), static_cast<int>(width),
-                         static_cast<int>(height)};
-        cameraTextures.insert(
-                std::make_pair(cameraComponent.entityID,
-                               std::make_pair(rect, std::unique_ptr<SDL_Texture, void (*)(SDL_Texture *)>(
-                                       SDL_CreateTexture(renderer.get(), SDL_PIXELFORMAT_RGBA8888,
-                                                         SDL_TEXTUREACCESS_TARGET,
-                                                         cameraComponent.size->getX(),
-                                                         cameraComponent.size->getY()),
-                                       [](SDL_Texture *t) { SDL_DestroyTexture(t); }))));
-    }
-    cameraTexture = cameraTextures.find(cameraComponent.entityID);
-    return cameraTexture->second;
 }
 

@@ -35,7 +35,7 @@ void BrackEngine::Run() {
         FPSSingleton::GetInstance().Start();
         SystemManager::GetInstance().UpdateSystems(GetDeltaTime());
         FPSSingleton::GetInstance().End();
-        Logger::Info("FPS: " + std::to_string(FPSSingleton::GetInstance().GetFPS()));
+//        Logger::Info("FPS: " + std::to_string(FPSSingleton::GetInstance().GetFPS()));
         if (ConfigSingleton::GetInstance().ShowFPS())
             UpdateFPS();
     }
@@ -64,8 +64,6 @@ void BrackEngine::CreateFPS() {
     objectInfoComponent->entityID = entityId;
     textComponent->entityID = entityId;
 
-    transformComponent->position = std::make_unique<Vector2>(100, 0);
-
     objectInfoComponent->name = "FPS";
     objectInfoComponent->tag = "FPS";
 
@@ -79,7 +77,8 @@ void BrackEngine::CreateFPS() {
 }
 
 void BrackEngine::UpdateFPS() {
-    auto& textComponent = ComponentStore::GetInstance().tryGetComponent<TextComponent>(1);
+    auto &textComponent = ComponentStore::GetInstance().tryGetComponent<TextComponent>(
+            1);//TODO ophalen met tag of name van component
     auto fakk = std::to_string(FPSSingleton::GetInstance().GetFPS());
 
     textComponent.text = fakk;

@@ -35,24 +35,24 @@ public:
     }
 
     template<typename T>
-    T& tryGetComponent(uint32_t entity) {
+    T &tryGetComponent(uint32_t entity) {
         auto itType = components.find(typeid(T));
         if (itType != components.end()) {
             auto itEntity = itType->second.find(entity);
             if (itEntity != itType->second.end()) {
                 // Cast and return a reference to the managed object
-                return *static_cast<T*>(itEntity->second.get());
+                return *static_cast<T *>(itEntity->second.get());
             }
         }
         throw std::runtime_error("Component not found");
     }
 
     template<typename BaseT>
-    std::vector<BaseT*> getAllComponentsOfType() {
-        std::vector<BaseT*> result;
-        for (auto& [type, map] : components) {
-            for (auto& [id, comp] : map) {
-                BaseT* casted = dynamic_cast<BaseT*>(comp.get());
+    std::vector<BaseT *> getAllComponentsOfType() {
+        std::vector<BaseT *> result;
+        for (auto &[type, map]: components) {
+            for (auto &[id, comp]: map) {
+                BaseT *casted = dynamic_cast<BaseT *>(comp.get());
                 if (casted) {
                     result.push_back(casted);
                 }
@@ -60,7 +60,6 @@ public:
         }
         return result;
     }
-
 
 
     template<typename T>
@@ -86,7 +85,9 @@ public:
 
 private:
     static ComponentStore instance;
+
     ComponentStore() = default;
+
     std::unordered_map<std::type_index, std::unordered_map<uint32_t, std::unique_ptr<IComponent>>> components;
 };
 
