@@ -274,7 +274,38 @@ void RenderWrapper::RenderCircleCollision(const CameraComponent &cameraComponent
                                           const TransformComponent cameraTransformComponent,
                                           const CircleCollisionComponent &circleCollisionComponent,
                                           const TransformComponent &transformComponent) {
+#if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
+    auto &cameraPosition = cameraTransformComponent.position;
+    auto &cameraSize = cameraComponent.size;
+    auto &spritePosition = transformComponent.position;
+    auto &circleSize = circleCollisionComponent.radius;
+    auto sizeX = circleSize->getX() * transformComponent.scale->getX();
+    auto sizeY = circleSize->getY() * transformComponent.scale->getY();
 
+    if (spritePosition->getX() + sizeX / 2 < cameraPosition->getX() - cameraSize->getX() / 2 ||
+        spritePosition->getX() - sizeX / 2 > cameraPosition->getX() + cameraSize->getX() / 2 ||
+        spritePosition->getY() + sizeY / 2 < cameraPosition->getY() - cameraSize->getY() / 2 ||
+        spritePosition->getY() - sizeY / 2 > cameraPosition->getY() + cameraSize->getY() / 2)
+        return;
+
+    SDL_SetRenderDrawColor(renderer.get(), 255, 0, 0, 255);
+    double angle = 0.0;
+    double step = 0.005;  // Angle step for plotting points
+
+    auto centerX = transformComponent.position->getX() - cameraTransformComponent.position->getX() +
+                   cameraComponent.size->getX() / 2;
+    auto centerY = transformComponent.position->getY() - cameraTransformComponent.position->getY() +
+                   cameraComponent.size->getY() / 2;
+    // Plot points along the ellipse boundary
+    while (angle < 2 * M_PI) {
+        int x = static_cast<int>(centerX + circleCollisionComponent.radius->getX() * cos(angle));
+        int y = static_cast<int>(centerY + circleCollisionComponent.radius->getY() * sin(angle));
+
+        SDL_RenderDrawPoint(renderer.get(), x, y);
+
+        angle += step;
+    }
+#endif
 }
 
 void RenderWrapper::RenderBoxCollision(const CameraComponent &cameraComponent,
