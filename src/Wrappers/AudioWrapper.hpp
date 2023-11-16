@@ -31,7 +31,7 @@ private:
     FMOD::System *system;
     std::unordered_map<int, FMOD::Channel*> soundEffectsChannelMap;
     std::pair<int, FMOD::Channel*> soundTrackChannelPair;
-    int soundTrackChannel = 30;
+    int soundTrackChannel = 10;
 };
 
 

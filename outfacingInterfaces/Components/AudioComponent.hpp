@@ -13,7 +13,7 @@
 
 struct AudioComponent : public AudioArchetype {
 protected:
-    explicit AudioComponent(std::string path, bool looping) : AudioArchetype(), audioPath(std::move(path)), isLooping(looping) {}
+    explicit AudioComponent(std::string path, bool isSoundTrack) : AudioArchetype(), audioPath(std::move(path)), isSoundTrack(isSoundTrack) {}
 
 public:
     ~AudioComponent() = default;
@@ -29,10 +29,9 @@ public:
 
     bool startPlaying = false;
     float volume;
-    bool isSoundTrack;
 
-    bool getIsLooping() const {
-        return isLooping;
+    bool getIsSoundTrack() const {
+        return isSoundTrack;
     }
 
     std::string getAudioPath() const{
@@ -41,7 +40,7 @@ public:
 
 private:
     const std::string audioPath;
-    const bool isLooping;
+    const bool isSoundTrack;
 };
 
 #endif //BRACK_ENGINE_AUDIOCOMPONENT_HPP

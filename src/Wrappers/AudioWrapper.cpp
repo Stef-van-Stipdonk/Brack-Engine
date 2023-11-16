@@ -73,35 +73,28 @@ void AudioWrapper::PlaySound(AudioComponent &audioComponent) {
         return;
     }
 
-    if (audioComponent.isSoundTrack) {
-        if (soundTrackChannel < availableSFXChannels) {
-            Logger::Error("SoundTrack channel should be greater than available SFX channels.");
-            return;
-        }
-
+    if (audioComponent.getIsSoundTrack()) {
         soundTrackChannelPair.first = soundTrackChannel; // Set the channel ID
         soundTrackChannelPair.second->setVolume(audioComponent.volume); // Set volume
 
-        // Check if there's an existing SoundTrack channel pair
-        if (soundTrackChannelPair.second) {
-            soundTrackChannelPair.second->stop(); // Stop the current SoundTrack
-        }
-
         FMOD::Sound* sound = nullptr;
-        FMOD_RESULT result = system->createSound(audioComponent.getAudioPath().c_str(), FMOD_DEFAULT, 0, &sound);
+        FMOD_MODE mode = audioComponent.getIsSoundTrack() ? FMOD_LOOP_NORMAL : FMOD_DEFAULT; // Set looping for SoundTrack
+
+        FMOD_RESULT result = system->createSound(audioComponent.getAudioPath().c_str(), mode, 0, &sound);
 
         if (result != FMOD_OK) {
             Logger::Error("Failed to create sound: " + std::string(FMOD_ErrorString(result)));
             return;
         }
 
-        result = system->playSound(sound, nullptr, true, &soundTrackChannelPair.second);
+        result = system->playSound(sound, nullptr, false, &soundTrackChannelPair.second);
 
         if (result != FMOD_OK) {
             Logger::Error("Failed to play sound on SoundTrack channel: " + std::string(FMOD_ErrorString(result)));
             return;
         }
-        Logger::Debug("Uploaded sound to Soundtrack Channel: " + std::to_string(soundTrackChannel) + ", Path: " + audioComponent.getAudioPath());
+
+        Logger::Debug("Uploaded sound to Soundtrack Channel: " + std::to_string(soundTrackChannelPair.first) + ", Path: " + audioComponent.getAudioPath());
     } else { // SoundEffect
         // Find an available SFX channel to play the sound
         int channelID = FindAvailableSFXChannel();

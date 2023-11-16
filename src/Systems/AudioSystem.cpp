@@ -14,8 +14,8 @@ AudioSystem::~AudioSystem() {
 }
 
 void AudioSystem::Update(float deltaTime) {
-    auto archetypes = ComponentStore::GetInstance().getAllComponentsOfType<AudioComponent>();
-    for(auto audioComponent : archetypes){
+    auto audiocomponents = ComponentStore::GetInstance().getAllComponentsOfType<AudioComponent>();
+    for(auto audioComponent : audiocomponents){
         if(audioComponent->startPlaying){
             audioComponent->startPlaying = false;
             audioWrapper->PlaySound(*audioComponent);
