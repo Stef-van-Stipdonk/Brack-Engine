@@ -59,7 +59,7 @@ bool RenderWrapper::Initialize() {
         return false;
     }
 
-//    SDL_SetRenderDrawBlendMode(renderer.get(), SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawBlendMode(renderer.get(), SDL_BLENDMODE_BLEND);
     renderTexture = std::unique_ptr<SDL_Texture, void (*)(SDL_Texture *)>(
             SDL_CreateTexture(renderer.get(), SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,
                               ConfigSingleton::GetInstance().GetWindowSize().getX(),
@@ -80,109 +80,6 @@ void RenderWrapper::Cleanup() {
     SDL_Quit();
     TTF_Quit();
     IMG_Quit();
-}
-
-//void RenderWrapper::RenderCamera(CameraComponent *camera) {
-//    auto &backgroundColor = camera->backgroundColor;
-//    SDL_SetRenderDrawColor(renderer.get(), backgroundColor->r, backgroundColor->g, backgroundColor->b,
-//                           backgroundColor->a); // RGBA format
-//
-//    // Clear the screen with the background color.
-//    SDL_RenderClear(renderer.get());
-//
-//    int windowWidth, windowHeight;
-//    SDL_GetWindowSize(window.get(), &windowWidth, &windowHeight);
-//
-//    if (windowWidth != camera->size.getX() || windowHeight != camera->size.getY()) {
-//        int centerX = SDL_WINDOWPOS_CENTERED;
-//        int centerY = SDL_WINDOWPOS_CENTERED;
-//        SDL_SetWindowSize(window.get(), camera->size.getX(), camera->size.getY());
-//        SDL_SetWindowPosition(window.get(), centerX, centerY);
-//    }
-//}
-
-void RenderWrapper::RenderSprite(SpriteComponent &sprite) {
-    //Check if the texture is already created. If not add it to the created textures
-
-}
-
-void RenderWrapper::RenderText(TextComponent &textComponent, TransformComponent &transformComponent) {
-    SDL_Color sdlColor = {
-            static_cast<Uint8>(textComponent.color->r),
-            static_cast<Uint8>(textComponent.color->g),
-            static_cast<Uint8>(textComponent.color->b),
-            static_cast<Uint8>(textComponent.color->a)
-    };
-
-    TTF_Font *font = nullptr;
-    const std::string &fontPath = textComponent.fontPath;
-    int fontSize = textComponent.fontSize;
-
-    auto &sizeMap = fontCache[fontPath];
-    if (sizeMap.count(fontSize) != 0) {
-        font = sizeMap[fontSize];
-    } else {
-        font = TTF_OpenFont(fontPath.c_str(), fontSize);
-        if (!font) {
-            std::string baseFontPath = ConfigSingleton::GetInstance().GetBaseAssetPath() + "Fonts/Arial.ttf";
-            font = TTF_OpenFont(baseFontPath.c_str(), fontSize);
-        }
-        sizeMap[fontSize] = font;
-    }
-
-    SDL_Surface *surface = TTF_RenderText_Solid(font, textComponent.text.c_str(), sdlColor);
-
-    if (!surface) {
-        std::cerr << "TTF_RenderText_Solid Error: " << TTF_GetError() << std::endl;
-    }
-
-    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer.get(), surface);
-    if (!texture) {
-        std::cerr << "SDL_CreateTextureFromSurface Error: " << SDL_GetError() << std::endl;
-    }
-
-    SDL_Rect rect = {static_cast<int>(transformComponent.position->getX()),
-                     static_cast<int>(transformComponent.position->getY()), surface->w, surface->h};
-    SDL_RenderCopy(renderer.get(), texture, nullptr, &rect);
-
-    SDL_FreeSurface(surface);
-    SDL_DestroyTexture(texture);
-}
-
-void RenderWrapper::RenderBoxCollisionComponents(BoxCollisionComponent &boxCollisionComponent,
-                                                 TransformComponent &transformComponent) {
-#if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
-    SDL_Rect buttonRect = {
-            static_cast<int>(transformComponent.position->getX()),
-            static_cast<int>(transformComponent.position->getY()),
-            static_cast<int>(boxCollisionComponent.size->getX()),
-            static_cast<int>(boxCollisionComponent.size->getY())};
-
-    // Render the button background (you can customize this part)
-    SDL_SetRenderDrawColor(renderer.get(), 255, 0, 0, 255);
-    SDL_RenderDrawRect(renderer.get(), &buttonRect);
-#endif
-}
-
-void RenderWrapper::RenderCircleCollisionComponents(CircleCollisionComponent &circleCollisionComponent,
-                                                    TransformComponent &transformComponent) {
-#if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
-    SDL_SetRenderDrawColor(renderer.get(), 255, 0, 0, 255);
-    double angle = 0.0;
-    double step = 0.005;  // Angle step for plotting points
-
-    auto centerX = transformComponent.position->getX() + circleCollisionComponent.radius->getX();
-    auto centerY = transformComponent.position->getY() + circleCollisionComponent.radius->getY();
-    // Plot points along the ellipse boundary
-    while (angle < 2 * M_PI) {
-        int x = static_cast<int>(centerX + circleCollisionComponent.radius->getX() * cos(angle));
-        int y = static_cast<int>(centerY + circleCollisionComponent.radius->getY() * sin(angle));
-
-        SDL_RenderDrawPoint(renderer.get(), x, y);
-
-        angle += step;
-    }
-#endif
 }
 
 void RenderWrapper::RenderFrame() {
@@ -271,7 +168,7 @@ RenderWrapper::GetCameraTexturePair(const CameraComponent &cameraComponent,
 }
 
 void RenderWrapper::RenderCircleCollision(const CameraComponent &cameraComponent,
-                                          const TransformComponent cameraTransformComponent,
+                                          const TransformComponent &cameraTransformComponent,
                                           const CircleCollisionComponent &circleCollisionComponent,
                                           const TransformComponent &transformComponent) {
 #if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG

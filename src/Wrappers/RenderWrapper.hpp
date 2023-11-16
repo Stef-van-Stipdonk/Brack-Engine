@@ -45,7 +45,7 @@ public:
                             const TransformComponent &transformComponent);
 
     void
-    RenderCircleCollision(const CameraComponent &cameraComponent, const TransformComponent cameraTransformComponent,
+    RenderCircleCollision(const CameraComponent &cameraComponent, const TransformComponent &cameraTransformComponent,
                           const CircleCollisionComponent &circleCollisionComponent,
                           const TransformComponent &transformComponent);
 
@@ -56,21 +56,10 @@ public:
 
     void RenderUiRectangle(const RectangleComponent &rectangleComponent, const TransformComponent &transformComponent);
 
-    void RenderSprite(SpriteComponent &sprite);
-
-    void RenderText(TextComponent &textComponent, TransformComponent &transformComponent);
-
-    void RenderButton(TextComponent &button);
 
     void RenderToMainTexture();
 
     void RenderFrame();
-
-    void
-    RenderBoxCollisionComponents(BoxCollisionComponent &boxCollisionComponent, TransformComponent &transformComponent);
-
-    void RenderCircleCollisionComponents(CircleCollisionComponent &circleCollisionComponent,
-                                         TransformComponent &transformComponent);
 
     static void Cleanup();
 
