@@ -370,11 +370,13 @@ RenderWrapper::RenderSprite(const CameraComponent &cameraComponent, const Transf
     auto &cameraSize = cameraComponent.size;
     auto &spritePosition = transformComponent.position;
     auto &spriteSize = spriteComponent.spriteSize;
+    auto sizeX = spriteSize->getX() * transformComponent.scale->getX();
+    auto sizeY = spriteSize->getY() * transformComponent.scale->getY();
 
-    if (spritePosition->getX() + spriteSize->getX() / 2 < cameraPosition->getX() - cameraSize->getX() / 2 ||
-        spritePosition->getX() - spriteSize->getX() / 2 > cameraPosition->getX() + cameraSize->getX() / 2 ||
-        spritePosition->getY() + spriteSize->getY() / 2 < cameraPosition->getY() - cameraSize->getY() / 2 ||
-        spritePosition->getY() - spriteSize->getY() / 2 > cameraPosition->getY() + cameraSize->getY() / 2)
+    if (spritePosition->getX() + sizeX / 2 < cameraPosition->getX() - cameraSize->getX() / 2 ||
+        spritePosition->getX() - sizeX / 2 > cameraPosition->getX() + cameraSize->getX() / 2 ||
+        spritePosition->getY() + sizeY / 2 < cameraPosition->getY() - cameraSize->getY() / 2 ||
+        spritePosition->getY() - sizeY / 2 > cameraPosition->getY() + cameraSize->getY() / 2)
         return;
 
     if (textures.find(spriteComponent.spritePath) == textures.end())
