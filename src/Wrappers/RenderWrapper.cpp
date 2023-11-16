@@ -412,6 +412,63 @@ RenderWrapper::RenderSprite(const CameraComponent &cameraComponent, const Transf
 void
 RenderWrapper::RenderText(const CameraComponent &cameraComponent, const TransformComponent &cameraTransformComponent,
                           const TextComponent &textComponent, const TransformComponent &transformComponent) {
+    SDL_Color sdlColor = {
+            static_cast<Uint8>(textComponent.color->r),
+            static_cast<Uint8>(textComponent.color->g),
+            static_cast<Uint8>(textComponent.color->b),
+            static_cast<Uint8>(textComponent.color->a)
+    };
 
+    TTF_Font *font = nullptr;
+    const std::string &fontPath = textComponent.fontPath;
+    int fontSize = textComponent.fontSize;
+
+    auto &sizeMap = fontCache[fontPath];
+    if (sizeMap.count(fontSize) != 0) {
+        font = sizeMap[fontSize];
+    } else {
+        font = TTF_OpenFont(fontPath.c_str(), fontSize);
+        if (!font) {
+            std::string baseFontPath = ConfigSingleton::GetInstance().GetBaseAssetPath() + "Fonts/Arial.ttf";
+            font = TTF_OpenFont(baseFontPath.c_str(), fontSize);
+        }
+        sizeMap[fontSize] = font;
+    }
+
+    SDL_Surface *surface = TTF_RenderText_Solid(font, textComponent.text.c_str(), sdlColor);
+
+    if (!surface) {
+        std::cerr << "TTF_RenderText_Solid Error: " << TTF_GetError() << std::endl;
+    }
+
+    auto &cameraPosition = cameraTransformComponent.position;
+    auto &cameraSize = cameraComponent.size;
+    auto &textPosition = transformComponent.position;
+    auto sizeX = surface->w;
+    auto sizeY = surface->h;
+
+    if (textPosition->getX() + sizeX / 2 < cameraPosition->getX() - cameraSize->getX() / 2 ||
+        textPosition->getX() - sizeX / 2 > cameraPosition->getX() + cameraSize->getX() / 2 ||
+        textPosition->getY() + sizeY / 2 < cameraPosition->getY() - cameraSize->getY() / 2 ||
+        textPosition->getY() - sizeY / 2 > cameraPosition->getY() + cameraSize->getY() / 2)
+        return;
+
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer.get(), surface);
+    if (!texture) {
+        std::cerr << "SDL_CreateTextureFromSurface Error: " << SDL_GetError() << std::endl;
+    }
+
+    SDL_Rect rect = {
+            static_cast<int>(transformComponent.position->getX() - cameraTransformComponent.position->getX() +
+                             cameraComponent.size->getX() / 2 - sizeX / 2),
+            static_cast<int>(transformComponent.position->getY() - cameraTransformComponent.position->getY() +
+                             cameraComponent.size->getY() / 2 - sizeY / 2),
+            static_cast<int>(sizeX),
+            static_cast<int>(sizeY)};
+    
+    SDL_RenderCopy(renderer.get(), texture, nullptr, &rect);
+
+    SDL_FreeSurface(surface);
+    SDL_DestroyTexture(texture);
 }
 
