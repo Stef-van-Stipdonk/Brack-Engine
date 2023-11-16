@@ -4,14 +4,15 @@ project(Brack_Engine)
 set(CMAKE_CXX_STANDARD 17)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules")
+set(BOX2D_PATH "${CMAKE_CURRENT_SOURCE_DIR}/lib/Box2d")
 
-add_subdirectory(lib/Box2d)
 if (WIN32 OR WIN64)
     set(SDL2_PATH "${CMAKE_CURRENT_SOURCE_DIR}/lib/SDL")
     set(SDL2_TTF_PATH "${CMAKE_CURRENT_SOURCE_DIR}/lib/SDL")
     set(SDL2_IMAGE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/lib/SDL")
+    add_subdirectory(${BOX2D_PATH})
 
-    include_directories(${SDL2_INCLUDE_DIR} ${SDL2_TTF_INCLUDE_DIR} ${SDL2_IMAGE_DIR})
+    include_directories(${SDL2_INCLUDE_DIR} ${SDL2_TTF_INCLUDE_DIR} ${SDL2_IMAGE_DIR} ${BOX2D_PATH})
 
     find_package(SDL2 REQUIRED)
     find_package(SDL2_ttf REQUIRED)
@@ -23,6 +24,7 @@ else ()
     pkg_check_modules(SDL2 REQUIRED sdl2)
     include_directories(${SDL2_INCLUDE_DIRS})
     link_directories(${SDL2_LIBRARY_DIRS})
+    add_subdirectory(${BOX2D_PATH})
 endif ()
 
 add_library(${PROJECT_NAME} SHARED
@@ -107,6 +109,9 @@ add_library(${PROJECT_NAME} SHARED
         src/Helpers/UserLogger.cpp
         outfacingInterfaces/Helpers/UserLogger.hpp
         outfacingInterfaces/Components/RectangleComponent.hpp
+        src/Wrappers/ContactListener.cpp
+        src/Wrappers/ContactListener.hpp
+        src/Wrappers/ContactListener.hpp
 )
 
 option(USER_LOG_TO_FILE "Enable user logging to a file" OFF)
@@ -186,7 +191,7 @@ endif ()
 target_link_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/FMod)
 target_link_libraries(${PROJECT_NAME} PRIVATE fmod)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_TTF_LIBRARIES})
-target_link_libraries(${PROJECT_NAME} PRIVATE box2d)
 
+target_link_libraries(${PROJECT_NAME} PRIVATE box2d)
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/outfacingInterfaces)

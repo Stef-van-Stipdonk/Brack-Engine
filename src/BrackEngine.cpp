@@ -14,6 +14,7 @@
 #include "Systems/BehaviourScriptSystem.hpp"
 #include "Systems/ClickSystem.hpp"
 #include "Systems/AudioSystem.hpp"
+#include "Systems/PhysicsSystem.hpp"
 
 BrackEngine::BrackEngine(Config &&config) {
 
@@ -24,6 +25,7 @@ BrackEngine::BrackEngine(Config &&config) {
     SystemManager::GetInstance().AddSystem(std::make_shared<BehaviourScriptSystem>());
     SystemManager::GetInstance().AddSystem(std::make_shared<MovementSystem>());
     SystemManager::GetInstance().AddSystem(std::make_shared<RenderingSystem>());
+    SystemManager::GetInstance().AddSystem(std::make_shared<PhysicsSystem>());
 
     lastTime = std::chrono::high_resolution_clock::now();
 
@@ -37,7 +39,7 @@ void BrackEngine::Run() {
         FPSSingleton::GetInstance().Start();
         SystemManager::GetInstance().UpdateSystems(GetDeltaTime());
         FPSSingleton::GetInstance().End();
-        Logger::Info("FPS: " + std::to_string(FPSSingleton::GetInstance().GetFPS()));
+        //Logger::Info("FPS: " + std::to_string(FPSSingleton::GetInstance().GetFPS()));
         if (ConfigSingleton::GetInstance().ShowFPS())
             UpdateFPS();
     }
@@ -75,7 +77,7 @@ void BrackEngine::CreateFPS() {
 }
 
 void BrackEngine::UpdateFPS() {
-    auto& textComponent = ComponentStore::GetInstance().tryGetComponent<TextComponent>(1);
+    auto &textComponent = ComponentStore::GetInstance().tryGetComponent<TextComponent>(1);
     auto fakk = std::to_string(FPSSingleton::GetInstance().GetFPS());
 
     textComponent.text = fakk;

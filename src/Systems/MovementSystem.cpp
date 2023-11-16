@@ -21,7 +21,7 @@ void MovementSystem::Update(float deltaTime) {
         if (velocityComponent.velocity == Vector2(0, 0)) {
             continue;
         }
-        auto transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(entity);
+        auto &transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(entity);
         transformComponent.position = std::make_unique<Vector2>(
                 *transformComponent.position + velocityComponent.velocity * deltaTime
         );
