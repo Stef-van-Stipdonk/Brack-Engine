@@ -25,7 +25,10 @@ public:
 
     ComponentStore &operator=(ComponentStore &&) = delete;
 
-    static ComponentStore &GetInstance();
+    static ComponentStore &GetInstance() {
+        static ComponentStore instance;
+        return instance;
+    }
 
     ~ComponentStore() = default;
 
