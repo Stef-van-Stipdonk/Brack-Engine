@@ -14,38 +14,11 @@ AudioSystem::~AudioSystem() {
 }
 
 void AudioSystem::Update(float deltaTime) {
-    auto entities = ComponentStore::GetInstance().getEntitiesWithComponent<AudioComponent>();
-    for(auto entity : entities){
-        auto audioComponent = ComponentStore::GetInstance().tryGetComponent<AudioComponent>(entity);
-        if(!audioWrapper->IsInitialized(audioComponent)){
-            if(audioWrapper->IsValidAudioPath(audioComponent)){
-                audioWrapper->UploadSound(audioComponent);
-            }
-        }
-
-        if(audioComponent.shouldBePlaying && !audioComponent.isPlaying){
-            audioWrapper->PlaySound(audioComponent);
-            audioComponent.isPlaying = true;
-        }
-
-        if(!audioComponent.shouldBePlaying && audioComponent.isPlaying){
-            audioWrapper->PauseSound(audioComponent);
-            audioComponent.isPlaying = false;
-        }
-
-        if (audioWrapper->GetVolume(audioComponent) != audioComponent.volume) {
-            audioWrapper->SetVolume(audioComponent, audioComponent.volume);
-        }
-
-        if (audioWrapper->GetLooping(audioComponent) != audioComponent.isLooping) {
-            audioWrapper->SetLooping(audioComponent, audioComponent.isLooping);
-        }
-
-        if(!audioComponent.isLooping){
-            if(audioWrapper->HasSoundFinished(audioComponent)){
-                audioComponent.isPlaying = false;
-                audioComponent.shouldBePlaying = false;
-            }
+    auto archetypes = ComponentStore::GetInstance().getAllComponentsOfType<AudioComponent>();
+    for(auto audioComponent : archetypes){
+        if(audioComponent->startPlaying){
+            audioComponent->startPlaying = false;
+            audioWrapper->PlaySound(*audioComponent);
         }
     }
 }
@@ -58,8 +31,7 @@ void AudioSystem::CleanUp() {
     auto entities = ComponentStore::GetInstance().getEntitiesWithComponent<AudioComponent>();
     for(auto entity : entities){
         auto audioComponent = ComponentStore::GetInstance().tryGetComponent<AudioComponent>(entity);
-            audioWrapper->RemoveSound(audioComponent);
-            audioComponent.isPlaying = false;
+            audioComponent.startPlaying = false;
     }
     audioWrapper->CleanUp();
 }

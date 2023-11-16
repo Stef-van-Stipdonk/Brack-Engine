@@ -38,6 +38,10 @@ std::string ConfigSingleton::GetBaseAssetPath() const {
     return BaseAssetPath;
 }
 
+int ConfigSingleton::getAmountOfSFXChannels() const {
+    return amountOfSFXChannels;
+}
+
 void ConfigSingleton::SetConfig(Config config) {
     isRunning = config.isRunning;
     windowTitle = config.windowTitle;
@@ -45,6 +49,7 @@ void ConfigSingleton::SetConfig(Config config) {
     fullscreen = config.fullscreen;
     BaseAssetPath = config.BaseAssetPath;
     showFPS = config.showFPS;
+    amountOfSFXChannels = config.amountOfSFXChannels;
 }
 
 bool ConfigSingleton::ShowFPS() const {

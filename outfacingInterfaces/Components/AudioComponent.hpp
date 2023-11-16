@@ -12,9 +12,10 @@
 #include <utility>
 
 struct AudioComponent : public AudioArchetype {
+protected:
+    explicit AudioComponent(std::string path, bool looping) : AudioArchetype(), audioPath(std::move(path)), isLooping(looping) {}
 
-    explicit AudioComponent(std::string  path, const int channel, bool isSoundTrack) : AudioArchetype(), audioPath(std::move(path)), channel(channel), isSoundTrack(isSoundTrack) {}
-
+public:
     ~AudioComponent() = default;
 
     void Accept(ComponentVisitor &visitor) override {
@@ -25,14 +26,22 @@ struct AudioComponent : public AudioArchetype {
         return std::make_unique<AudioComponent>(*this);
     }
 
-    std::string audioPath;
-    bool isLooping = false;
-    bool isPlaying = false;
-    bool shouldBePlaying = false;
-    bool isSoundTrack = false;
+
+    bool startPlaying = false;
     float volume;
-    int duration;
-    int channel;
+    bool isSoundTrack;
+
+    bool getIsLooping() const {
+        return isLooping;
+    }
+
+    std::string getAudioPath() const{
+        return audioPath;
+    }
+
+private:
+    const std::string audioPath;
+    const bool isLooping;
 };
 
 #endif //BRACK_ENGINE_AUDIOCOMPONENT_HPP

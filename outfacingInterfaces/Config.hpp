@@ -20,6 +20,7 @@ public:
     bool fullscreen = false;
     std::string BaseAssetPath = "../../Brackocalypse/Assets/";
     bool showFPS = true;
+    int amountOfSFXChannels = 3;
 };
 
 

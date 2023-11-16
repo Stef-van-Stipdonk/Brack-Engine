@@ -11,7 +11,7 @@
 #include <vector>
 #include <memory>
 #include <unordered_map>
-
+#include "../ConfigSingleton.hpp"
 
 class AudioWrapper {
 public:
@@ -21,36 +21,17 @@ public:
 
     void CleanUp();
 
-    void UploadSound(AudioComponent &audioComponent);
-
-    void RemoveSound(AudioComponent &audioComponent);
-
-    void PauseSound(AudioComponent &audioComponent);
-
     void PlaySound(AudioComponent &audioComponent);
 
-    void StopSound(AudioComponent &audioComponent);
-
-    float GetVolume(AudioComponent &audioComponent);
-
-    void SetVolume(AudioComponent &audioComponent, float volume);
-
-    bool GetLooping(const AudioComponent &audioComponent) ;
-
-    void SetLooping(AudioComponent &audioComponent, bool loop);
-
-    bool HasSoundFinished(const AudioComponent& audioComponent);
-
-    bool IsInitialized(const AudioComponent& audioComponent);
-
     bool IsValidAudioPath(const AudioComponent& audioComponent);
+
+    int FindAvailableSFXChannel() const;
 
 private:
     FMOD::System *system;
     std::unordered_map<int, FMOD::Channel*> soundEffectsChannelMap;
     std::pair<int, FMOD::Channel*> soundTrackChannelPair;
-    int soundTrackChannel = 1;
-    FMOD::Channel* FindAssociatedFMODChannel(int intChannel);
+    int soundTrackChannel = 30;
 };
 
 
