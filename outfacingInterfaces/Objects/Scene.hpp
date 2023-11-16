@@ -29,13 +29,11 @@ public:
 
     void RemoveGameObject(GameObject &gameObject);
 
-    Camera &GetMainCamera();
+    void SetCamera(std::unique_ptr<Camera> camera);
 
-    void SetCamera(Camera &camera);
-
+    std::unique_ptr<Camera> mainCamera;
 private:
     std::vector<std::unique_ptr<GameObject>> gameObjects;
-    Camera mainCamera;
 };
 
 

@@ -17,6 +17,8 @@ struct PersistenceTag : public IComponent {
         return std::make_unique<PersistenceTag>(*this);
     }
 
+    PersistenceTag(const PersistenceTag& other) : IComponent(other) {}
+
     void Accept(ComponentVisitor &visitor) override {
         visitor.visit(*this);
     }

@@ -16,7 +16,7 @@ struct CameraComponent : public VelocityComponent {
 
     ~CameraComponent() override = default;
 
-    CameraComponent(const CameraComponent &other) {
+    CameraComponent(const CameraComponent &other) : VelocityComponent(other) {
         size = std::make_unique<Vector2>(*other.size);
         backgroundColor = std::make_unique<Color>(*other.backgroundColor);
     }

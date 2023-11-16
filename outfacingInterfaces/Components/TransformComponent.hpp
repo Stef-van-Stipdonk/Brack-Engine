@@ -31,7 +31,7 @@ struct TransformComponent : public IComponent {
         visitor.visit(*this);
     }
 
-    TransformComponent(const TransformComponent& other) {
+    TransformComponent(const TransformComponent& other) : IComponent(other) {
         if (other.position != nullptr)
             position = std::make_unique<Vector2>(*other.position);
         if (other.scale != nullptr)

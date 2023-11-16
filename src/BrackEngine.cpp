@@ -56,22 +56,21 @@ float BrackEngine::GetDeltaTime() {
 
 void BrackEngine::CreateFPS() {
     auto entityId = EntityManager::GetInstance().CreateEntity();
-    auto transformComponent = std::make_unique<TransformComponent>();
     auto objectInfoComponent = std::make_unique<ObjectInfoComponent>();
-    auto textComponent = std::make_unique<TextComponent>();
+    auto textComponent = TextComponent();
 
     objectInfoComponent->name = "FPS";
     objectInfoComponent->tag = "FPS";
 
-    textComponent->text = "0";
-    textComponent->fontSize = 32;
-    textComponent->color = std::make_unique<Color>(255, 0, 0, 255);
+    textComponent.text = "0";
+    textComponent.fontSize = 32;
+    textComponent.color = std::make_unique<Color>(255, 0, 0, 255);
+    textComponent.entityID = entityId;
 
-    ComponentStore::GetInstance().addComponent(entityId, std::move(transformComponent));
-    ComponentStore::GetInstance().addComponent(entityId, std::move(objectInfoComponent));
-    ComponentStore::GetInstance().addComponent(entityId, std::move(textComponent));
+    ComponentStore::GetInstance().addComponent<TransformComponent>(entityId);
+    ComponentStore::GetInstance().addComponent<ObjectInfoComponent>(entityId);
+    ComponentStore::GetInstance().addComponent<TextComponent>(textComponent);
 }
-
 void BrackEngine::UpdateFPS() {
     auto& textComponent = ComponentStore::GetInstance().tryGetComponent<TextComponent>(1);
     auto fakk = std::to_string(FPSSingleton::GetInstance().GetFPS());

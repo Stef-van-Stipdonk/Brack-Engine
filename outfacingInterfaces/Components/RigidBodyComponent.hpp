@@ -17,6 +17,11 @@ struct RigidBodyComponent : public IComponent {
          return std::make_unique<RigidBodyComponent>(*this);
      }
 
+     RigidBodyComponent(const RigidBodyComponent& other) : IComponent(other) {
+         mass = other.mass;
+         gravityScale = other.gravityScale;
+     }
+
     void Accept(ComponentVisitor &visitor) override {
         visitor.visit(*this);
     }

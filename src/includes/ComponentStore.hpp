@@ -25,17 +25,41 @@ public:
 
     ComponentStore &operator=(ComponentStore &&) = delete;
 
-    static ComponentStore &GetInstance();
+    static ComponentStore &GetInstance() {
+        static ComponentStore instance;
+        return instance;
+    }
 
     ~ComponentStore() = default;
 
-    template<typename T>
-    void addComponent(uint32_t entity, std::unique_ptr<T> component) {
-        components[typeid(T)][entity] = std::move(component);
+    template<typename T, typename...Args>
+    typename std::enable_if<std::is_base_of<IComponent, T>::value>::type
+    addComponent(Args&&...args){
+        T component(std::forward<Args>(args)...);
+        auto entityId = component.entityID;
+
+        if(entityId == 0)
+            throw std::runtime_error("Entity ID cannot be 0, please make sure to implement a copy constructor for your component of type " + std::string(typeid(T).name()));
+
+        components[typeid(T)][entityId] = std::make_unique<T>(component);
     }
 
+    template<typename T, typename...Args>
+    typename std::enable_if<std::is_base_of<IComponent, T>::value>::type
+    addComponent(uint32_t entityId, Args&&...args){
+        if(entityId == 0)
+            throw std::runtime_error("Entity ID cannot be 0, please make sure to implement a copy constructor for your component of type " + std::string(typeid(T).name()));
+
+        T component(std::forward<Args>(args)...);
+        component.entityID = entityId;
+
+        components[typeid(T)][entityId] = std::make_unique<T>(component);
+    }
+
+
     template<typename T>
-    T& tryGetComponent(uint32_t entity) {
+    typename std::enable_if<std::is_base_of<IComponent, T>::value, T&>::type
+    tryGetComponent(uint32_t entity) {
         auto itType = components.find(typeid(T));
         if (itType != components.end()) {
             auto itEntity = itType->second.find(entity);
@@ -48,7 +72,8 @@ public:
     }
 
     template<typename BaseT>
-    std::vector<BaseT*> getAllComponentsOfType() {
+    typename std::enable_if<std::is_base_of<IComponent, BaseT>::value, std::vector<BaseT>>::type
+    getAllComponentsOfType() {
         std::vector<BaseT*> result;
         for (auto& [type, map] : components) {
             for (auto& [id, comp] : map) {
@@ -64,7 +89,8 @@ public:
 
 
     template<typename T>
-    void removeComponent(uint32_t entity) {
+    typename std::enable_if<std::is_base_of<IComponent, T>::value>::type
+    removeComponent(uint32_t entity) {
         auto itType = components.find(typeid(T));
         if (itType != components.end()) {
             itType->second.erase(entity);
@@ -72,7 +98,8 @@ public:
     }
 
     template<typename T>
-    std::vector<uint32_t> getEntitiesWithComponent() {
+    typename std::enable_if<std::is_base_of<IComponent, T>::value, std::vector<uint32_t>>::type
+    getEntitiesWithComponent() {
         std::vector<uint32_t> entities;
         auto itType = components.find(typeid(T));
         if (itType != components.end()) {
@@ -85,7 +112,6 @@ public:
 
 
 private:
-    static ComponentStore instance;
     ComponentStore() = default;
     std::unordered_map<std::type_index, std::unordered_map<uint32_t, std::unique_ptr<IComponent>>> components;
 };
