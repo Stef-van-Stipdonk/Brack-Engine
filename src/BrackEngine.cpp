@@ -56,15 +56,12 @@ float BrackEngine::GetDeltaTime() {
 
 void BrackEngine::CreateFPS() {
     auto entityId = EntityManager::GetInstance().CreateEntity();
-    auto objectInfoComponent = std::make_unique<ObjectInfoComponent>();
+    auto objectInfoComponent = ObjectInfoComponent();
     auto textComponent = TextComponent();
 
-    transformComponent->entityID = entityId;
-    objectInfoComponent->entityID = entityId;
-    textComponent->entityID = entityId;
-
-    objectInfoComponent->name = "FPS";
-    objectInfoComponent->tag = "FPS";
+    objectInfoComponent.name = "FPS";
+    objectInfoComponent.tag = "FPS";
+    objectInfoComponent.entityID = entityId;
 
     textComponent.text = "0";
     textComponent.fontSize = 32;
@@ -72,9 +69,10 @@ void BrackEngine::CreateFPS() {
     textComponent.entityID = entityId;
 
     ComponentStore::GetInstance().addComponent<TransformComponent>(entityId);
-    ComponentStore::GetInstance().addComponent<ObjectInfoComponent>(entityId);
+    ComponentStore::GetInstance().addComponent<ObjectInfoComponent>(objectInfoComponent);
     ComponentStore::GetInstance().addComponent<TextComponent>(textComponent);
 }
+
 void BrackEngine::UpdateFPS() {
     auto &textComponent = ComponentStore::GetInstance().tryGetComponent<TextComponent>(
             1);//TODO ophalen met tag of name van component

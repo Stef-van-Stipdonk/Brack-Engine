@@ -25,7 +25,7 @@ void GameObjectConverter::AddGameObject(GameObject *gameObject) {
 }
 
 
-void GameObjectConverter::AddCamera(std::unique_ptr<Camera> camera) {
+void GameObjectConverter::AddCamera(Camera *camera) {
     ComponentVisitor componentVisitor;
     if (camera->GetEntityID() == 0)
         camera->SetEntityID(EntityManager::GetInstance().CreateEntity());

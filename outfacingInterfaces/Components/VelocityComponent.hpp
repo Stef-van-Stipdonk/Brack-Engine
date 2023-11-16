@@ -16,7 +16,7 @@ struct VelocityComponent : public IComponent {
         return std::make_unique<VelocityComponent>(*this);
     }
 
-    VelocityComponent(const VelocityComponent &other) : TransformComponent(other) {
+    VelocityComponent(const VelocityComponent &other) : IComponent(other) {
         velocity = other.velocity;
     }
 
