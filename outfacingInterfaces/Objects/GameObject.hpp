@@ -44,6 +44,9 @@ public:
         components.push_back(std::move(component));
     }
 
+    AddComponent(T component){
+        AddComponent(std::make_unique<T>(component));
+    }
     GameObject(const GameObject &other) {
         entityID = other.entityID;
         components = std::vector<std::unique_ptr<IComponent>>();
