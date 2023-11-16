@@ -22,6 +22,10 @@ struct ParticleComponent : public IComponent {
         visitor.visit(*this);
     }
 
+    ParticleComponent(const ParticleComponent& other) : IComponent(other) {
+        lifetimeInSeconds = other.lifetimeInSeconds;
+    }
+
     float lifetimeInSeconds;
 };
 

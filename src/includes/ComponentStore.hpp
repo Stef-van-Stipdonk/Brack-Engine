@@ -29,10 +29,30 @@ public:
 
     ~ComponentStore() = default;
 
-    template<typename T>
-    void addComponent(uint32_t entity, std::unique_ptr<T> component) {
-        components[typeid(T)][entity] = std::move(component);
+    template<typename T, typename...Args>
+    typename std::enable_if<std::is_base_of<IComponent, T>::value>::type
+    addComponent(Args&&...args){
+        T component(std::forward<Args>(args)...);
+        auto entityId = component.entityID;
+
+        if(entityId == 0)
+            throw std::runtime_error("Entity ID cannot be 0, please make sure to implement a copy constructor for your component of type " + std::string(typeid(T).name()));
+
+        components[typeid(T)][entityId] = std::make_unique<T>(component);
     }
+
+    template<typename T, typename...Args>
+    typename std::enable_if<std::is_base_of<IComponent, T>::value>::type
+    addComponent(uint32_t entityId, Args&&...args){
+        if(entityId == 0)
+            throw std::runtime_error("Entity ID cannot be 0, please make sure to implement a copy constructor for your component of type " + std::string(typeid(T).name()));
+
+        T component(std::forward<Args>(args)...);
+        component.entityID = entityId;
+
+        components[typeid(T)][entityId] = std::make_unique<T>(component);
+    }
+
 
     template<typename T>
     T& tryGetComponent(uint32_t entity) {

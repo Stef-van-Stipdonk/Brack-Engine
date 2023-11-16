@@ -47,22 +47,15 @@ void Scene::RemoveGameObject(GameObject &gameObject) {
     }
 }
 
-Camera &Scene::GetMainCamera() {
-    if (mainCamera.GetEntityID() == 0)
-        return mainCamera;
-    mainCamera = Camera();
-    return mainCamera;
-}
-
-void Scene::SetCamera(Camera &camera) {
-    mainCamera = camera;
+void Scene::SetCamera(std::unique_ptr<Camera> camera) {
+    mainCamera = std::move(camera);
 }
 
 Scene::Scene(Camera &&mainCamera) {
-    this->mainCamera = mainCamera;
+    this->mainCamera = std::make_unique<Camera>(mainCamera);
 }
 
 Scene::Scene() {
-    mainCamera = Camera();
+    mainCamera = std::make_unique<Camera>();
 }
 

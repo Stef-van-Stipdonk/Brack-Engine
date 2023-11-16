@@ -22,6 +22,10 @@ struct ParticleEmitterComponent : public IComponent {
         visitor.visit(*this);
     }
 
+    ParticleEmitterComponent(const ParticleEmitterComponent& other) : IComponent(other) {
+        amount = other.amount;
+    }
+
     int amount;
 };
 
