@@ -7,22 +7,25 @@
 #include <vector>
 #include <Components/CircleCollisionComponent.hpp>
 
-/*
-PhysicsWrapper::PhysicsWrapper() ;
 
-PhysicsWrapper::~PhysicsWrapper() ;*/
-
-void PhysicsWrapper::Initialize() {
+PhysicsWrapper::PhysicsWrapper() {
     b2Vec2 gravity(0.0f, -9.8f);
     world = std::make_unique<b2World>(gravity);
-    ContactListener *contactListener = new ContactListener();
-    world->SetContactListener(contactListener);
+    contactListener = std::make_unique<ContactListener>();
+    world->SetContactListener(contactListener.get());
+}
+
+PhysicsWrapper::~PhysicsWrapper() {}
+
+
+void PhysicsWrapper::Initialize() {
+
 }
 
 void PhysicsWrapper::Update() {
-    const float timeStep = 1.0f / 60.0f;
-    const int32 velocityIterations = 6;
-    const int32 positionIterations = 2;
+    const float timeStep{1.0f / 60.0f};
+    const int32 velocityIterations{6};
+    const int32 positionIterations{2};
 
     world->Step(timeStep, velocityIterations, positionIterations);
 
@@ -44,7 +47,6 @@ void PhysicsWrapper::AddCircles(std::vector<uint32_t> componentIds) {
 
             b2CircleShape shape;
             shape.m_radius = circleCollisionComp.radius->getX();
-
             b2FixtureDef fixtureDef;
             fixtureDef.shape = &shape;
             fixtureDef.density = 1.0f;

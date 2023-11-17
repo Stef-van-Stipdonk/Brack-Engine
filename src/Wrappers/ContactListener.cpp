@@ -8,9 +8,12 @@
 void ContactListener::BeginContact(b2Contact *contact) {
     Logger::GetInstance().Info("test");
 
-    if (contact->GetFixtureA()) {
+}
 
-    }
+void ContactListener::EndContact(b2Contact *contact) {
+    Logger::GetInstance().Info("test exited");
+
 
 }
+
 

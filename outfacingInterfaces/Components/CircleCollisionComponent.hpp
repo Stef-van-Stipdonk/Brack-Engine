@@ -21,12 +21,12 @@ struct CircleCollisionComponent : public IComponent {
     }
 
     ~CircleCollisionComponent() override {
-        if(radius != nullptr)
+        if (radius != nullptr)
             radius = nullptr;
     };
 
     CircleCollisionComponent(const CircleCollisionComponent &other) : IComponent(other) {
-        if(other.radius != nullptr)
+        if (other.radius != nullptr)
             radius = std::make_unique<Vector2>(*other.radius);
     }
 
