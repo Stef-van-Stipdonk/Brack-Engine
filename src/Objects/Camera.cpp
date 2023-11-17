@@ -12,10 +12,12 @@ Camera::Camera() : GameObject() {
     AddComponent(std::make_unique<CameraComponent>());
     SetBackgroundColor(Color(0, 0, 0, 255));
     auto size = ConfigSingleton::GetInstance().GetWindowSize();
+    auto halfSize = size / 2;
+    SetOnScreenPosition(halfSize);
     SetSize(size);
 }
 
-void Camera::SetBackgroundColor(const Color& color) {
+void Camera::SetBackgroundColor(const Color &color) {
     if (entityID == 0) {
         TryGetComponent<CameraComponent>().backgroundColor = std::make_unique<Color>(color);
     } else
@@ -23,14 +25,14 @@ void Camera::SetBackgroundColor(const Color& color) {
                 entityID).backgroundColor = std::make_unique<Color>(color);
 }
 
-void Camera::SetSize(const Vector2& size) {
+void Camera::SetSize(const Vector2 &size) {
     if (entityID == 0) {
         TryGetComponent<CameraComponent>().size = std::make_unique<Vector2>(size);
     } else
         ComponentStore::GetInstance().tryGetComponent<CameraComponent>(entityID).size = std::make_unique<Vector2>(size);
 }
 
-void Camera::SetOnScreenPosition(const Vector2& position) {
+void Camera::SetOnScreenPosition(const Vector2 &position) {
     if (entityID == 0) {
         TryGetComponent<CameraComponent>().onScreenPosition = std::make_unique<Vector2>(position);
     } else
