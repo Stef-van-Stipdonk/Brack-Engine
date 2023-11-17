@@ -187,7 +187,7 @@ void RenderWrapper::RenderCircleCollision(const CameraComponent &cameraComponent
 
     SDL_SetRenderDrawColor(renderer.get(), 255, 0, 0, 255);
     double angle = 0.0;
-    double step = 0.005;  // Angle step for plotting points
+    double step = 0.01;  // Angle step for plotting points
 
     auto centerX = transformComponent.position->getX() - cameraTransformComponent.position->getX() +
                    cameraComponent.size->getX() / 2;
