@@ -7,11 +7,12 @@
 
 
 #include "Components/Archetypes/AudioArchetype.hpp"
-#include "../../lib/FMod/include/fmod.hpp"
+#include "fmod.hpp"
 #include <vector>
 #include <memory>
 #include <unordered_map>
 #include "../ConfigSingleton.hpp"
+#include <fmod_errors.h>
 
 class AudioWrapper {
 public:
