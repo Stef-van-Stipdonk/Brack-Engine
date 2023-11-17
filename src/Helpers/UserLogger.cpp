@@ -44,6 +44,35 @@ UserLogger::UserLogger() {
 #endif
 }
 
+void UserLogger::CheckAndCleanOldLogs() {
+    const std::string logDir = "logging/game/";
+    const size_t maxLogFiles = 10;
+
+    std::vector<std::filesystem::directory_entry> logFiles;
+
+    // Gather list of log files
+    for (const auto& entry : std::filesystem::directory_iterator(logDir)) {
+        if (entry.is_regular_file()) {
+            logFiles.push_back(entry);
+        }
+    }
+
+    // Sort files by last write time in descending order (newest first)
+    std::sort(logFiles.begin(), logFiles.end(),
+              [](const std::filesystem::directory_entry& a, const std::filesystem::directory_entry& b) {
+                  return std::filesystem::last_write_time(a) > std::filesystem::last_write_time(b);
+              });
+
+    // Delete all files except the newest 10
+    if (logFiles.size() > maxLogFiles) {
+        for (auto it = logFiles.begin() + maxLogFiles; it != logFiles.end(); ++it) {
+            std::cout << "Deleting log file: " << it->path() << std::endl;
+            std::filesystem::remove(it->path());
+        }
+    }
+}
+
+
 void UserLogger::CreateDirectories(const std::string& dir) {
 #if defined(_WIN32)
     std::string command = "mkdir " + dir;
@@ -83,6 +112,7 @@ UserLogger &UserLogger::GetInstance() {
 void UserLogger::OpenLogFile(const std::string &filename) {
     std::lock_guard<std::mutex> lock(fileMutex);
     if (!logFile.is_open()) {
+        CheckAndCleanOldLogs();
         logFile.open(filename, std::ios::out | std::ios::app);
         if (!logFile.is_open()) {
             throw std::runtime_error("Unable to open log file: " + filename);
