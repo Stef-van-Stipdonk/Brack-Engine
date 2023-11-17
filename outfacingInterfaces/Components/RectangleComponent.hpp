@@ -15,7 +15,7 @@ struct RectangleComponent : public RenderArchetype {
     explicit RectangleComponent(Vector2 size, Color fill)
             : RenderArchetype(), size(std::make_unique<Vector2>(size)), fill(std::make_unique<Color>(fill)) {}
 
-    explicit RectangleComponent(Vector2 size) : RectangleComponent(size, Color(0, 0, 0, 0)) {}
+    explicit RectangleComponent(Vector2 size) : RectangleComponent(size, Color(255, 255, 255, 255)) {}
 
     ~RectangleComponent() override = default;
 

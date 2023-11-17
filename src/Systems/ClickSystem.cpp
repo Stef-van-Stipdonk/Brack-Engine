@@ -27,37 +27,45 @@ void ClickSystem::Update(float deltaTime) {
 }
 
 void ClickSystem::CheckBoxCollision(const ClickableComponent& clickableComponent, const Vector2& mousePosition) {
-    auto boxColliderComponent = ComponentStore::GetInstance().tryGetComponent<BoxCollisionComponent>(
-            clickableComponent.entityID);
-    auto transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(
-            clickableComponent.entityID);
-    if(
-            mousePosition.getX() >= transformComponent.position->getX() &&
-            mousePosition.getX() <= transformComponent.position->getX() + boxColliderComponent.size->getX() &&
-            mousePosition.getY() >= transformComponent.position->getY() &&
-            mousePosition.getY() <= transformComponent.position->getY() + boxColliderComponent.size->getY()
-            ){
-        clickableComponent.OnClick();
+    try{
+        auto boxColliderComponent = ComponentStore::GetInstance().tryGetComponent<BoxCollisionComponent>(
+                clickableComponent.entityID);
+        auto transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(
+                clickableComponent.entityID);
+        if(
+                mousePosition.getX() >= transformComponent.position->getX() &&
+                mousePosition.getX() <= transformComponent.position->getX() + boxColliderComponent.size->getX() &&
+                mousePosition.getY() >= transformComponent.position->getY() &&
+                mousePosition.getY() <= transformComponent.position->getY() + boxColliderComponent.size->getY()
+                ){
+            clickableComponent.OnClick();
+        }
+    }catch(const std::exception& e){
+
     }
 }
 
 void ClickSystem::CheckCircleCollision(const ClickableComponent &clickableComponent, const Vector2 &mousePosition) {
-    auto circleCollisionComponent = ComponentStore::GetInstance().tryGetComponent<CircleCollisionComponent>(
-            clickableComponent.entityID);
-    auto transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(
-            clickableComponent.entityID);
-    auto x = mousePosition.getX();
-    auto y = mousePosition.getY();
-    auto a = circleCollisionComponent.radius->getX();
-    auto b = circleCollisionComponent.radius->getY();
-    auto h = transformComponent.position->getX() + circleCollisionComponent.radius->getX();
-    auto k = transformComponent.position->getY() + circleCollisionComponent.radius->getY();
-    // Calculate the left-hand side of the ellipse equation
-    double lhs = ((x - h) * (x - h)) / (a * a) + ((y - k) * (y - k)) / (b * b);
+    try{
+        auto circleCollisionComponent = ComponentStore::GetInstance().tryGetComponent<CircleCollisionComponent>(
+                clickableComponent.entityID);
+        auto transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(
+                clickableComponent.entityID);
+        auto x = mousePosition.getX();
+        auto y = mousePosition.getY();
+        auto a = circleCollisionComponent.radius->getX();
+        auto b = circleCollisionComponent.radius->getY();
+        auto h = transformComponent.position->getX() + circleCollisionComponent.radius->getX();
+        auto k = transformComponent.position->getY() + circleCollisionComponent.radius->getY();
+        // Calculate the left-hand side of the ellipse equation
+        double lhs = ((x - h) * (x - h)) / (a * a) + ((y - k) * (y - k)) / (b * b);
 
-    // Check if the point is inside the ellipse
-    if(lhs <= 1.0){
-        clickableComponent.OnClick();
+        // Check if the point is inside the ellipse
+        if(lhs <= 1.0){
+            clickableComponent.OnClick();
+        }
+    }catch(const std::exception& e){
+
     }
 }
 
