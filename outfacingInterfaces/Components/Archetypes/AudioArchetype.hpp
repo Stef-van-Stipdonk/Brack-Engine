@@ -8,7 +8,7 @@
 #include <Components/IComponent.hpp>
 #include "../../../src/Components/ComponentVisitor.hpp"
 
-class AudioArchetype : public IComponent {
+struct AudioArchetype : public IComponent {
 public:
     explicit AudioArchetype() : IComponent() {}
 
@@ -17,6 +17,8 @@ public:
     virtual std::unique_ptr<IComponent> clone() const override {
         return std::make_unique<AudioArchetype>(*this);
     }
+
+    AudioArchetype(const AudioArchetype &other) : IComponent(other) {}
 
     void Accept(ComponentVisitor &visitor) override {
         visitor.visit(*this);

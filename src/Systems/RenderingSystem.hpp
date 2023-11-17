@@ -7,14 +7,23 @@
 
 
 #include <memory>
+#include <set>
 #include "ISystem.hpp"
 #include "../Wrappers/RenderWrapper.hpp"
+
+
+struct CompareByLayer {
+    bool operator()(const RenderArchetype *lhs, const RenderArchetype *rhs) const {
+        return std::tie(lhs->sortingLayer, lhs->orderInLayer) > std::tie(rhs->sortingLayer, rhs->orderInLayer);
+    }
+};
 
 class RenderingSystem : public ISystem {
 public:
     RenderingSystem();
 
     ~RenderingSystem() override;
+
     void CleanUp() override;
 
     const std::string GetName() const override;
@@ -22,8 +31,11 @@ public:
     void Update(float deltaTime) override;
 
 private:
+    void SortRenderComponents();
+
+    std::multiset<RenderArchetype *, CompareByLayer> components;
+    std::multiset<RenderArchetype *, CompareByLayer> uiComponents;
     std::unique_ptr<RenderWrapper> sdl2Wrapper;
 };
-
 
 #endif //BRACK_ENGINE_RENDERINGSYSTEM_HPP

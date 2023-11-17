@@ -21,21 +21,24 @@ public:
 
     void AddGameObject(std::unique_ptr<GameObject> gameObject);
 
-    std::unique_ptr<GameObject>& GetGameObjectByName(char *name);
+    std::unique_ptr<GameObject> &GetGameObjectByName(char *name);
 
-    std::vector<GameObject*> GetGameObjectsByTag(const std::string& tag);
+    std::vector<GameObject *> GetGameObjectsByTag(const std::string &tag);
 
-    std::vector<GameObject*> GetAllGameObjects();
+    std::vector<GameObject *> GetAllGameObjects();
+
+    std::vector<Camera *> GetAllCameras();
 
     void RemoveGameObject(GameObject &gameObject);
 
-    Camera &GetMainCamera();
+    std::vector<std::unique_ptr<Camera>> &GetCameras();
 
-    void SetCamera(Camera &camera);
+    void AddCamera(Camera &&camera);
 
 private:
     std::vector<std::unique_ptr<GameObject>> gameObjects;
-    Camera mainCamera;
+    std::vector<std::unique_ptr<Camera>> cameras;
+
 };
 
 

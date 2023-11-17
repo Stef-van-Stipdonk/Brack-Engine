@@ -24,7 +24,6 @@ else ()
     pkg_check_modules(SDL2 REQUIRED sdl2)
     include_directories(${SDL2_INCLUDE_DIRS})
     link_directories(${SDL2_LIBRARY_DIRS})
-    add_subdirectory(${BOX2D_PATH})
 endif ()
 
 add_library(${PROJECT_NAME} SHARED
@@ -32,12 +31,9 @@ add_library(${PROJECT_NAME} SHARED
         outfacingInterfaces/ISystem.hpp
         src/Managers/Entities/EntityManager.cpp
         src/includes/EntityManager.hpp
-        src/Managers/Components/ComponentStore.cpp
         src/includes/ComponentStore.hpp
         src/Managers/Systems/SystemManager.cpp
         src/includes/SystemManager.hpp
-        src/Managers/Components/SparseSet.cpp
-        src/includes/SparseSet.hpp
         outfacingInterfaces/IComponentStorage.hpp
         src/Wrappers/RenderWrapper.cpp
         outfacingInterfaces/Components/ChildComponent.hpp
@@ -112,6 +108,7 @@ add_library(${PROJECT_NAME} SHARED
         src/Wrappers/ContactListener.cpp
         src/Wrappers/ContactListener.hpp
         src/Wrappers/ContactListener.hpp
+        src/Managers/Entities/ComponentStore.cpp
 )
 
 option(USER_LOG_TO_FILE "Enable user logging to a file" OFF)

@@ -61,6 +61,8 @@ private:
     bool shutdown_ = false;
 
     void CreateDirectories(const std::string &dir);
+
+    void CheckAndCleanOldLogs();
 };
 
 #endif // BRACKOCALYPSE_USER_LOGGER_HPP
