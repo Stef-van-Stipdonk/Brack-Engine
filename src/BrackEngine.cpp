@@ -40,7 +40,7 @@ void BrackEngine::Run() {
             UpdateFPS();
     }
 
-    SystemManager::GetInstance().CleanUp();
+    SystemManager::GetInstance().CleanUp(); 
 }
 
 float BrackEngine::GetDeltaTime() {
