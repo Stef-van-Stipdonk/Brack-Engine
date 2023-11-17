@@ -15,8 +15,6 @@
 #include "EngineManagers/InputManager.hpp"
 #include "Config.hpp"
 #include "../src/includes/ComponentStore.hpp"
-#include "../src/LoadFactories/IComponentLoad.h"
-#include "../src/LoadFactories/LoadParser.h"
 
 class BrackEngine {
 public:
@@ -26,9 +24,9 @@ public:
 
     void Run();
 
-    void Save(std::string filePath);
+    void Save(const std::string& filePath, const std::string& content);
 
-    void Load(std::string filePath);
+    std::string Load(std::string filePath);
 
     SceneManager &GetSceneManager() const;
 
