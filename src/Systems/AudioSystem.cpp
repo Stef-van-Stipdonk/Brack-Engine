@@ -5,7 +5,7 @@
 #include "AudioSystem.hpp"
 #include "../includes/EntityManager.hpp"
 #include <fstream>
-#include <Components/AudioComponent.hpp>
+#include <Components/Archetypes/AudioArchetype.hpp>
 
 AudioSystem::AudioSystem() : audioWrapper(new AudioWrapper()) {
 }
@@ -14,7 +14,7 @@ AudioSystem::~AudioSystem() {
 }
 
 void AudioSystem::Update(float deltaTime) {
-    auto audiocomponents = ComponentStore::GetInstance().getAllComponentsOfType<AudioComponent>();
+    auto audiocomponents = ComponentStore::GetInstance().getAllComponentsOfType<AudioArchetype>();
     for(auto audioComponent : audiocomponents){
         if(audioComponent->startPlaying){
             audioComponent->startPlaying = false;
@@ -28,9 +28,9 @@ const std::string AudioSystem::GetName() const {
 }
 
 void AudioSystem::CleanUp() {
-    auto entities = ComponentStore::GetInstance().getEntitiesWithComponent<AudioComponent>();
+    auto entities = ComponentStore::GetInstance().getEntitiesWithComponent<AudioArchetype>();
     for(auto entity : entities){
-        auto audioComponent = ComponentStore::GetInstance().tryGetComponent<AudioComponent>(entity);
+        auto audioComponent = ComponentStore::GetInstance().tryGetComponent<AudioArchetype>(entity);
             audioComponent.startPlaying = false;
     }
     audioWrapper->CleanUp();

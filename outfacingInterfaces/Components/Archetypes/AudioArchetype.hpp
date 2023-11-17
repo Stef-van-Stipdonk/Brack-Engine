@@ -10,7 +10,7 @@
 
 class AudioArchetype : public IComponent {
 public:
-    explicit AudioArchetype() : IComponent() {}
+    explicit AudioArchetype(std::string path, bool isSoundTrack) : IComponent(), audioPath(std::move(path)), isSoundTrack(isSoundTrack) {}
 
     ~AudioArchetype() override = default;
 
@@ -21,6 +21,21 @@ public:
     void Accept(ComponentVisitor &visitor) override {
         visitor.visit(*this);
     }
+
+    bool startPlaying = false;
+    float volume;
+
+    bool getIsSoundTrack() const {
+        return isSoundTrack;
+    }
+
+    std::string getAudioPath() const{
+        return audioPath;
+    }
+
+private:
+    const std::string audioPath;
+    const bool isSoundTrack;
 };
 
 #endif //BRACKOCALYPSE_AUDIOARCHETYPE_HPP

@@ -6,11 +6,14 @@
 #define BRACKOCALYPSE_SOUNDTRACKCOMPONENT_HPP
 
 
-#include "AudioComponent.hpp"
+#include "Archetypes/AudioArchetype.hpp"
 
-struct SoundTrackComponent : public AudioComponent {
+struct SoundTrackComponent : public AudioArchetype {
+public:
     SoundTrackComponent(std::string path)
-            : AudioComponent(std::move(path), true) {}
+            : AudioArchetype(std::move(path), true) {}
+
+    ~SoundTrackComponent() = default;
 
     void Accept(ComponentVisitor &visitor) override {
         visitor.visit(*this);

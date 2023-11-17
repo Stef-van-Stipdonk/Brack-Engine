@@ -43,7 +43,6 @@ add_library(${PROJECT_NAME} SHARED
         outfacingInterfaces/Components/ObjectInfoComponent.hpp
         outfacingInterfaces/Components/RigidBodyComponent.hpp
         outfacingInterfaces/Components/AIComponent.hpp
-        outfacingInterfaces/Components/AudioComponent.hpp
         outfacingInterfaces/Components/TransformComponent.hpp
         src/Helpers/Vector2.cpp
         outfacingInterfaces/Components/VelocityComponent.hpp

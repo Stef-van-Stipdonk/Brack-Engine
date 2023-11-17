@@ -88,7 +88,7 @@ void AudioWrapper::ClearUnusedChannels() {
     }
 }
 
-void AudioWrapper::PlaySound(AudioComponent &audioComponent) {
+void AudioWrapper::PlaySound(AudioArchetype &audioComponent) {
     if (!system) {
         Logger::Error("FMOD audio system is not initialized.");
         return;
@@ -165,7 +165,7 @@ void AudioWrapper::PlaySound(AudioComponent &audioComponent) {
     }
 }
 
-bool AudioWrapper::IsValidAudioPath(const AudioComponent& audioComponent){
+bool AudioWrapper::IsValidAudioPath(const AudioArchetype& audioComponent){
     std::ifstream file(audioComponent.getAudioPath());
 
     if (!file.good()) {

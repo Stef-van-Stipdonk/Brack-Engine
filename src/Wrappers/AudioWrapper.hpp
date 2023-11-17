@@ -6,7 +6,7 @@
 #define BRACK_ENGINE_AUDIOWRAPPER_HPP
 
 
-#include "Components/AudioComponent.hpp"
+#include "Components/Archetypes/AudioArchetype.hpp"
 #include "../../lib/FMod/include/fmod.hpp"
 #include <vector>
 #include <memory>
@@ -21,9 +21,9 @@ public:
 
     void CleanUp();
 
-    void PlaySound(AudioComponent &audioComponent);
+    void PlaySound(AudioArchetype &audioComponent);
 
-    bool IsValidAudioPath(const AudioComponent& audioComponent);
+    bool IsValidAudioPath(const AudioArchetype& audioComponent);
 
     int FindAvailableSFXChannel();
 
