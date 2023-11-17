@@ -39,7 +39,9 @@ void AudioWrapper::CleanUp() {
     }
 }
 
-int AudioWrapper::FindAvailableSFXChannel() const {
+int AudioWrapper::FindAvailableSFXChannel() {
+    ClearUnusedChannels();
+
     int availableSFXChannels = ConfigSingleton::GetInstance().getAmountOfSFXChannels();
 
     if (availableSFXChannels <= 0) {
@@ -53,6 +55,37 @@ int AudioWrapper::FindAvailableSFXChannel() const {
         }
     }
     return -1; // No available channel found
+}
+
+void AudioWrapper::ClearUnusedChannels() {
+    std::vector<int> channelsToRelease;
+
+    for (auto it = soundEffectsChannelMap.begin(); it != soundEffectsChannelMap.end();) {
+        FMOD::Channel* channel = it->second;
+        bool isPlaying; // Declaration without initialization
+
+        // Checking if the channel is playing
+        if (channel) {
+            FMOD_RESULT result = channel->isPlaying(&isPlaying);
+            if (result != FMOD_OK) {
+                Logger::Error("Error checking if channel is playing: " + std::string(FMOD_ErrorString(result)));
+                ++it;
+                continue;
+            }
+
+            Logger::Debug("Channel ID: " + std::to_string(it->first) + ", Is playing: " + (isPlaying ? "true" : "false"));
+
+            if (!isPlaying) {
+                channelsToRelease.push_back(it->first); // Marking channel for release
+                it = soundEffectsChannelMap.erase(it); // Erasing channel from map
+            } else {
+                ++it; // Move to the next channel
+            }
+        } else {
+            Logger::Debug("Invalid channel found and removed.");
+            it = soundEffectsChannelMap.erase(it); // Erase invalid channel from the map
+        }
+    }
 }
 
 void AudioWrapper::PlaySound(AudioComponent &audioComponent) {

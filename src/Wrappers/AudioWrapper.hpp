@@ -25,7 +25,9 @@ public:
 
     bool IsValidAudioPath(const AudioComponent& audioComponent);
 
-    int FindAvailableSFXChannel() const;
+    int FindAvailableSFXChannel();
+
+    void ClearUnusedChannels() ;
 
 private:
     FMOD::System *system;
