@@ -13,6 +13,7 @@
 #include "Systems/BehaviourScriptSystem.hpp"
 #include "Systems/ClickSystem.hpp"
 #include "Systems/AudioSystem.hpp"
+#include <typeindex>
 
 BrackEngine::BrackEngine(Config &&config) {
     ConfigSingleton::GetInstance().SetConfig(config);
@@ -77,4 +78,72 @@ void BrackEngine::UpdateFPS() {
     auto fakk = std::to_string(FPSSingleton::GetInstance().GetFPS());
 
     textComponent.text = fakk;
+}
+
+void BrackEngine::Save(std::string filePath) {
+    std::ofstream file(filePath, std::ios::binary);
+
+    // Check if the file can be opened for writing
+    if (!file.is_open()) {
+        std::cerr << "Unable to open file for writing: " << filePath << std::endl;
+        return;
+    }
+
+    // Write components to file
+    const std::unordered_map<std::type_index, std::unordered_map<uint32_t, std::unique_ptr<IComponent>>>& components = ComponentStore::GetInstance().getComponents();
+
+    for (const auto& typeIndexMapPair : components) {
+        for (const auto& entityIdComponentPair : typeIndexMapPair.second) {
+            // Serialize the data of each component individually
+            const std::unique_ptr<IComponent>& component = entityIdComponentPair.second;
+            if (!(file.write(reinterpret_cast<const char*>(&typeIndexMapPair.first), sizeof(std::type_index)) &&
+                  file.write(reinterpret_cast<const char*>(&entityIdComponentPair.first), sizeof(uint32_t)) &&
+                  file.write(reinterpret_cast<const char*>(component.get()), sizeof(IComponent)))) {
+                std::cerr << "Error writing to file: " << filePath << std::endl;
+                file.close(); // Close the file before returning
+                return;
+            }
+        }
+    }
+
+    file.close();
+}
+
+void BrackEngine::Load(std::string filePath) {
+    std::ifstream file(filePath, std::ios::binary);
+
+    // Check if the file can be opened for reading
+    if (!file.is_open()) {
+        std::cerr << "Unable to open file for reading: " << filePath << std::endl;
+        return;
+    }
+
+    // Map to store the deserialized components
+    std::unordered_map<std::type_index, std::unordered_map<uint32_t, std::unique_ptr<IComponent>>> deserializedComponents;
+
+    while (true) {
+        std::type_index typeIndex = typeid("");
+        uint32_t entityId;
+
+        // Read the typeIndex, entityId, and component data
+        if (!(file.read(reinterpret_cast<char*>(&typeIndex), sizeof(typeIndex)) &&
+              file.read(reinterpret_cast<char*>(&entityId), sizeof(entityId)))) {
+            // Break if unable to read more data
+            break;
+        }
+
+        // Create an instance of the component (polymorphic type assumed)
+        std::unique_ptr<IComponent> component;
+        LoadParser::GetInstance().Load(typeIndex);
+
+        // Read the component data
+        if (!(file.read(reinterpret_cast<char*>(component.get()), sizeof(IComponent)))) {
+            std::cerr << "Error reading component data from file: " << filePath << std::endl;
+            return;
+        }
+
+//        ComponentStore::GetInstance().addComponent(entityId, std::move(component));
+    }
+
+    file.close();
 }

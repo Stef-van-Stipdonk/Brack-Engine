@@ -107,6 +107,13 @@ add_library(${PROJECT_NAME} SHARED
         src/Helpers/UserLogger.cpp
         outfacingInterfaces/Helpers/UserLogger.hpp
         outfacingInterfaces/Components/RectangleComponent.hpp
+        src/LoadFactories/IComponentLoad.h
+        src/LoadFactories/SpriteComponentLoad.cpp
+        src/LoadFactories/SpriteComponentLoad.h
+        src/LoadFactories/CameraComponentLoad.cpp
+        src/LoadFactories/TextComponentLoad.cpp
+        src/LoadFactories/LoadParser.cpp
+        src/LoadFactories/LoadParser.h
 )
 
 option(USER_LOG_TO_FILE "Enable user logging to a file" OFF)
