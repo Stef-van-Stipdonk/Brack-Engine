@@ -10,6 +10,8 @@
 #include <sstream>
 #include <chrono>
 #include <sys/stat.h>
+#include <filesystem>
+#include <algorithm>
 // Logger.cpp
 
 // Current log level

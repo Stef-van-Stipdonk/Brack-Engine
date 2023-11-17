@@ -8,6 +8,7 @@
 #include <chrono>
 #include <sys/stat.h>
 #include <filesystem>
+#include <algorithm>
 
 // Current log level
 #ifndef CURRENT_LOG_LEVEL
