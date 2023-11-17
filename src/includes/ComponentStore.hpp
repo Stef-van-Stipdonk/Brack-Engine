@@ -9,12 +9,6 @@
 #include "Components/IComponent.hpp"
 #include "../Logger.hpp"
 
-//// Forward declaration of IComponent
-//struct IComponent {
-//    virtual ~IComponent() = default;
-//};
-
-// Simplified ComponentStore
 class ComponentStore {
 public:
     ComponentStore(const ComponentStore &) = delete;
@@ -25,10 +19,7 @@ public:
 
     ComponentStore &operator=(ComponentStore &&) = delete;
 
-    static ComponentStore &GetInstance() {
-        static ComponentStore instance;
-        return instance;
-    }
+    static ComponentStore &GetInstance();
 
     ~ComponentStore() = default;
 
@@ -115,6 +106,8 @@ public:
 
 
 private:
+    static ComponentStore instance;
+
     ComponentStore() = default;
 
     std::unordered_map<std::type_index, std::unordered_map<uint32_t, std::unique_ptr<IComponent>>> components;

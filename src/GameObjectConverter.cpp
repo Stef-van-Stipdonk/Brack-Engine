@@ -16,9 +16,10 @@ GameObject GameObjectConverter::GetGameObject(uint32_t entityID) {
 
 void GameObjectConverter::AddGameObject(GameObject *gameObject) {
     ComponentVisitor componentVisitor;
+    auto &components = gameObject->GetAllComponents();
     if (gameObject->GetEntityID() == 0)
         gameObject->SetEntityID(EntityManager::GetInstance().CreateEntity());
-    for (auto &component: gameObject->GetAllComponents()) {
+    for (auto &component: components) {
         component->entityID = gameObject->GetEntityID();
         component->Accept(componentVisitor);
     }

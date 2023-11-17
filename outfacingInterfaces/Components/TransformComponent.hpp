@@ -16,10 +16,10 @@ struct TransformComponent : public IComponent {
     explicit TransformComponent() : IComponent() {}
 
     ~TransformComponent() override {
-        if(position != nullptr)
+        if (position != nullptr)
             position = nullptr;
 
-        if(scale != nullptr)
+        if (scale != nullptr)
             scale = nullptr;
     };
 
@@ -31,7 +31,7 @@ struct TransformComponent : public IComponent {
         visitor.visit(*this);
     }
 
-    TransformComponent(const TransformComponent& other) : IComponent(other) {
+    TransformComponent(const TransformComponent &other) : IComponent(other) {
         if (other.position != nullptr)
             position = std::make_unique<Vector2>(*other.position);
         if (other.scale != nullptr)

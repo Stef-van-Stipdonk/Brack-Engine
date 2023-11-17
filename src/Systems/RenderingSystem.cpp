@@ -4,8 +4,6 @@
 
 #include <Components/Archetypes/RenderArchetype.hpp>
 #include "RenderingSystem.hpp"
-#include "../includes/ComponentStore.hpp"
-#include "../Logger.hpp"
 #include "../includes/EntityManager.hpp"
 
 RenderingSystem::RenderingSystem() : sdl2Wrapper(new RenderWrapper()) {
