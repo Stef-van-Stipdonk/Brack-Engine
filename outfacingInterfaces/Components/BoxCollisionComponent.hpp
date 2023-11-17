@@ -8,8 +8,10 @@
 #include <memory>
 #include "CollisionComponent.hpp"
 
+
 struct BoxCollisionComponent : public CollisionComponent {
     explicit BoxCollisionComponent(Vector2 size) : CollisionComponent(), size(std::make_unique<Vector2>(size)) {}
+
 
     virtual std::unique_ptr<IComponent> clone() const override {
         return std::make_unique<BoxCollisionComponent>(*this);

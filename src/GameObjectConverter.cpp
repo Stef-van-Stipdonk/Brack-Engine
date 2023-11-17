@@ -14,18 +14,19 @@ GameObject GameObjectConverter::GetGameObject(uint32_t entityID) {
     return {};
 }
 
-void GameObjectConverter::AddGameObject(GameObject* gameObject) {
+void GameObjectConverter::AddGameObject(GameObject *gameObject) {
     ComponentVisitor componentVisitor;
+    auto &components = gameObject->GetAllComponents();
     if (gameObject->GetEntityID() == 0)
         gameObject->SetEntityID(EntityManager::GetInstance().CreateEntity());
-    for (auto &component: gameObject->GetAllComponents()) {
+    for (auto &component: components) {
         component->entityID = gameObject->GetEntityID();
         component->Accept(componentVisitor);
     }
 }
 
 
-void GameObjectConverter::AddCamera(std::unique_ptr<Camera> camera) {
+void GameObjectConverter::AddCamera(Camera *camera) {
     ComponentVisitor componentVisitor;
     if (camera->GetEntityID() == 0)
         camera->SetEntityID(EntityManager::GetInstance().CreateEntity());

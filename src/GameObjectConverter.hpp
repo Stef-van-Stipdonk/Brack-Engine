@@ -15,9 +15,9 @@ public:
 
     static GameObject GetGameObject(uint32_t entityID);
 
-    static void AddGameObject(GameObject* gameObject);
+    static void AddGameObject(GameObject *gameObject);
 
-    static void AddCamera(std::unique_ptr<Camera> camera);
+    static void AddCamera(Camera *camera);
 
     static void RemoveGameObject(GameObject &gameObject);
 };

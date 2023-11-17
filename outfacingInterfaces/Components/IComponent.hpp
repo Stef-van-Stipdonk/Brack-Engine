@@ -18,7 +18,7 @@ struct IComponent {
     IComponent(const IComponent &other) {
         entityID = other.entityID;
         isActive = other.isActive;
-    }
+    };
 
     virtual std::unique_ptr<IComponent> clone() const = 0;
 
