@@ -23,6 +23,10 @@ struct ParentComponent : public IComponent {
         visitor.visit(*this);
     }
 
+    ParentComponent(const ParentComponent& other) : IComponent(other) {
+        parentID = other.parentID;
+    }
+
     uint32_t parentID;
 };
 

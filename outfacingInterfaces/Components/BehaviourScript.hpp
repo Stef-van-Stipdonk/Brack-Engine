@@ -23,6 +23,8 @@ struct BehaviourScript : public IComponent {
         OnStart();
     }
 
+    BehaviourScript(const BehaviourScript& other) : IComponent(other) {}
+
     virtual void OnStart() {};
 
     virtual void OnUpdate(float deltaTime) {};

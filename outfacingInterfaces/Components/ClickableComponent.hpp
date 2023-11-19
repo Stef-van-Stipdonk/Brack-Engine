@@ -7,20 +7,21 @@
 
 #include <functional>
 #include <utility>
-#include "UIComponent.hpp"
+#include "IComponent.hpp"
 #include "../../src/Components/ComponentVisitor.hpp"
 
 
-struct ClickableComponent : public UIComponent {
-    explicit ClickableComponent() : UIComponent() {}
-
+struct ClickableComponent : public IComponent {
+    ClickableComponent() : IComponent() {}
+    
     virtual std::unique_ptr<IComponent> clone() const override {
         return std::make_unique<ClickableComponent>(*this);
+
     }
 
     ~ClickableComponent() override = default;
 
-    ClickableComponent(const ClickableComponent &other) : UIComponent(other) {
+    ClickableComponent(const ClickableComponent &other) : IComponent(other) {
         OnClick = other.OnClick;
     }
 

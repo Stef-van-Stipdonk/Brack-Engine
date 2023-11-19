@@ -31,6 +31,8 @@ public:
     static void Info(const std::string &message);
     static void Debug(const std::string &message);
 
+    void CheckAndCleanOldLogs();
+
     void Initialize();
 
     void Shutdown();

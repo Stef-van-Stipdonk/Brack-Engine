@@ -30,12 +30,9 @@ add_library(${PROJECT_NAME} SHARED
         outfacingInterfaces/ISystem.hpp
         src/Managers/Entities/EntityManager.cpp
         src/includes/EntityManager.hpp
-        src/Managers/Components/ComponentStore.cpp
         src/includes/ComponentStore.hpp
         src/Managers/Systems/SystemManager.cpp
         src/includes/SystemManager.hpp
-        src/Managers/Components/SparseSet.cpp
-        src/includes/SparseSet.hpp
         outfacingInterfaces/IComponentStorage.hpp
         src/Wrappers/RenderWrapper.cpp
         outfacingInterfaces/Components/ChildComponent.hpp
@@ -107,6 +104,7 @@ add_library(${PROJECT_NAME} SHARED
         src/Helpers/UserLogger.cpp
         outfacingInterfaces/Helpers/UserLogger.hpp
         outfacingInterfaces/Components/RectangleComponent.hpp
+        src/Managers/Entities/ComponentStore.cpp
 )
 
 option(USER_LOG_TO_FILE "Enable user logging to a file" OFF)

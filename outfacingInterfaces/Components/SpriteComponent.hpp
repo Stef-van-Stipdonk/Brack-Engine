@@ -10,21 +10,22 @@
 #include "../../src/Components/ComponentVisitor.hpp"
 #include <string>
 #include <memory>
+#include <Components/Archetypes/RenderArchetype.hpp>
 
-struct SpriteComponent : public TransformComponent {
-    explicit SpriteComponent() : TransformComponent() {}
+struct SpriteComponent : public RenderArchetype {
+    explicit SpriteComponent() : RenderArchetype() {}
 
     ~SpriteComponent() override {
-        if(imageSize != nullptr)
+        if (imageSize != nullptr)
             imageSize = nullptr;
 
-        if(spriteSize != nullptr)
+        if (spriteSize != nullptr)
             spriteSize = nullptr;
 
-        if(tileOffset != nullptr)
+        if (tileOffset != nullptr)
             tileOffset = nullptr;
 
-        if(color != nullptr)
+        if (color != nullptr)
             color = nullptr;
     };
 
@@ -32,18 +33,18 @@ struct SpriteComponent : public TransformComponent {
         return std::make_unique<SpriteComponent>(*this);
     }
 
-    SpriteComponent(const SpriteComponent &other) : TransformComponent(other) {
+    SpriteComponent(const SpriteComponent &other) : RenderArchetype(other) {
         spritePath = other.spritePath;
-        if(other.imageSize != nullptr)
+        if (other.imageSize != nullptr)
             imageSize = std::make_unique<Vector2>(*other.imageSize);
 
-        if(other.spriteSize != nullptr)
+        if (other.spriteSize != nullptr)
             spriteSize = std::make_unique<Vector2>(*other.spriteSize);
 
-        if(other.tileOffset != nullptr)
+        if (other.tileOffset != nullptr)
             tileOffset = std::make_unique<Vector2>(*other.tileOffset);
 
-        if(other.color != nullptr)
+        if (other.color != nullptr)
             color = std::make_unique<Color>(*other.color);
 
         flipX = other.flipX;
@@ -57,12 +58,14 @@ struct SpriteComponent : public TransformComponent {
         visitor.visit(*this);
     }
 
-    std::string spritePath;
-    std::unique_ptr<Vector2> imageSize, spriteSize, tileOffset;
-    std::unique_ptr<Color> color;
-    bool flipX, flipY;
-    int sortingLayer, orderInLayer;
-    int margin;
+    std::string spritePath = "";
+    std::unique_ptr<Vector2> imageSize = std::make_unique<Vector2>(0, 0);
+    std::unique_ptr<Vector2> spriteSize = std::make_unique<Vector2>(0, 0);
+    std::unique_ptr<Vector2> tileOffset = std::make_unique<Vector2>(0, 0);
+    std::unique_ptr<Color> color = std::make_unique<Color>(0, 0, 0, 255);
+    bool flipX = false;
+    bool flipY = false;
+    int margin = 0;
 };
 
 #endif //BRACK_ENGINE_SPRITECOMPONENT_HPP

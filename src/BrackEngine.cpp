@@ -36,12 +36,12 @@ void BrackEngine::Run() {
         FPSSingleton::GetInstance().Start();
         SystemManager::GetInstance().UpdateSystems(GetDeltaTime());
         FPSSingleton::GetInstance().End();
-        Logger::Info("FPS: " + std::to_string(FPSSingleton::GetInstance().GetFPS()));
+//        Logger::Info("FPS: " + std::to_string(FPSSingleton::GetInstance().GetFPS()));
         if (ConfigSingleton::GetInstance().ShowFPS())
             UpdateFPS();
     }
 
-    SystemManager::GetInstance().CleanUp();
+    SystemManager::GetInstance().CleanUp(); 
 }
 
 float BrackEngine::GetDeltaTime() {
@@ -57,24 +57,26 @@ float BrackEngine::GetDeltaTime() {
 
 void BrackEngine::CreateFPS() {
     auto entityId = EntityManager::GetInstance().CreateEntity();
-    auto transformComponent = std::make_unique<TransformComponent>();
-    auto objectInfoComponent = std::make_unique<ObjectInfoComponent>();
-    auto textComponent = std::make_unique<TextComponent>();
+    auto objectInfoComponent = ObjectInfoComponent();
+    auto textComponent = TextComponent();
 
-    objectInfoComponent->name = "FPS";
-    objectInfoComponent->tag = "FPS";
+    objectInfoComponent.name = "FPS";
+    objectInfoComponent.tag = "FPS";
+    objectInfoComponent.entityID = entityId;
 
-    textComponent->text = "0";
-    textComponent->fontSize = 32;
-    textComponent->color = std::make_unique<Color>(255, 0, 0, 255);
+    textComponent.text = "0";
+    textComponent.fontSize = 32;
+    textComponent.color = std::make_unique<Color>(255, 0, 0, 255);
+    textComponent.entityID = entityId;
 
-    ComponentStore::GetInstance().addComponent(entityId, std::move(transformComponent));
-    ComponentStore::GetInstance().addComponent(entityId, std::move(objectInfoComponent));
-    ComponentStore::GetInstance().addComponent(entityId, std::move(textComponent));
+    ComponentStore::GetInstance().addComponent<TransformComponent>(entityId);
+    ComponentStore::GetInstance().addComponent<ObjectInfoComponent>(objectInfoComponent);
+    ComponentStore::GetInstance().addComponent<TextComponent>(textComponent);
 }
 
 void BrackEngine::UpdateFPS() {
-    auto& textComponent = ComponentStore::GetInstance().tryGetComponent<TextComponent>(1);
+    auto &textComponent = ComponentStore::GetInstance().tryGetComponent<TextComponent>(
+            1);//TODO ophalen met tag of name van component
     auto fakk = std::to_string(FPSSingleton::GetInstance().GetFPS());
 
     textComponent.text = fakk;
