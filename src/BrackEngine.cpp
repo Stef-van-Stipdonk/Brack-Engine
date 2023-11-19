@@ -13,7 +13,6 @@
 #include "Systems/BehaviourScriptSystem.hpp"
 #include "Systems/ClickSystem.hpp"
 #include "Systems/AudioSystem.hpp"
-#include <typeindex>
 
 BrackEngine::BrackEngine(Config &&config) {
     ConfigSingleton::GetInstance().SetConfig(config);
@@ -82,7 +81,7 @@ void BrackEngine::UpdateFPS() {
     textComponent.text = fakk;
 }
 
-void BrackEngine::save(const std::string& filePath, const std::string& content) {
+void BrackEngine::save(const std::string& filePath, const std::string& content) const {
     std::ofstream file(filePath, std::ios::binary);
 
     // Check if the file can be opened for writing
@@ -107,7 +106,7 @@ void BrackEngine::save(const std::string& filePath, const std::string& content) 
     file.close();
 }
 
-std::string BrackEngine::load(const std::string& filePath) {
+std::string BrackEngine::load(const std::string& filePath) const {
     std::ifstream file(filePath, std::ios::binary);
 
     // Check if the file can be opened for reading

@@ -24,9 +24,9 @@ public:
 
     void Run();
 
-    void save(const std::string& filePath, const std::string& content);
+    void save(const std::string& filePath, const std::string& content) const;
 
-    std::string load(const std::string& filePath);
+    std::string load(const std::string& filePath) const;
 
 private:
     float GetDeltaTime();
