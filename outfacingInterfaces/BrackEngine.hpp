@@ -24,21 +24,9 @@ public:
 
     void Run();
 
-    void Save(const std::string& filePath, const std::string& content);
+    void save(const std::string& filePath, const std::string& content);
 
-    std::string Load(std::string filePath);
-
-    SceneManager &GetSceneManager() const;
-
-    InputManager &GetInputManager() const;
-
-    ReplayManager &GetReplayManager() const;
-
-    EntityManager &GetEntityManager() const;
-
-    SystemManager &GetSystemManager() const;
-
-    ComponentStore &GetComponentStore() const;
+    std::string load(const std::string& filePath);
 
 private:
     float GetDeltaTime();

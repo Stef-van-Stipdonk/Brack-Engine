@@ -82,7 +82,7 @@ void BrackEngine::UpdateFPS() {
     textComponent.text = fakk;
 }
 
-void BrackEngine::Save(const std::string& filePath, const std::string& content) {
+void BrackEngine::save(const std::string& filePath, const std::string& content) {
     std::ofstream file(filePath, std::ios::binary);
 
     // Check if the file can be opened for writing
@@ -91,16 +91,23 @@ void BrackEngine::Save(const std::string& filePath, const std::string& content) 
         return;
     }
 
-    if(!file.write(reinterpret_cast<const char*>(&content), sizeof(std::string))) {
-        std::cerr << "Error writing to file: " << filePath << std::endl;
+    // Write the size of the string first
+    size_t size = content.size();
+    if (!file.write(reinterpret_cast<const char*>(&size), sizeof(size_t))) {
+        std::cerr << "Error writing size to file: " << filePath << std::endl;
         file.close(); // Close the file before returning
         return;
+    }
+
+    // Write the content of the string
+    if (!file.write(content.c_str(), size)) {
+        std::cerr << "Error writing content to file: " << filePath << std::endl;
     }
 
     file.close();
 }
 
-std::string BrackEngine::Load(std::string filePath) {
+std::string BrackEngine::load(const std::string& filePath) {
     std::ifstream file(filePath, std::ios::binary);
 
     // Check if the file can be opened for reading
@@ -109,9 +116,17 @@ std::string BrackEngine::Load(std::string filePath) {
         return "";
     }
 
-    std::string content;
-    if(!file.read(reinterpret_cast<char*>(&content), sizeof(std::string))) {
+    // Read the size of the string first
+    size_t size;
+    if (!file.read(reinterpret_cast<char*>(&size), sizeof(size_t))) {
+        std::cerr << "Error reading size from file: " << filePath << std::endl;
         return "";
+    }
+
+    // Read the content of the string
+    std::string content(size, '\0');
+    if (!file.read(&content[0], size)) {
+        std::cerr << "Error reading content from file: " << filePath << std::endl;
     }
 
     file.close();
