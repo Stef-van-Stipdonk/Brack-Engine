@@ -23,11 +23,17 @@ struct BehaviourScript : public IComponent {
         OnStart();
     }
 
-    BehaviourScript(const BehaviourScript& other) : IComponent(other) {}
+    BehaviourScript(const BehaviourScript &other) : IComponent(other) {}
 
     virtual void OnStart() {};
 
     virtual void OnUpdate(float deltaTime) {};
+
+    template<typename T>
+    typename std::enable_if_t<std::is_base_of<IComponent, T>::value>::type
+    tryGetComponent() {
+        return ComponentStore::GetInstance().tryGetComponent<T>(entityID);
+    }
 };
 
 
