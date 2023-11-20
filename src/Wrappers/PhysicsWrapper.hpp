@@ -34,6 +34,9 @@ public:
 
     void addCircles(std::vector<uint32_t> componentIds);
 
+    void addSquares(std::vector<uint32_t> componentIds);
+
+
     void Cleanup();
 
     std::unordered_map<uint32_t, std::vector<b2Body *>> bodies;

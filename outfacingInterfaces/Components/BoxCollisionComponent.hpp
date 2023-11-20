@@ -6,6 +6,7 @@
 #define BRACK_ENGINE_BOXCOLLISIONCOMPONENT_HPP
 
 #include <memory>
+#include <Helpers/CollisionType.hpp>
 #include "CollisionComponent.hpp"
 
 
@@ -18,13 +19,14 @@ struct BoxCollisionComponent : public CollisionComponent {
     }
 
     ~BoxCollisionComponent() override {
-        if(size != nullptr)
+        if (size != nullptr)
             size = nullptr;
     };
 
     BoxCollisionComponent(const BoxCollisionComponent &other) : CollisionComponent(other) {
-        if(other.size != nullptr)
+        if (other.size != nullptr)
             size = std::make_unique<Vector2>(*other.size);
+        collisionType = other.collisionType;
     }
 
 
@@ -33,6 +35,8 @@ struct BoxCollisionComponent : public CollisionComponent {
     }
 
     std::unique_ptr<Vector2> size;
+    CollisionType collisionType;
+
 };
 
 #endif //BRACK_ENGINE_BOXCOLLISIONCOMPONENT_HPP
