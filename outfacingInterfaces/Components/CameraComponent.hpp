@@ -27,7 +27,7 @@ struct CameraComponent : public IComponent {
         return std::make_unique<CameraComponent>(*this);
     }
 
-    void Accept(ComponentVisitor &visitor) override {
+    void accept(ComponentVisitor &visitor) override {
         visitor.visit(*this);
     }
 

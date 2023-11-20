@@ -9,12 +9,12 @@
 SceneManager SceneManager::instance;
 
 void SceneManager::SetActiveScene(Scene &scene) {
-    EntityManager::GetInstance().ClearAllEntities();
+    EntityManager::getInstance().clearAllEntities();
     for (auto camera: scene.GetAllCameras())
-        GameObjectConverter::AddCamera(camera);
+        GameObjectConverter::addCamera(camera);
 
     for (auto gameObject: scene.GetAllGameObjects()) {
-        GameObjectConverter::AddGameObject(gameObject);
+        GameObjectConverter::addGameObject(gameObject);
     }
 }
 

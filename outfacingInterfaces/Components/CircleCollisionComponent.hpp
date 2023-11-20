@@ -30,7 +30,7 @@ struct CircleCollisionComponent : public IComponent {
             radius = std::make_unique<Vector2>(*other.radius);
     }
 
-    void Accept(ComponentVisitor &visitor) override {
+    void accept(ComponentVisitor &visitor) override {
         visitor.visit(*this);
     }
 

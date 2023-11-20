@@ -19,7 +19,7 @@ struct ObjectInfoComponent : public IComponent {
         return std::make_unique<ObjectInfoComponent>(*this);
     }
 
-    void Accept(ComponentVisitor &visitor) override {
+    void accept(ComponentVisitor &visitor) override {
         visitor.visit(*this);
     }
 

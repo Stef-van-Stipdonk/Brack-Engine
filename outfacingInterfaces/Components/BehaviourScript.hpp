@@ -7,7 +7,10 @@
 
 #include "IComponent.hpp"
 #include "../../src/Components/ComponentVisitor.hpp"
+#include "../../src/GameObjectConverter.hpp"
 #include <functional>
+#include <Objects/GameObject.hpp>
+#include <optional>
 
 struct BehaviourScript : public IComponent {
     explicit BehaviourScript() = default;
@@ -18,21 +21,37 @@ struct BehaviourScript : public IComponent {
         return std::make_unique<BehaviourScript>(*this);
     }
 
-    void Accept(ComponentVisitor &visitor) override {
+    void accept(ComponentVisitor &visitor) override {
         visitor.visit(*this);
-        OnStart();
+        onStart();
     }
 
     BehaviourScript(const BehaviourScript &other) : IComponent(other) {}
 
-    virtual void OnStart() {};
+    virtual void onStart() {};
 
-    virtual void OnUpdate(float deltaTime) {};
+    virtual void onUpdate(float deltaTime) {};
 
     template<typename T>
     typename std::enable_if_t<std::is_base_of<IComponent, T>::value>::type
     tryGetComponent() {
         return ComponentStore::GetInstance().tryGetComponent<T>(entityID);
+    }
+
+    static std::optional<GameObject> getGameObjectByName(const std::string &name) {
+        return GameObjectConverter::getGameObjectByName(name);
+    }
+
+    static std::vector<GameObject> getGameObjectsByName(const std::string &name) {
+        return GameObjectConverter::getGameObjectsByName(name);
+    }
+
+    static std::optional<GameObject> getGameObjectByTag(const std::string &tag) {
+        return GameObjectConverter::getGameObjectByTag(tag);
+    }
+
+    static std::vector<GameObject> getGameObjectsByTag(const std::string &tag) {
+        return GameObjectConverter::getGameObjectsByTag(tag);
     }
 };
 
