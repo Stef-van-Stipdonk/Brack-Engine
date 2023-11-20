@@ -6,6 +6,7 @@
 #define BRACK_ENGINE_CIRCLECOLLISIONCOMPONENT_HPP
 
 #include <memory>
+#include <Helpers/CollisionType.hpp>
 #include "CollisionComponent.hpp"
 
 
@@ -28,6 +29,7 @@ struct CircleCollisionComponent : public IComponent {
     CircleCollisionComponent(const CircleCollisionComponent &other) : IComponent(other) {
         if (other.radius != nullptr)
             radius = std::make_unique<Vector2>(*other.radius);
+        collisionType = other.collisionType;
     }
 
     void Accept(ComponentVisitor &visitor) override {
@@ -35,6 +37,7 @@ struct CircleCollisionComponent : public IComponent {
     }
 
     std::unique_ptr<Vector2> radius;
+    CollisionType collisionType;
 };
 
 #endif //BRACK_ENGINE_CIRCLECOLLISIONCOMPONENT_HPP
