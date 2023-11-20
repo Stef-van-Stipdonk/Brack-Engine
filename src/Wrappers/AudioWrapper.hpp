@@ -24,7 +24,13 @@ public:
 
     void PlaySound(AudioArchetype &audioComponent);
 
+    void PauseSound(AudioArchetype &audioComponent);
+
+    void ResumeSound(AudioArchetype &audioComponent);
+
     bool IsValidAudioPath(const AudioArchetype& audioComponent);
+
+    std::string getFileName(const std::string& audioPath);
 
     int FindAvailableSFXChannel();
 

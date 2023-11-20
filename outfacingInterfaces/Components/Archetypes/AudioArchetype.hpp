@@ -8,7 +8,7 @@
 #include <Components/IComponent.hpp>
 #include "../../../src/Components/ComponentVisitor.hpp"
 
-class AudioArchetype : public IComponent {
+struct AudioArchetype : public IComponent {
 public:
     explicit AudioArchetype(std::string path, bool isSoundTrack) : IComponent(), audioPath(std::move(path)), isSoundTrack(isSoundTrack) {}
 
@@ -22,6 +22,7 @@ public:
         visitor.visit(*this);
     }
 
+    bool pauseSound = false;
     bool startPlaying = false;
     float volume;
 
@@ -32,6 +33,7 @@ public:
     std::string getAudioPath() const{
         return audioPath;
     }
+
 
 private:
     const std::string audioPath;

@@ -165,6 +165,142 @@ void AudioWrapper::PlaySound(AudioArchetype &audioComponent) {
     }
 }
 
+void AudioWrapper::PauseSound(AudioArchetype &audioComponent) {
+    if (!system) {
+        Logger::Error("FMOD audio system is not initialized.");
+        return;
+    }
+
+    if(!audioComponent.getIsSoundTrack()){
+        for (auto it = soundEffectsChannelMap.begin(); it != soundEffectsChannelMap.end(); ++it) {
+            FMOD::Channel* channel = it->second;
+            if (channel) {
+                FMOD::Sound* sound = nullptr;
+                FMOD_RESULT result = channel->getCurrentSound(&sound);
+                if (result != FMOD_OK) {
+                    Logger::Error("Error getting current sound: " + std::string(FMOD_ErrorString(result)));
+                    continue;
+                }
+                char audioPath[256];
+                result = sound->getName(audioPath, sizeof(audioPath));
+                if (result != FMOD_OK) {
+                    Logger::Error("Error getting sound name: " + std::string(FMOD_ErrorString(result)));
+                    continue;
+                }
+
+                if (std::string(audioPath) == getFileName(audioComponent.getAudioPath())) {
+                    result = channel->setPaused(true);
+                    if (result != FMOD_OK) {
+                        Logger::Error("Error pausing channel: " + std::string(FMOD_ErrorString(result)));
+                    }
+                }
+            }
+        }
+    }
+    else {
+        FMOD::Channel* channel = soundTrackChannelPair.second;
+        if (channel) {
+            FMOD::Sound* sound = nullptr;
+            FMOD_RESULT result = channel->getCurrentSound(&sound);
+            if (result != FMOD_OK) {
+                Logger::Error("Error getting current sound: " + std::string(FMOD_ErrorString(result)));
+                return;
+            }
+
+            char audioPath[256];
+            result = sound->getName(audioPath, sizeof(audioPath));
+            if (result != FMOD_OK) {
+                Logger::Error("Error getting sound name: " + std::string(FMOD_ErrorString(result)));
+                return;
+            }
+
+            if (std::string(audioPath) == getFileName(audioComponent.getAudioPath())) {
+                result = channel->setPaused(true);
+                if (result != FMOD_OK) {
+                    Logger::Error("Error pausing channel: " + std::string(FMOD_ErrorString(result)));
+                }
+            }
+        }
+    }
+}
+
+void AudioWrapper::ResumeSound(AudioArchetype &audioComponent) {
+    if (!system) {
+        Logger::Error("FMOD audio system is not initialized.");
+        return;
+    }
+
+    if (!audioComponent.getIsSoundTrack()) {
+        for (auto it = soundEffectsChannelMap.begin(); it != soundEffectsChannelMap.end(); ++it) {
+            FMOD::Channel* channel = it->second;
+            if (channel) {
+                FMOD::Sound* sound = nullptr;
+                FMOD_RESULT result = channel->getCurrentSound(&sound);
+                if (result != FMOD_OK) {
+                    Logger::Error("Error getting current sound: " + std::string(FMOD_ErrorString(result)));
+                    continue;
+                }
+
+                char audioPath[256];
+                result = sound->getName(audioPath, sizeof(audioPath));
+                if (result != FMOD_OK) {
+                    Logger::Error("Error getting sound name: " + std::string(FMOD_ErrorString(result)));
+                    continue;
+                }
+
+                if (std::string(audioPath) == getFileName(audioComponent.getAudioPath())) {
+                    bool isPaused;
+                    result = channel->getPaused(&isPaused);
+                    if (result != FMOD_OK) {
+                        Logger::Error("Error checking if channel is paused: " + std::string(FMOD_ErrorString(result)));
+                        continue;
+                    }
+
+                    if (isPaused) {
+                        result = channel->setPaused(false); // Resume the channel
+                        if (result != FMOD_OK) {
+                            Logger::Error("Error resuming channel: " + std::string(FMOD_ErrorString(result)));
+                        }
+                    }
+                }
+            }
+        }
+    } else {
+        FMOD::Channel* channel = soundTrackChannelPair.second;
+        if (channel) {
+            FMOD::Sound* sound = nullptr;
+            FMOD_RESULT result = channel->getCurrentSound(&sound);
+            if (result != FMOD_OK) {
+                Logger::Error("Error getting current sound: " + std::string(FMOD_ErrorString(result)));
+                return;
+            }
+
+            char audioPath[256];
+            result = sound->getName(audioPath, sizeof(audioPath));
+            if (result != FMOD_OK) {
+                Logger::Error("Error getting sound name: " + std::string(FMOD_ErrorString(result)));
+                return;
+            }
+
+            if (std::string(audioPath) == getFileName(audioComponent.getAudioPath())) {
+                bool isPaused;
+                result = channel->getPaused(&isPaused);
+                if (result != FMOD_OK) {
+                    Logger::Error("Error checking if channel is paused: " + std::string(FMOD_ErrorString(result)));
+                    return;
+                }
+
+                if (isPaused) {
+                    result = channel->setPaused(false); // Resume the channel
+                    if (result != FMOD_OK) {
+                        Logger::Error("Error resuming channel: " + std::string(FMOD_ErrorString(result)));
+                    }
+                }
+            }
+        }
+    }
+}
+
 bool AudioWrapper::IsValidAudioPath(const AudioArchetype& audioComponent){
     std::ifstream file(audioComponent.getAudioPath());
 
@@ -195,3 +331,9 @@ bool AudioWrapper::IsValidAudioPath(const AudioArchetype& audioComponent){
     return true;
 }
 
+std::string AudioWrapper::getFileName(const std::string& audioPath) {
+    size_t lastSlash = audioPath.find_last_of("/\\");
+    std::string fileName = audioPath.substr(lastSlash + 1);
+
+    return fileName;
+}

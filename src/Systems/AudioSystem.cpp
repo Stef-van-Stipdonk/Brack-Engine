@@ -20,6 +20,12 @@ void AudioSystem::Update(float deltaTime) {
             audioComponent->startPlaying = false;
             audioWrapper->PlaySound(*audioComponent);
         }
+        if(audioComponent->pauseSound){
+            audioWrapper->PauseSound(*audioComponent);
+        }
+        else{
+            audioWrapper->ResumeSound(*audioComponent);
+        }
     }
 }
 
