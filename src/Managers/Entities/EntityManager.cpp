@@ -32,6 +32,8 @@ EntityManager &EntityManager::getInstance() {
 }
 
 void EntityManager::addEntityWithName(uint32_t entity, const std::string &name) {
+    if (name.empty())
+        return;
     if (entitiesByName.find(name) == entitiesByName.end())
         entitiesByName[name] = {entity};
     else if (std::find(entitiesByName[name].begin(), entitiesByName[name].end(), entity) == entitiesByName[name].end())
@@ -39,6 +41,8 @@ void EntityManager::addEntityWithName(uint32_t entity, const std::string &name) 
 }
 
 void EntityManager::addEntityWithTag(uint32_t entity, const std::string &tag) {
+    if (tag.empty())
+        return;
     if (entitiesByTag.find(tag) == entitiesByTag.end())
         entitiesByTag[tag] = {entity};
     else if (std::find(entitiesByTag[tag].begin(), entitiesByTag[tag].end(), entity) == entitiesByTag[tag].end())
