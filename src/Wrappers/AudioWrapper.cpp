@@ -230,6 +230,28 @@ void AudioWrapper::ResumeSound(AudioArchetype &audioComponent) {
         return;
     }
 
+    bool anySoundsPaused = false;
+    for (auto it = soundEffectsChannelMap.begin(); it != soundEffectsChannelMap.end(); ++it) {
+        FMOD::Channel* channel = it->second;
+        if (channel) {
+            bool isPlaying;
+            FMOD_RESULT result = channel->isPlaying(&isPlaying);
+            if (result != FMOD_OK) {
+                Logger::Error("Error checking if channel is playing: " + std::string(FMOD_ErrorString(result)));
+                continue;
+            }
+            if (!isPlaying) {
+                anySoundsPaused = true;
+                Logger::Debug("Paused Sound Found");
+                break; // Exit the loop as soon as a paused sound is found
+            }
+        }
+    }
+
+    if (!anySoundsPaused) {
+        return;
+    }
+
     if (!audioComponent.getIsSoundTrack()) {
         for (auto it = soundEffectsChannelMap.begin(); it != soundEffectsChannelMap.end(); ++it) {
             FMOD::Channel* channel = it->second;
