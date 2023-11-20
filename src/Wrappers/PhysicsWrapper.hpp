@@ -9,28 +9,52 @@
 #include <vector>
 #include <Components/CircleCollisionComponent.hpp>
 #include "../../lib/Box2d/include/box2d/box2d.h"
-#include "ContactListener.hpp"
+
+class ContactListener;
 
 class PhysicsWrapper {
 public:
-    PhysicsWrapper();
 
     ~PhysicsWrapper();
 
+    static PhysicsWrapper &GetInstance();
+
+
+    PhysicsWrapper(PhysicsWrapper &other) = delete;
+
+    void operator=(const PhysicsWrapper &) = delete;
+
+    PhysicsWrapper(PhysicsWrapper &&other) = delete;
+
+    void operator=(PhysicsWrapper &&) = delete;
+
     void Initialize();
 
-    void Update();
+    void update();
 
-    void AddCircles(std::vector<uint32_t> componentIds);
+    void addCircles(std::vector<uint32_t> componentIds);
 
     void Cleanup();
 
+    std::unordered_map<uint32_t, std::vector<b2Body *>> bodies;
+
 private:
+    PhysicsWrapper();
+
+    static PhysicsWrapper instance;
+
     std::unique_ptr<ContactListener> contactListener;
 
     std::unique_ptr<b2World> world;
-    std::unordered_map<uint32_t, std::vector<b2Body *>> bodies;
 
+    b2BodyType getBodyType(CollisionType collisionType);
+};
+
+class ContactListener : public b2ContactListener {
+public:
+    void BeginContact(b2Contact *contact) override;
+
+    void EndContact(b2Contact *contact) override;
 };
 
 
