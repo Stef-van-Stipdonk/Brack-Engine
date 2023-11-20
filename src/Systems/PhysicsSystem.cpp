@@ -7,8 +7,6 @@
 #include "../includes/ComponentStore.hpp"
 
 PhysicsSystem::PhysicsSystem() {
-    physicsWrapper = std::make_unique<PhysicsWrapper>();
-    physicsWrapper->Initialize();
 }
 
 PhysicsSystem::~PhysicsSystem() {
@@ -28,9 +26,9 @@ void PhysicsSystem::Update(float deltaTime) {
 
         circleCollisionComponents.push_back(&circleCollisionComponent);
     }
-    physicsWrapper->AddCircles(circleCollisionComponentIds);
+    PhysicsWrapper::GetInstance().addCircles(circleCollisionComponentIds);
 
-    physicsWrapper->Update();
+    PhysicsWrapper::GetInstance().update();
 
 
 }
