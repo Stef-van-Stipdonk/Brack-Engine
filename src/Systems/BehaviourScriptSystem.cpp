@@ -14,11 +14,11 @@ BehaviourScriptSystem::~BehaviourScriptSystem() {
 
 }
 
+
 void BehaviourScriptSystem::update(float deltaTime) {
     auto entities = ComponentStore::GetInstance().getAllComponentsOfType<BehaviourScript>();
     for (auto entity: entities) {
-//        auto& behaviourScriptComponent = ComponentStore::GetInstance().tryGetComponent<BehaviourScript>(entity);
-        entity->OnUpdate(deltaTime);
+        entity->onUpdate(deltaTime);
     }
 }
 
