@@ -12,8 +12,10 @@
 Button::Button(const Vector2& size, const std::string& text) : UIObject() {
     auto textComponent = std::make_unique<TextComponent>();
     textComponent->text = std::move(text);
+    textComponent->orderInLayer = 0;
 
     auto rectangleComponent = std::make_unique<RectangleComponent>(size);
+    rectangleComponent->orderInLayer = 1;
 
     auto boxCollisionComponent = std::make_unique<BoxCollisionComponent>(size);
 

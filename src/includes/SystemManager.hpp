@@ -72,7 +72,7 @@ public:
 
             // Remove this system as a dependency from other systems
             for (auto& system : systems) {
-                system->RemoveDependency(systemToRemove);
+                system->removeDependency(systemToRemove);
             }
 
             // Now remove the system itself

@@ -12,7 +12,7 @@ ReplaySystem::~ReplaySystem() {
 
 }
 
-void ReplaySystem::Update(float deltaTime) {
+void ReplaySystem::update(float deltaTime) {
 
 }
 
@@ -24,10 +24,10 @@ void ReplaySystem::LoadReplay() {
 
 }
 
-const std::string ReplaySystem::GetName() const {
+const std::string ReplaySystem::getName() const {
     return "ReplaySystem";
 }
 
-void ReplaySystem::CleanUp() {
+void ReplaySystem::cleanUp() {
 
 }
