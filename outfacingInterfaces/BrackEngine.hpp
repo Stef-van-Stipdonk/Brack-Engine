@@ -29,9 +29,10 @@ private:
 
     void CreateFPS();
 
-    void UpdateFPS();
+    void UpdateFPS(float deltaTime);
 
     std::chrono::time_point<std::chrono::high_resolution_clock> lastTime;
+    float totalTime = 0;
 };
 
 

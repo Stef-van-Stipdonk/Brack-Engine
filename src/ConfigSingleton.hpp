@@ -40,6 +40,7 @@ public:
 
     std::string GetBaseAssetPath() const;
 
+    uint32_t GetFPSLimit() const;
 
     void ToggleIsRunning();
 
@@ -54,6 +55,7 @@ private:
     bool fullscreen = false;
     std::string BaseAssetPath = "../../Brackocalypse/Assets/";
     bool showFPS = true;
+    uint32_t fpsLimit = 60;
 };
 
 
