@@ -20,12 +20,14 @@ struct BehaviourScript : public IComponent {
 
     void Accept(ComponentVisitor &visitor) override {
         visitor.visit(*this);
-        OnStart();
+        onStart();
     }
 
-    virtual void OnStart() {};
+    BehaviourScript(const BehaviourScript& other) : IComponent(other) {}
 
-    virtual void OnUpdate(float deltaTime) {};
+    virtual void onStart() {};
+
+    virtual void onUpdate(float deltaTime) {};
 };
 
 
