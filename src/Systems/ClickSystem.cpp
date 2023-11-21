@@ -12,7 +12,7 @@ ClickSystem::ClickSystem() {}
 
 ClickSystem::~ClickSystem() {}
 
-void ClickSystem::Update(float deltaTime) {
+void ClickSystem::update(float deltaTime) {
     if(!InputManager::GetInstance().IsMouseReleased(LEFT_MOUSE)) return;
 
     auto& componentStore = ComponentStore::GetInstance();
@@ -69,10 +69,10 @@ void ClickSystem::CheckCircleCollision(const ClickableComponent &clickableCompon
     }
 }
 
-const std::string ClickSystem::GetName() const {
+const std::string ClickSystem::getName() const {
     return "ClickSystem";
 }
 
-void ClickSystem::CleanUp() {
+void ClickSystem::cleanUp() {
 
 }

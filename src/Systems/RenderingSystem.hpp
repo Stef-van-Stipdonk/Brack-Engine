@@ -24,11 +24,11 @@ public:
 
     ~RenderingSystem() override;
 
-    void CleanUp() override;
+    void cleanUp() override;
 
-    const std::string GetName() const override;
+    const std::string getName() const override;
 
-    void Update(float deltaTime) override;
+    void update(float deltaTime) override;
 
 private:
     void SortRenderComponents();

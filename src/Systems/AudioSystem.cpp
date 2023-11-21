@@ -12,17 +12,17 @@ AudioSystem::~AudioSystem() {
 
 }
 
-void AudioSystem::Update(float deltaTime) {
+void AudioSystem::update(float deltaTime) {
 }
 
 void AudioSystem::PlayPause(uint32_t entityID) {
 
 }
 
-const std::string AudioSystem::GetName() const {
+const std::string AudioSystem::getName() const {
     return "AudioSystem";
 }
 
-void AudioSystem::CleanUp() {
+void AudioSystem::cleanUp() {
 
 }

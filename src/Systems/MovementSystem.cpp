@@ -14,7 +14,7 @@ MovementSystem::~MovementSystem() {
 
 }
 
-void MovementSystem::Update(float deltaTime) {
+void MovementSystem::update(float deltaTime) {
     auto entities = ComponentStore::GetInstance().getEntitiesWithComponent<VelocityComponent>();
     for (auto entity: entities) {
         auto velocityComponent = ComponentStore::GetInstance().tryGetComponent<VelocityComponent>(entity);
@@ -28,10 +28,10 @@ void MovementSystem::Update(float deltaTime) {
     }
 }
 
-const std::string MovementSystem::GetName() const {
+const std::string MovementSystem::getName() const {
     return "MovementSystem";
 }
 
-void MovementSystem::CleanUp() {
+void MovementSystem::cleanUp() {
 
 }

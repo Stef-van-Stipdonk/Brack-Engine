@@ -12,12 +12,12 @@
 class ISystem : public std::enable_shared_from_this<ISystem> {
 public:
     virtual ~ISystem() = default;
-    virtual void Init() {}
-    virtual void Update(float deltaTime) = 0;
-    virtual const std::string GetName() const = 0;
-    virtual void CleanUp() = 0;
+    virtual void init() {}
+    virtual void update(float deltaTime) = 0;
+    virtual const std::string getName() const = 0;
+    virtual void cleanUp() = 0;
 
-    void AddDependency(std::shared_ptr<ISystem> dependency) {
+    void addDependency(std::shared_ptr<ISystem> dependency) {
         auto thisPtr = shared_from_this();
 
         bool dependencyExists = std::any_of(outgoingEdges.begin(), outgoingEdges.end(),
@@ -29,8 +29,8 @@ public:
 
         if (!dependencyExists) {
             outgoingEdges.push_back(dependency);
-            Logger::Info("Dependency added for " + this->GetName() + ", " + this->GetName() + " now depends on " +
-                         dependency->GetName());
+            Logger::Info("Dependency added for " + this->getName() + ", " + this->getName() + " now depends on " +
+                         dependency->getName());
 
             bool backLinkExists = std::any_of(dependency->incomingEdges.begin(), dependency->incomingEdges.end(),
                                               [thisPtr](const std::weak_ptr<ISystem>& weakPtr) {
@@ -45,7 +45,7 @@ public:
         }
     }
 
-    void RemoveDependency(std::shared_ptr<ISystem> dependency) {
+    void removeDependency(std::shared_ptr<ISystem> dependency) {
         for (auto& outgoingEdge : dependency->outgoingEdges) {
             auto targetSystem = outgoingEdge.lock();
             if (targetSystem) {
@@ -72,12 +72,12 @@ public:
             }
         }
 
-        Logger::Info("Dependency removed for " + dependency->GetName());
+        Logger::Info("Dependency removed for " + dependency->getName());
     }
 
 
 
-    void AddDependency(std::weak_ptr<ISystem> weakDependency) {
+    void addDependency(std::weak_ptr<ISystem> weakDependency) {
         auto thisPtr = shared_from_this();
 
         // Lock the weak pointer to get a shared pointer for comparison
@@ -95,8 +95,8 @@ public:
 
         if (!dependencyExists) {
             outgoingEdges.push_back(weakDependency);
-            Logger::Info("Dependency added for " + this->GetName() + ", " + this->GetName() + " now depends on " +
-                         dependency->GetName());
+            Logger::Info("Dependency added for " + this->getName() + ", " + this->getName() + " now depends on " +
+                         dependency->getName());
 
             bool backLinkExists = std::any_of(dependency->incomingEdges.begin(), dependency->incomingEdges.end(),
                                               [thisPtr](const std::weak_ptr<ISystem>& weakPtr) {
@@ -116,7 +116,7 @@ public:
     std::vector<std::weak_ptr<ISystem>> incomingEdges;
 
 
-    const std::vector<std::weak_ptr<ISystem>>& GetDependencies() const { return outgoingEdges; }
+    const std::vector<std::weak_ptr<ISystem>>& getDependencies() const { return outgoingEdges; }
 
 private:
 

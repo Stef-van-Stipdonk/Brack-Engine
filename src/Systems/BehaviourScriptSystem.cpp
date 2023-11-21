@@ -14,7 +14,7 @@ BehaviourScriptSystem::~BehaviourScriptSystem() {
 
 }
 
-void BehaviourScriptSystem::Update(float deltaTime) {
+void BehaviourScriptSystem::update(float deltaTime) {
     auto entities = ComponentStore::GetInstance().getAllComponentsOfType<BehaviourScript>();
     for (auto entity: entities) {
 //        auto& behaviourScriptComponent = ComponentStore::GetInstance().tryGetComponent<BehaviourScript>(entity);
@@ -22,10 +22,10 @@ void BehaviourScriptSystem::Update(float deltaTime) {
     }
 }
 
-const std::string BehaviourScriptSystem::GetName() const {
+const std::string BehaviourScriptSystem::getName() const {
     return "BehaviourScriptSystem";
 }
 
-void BehaviourScriptSystem::CleanUp() {
+void BehaviourScriptSystem::cleanUp() {
 
 }
