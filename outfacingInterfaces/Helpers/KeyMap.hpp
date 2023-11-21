@@ -251,7 +251,7 @@ enum KeyMap {
     SOFTLEFT = 1073742111,
     SOFTRIGHT = 1073742112,
     CALL = 1073742113,
-    ENDCALL = 1073742114
+    ENDCALL = 1073742114,
 };
 
 #define KeyMap_List \

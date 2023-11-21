@@ -23,6 +23,13 @@ struct ObjectInfoComponent : public IComponent {
         visitor.visit(*this);
     }
 
+    ObjectInfoComponent(const ObjectInfoComponent& other) : IComponent(other) {
+        name = other.name;
+        tag = other.tag;
+        layer = other.layer;
+        isActive = other.isActive;
+    }
+
     std::string name, tag;
     int layer;
     bool isActive = true;

@@ -14,24 +14,24 @@ MovementSystem::~MovementSystem() {
 
 }
 
-void MovementSystem::Update(float deltaTime) {
+void MovementSystem::update(float deltaTime) {
     auto entities = ComponentStore::GetInstance().getEntitiesWithComponent<VelocityComponent>();
     for (auto entity: entities) {
         auto velocityComponent = ComponentStore::GetInstance().tryGetComponent<VelocityComponent>(entity);
         if (velocityComponent.velocity == Vector2(0, 0)) {
             continue;
         }
-        auto transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(entity);
+        auto &transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(entity);
         transformComponent.position = std::make_unique<Vector2>(
                 *transformComponent.position + velocityComponent.velocity * deltaTime
         );
     }
 }
 
-const std::string MovementSystem::GetName() const {
+const std::string MovementSystem::getName() const {
     return "MovementSystem";
 }
 
-void MovementSystem::CleanUp() {
+void MovementSystem::cleanUp() {
 
 }

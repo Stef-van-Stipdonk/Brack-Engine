@@ -7,8 +7,8 @@
 
 #include "TransformComponent.hpp"
 
-struct VelocityComponent : public TransformComponent {
-    explicit VelocityComponent() : TransformComponent() {}
+struct VelocityComponent : public IComponent {
+    explicit VelocityComponent() : IComponent() {}
 
     ~VelocityComponent() = default;
 
@@ -16,7 +16,9 @@ struct VelocityComponent : public TransformComponent {
         return std::make_unique<VelocityComponent>(*this);
     }
 
-    VelocityComponent(const VelocityComponent &other) = default;
+    VelocityComponent(const VelocityComponent &other) : IComponent(other) {
+        velocity = other.velocity;
+    }
 
     void Accept(ComponentVisitor &visitor) override {
         visitor.visit(*this);

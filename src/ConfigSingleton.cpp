@@ -38,8 +38,8 @@ std::string ConfigSingleton::GetBaseAssetPath() const {
     return BaseAssetPath;
 }
 
-int ConfigSingleton::getAmountOfSFXChannels() const {
-    return amountOfSFXChannels;
+int ConfigSingleton::getAmountOfSoundEffectsChannels() const {
+    return amountOfSoundEffectsChannels;
 }
 
 void ConfigSingleton::SetConfig(Config config) {
@@ -49,7 +49,8 @@ void ConfigSingleton::SetConfig(Config config) {
     fullscreen = config.fullscreen;
     BaseAssetPath = config.BaseAssetPath;
     showFPS = config.showFPS;
-    amountOfSFXChannels = config.amountOfSFXChannels;
+    amountOfSoundEffectsChannels = config.amountOfSoundEffectsChannels;
+    fpsLimit = config.fpsLimit;
 }
 
 bool ConfigSingleton::ShowFPS() const {
@@ -58,4 +59,8 @@ bool ConfigSingleton::ShowFPS() const {
 
 void ConfigSingleton::SetWindowSize(Vector2 size) const {
     size = size;
+}
+
+uint32_t ConfigSingleton::GetFPSLimit() const {
+    return fpsLimit;
 }

@@ -43,7 +43,8 @@ public:
 /// Finds a system by type and returns a weak pointer to it
 /// </summary>
     template<typename T>
-    std::weak_ptr<T> FindSystem() {
+    typename std::enable_if<std::is_base_of<ISystem, T>::value, std::weak_ptr<T>>::type
+    FindSystem() {
         for (auto& system : systems) {
             auto castedSystem = std::dynamic_pointer_cast<T>(system);
             if (castedSystem) {
@@ -58,7 +59,8 @@ public:
 
 
     template<typename T>
-    void RemoveSystem() {
+    typename std::enable_if<std::is_base_of<ISystem, T>::value>::type
+    RemoveSystem() {
         // Find the system to remove
         auto systemToRemoveIt = std::find_if(systems.begin(), systems.end(),
                                              [](const std::shared_ptr<ISystem>& system) {
@@ -70,7 +72,7 @@ public:
 
             // Remove this system as a dependency from other systems
             for (auto& system : systems) {
-                system->RemoveDependency(systemToRemove);
+                system->removeDependency(systemToRemove);
             }
 
             // Now remove the system itself

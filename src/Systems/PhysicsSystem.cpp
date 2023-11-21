@@ -12,14 +12,14 @@ PhysicsSystem::~PhysicsSystem() {
 
 }
 
-void PhysicsSystem::Update(float deltaTime) {
+void PhysicsSystem::update(float deltaTime) {
 
 }
 
-const std::string PhysicsSystem::GetName() const {
+const std::string PhysicsSystem::getName() const {
     return "PhysicsSystem";
 }
 
-void PhysicsSystem::CleanUp() {
+void PhysicsSystem::cleanUp() {
 
 }

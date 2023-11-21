@@ -12,13 +12,13 @@ AnimationSystem::~AnimationSystem() {
 
 }
 
-void AnimationSystem::Update(float deltaTime) {
+void AnimationSystem::update(float deltaTime) {
 
 }
 
-const std::string AnimationSystem::GetName() const {
+const std::string AnimationSystem::getName() const {
     return "AnimationSystem";
 }
 
-void AnimationSystem::CleanUp() {
+void AnimationSystem::cleanUp() {
 }

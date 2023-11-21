@@ -12,14 +12,14 @@ TimerSystem::~TimerSystem() {
 
 }
 
-void TimerSystem::Update(float deltaTime) {
+void TimerSystem::update(float deltaTime) {
 
 }
 
-const std::string TimerSystem::GetName() const {
+const std::string TimerSystem::getName() const {
     return "TimerSystem";
 }
 
-void TimerSystem::CleanUp() {
+void TimerSystem::cleanUp() {
 
 }

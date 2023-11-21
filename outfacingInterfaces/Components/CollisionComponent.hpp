@@ -21,6 +21,8 @@ struct CollisionComponent : public TransformComponent {
     void Accept(ComponentVisitor &visitor) override {
         visitor.visit(*this);
     }
+
+    CollisionComponent(const CollisionComponent& other) : TransformComponent(other) {}
 };
 
 #endif //BRACK_ENGINE_COLLISIONCOMPONENT_HPP

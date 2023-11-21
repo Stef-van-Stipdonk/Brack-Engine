@@ -12,14 +12,14 @@ ParticleSystem::~ParticleSystem() {
 
 }
 
-void ParticleSystem::Update(float deltaTime) {
+void ParticleSystem::update(float deltaTime) {
 
 }
 
-const std::string ParticleSystem::GetName() const {
+const std::string ParticleSystem::getName() const {
     return "ParticleSystem";
 }
 
-void ParticleSystem::CleanUp() {
+void ParticleSystem::cleanUp() {
 
 }

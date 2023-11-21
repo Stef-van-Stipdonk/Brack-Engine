@@ -20,21 +20,21 @@ public:
 
     ~AudioWrapper();
 
-    void CleanUp();
+    void cleanUp();
 
-    void PlaySound(AudioArchetype &audioComponent);
+    void playSound(AudioArchetype &audioComponent);
 
-    void PauseSound(AudioArchetype &audioComponent);
+    void pauseSound(AudioArchetype &audioComponent);
 
-    void ResumeSound(AudioArchetype &audioComponent);
+    void resumeSound(AudioArchetype &audioComponent);
 
-    bool IsValidAudioPath(const AudioArchetype& audioComponent);
+    bool isValidAudioPath(const AudioArchetype& audioComponent);
 
     std::string getFileName(const std::string& audioPath);
 
-    int FindAvailableSFXChannel();
+    int findAvailableSoundEffectsChannel();
 
-    void ClearUnusedChannels() ;
+    void clearUnusedChannels() ;
 
 private:
     FMOD::System *system;

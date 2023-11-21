@@ -29,7 +29,7 @@ AudioWrapper::~AudioWrapper() {
     }
 }
 
-void AudioWrapper::CleanUp() {
+void AudioWrapper::cleanUp() {
     if (system) {
         FMOD_RESULT result = system->release();
         if (result != FMOD_OK) {
@@ -39,10 +39,10 @@ void AudioWrapper::CleanUp() {
     }
 }
 
-int AudioWrapper::FindAvailableSFXChannel() {
-    ClearUnusedChannels();
+int AudioWrapper::findAvailableSoundEffectsChannel() {
+    clearUnusedChannels();
 
-    int availableSFXChannels = ConfigSingleton::GetInstance().getAmountOfSFXChannels();
+    int availableSFXChannels = ConfigSingleton::GetInstance().getAmountOfSoundEffectsChannels();
 
     if (availableSFXChannels <= 0) {
         Logger::Error("Invalid SFX channel count.");
@@ -57,7 +57,7 @@ int AudioWrapper::FindAvailableSFXChannel() {
     return -1; // No available channel found
 }
 
-void AudioWrapper::ClearUnusedChannels() {
+void AudioWrapper::clearUnusedChannels() {
     std::vector<int> channelsToRelease;
 
     for (auto it = soundEffectsChannelMap.begin(); it != soundEffectsChannelMap.end();) {
@@ -88,18 +88,18 @@ void AudioWrapper::ClearUnusedChannels() {
     }
 }
 
-void AudioWrapper::PlaySound(AudioArchetype &audioComponent) {
+void AudioWrapper::playSound(AudioArchetype &audioComponent) {
     if (!system) {
         Logger::Error("FMOD audio system is not initialized.");
         return;
     }
 
-    if (!IsValidAudioPath(audioComponent)) {
+    if (!isValidAudioPath(audioComponent)) {
         Logger::Error("Invalid audio file path.");
         return;
     }
 
-    int availableSFXChannels = ConfigSingleton::GetInstance().getAmountOfSFXChannels();
+    int availableSFXChannels = ConfigSingleton::GetInstance().getAmountOfSoundEffectsChannels();
 
     if (availableSFXChannels <= 0) {
         Logger::Error("No available SFX channels.");
@@ -130,7 +130,7 @@ void AudioWrapper::PlaySound(AudioArchetype &audioComponent) {
         Logger::Debug("Uploaded sound to Soundtrack Channel: " + std::to_string(soundTrackChannelPair.first) + ", Path: " + audioComponent.getAudioPath());
     } else { // SoundEffect
         // Find an available SFX channel to play the sound
-        int channelID = FindAvailableSFXChannel();
+        int channelID = findAvailableSoundEffectsChannel();
 
         if (channelID == -1) {
             Logger::Debug("All SFX channels are currently in use.");
@@ -165,7 +165,7 @@ void AudioWrapper::PlaySound(AudioArchetype &audioComponent) {
     }
 }
 
-void AudioWrapper::PauseSound(AudioArchetype &audioComponent) {
+void AudioWrapper::pauseSound(AudioArchetype &audioComponent) {
     if (!system) {
         Logger::Error("FMOD audio system is not initialized.");
         return;
@@ -224,7 +224,7 @@ void AudioWrapper::PauseSound(AudioArchetype &audioComponent) {
     }
 }
 
-void AudioWrapper::ResumeSound(AudioArchetype &audioComponent) {
+void AudioWrapper::resumeSound(AudioArchetype &audioComponent) {
     if (!system) {
         Logger::Error("FMOD audio system is not initialized.");
         return;
@@ -323,7 +323,7 @@ void AudioWrapper::ResumeSound(AudioArchetype &audioComponent) {
     }
 }
 
-bool AudioWrapper::IsValidAudioPath(const AudioArchetype& audioComponent){
+bool AudioWrapper::isValidAudioPath(const AudioArchetype& audioComponent){
     std::ifstream file(audioComponent.getAudioPath());
 
     if (!file.good()) {
