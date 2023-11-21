@@ -6,6 +6,7 @@
 #define BRACKOCALYPSE_CONFIG_HPP
 
 #include <string>
+#include <cstdint>
 #include "Helpers/Vector2.hpp"
 
 class Config {
@@ -20,7 +21,8 @@ public:
     bool fullscreen = false;
     std::string BaseAssetPath = "../../Brackocalypse/Assets/";
     bool showFPS = true;
-    int amountOfSFXChannels = 3;
+    int amountOfSoundEffectsChannels = 3;
+    uint16_t fpsLimit = 0;
 };
 
 

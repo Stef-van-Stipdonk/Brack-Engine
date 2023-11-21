@@ -24,26 +24,15 @@ public:
 
     void Run();
 
-    SceneManager &GetSceneManager() const;
-
-    InputManager &GetInputManager() const;
-
-    ReplayManager &GetReplayManager() const;
-
-    EntityManager &GetEntityManager() const;
-
-    SystemManager &GetSystemManager() const;
-
-    ComponentStore &GetComponentStore() const;
-
 private:
     float GetDeltaTime();
 
     void CreateFPS();
 
-    void UpdateFPS();
+    void UpdateFPS(float deltaTime);
 
     std::chrono::time_point<std::chrono::high_resolution_clock> lastTime;
+    float totalTime = 0;
 };
 
 

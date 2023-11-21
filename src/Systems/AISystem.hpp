@@ -14,10 +14,10 @@ public:
 
     ~AISystem() override;
 
-    const std::string GetName() const override;
-    void CleanUp() override;
+    const std::string getName() const override;
+    void cleanUp() override;
 
-    void Update(float deltaTime) override;
+    void update(float deltaTime) override;
 };
 
 

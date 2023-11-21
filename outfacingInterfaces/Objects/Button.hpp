@@ -28,5 +28,4 @@ public:
     void SetDisabled(bool disabled);
 };
 
-
 #endif //BRACK_ENGINE_BUTTON_HPP

@@ -13,31 +13,33 @@ AudioSystem::AudioSystem() : audioWrapper(new AudioWrapper()) {
 AudioSystem::~AudioSystem() {
 }
 
-void AudioSystem::Update(float deltaTime) {
+void AudioSystem::update(float deltaTime) {
     auto audiocomponents = ComponentStore::GetInstance().getAllComponentsOfType<AudioArchetype>();
     for(auto audioComponent : audiocomponents){
         if(audioComponent->startPlaying){
             audioComponent->startPlaying = false;
-            audioWrapper->PlaySound(*audioComponent);
+            audioWrapper->playSound(*audioComponent);
         }
         if(audioComponent->pauseSound){
-            audioWrapper->PauseSound(*audioComponent);
+            audioWrapper->pauseSound(*audioComponent);
         }
         else{
-            audioWrapper->ResumeSound(*audioComponent);
+            audioWrapper->resumeSound(*audioComponent);
         }
     }
 }
 
-const std::string AudioSystem::GetName() const {
+
+
+const std::string AudioSystem::getName() const {
     return "AudioSystem";
 }
 
-void AudioSystem::CleanUp() {
+void AudioSystem::cleanUp() {
     auto entities = ComponentStore::GetInstance().getEntitiesWithComponent<AudioArchetype>();
     for(auto entity : entities){
         auto audioComponent = ComponentStore::GetInstance().tryGetComponent<AudioArchetype>(entity);
             audioComponent.startPlaying = false;
     }
-    audioWrapper->CleanUp();
+    audioWrapper->cleanUp();
 }

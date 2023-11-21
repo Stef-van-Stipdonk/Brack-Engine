@@ -20,6 +20,8 @@ struct InputTag : public IComponent {
     void Accept(ComponentVisitor &visitor) override {
         visitor.visit(*this);
     }
+
+    InputTag(const InputTag& other) : IComponent(other) {}
 };
 
 #endif //BRACK_ENGINE_INPUTTAG_HPP

@@ -18,6 +18,8 @@ public:
 
     void SetBackgroundColor(const Color& color);
 
+    void SetOnScreenPosition(const Vector2& position);
+
     void SetSize(const Vector2& size);
 };
 

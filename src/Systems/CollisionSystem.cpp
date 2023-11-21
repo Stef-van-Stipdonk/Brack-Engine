@@ -12,14 +12,14 @@ CollisionSystem::~CollisionSystem() {
 
 }
 
-void CollisionSystem::Update(float deltaTime) {
+void CollisionSystem::update(float deltaTime) {
 
 }
 
-const std::string CollisionSystem::GetName() const {
+const std::string CollisionSystem::getName() const {
     return "CollisionSystem";
 }
 
-void CollisionSystem::CleanUp() {
+void CollisionSystem::cleanUp() {
 
 }
