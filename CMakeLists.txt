@@ -184,7 +184,7 @@ endif ()
 target_link_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/FMod)
 
 if (WIN32 OR WIN64)
-    target_link_libraries(${PROJECT_NAME} PRIVATE fmod})
+    target_link_libraries(${PROJECT_NAME} PRIVATE fmod)
 else ()
     find_library(FMOD NAMES libfmod.so.13 PATHS ${CMAKE_CURRENT_SOURCE_DIR}/lib/FMod)
     target_link_libraries(${PROJECT_NAME} PRIVATE ${FMOD})
