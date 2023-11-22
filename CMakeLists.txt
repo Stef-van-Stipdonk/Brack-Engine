@@ -107,6 +107,8 @@ add_library(${PROJECT_NAME} SHARED
         outfacingInterfaces/Components/RectangleComponent.hpp
         src/Managers/Entities/ComponentStore.cpp
         outfacingInterfaces/Helpers/CollisionType.hpp
+        outfacingInterfaces/Helpers/CollisionSide.hpp
+        outfacingInterfaces/Helpers/CollisionSide.hpp
 )
 
 option(USER_LOG_TO_FILE "Enable user logging to a file" OFF)

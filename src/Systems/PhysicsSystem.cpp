@@ -3,6 +3,7 @@
 //
 
 #include <Components/CircleCollisionComponent.hpp>
+#include <Components/BoxCollisionComponent.hpp>
 #include "PhysicsSystem.hpp"
 #include "../includes/ComponentStore.hpp"
 
@@ -14,23 +15,30 @@ PhysicsSystem::~PhysicsSystem() {
 }
 
 void PhysicsSystem::Update(float deltaTime) {
+    handleCircles();
+    handleBoxes();
+
+    PhysicsWrapper::GetInstance().update(deltaTime);
+
+
+}
+
+void PhysicsSystem::handleCircles() {
     auto &compStore = ComponentStore::GetInstance();
 
     auto circleCollisionComponentIds = compStore.getEntitiesWithComponent<CircleCollisionComponent>();
 
-    std::vector<CircleCollisionComponent *> circleCollisionComponents;
-
-    for (auto circleCollisionComponentId: circleCollisionComponentIds) {
-        auto circleCollisionComponent = compStore.tryGetComponent<CircleCollisionComponent>(
-                circleCollisionComponentId);
-
-        circleCollisionComponents.push_back(&circleCollisionComponent);
-    }
+    if (circleCollisionComponentIds.empty()) return;
     PhysicsWrapper::GetInstance().addCircles(circleCollisionComponentIds);
+}
 
-    PhysicsWrapper::GetInstance().update();
+void PhysicsSystem::handleBoxes() {
+    auto &compStore = ComponentStore::GetInstance();
 
+    auto boxCollisionComponentIds = compStore.getEntitiesWithComponent<BoxCollisionComponent>();
 
+    if (boxCollisionComponentIds.empty()) return;
+    PhysicsWrapper::GetInstance().addBoxes(boxCollisionComponentIds);
 }
 
 const std::string PhysicsSystem::GetName() const {
