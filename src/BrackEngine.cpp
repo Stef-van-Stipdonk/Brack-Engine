@@ -71,6 +71,9 @@ void BrackEngine::CreateFPS() {
     ComponentStore::GetInstance().addComponent<TransformComponent>(entityId);
     ComponentStore::GetInstance().addComponent<ObjectInfoComponent>(objectInfoComponent);
     ComponentStore::GetInstance().addComponent<TextComponent>(textComponent);
+
+    EntityManager::getInstance().addEntityWithName(entityId, objectInfoComponent.name);
+    EntityManager::getInstance().addEntityWithTag(entityId, objectInfoComponent.tag);
 }
 
 void BrackEngine::UpdateFPS() {
