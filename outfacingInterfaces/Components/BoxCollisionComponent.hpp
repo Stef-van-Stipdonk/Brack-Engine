@@ -7,7 +7,6 @@
 
 #include <memory>
 #include <Helpers/CollisionType.hpp>
-#include <Helpers/CollisionSide.hpp>
 #include "CollisionComponent.hpp"
 
 
