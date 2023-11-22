@@ -18,7 +18,7 @@ void PhysicsSystem::Update(float deltaTime) {
     handleCircles();
     handleBoxes();
 
-    PhysicsWrapper::GetInstance().update(deltaTime);
+    PhysicsWrapper::getInstance().update(deltaTime);
 
 
 }
@@ -29,7 +29,7 @@ void PhysicsSystem::handleCircles() {
     auto circleCollisionComponentIds = compStore.getEntitiesWithComponent<CircleCollisionComponent>();
 
     if (circleCollisionComponentIds.empty()) return;
-    PhysicsWrapper::GetInstance().addCircles(circleCollisionComponentIds);
+    PhysicsWrapper::getInstance().addCircles(circleCollisionComponentIds);
 }
 
 void PhysicsSystem::handleBoxes() {
@@ -38,7 +38,7 @@ void PhysicsSystem::handleBoxes() {
     auto boxCollisionComponentIds = compStore.getEntitiesWithComponent<BoxCollisionComponent>();
 
     if (boxCollisionComponentIds.empty()) return;
-    PhysicsWrapper::GetInstance().addBoxes(boxCollisionComponentIds);
+    PhysicsWrapper::getInstance().addBoxes(boxCollisionComponentIds);
 }
 
 const std::string PhysicsSystem::GetName() const {

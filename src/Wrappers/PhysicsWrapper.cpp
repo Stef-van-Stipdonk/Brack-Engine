@@ -19,13 +19,10 @@ PhysicsWrapper::PhysicsWrapper() {
 
 PhysicsWrapper::~PhysicsWrapper() = default;
 
-PhysicsWrapper &PhysicsWrapper::GetInstance() {
+PhysicsWrapper &PhysicsWrapper::getInstance() {
     return instance;
 }
 
-void PhysicsWrapper::Initialize() {
-
-}
 
 void PhysicsWrapper::update(float deltaTime) {
     const int32 velocityIterations{6};
@@ -112,10 +109,6 @@ void PhysicsWrapper::addBoxes(std::vector<uint32_t> componentIds) {
 }
 
 
-void PhysicsWrapper::Cleanup() {
-
-}
-
 b2BodyType PhysicsWrapper::getBodyType(CollisionType collisionType) {
     switch (collisionType) {
         case STATIC:
@@ -129,7 +122,7 @@ b2BodyType PhysicsWrapper::getBodyType(CollisionType collisionType) {
 
 
 void ContactListener::BeginContact(b2Contact *contact) {
-    std::unordered_map<uint32_t, b2Body *> bodies = PhysicsWrapper::GetInstance().bodies;
+    std::unordered_map<uint32_t, b2Body *> bodies = PhysicsWrapper::getInstance().bodies;
     auto &compStore = ComponentStore::GetInstance();
     auto contactA = contact->GetFixtureA()->GetBody();
     auto contactB = contact->GetFixtureB()->GetBody();
@@ -172,7 +165,7 @@ void ContactListener::BeginContact(b2Contact *contact) {
 
 
 void ContactListener::EndContact(b2Contact *contact) {
-    std::unordered_map<uint32_t, b2Body *> bodies = PhysicsWrapper::GetInstance().bodies;
+    std::unordered_map<uint32_t, b2Body *> bodies = PhysicsWrapper::getInstance().bodies;
     auto &compStore = ComponentStore::GetInstance();
     auto contactA = contact->GetFixtureA()->GetBody();
     auto contactB = contact->GetFixtureB()->GetBody();

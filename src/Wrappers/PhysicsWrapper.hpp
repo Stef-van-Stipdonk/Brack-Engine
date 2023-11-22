@@ -17,7 +17,7 @@ public:
 
     ~PhysicsWrapper();
 
-    static PhysicsWrapper &GetInstance();
+    static PhysicsWrapper &getInstance();
 
 
     PhysicsWrapper(PhysicsWrapper &other) = delete;
