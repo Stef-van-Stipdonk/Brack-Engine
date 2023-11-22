@@ -17,12 +17,10 @@ public:
     ~PhysicsSystem() override;
 
     void update(float deltaTime) override;
-
-    const std::string GetName() const override;
-
-    void CleanUp() override;
-
+    
     const std::string getName() const override;
+
+    void cleanUp() override;
 
 
 private:

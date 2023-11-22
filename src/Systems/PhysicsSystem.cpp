@@ -14,14 +14,22 @@ PhysicsSystem::~PhysicsSystem() {
 
 }
 
-void PhysicsSystem::Update(float deltaTime) {
+void PhysicsSystem::update(float deltaTime) {
     handleCircles();
     handleBoxes();
 
     PhysicsWrapper::getInstance().update(deltaTime);
 
+}
+
+void PhysicsSystem::cleanUp() {
 
 }
+
+const std::string PhysicsSystem::getName() const {
+    return "PhysicsSystem";
+}
+
 
 void PhysicsSystem::handleCircles() {
     auto &compStore = ComponentStore::GetInstance();
@@ -42,10 +50,8 @@ void PhysicsSystem::handleBoxes() {
     PhysicsWrapper::getInstance().addBoxes(boxCollisionComponentIds);
 }
 
-const std::string PhysicsSystem::getName() const {
-    return "PhysicsSystem";
-}
 
-void PhysicsSystem::cleanUp() {
 
-}
+
+
+

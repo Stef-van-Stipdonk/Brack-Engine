@@ -159,7 +159,7 @@ void ContactListener::BeginContact(b2Contact *contact) {
     if (std::find(boxEntities.begin(), boxEntities.end(), contactBComponent) != boxEntities.end()) {
         compStore.tryGetComponent<BoxCollisionComponent>(contactBComponent).collidedWith.push_back(contactAComponent);
     }
-
+    Logger::GetInstance().Debug("Collision");
 
 }
 
@@ -209,6 +209,7 @@ void ContactListener::EndContact(b2Contact *contact) {
                 std::remove(component.collidedWith.begin(), component.collidedWith.end(), contactAComponent),
                 component.collidedWith.end());
     }
+    Logger::GetInstance().Debug("Collision removed");
 
 
 }
