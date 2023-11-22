@@ -67,7 +67,7 @@ public:
     }
 
     template<typename BaseT>
-    typename std::enable_if<std::is_base_of<IComponent, BaseT>::value, std::vector<BaseT>>::type
+    typename std::enable_if<std::is_base_of<IComponent, BaseT>::value, std::vector<BaseT*>>::type
     getAllComponentsOfType() {
         std::vector<BaseT *> result;
         for (auto &[type, map]: components) {

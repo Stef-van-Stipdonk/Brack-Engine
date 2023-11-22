@@ -37,14 +37,15 @@ void PhysicsSystem::handleBoxes() {
 
     auto boxCollisionComponentIds = compStore.getEntitiesWithComponent<BoxCollisionComponent>();
 
+
     if (boxCollisionComponentIds.empty()) return;
     PhysicsWrapper::getInstance().addBoxes(boxCollisionComponentIds);
 }
 
-const std::string PhysicsSystem::GetName() const {
+const std::string PhysicsSystem::getName() const {
     return "PhysicsSystem";
 }
 
-void PhysicsSystem::CleanUp() {
+void PhysicsSystem::cleanUp() {
 
 }

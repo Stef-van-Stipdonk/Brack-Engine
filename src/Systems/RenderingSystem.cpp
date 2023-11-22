@@ -13,7 +13,7 @@ RenderingSystem::~RenderingSystem() {
 
 }
 
-void RenderingSystem::Update(float deltaTime) {
+void RenderingSystem::update(float deltaTime) {
     SortRenderComponents();
 #if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
     auto boxCollisionComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<BoxCollisionComponent>();
@@ -73,11 +73,11 @@ void RenderingSystem::Update(float deltaTime) {
 
 }
 
-void RenderingSystem::CleanUp() {
+void RenderingSystem::cleanUp() {
     sdl2Wrapper->Cleanup();
 }
 
-const std::string RenderingSystem::GetName() const {
+const std::string RenderingSystem::getName() const {
     return "RenderingSystem";
 }
 
