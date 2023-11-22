@@ -33,7 +33,7 @@ struct BehaviourScript : public IComponent {
     virtual void onUpdate(float deltaTime) {};
 
     template<typename T>
-    typename std::enable_if_t<std::is_base_of<IComponent, T>::value>::type
+    typename std::enable_if<std::is_base_of<IComponent, T>::value, T &>::type
     tryGetComponent() {
         return ComponentStore::GetInstance().tryGetComponent<T>(entityID);
     }
