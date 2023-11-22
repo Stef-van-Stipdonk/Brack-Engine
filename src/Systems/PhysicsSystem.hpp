@@ -16,10 +16,10 @@ public:
 
     ~PhysicsSystem() override;
 
-    void Update(float deltaTime) override;
+    void update(float deltaTime) override;
 
-    const std::string GetName() const override;
-    void CleanUp() override;
+    const std::string getName() const override;
+    void cleanUp() override;
 
 private:
     std::unique_ptr <PhysicsWrapper> physicsWrapper;

@@ -21,7 +21,7 @@ struct BehaviourScript : public IComponent {
         return std::make_unique<BehaviourScript>(*this);
     }
 
-    void accept(ComponentVisitor &visitor) override {
+    virtual void accept(ComponentVisitor &visitor) override {
         visitor.visit(*this);
         onStart();
     }

@@ -12,14 +12,14 @@ SaveSystem::~SaveSystem() {
 
 }
 
-void SaveSystem::Update(float deltaTime) {
+void SaveSystem::update(float deltaTime) {
 
 }
 
-const std::string SaveSystem::GetName() const {
+const std::string SaveSystem::getName() const {
     return "SaveSystem";
 }
 
-void SaveSystem::CleanUp() {
+void SaveSystem::cleanUp() {
 
 }

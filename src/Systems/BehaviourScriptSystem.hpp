@@ -14,11 +14,11 @@ public:
 
     ~BehaviourScriptSystem() override;
 
-    const std::string GetName() const override;
+    const std::string getName() const override;
 
-    void CleanUp() override;
+    void cleanUp() override;
 
-    void Update(float deltaTime) override;
+    void update(float deltaTime) override;
 
 private:
 

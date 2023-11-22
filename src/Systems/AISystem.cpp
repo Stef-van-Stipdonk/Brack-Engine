@@ -12,14 +12,14 @@ AISystem::~AISystem() {
 
 }
 
-void AISystem::Update(float deltaTime) {
+void AISystem::update(float deltaTime) {
 
 }
 
-const std::string AISystem::GetName() const {
+const std::string AISystem::getName() const {
     return "AISystem";
 }
 
-void AISystem::CleanUp() {
+void AISystem::cleanUp() {
 
 }
