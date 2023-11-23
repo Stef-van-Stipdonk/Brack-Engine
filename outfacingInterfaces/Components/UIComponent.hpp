@@ -23,7 +23,7 @@ struct UIComponent : public IComponent {
         return std::make_unique<UIComponent>(*this);
     }
 
-    void Accept(ComponentVisitor &visitor) override {
+    void accept(ComponentVisitor &visitor) override {
         visitor.visit(*this);
     }
 

@@ -11,6 +11,8 @@
 #include <string>
 #include <typeinfo>
 #include <stdexcept>
+#include "../src/includes/ComponentStore.hpp"
+#include "../Entity.hpp"
 
 class GameObject {
 public:
@@ -20,11 +22,11 @@ public:
         components.clear();
     };
 
-    GameObject& operator=(const GameObject &other) {
+    GameObject &operator=(const GameObject &other) {
         if (this != &other) {
             entityID = other.entityID;
             components.clear();
-            for (const auto &comp : other.components) {
+            for (const auto &comp: other.components) {
                 components.push_back(comp->clone());
             }
         }
@@ -47,7 +49,7 @@ public:
 
     template<typename T>
     typename std::enable_if<std::is_base_of<IComponent, T>::value>::type
-    AddComponent(T component){
+    AddComponent(T component) {
         AddComponent(std::make_unique<T>(component));
     }
 
@@ -55,7 +57,7 @@ public:
     GameObject(const GameObject &other) {
         entityID = other.entityID;
         components = std::vector<std::unique_ptr<IComponent>>();
-        for (auto &comp : other.components) {
+        for (auto &comp: other.components) {
             components.push_back(comp->clone());
         }
     }
@@ -71,13 +73,18 @@ public:
     }
 
     template<typename T>
-    typename std::enable_if<std::is_base_of<IComponent, T>::value, T&>::type
-    TryGetComponent() const {
-        for (const auto &comp : components) {
-            if (auto castedComp = dynamic_cast<T*>(comp.get())) {
-                return *castedComp; // dereference the pointer to return a reference
+    typename std::enable_if<std::is_base_of<IComponent, T>::value, T &>::type
+    tryGetComponent() const {
+        if (entityID == 0) {
+            for (const auto &comp: components) {
+                if (auto castedComp = dynamic_cast<T *>(comp.get())) {
+                    return *castedComp; // dereference the pointer to return a reference
+                }
             }
+        } else {
+            return ComponentStore::GetInstance().tryGetComponent<T>(entityID);
         }
+
         throw std::runtime_error("Component not found"); // throw an exception if not found
     }
 
@@ -85,7 +92,7 @@ public:
     typename std::enable_if<std::is_base_of<IComponent, T>::value>::type
     RemoveComponent() {
         for (auto it = components.begin(); it != components.end();) {
-            T* comp = dynamic_cast<T*>(it->get());
+            T *comp = dynamic_cast<T *>(it->get());
             if (comp != nullptr) {
                 it = components.erase(it);
             } else {
@@ -114,14 +121,14 @@ public:
 
     void SetLayer(int layer);
 
-    uint32_t GetEntityID() const;
+    entity GetEntityID() const;
 
-    void SetEntityID(uint32_t id);
+    void SetEntityID(entity id);
 
-    std::vector<std::unique_ptr<IComponent>>&GetAllComponents();
+    std::vector<std::unique_ptr<IComponent>> &GetAllComponents();
 
 protected:
-    uint32_t entityID = 0;
+    entity entityID = 0;
     std::vector<std::unique_ptr<IComponent>> components;
 };
 

@@ -54,7 +54,7 @@ struct SpriteComponent : public RenderArchetype {
         margin = other.margin;
     }
 
-    void Accept(ComponentVisitor &visitor) override {
+    void accept(ComponentVisitor &visitor) override {
         visitor.visit(*this);
     }
 

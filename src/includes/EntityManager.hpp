@@ -7,12 +7,15 @@
 
 
 #include <unordered_set>
+#include <map>
+#include <vector>
 #include <cstdint>
+#include "../../outfacingInterfaces/Entity.hpp"
 
 class EntityManager {
 
 public:
-    static EntityManager &GetInstance();
+    static EntityManager &getInstance();
 
     ~EntityManager() = default;
 
@@ -24,22 +27,35 @@ public:
 
     EntityManager &operator=(EntityManager &&) = delete;
 
-    uint32_t CreateEntity();
+    entity createEntity();
 
-    void DestroyEntity(uint32_t entity);
+    void destroyEntity(entity entityId);
 
-    const std::unordered_set<uint32_t> &GetAllEntities() const;
+    const std::unordered_set<entity> &getAllEntities() const;
 
-    void ClearAllEntities();
+    void clearAllEntities();
 
+    void addEntityWithName(entity entityId, const std::string &name);
+
+    void addEntityWithTag(entity entityId, const std::string &tag);
+
+    std::vector<entity> getEntitiesByName(const std::string &name) const;
+
+    entity getEntityByName(const std::string &name) const;
+
+    std::vector<entity> getEntitiesByTag(const std::string &tag) const;
+
+    entity getEntityByTag(const std::string &tag) const;
 
 private:
     static EntityManager instance;
 
     EntityManager() = default;
 
-    std::unordered_set<uint32_t> entities;
-    uint32_t nextID = 1; // Start from 1 for simplicity.
+    std::unordered_set<entity> entities;
+    entity nextID = 1; // Start from 1 for simplicity.
+    std::map<std::string, std::vector<entity>> entitiesByName;
+    std::map<std::string, std::vector<entity>> entitiesByTag;
 };
 
 

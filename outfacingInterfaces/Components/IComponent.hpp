@@ -7,6 +7,7 @@
 
 #include <cstdint>
 #include <memory>
+#include <Entity.hpp>
 
 class ComponentVisitor;
 
@@ -22,11 +23,11 @@ struct IComponent {
 
     virtual std::unique_ptr<IComponent> clone() const = 0;
 
-    virtual void Accept(ComponentVisitor &visitor) {};
+    virtual void accept(ComponentVisitor &visitor) {};
 
 
     // Als we nog achter andere overeenkomende dingen komen bij ieder component kunnen we die hier toevoegens
-    uint32_t entityID{0};
+    entity entityID{0};
     bool isActive = true;
 };
 

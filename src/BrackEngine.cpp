@@ -36,12 +36,12 @@ void BrackEngine::Run() {
         auto deltaTime = GetDeltaTime();
         SystemManager::GetInstance().UpdateSystems(deltaTime);
         FPSSingleton::GetInstance().End();
-//        Logger::Info("FPS: " + std::to_string(FPSSingleton::GetInstance().GetFPS()));
+//        Logger::Info("FPS: " + std::to_string(FPSSingleton::getInstance().GetFPS()));
         if (ConfigSingleton::GetInstance().ShowFPS())
             UpdateFPS(deltaTime);
     }
 
-    SystemManager::GetInstance().CleanUp(); 
+    SystemManager::GetInstance().CleanUp();
 }
 
 float BrackEngine::GetDeltaTime() {
@@ -56,7 +56,7 @@ float BrackEngine::GetDeltaTime() {
 }
 
 void BrackEngine::CreateFPS() {
-    auto entityId = EntityManager::GetInstance().CreateEntity();
+    auto entityId = EntityManager::getInstance().createEntity();
     auto objectInfoComponent = ObjectInfoComponent();
     auto textComponent = TextComponent();
 
@@ -72,6 +72,9 @@ void BrackEngine::CreateFPS() {
     ComponentStore::GetInstance().addComponent<TransformComponent>(entityId);
     ComponentStore::GetInstance().addComponent<ObjectInfoComponent>(objectInfoComponent);
     ComponentStore::GetInstance().addComponent<TextComponent>(textComponent);
+
+    EntityManager::getInstance().addEntityWithName(entityId, objectInfoComponent.name);
+    EntityManager::getInstance().addEntityWithTag(entityId, objectInfoComponent.tag);
 }
 
 void BrackEngine::UpdateFPS(float deltaTime) {

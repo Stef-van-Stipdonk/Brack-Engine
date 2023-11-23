@@ -6,14 +6,15 @@
 #define BRACK_ENGINE_ICOMPONENTSTORAGE_HPP
 
 #include <cstdint>
+#include "Entity.hpp"
 
 class IComponentStorage {
 public:
     virtual ~IComponentStorage() = default;
 
-    virtual void RemoveComponentByEntity(uint32_t entity) = 0;
+    virtual void RemoveComponentByEntity(entity entityId) = 0;
 
-    virtual void InsertComponent(uint32_t entity, void *component) = 0;
+    virtual void InsertComponent(entity entityId, void *component) = 0;
 };
 
 #endif //BRACK_ENGINE_ICOMPONENTSTORAGE_HPP

@@ -30,7 +30,7 @@ struct RectangleComponent : public RenderArchetype {
         return std::make_unique<RectangleComponent>(*this);
     }
 
-    void Accept(ComponentVisitor &visitor) override {
+    void accept(ComponentVisitor &visitor) override {
         visitor.visit<RectangleComponent>(*this);
     }
 

@@ -22,7 +22,7 @@ struct RigidBodyComponent : public IComponent {
          gravityScale = other.gravityScale;
      }
 
-    void Accept(ComponentVisitor &visitor) override {
+    void accept(ComponentVisitor &visitor) override {
         visitor.visit(*this);
     }
 

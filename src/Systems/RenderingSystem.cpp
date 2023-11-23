@@ -86,7 +86,7 @@ void RenderingSystem::SortRenderComponents() {
     uiComponents.clear();
 
     auto spriteComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<SpriteComponent>();
-    for (uint32_t entityId: spriteComponentIds) {
+    for (auto entityId: spriteComponentIds) {
         auto &spriteComponent = ComponentStore::GetInstance().tryGetComponent<SpriteComponent>(entityId);
         if (!spriteComponent.isActive)
             continue;
@@ -96,7 +96,7 @@ void RenderingSystem::SortRenderComponents() {
             components.insert(&spriteComponent);
     }
     auto textComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<TextComponent>();
-    for (uint32_t entityId: textComponentIds) {
+    for (auto entityId: textComponentIds) {
         auto &textComponent = ComponentStore::GetInstance().tryGetComponent<TextComponent>(entityId);
         if (!textComponent.isActive)
             continue;
@@ -106,7 +106,7 @@ void RenderingSystem::SortRenderComponents() {
             components.insert(&textComponent);
     }
     auto RectangleComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<RectangleComponent>();
-    for (uint32_t entityId: RectangleComponentIds) {
+    for (auto entityId: RectangleComponentIds) {
         auto &rectangleComponent = ComponentStore::GetInstance().tryGetComponent<RectangleComponent>(entityId);
         if (!rectangleComponent.isActive)
             continue;

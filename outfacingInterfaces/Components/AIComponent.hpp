@@ -15,11 +15,11 @@ struct AIComponent : public IComponent {
 
     ~AIComponent() override = default;
 
-    void Accept(ComponentVisitor &visitor) override {
+    void accept(ComponentVisitor &visitor) override {
         visitor.visit(*this);
     }
 
-    AIComponent(const AIComponent& other) : IComponent(other){
+    AIComponent(const AIComponent &other) : IComponent(other) {
         destinationEntityID = other.destinationEntityID;
     }
 
@@ -27,7 +27,7 @@ struct AIComponent : public IComponent {
         return std::make_unique<AIComponent>(*this);
     }
 
-    uint32_t destinationEntityID;
+    entity destinationEntityID;
 };
 
 #endif //BRACK_ENGINE_AICOMPONENT_HPP

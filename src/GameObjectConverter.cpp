@@ -6,32 +6,74 @@
 #include "includes/EntityManager.hpp"
 #include "Components/ComponentVisitor.hpp"
 
-Camera GameObjectConverter::GetMainCamera(uint32_t entityID) {
+Camera GameObjectConverter::getMainCamera(entity entityID) {
     return {};
 }
 
-GameObject GameObjectConverter::GetGameObject(uint32_t entityID) {
+GameObject GameObjectConverter::getGameObject(entity entityID) {
     return {};
 }
 
-void GameObjectConverter::AddGameObject(GameObject *gameObject) {
+void GameObjectConverter::addGameObject(GameObject *gameObject) {
     ComponentVisitor componentVisitor;
     auto &components = gameObject->GetAllComponents();
     if (gameObject->GetEntityID() == 0)
-        gameObject->SetEntityID(EntityManager::GetInstance().CreateEntity());
+        gameObject->SetEntityID(EntityManager::getInstance().createEntity());
     for (auto &component: components) {
         component->entityID = gameObject->GetEntityID();
-        component->Accept(componentVisitor);
+        component->accept(componentVisitor);
     }
 }
 
 
-void GameObjectConverter::AddCamera(Camera *camera) {
+void GameObjectConverter::addCamera(Camera *camera) {
     ComponentVisitor componentVisitor;
     if (camera->GetEntityID() == 0)
-        camera->SetEntityID(EntityManager::GetInstance().CreateEntity());
+        camera->SetEntityID(EntityManager::getInstance().createEntity());
     for (auto &component: camera->GetAllComponents()) {
         component->entityID = camera->GetEntityID();
-        component->Accept(componentVisitor);
+        component->accept(componentVisitor);
     }
+}
+
+std::optional<GameObject> GameObjectConverter::getGameObjectByName(const std::string &name) {
+    auto entityId = EntityManager::getInstance().getEntityByName(name);
+    if (entityId == 0)
+        return std::nullopt;
+
+    auto gameObject = GameObject();
+    gameObject.SetEntityID(entityId);
+    return gameObject;
+}
+
+std::vector<GameObject> GameObjectConverter::getGameObjectsByName(const std::string &name) {
+    auto gameObjects = std::vector<GameObject>();
+    auto entityIds = EntityManager::getInstance().getEntitiesByName(name);
+    for (auto entityId: entityIds) {
+        auto gameObject = GameObject();
+        gameObject.SetEntityID(entityId);
+        gameObjects.push_back(gameObject);
+    }
+    return gameObjects;
+}
+
+std::optional<GameObject> GameObjectConverter::getGameObjectByTag(const std::string &tag) {
+    auto entityId = EntityManager::getInstance().getEntityByTag(tag);
+    if (entityId == 0)
+        return std::nullopt;
+
+    auto gameObject = GameObject();
+    gameObject.SetEntityID(entityId);
+    return gameObject;
+}
+
+std::vector<GameObject> GameObjectConverter::getGameObjectsByTag(const std::string &tag) {
+    auto gameObjects = std::vector<GameObject>();
+    auto entityIds = EntityManager::getInstance().getEntitiesByTag(tag);
+    for (auto entityId: entityIds) {
+        auto gameObject = GameObject();
+        gameObject.SetEntityID(entityId);
+        gameObjects.push_back(gameObject);
+    }
+    return gameObjects;
 }

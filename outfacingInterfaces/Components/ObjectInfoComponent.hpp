@@ -19,11 +19,13 @@ struct ObjectInfoComponent : public IComponent {
         return std::make_unique<ObjectInfoComponent>(*this);
     }
 
-    void Accept(ComponentVisitor &visitor) override {
+    void accept(ComponentVisitor &visitor) override {
         visitor.visit(*this);
+        EntityManager::getInstance().addEntityWithName(entityID, name);
+        EntityManager::getInstance().addEntityWithTag(entityID, tag);
     }
 
-    ObjectInfoComponent(const ObjectInfoComponent& other) : IComponent(other) {
+    ObjectInfoComponent(const ObjectInfoComponent &other) : IComponent(other) {
         name = other.name;
         tag = other.tag;
         layer = other.layer;

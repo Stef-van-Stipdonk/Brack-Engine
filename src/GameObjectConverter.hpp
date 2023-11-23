@@ -7,19 +7,29 @@
 
 
 #include <cstdint>
+#include <optional>
 #include "Objects/Camera.hpp"
+#include "../outfacingInterfaces/Entity.hpp"
 
 class GameObjectConverter {
 public:
-    static Camera GetMainCamera(uint32_t entityID);
+    static Camera getMainCamera(entity entityID);
 
-    static GameObject GetGameObject(uint32_t entityID);
+    static GameObject getGameObject(entity entityID);
 
-    static void AddGameObject(GameObject *gameObject);
+    static void addGameObject(GameObject *gameObject);
 
-    static void AddCamera(Camera *camera);
+    static void addCamera(Camera *camera);
 
-    static void RemoveGameObject(GameObject &gameObject);
+    static std::optional<GameObject> getGameObjectByName(const std::string &name);
+
+    static std::vector<GameObject> getGameObjectsByName(const std::string &name);
+
+    static std::optional<GameObject> getGameObjectByTag(const std::string &tag);
+
+    static std::vector<GameObject> getGameObjectsByTag(const std::string &tag);
+
+    static void removeGameObject(GameObject &gameObject);
 };
 
 
