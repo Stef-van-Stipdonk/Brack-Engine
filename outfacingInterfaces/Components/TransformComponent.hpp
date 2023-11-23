@@ -27,7 +27,7 @@ struct TransformComponent : public IComponent {
         return std::make_unique<TransformComponent>(*this);
     }
 
-    void Accept(ComponentVisitor &visitor) override {
+    void accept(ComponentVisitor &visitor) override {
         visitor.visit(*this);
     }
 

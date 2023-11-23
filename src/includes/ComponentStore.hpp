@@ -8,6 +8,7 @@
 #include <random>
 #include "Components/IComponent.hpp"
 #include "../Logger.hpp"
+#include "EntityManager.hpp"
 
 class ComponentStore {
 public:
