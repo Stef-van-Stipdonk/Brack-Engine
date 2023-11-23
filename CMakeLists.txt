@@ -4,15 +4,11 @@ project(Brack_Engine)
 set(CMAKE_CXX_STANDARD 17)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules")
-set(BOX2D_PATH "${CMAKE_CURRENT_SOURCE_DIR}/lib/Box2d")
-add_subdirectory(${BOX2D_PATH})
 
 if (WIN32 OR WIN64)
     set(SDL2_PATH "${CMAKE_CURRENT_SOURCE_DIR}/lib/SDL")
     set(SDL2_TTF_PATH "${CMAKE_CURRENT_SOURCE_DIR}/lib/SDL")
     set(SDL2_IMAGE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/lib/SDL")
-
-    include_directories(${SDL2_INCLUDE_DIR} ${SDL2_TTF_INCLUDE_DIR} ${SDL2_IMAGE_DIR} ${BOX2D_PATH})
 
     find_package(SDL2 REQUIRED)
     find_package(SDL2_ttf REQUIRED)
@@ -108,6 +104,25 @@ add_library(${PROJECT_NAME} SHARED
         src/Managers/Entities/ComponentStore.cpp
         outfacingInterfaces/Helpers/CollisionType.hpp
 )
+
+if (WIN32 OR WIN64)
+    # Use the bundled Box2D for Windows
+    set(BOX2D_PATH "${CMAKE_CURRENT_SOURCE_DIR}/lib/Box2d")
+    add_subdirectory(${BOX2D_PATH})
+    include_directories(${BOX2D_PATH})
+    # Link with the bundled Box2D library (assuming it's defined in the add_subdirectory)
+else ()
+    if (APPLE)
+        find_library(BOX2D_LIBRARY NAMES box2d)
+        find_path(BOX2D_INCLUDE_DIR Box2D/Box2D.h)
+
+        message(STATUS "Box2D Library: ${BOX2D_LIBRARY}")
+        message(STATUS "Box2D Include: ${BOX2D_INCLUDE_DIR}")
+
+        target_link_libraries(${PROJECT_NAME} PRIVATE ${BOX2D_LIBRARY})
+        target_include_directories(${PROJECT_NAME} PRIVATE ${BOX2D_INCLUDE_DIR})
+    endif ()
+endif ()
 
 option(USER_LOG_TO_FILE "Enable user logging to a file" OFF)
 
