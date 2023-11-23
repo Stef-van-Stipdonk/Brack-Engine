@@ -8,12 +8,13 @@
 
 #include <memory>
 #include "../../src/includes/EntityManager.hpp"
+#include "../../src/GameObjectConverter.hpp"
 
 class Scene;
 
 class SceneManager {
 public:
-    static SceneManager &GetInstance();
+    static SceneManager &getInstance();
 
     ~SceneManager() = default;
 
@@ -25,7 +26,15 @@ public:
 
     SceneManager &operator=(SceneManager &&) = delete;
 
-    void SetActiveScene(Scene &scene);
+    void setActiveScene(Scene &scene);
+
+    static std::optional<GameObject> getGameObjectByName(const std::string &name);
+
+    static std::vector<GameObject> getGameObjectsByName(const std::string &name);
+
+    static std::optional<GameObject> getGameObjectByTag(const std::string &tag);
+
+    static std::vector<GameObject> getGameObjectsByTag(const std::string &tag);
 
 private:
     SceneManager() = default;

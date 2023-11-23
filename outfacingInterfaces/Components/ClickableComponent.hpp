@@ -25,7 +25,7 @@ struct ClickableComponent : public IComponent {
         OnClick = other.OnClick;
     }
 
-    void Accept(ComponentVisitor &visitor) override {
+    void accept(ComponentVisitor &visitor) override {
         visitor.visit(*this);
     }
 

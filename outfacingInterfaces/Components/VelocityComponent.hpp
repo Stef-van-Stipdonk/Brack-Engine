@@ -20,7 +20,7 @@ struct VelocityComponent : public IComponent {
         velocity = other.velocity;
     }
 
-    void Accept(ComponentVisitor &visitor) override {
+    void accept(ComponentVisitor &visitor) override {
         visitor.visit(*this);
     }
 

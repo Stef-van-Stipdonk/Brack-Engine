@@ -22,7 +22,7 @@ struct IComponent {
 
     virtual std::unique_ptr<IComponent> clone() const = 0;
 
-    virtual void Accept(ComponentVisitor &visitor) {};
+    virtual void accept(ComponentVisitor &visitor) {};
 
 
     // Als we nog achter andere overeenkomende dingen komen bij ieder component kunnen we die hier toevoegens

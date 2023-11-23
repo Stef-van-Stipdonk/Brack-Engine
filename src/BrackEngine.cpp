@@ -13,7 +13,6 @@
 #include "Systems/BehaviourScriptSystem.hpp"
 #include "Systems/ClickSystem.hpp"
 #include "Systems/AudioSystem.hpp"
-#include "Systems/PhysicsSystem.hpp"
 
 BrackEngine::BrackEngine(Config &&config) {
     ConfigSingleton::GetInstance().SetConfig(config);
@@ -23,7 +22,6 @@ BrackEngine::BrackEngine(Config &&config) {
     SystemManager::GetInstance().AddSystem(std::make_shared<BehaviourScriptSystem>());
     SystemManager::GetInstance().AddSystem(std::make_shared<MovementSystem>());
     SystemManager::GetInstance().AddSystem(std::make_shared<RenderingSystem>());
-    SystemManager::GetInstance().AddSystem(std::make_shared<PhysicsSystem>());
 
     lastTime = std::chrono::high_resolution_clock::now();
 
@@ -38,12 +36,12 @@ void BrackEngine::Run() {
         auto deltaTime = GetDeltaTime();
         SystemManager::GetInstance().UpdateSystems(deltaTime);
         FPSSingleton::GetInstance().End();
-        //Logger::Info("FPS: " + std::to_string(FPSSingleton::GetInstance().GetFPS()));
+//        Logger::Info("FPS: " + std::to_string(FPSSingleton::getInstance().GetFPS()));
         if (ConfigSingleton::GetInstance().ShowFPS())
             UpdateFPS(deltaTime);
     }
 
-    SystemManager::GetInstance().CleanUp(); 
+    SystemManager::GetInstance().CleanUp();
 }
 
 float BrackEngine::GetDeltaTime() {
@@ -74,6 +72,9 @@ void BrackEngine::CreateFPS() {
     ComponentStore::GetInstance().addComponent<TransformComponent>(entityId);
     ComponentStore::GetInstance().addComponent<ObjectInfoComponent>(objectInfoComponent);
     ComponentStore::GetInstance().addComponent<TextComponent>(textComponent);
+
+    EntityManager::getInstance().addEntityWithName(entityId, objectInfoComponent.name);
+    EntityManager::getInstance().addEntityWithTag(entityId, objectInfoComponent.tag);
 }
 
 void BrackEngine::UpdateFPS(float deltaTime) {
@@ -86,4 +87,55 @@ void BrackEngine::UpdateFPS(float deltaTime) {
             1);//TODO ophalen met tag of name van component
 
     textComponent.text = std::to_string(FPSSingleton::GetInstance().GetFPS());;
+}
+
+void BrackEngine::save(const std::string& filePath, const std::string& content) const {
+    std::ofstream file(filePath, std::ios::binary);
+
+    // Check if the file can be opened for writing
+    if (!file.is_open()) {
+        std::cerr << "Unable to open file for writing: " << filePath << std::endl;
+        return;
+    }
+
+    // Write the size of the string first
+    size_t size = content.size();
+    if (!file.write(reinterpret_cast<const char*>(&size), sizeof(size_t))) {
+        std::cerr << "Error writing size to file: " << filePath << std::endl;
+        file.close(); // Close the file before returning
+        return;
+    }
+
+    // Write the content of the string
+    if (!file.write(content.c_str(), size)) {
+        std::cerr << "Error writing content to file: " << filePath << std::endl;
+    }
+
+    file.close();
+}
+
+std::string BrackEngine::load(const std::string& filePath) const {
+    std::ifstream file(filePath, std::ios::binary);
+
+    // Check if the file can be opened for reading
+    if (!file.is_open()) {
+        std::cerr << "Unable to open file for reading: " << filePath << std::endl;
+        return "";
+    }
+
+    // Read the size of the string first
+    size_t size;
+    if (!file.read(reinterpret_cast<char*>(&size), sizeof(size_t))) {
+        std::cerr << "Error reading size from file: " << filePath << std::endl;
+        return "";
+    }
+
+    // Read the content of the string
+    std::string content(size, '\0');
+    if (!file.read(&content[0], size)) {
+        std::cerr << "Error reading content from file: " << filePath << std::endl;
+    }
+
+    file.close();
+    return content;
 }

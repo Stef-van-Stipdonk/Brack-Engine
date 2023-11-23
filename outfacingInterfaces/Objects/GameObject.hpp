@@ -11,6 +11,7 @@
 #include <string>
 #include <typeinfo>
 #include <stdexcept>
+#include "../src/includes/ComponentStore.hpp"
 
 class GameObject {
 public:
@@ -72,12 +73,17 @@ public:
 
     template<typename T>
     typename std::enable_if<std::is_base_of<IComponent, T>::value, T&>::type
-    TryGetComponent() const {
-        for (const auto &comp : components) {
-            if (auto castedComp = dynamic_cast<T*>(comp.get())) {
-                return *castedComp; // dereference the pointer to return a reference
+    tryGetComponent() const {
+        if(entityID == 0){
+            for (const auto &comp : components) {
+                if (auto castedComp = dynamic_cast<T*>(comp.get())) {
+                    return *castedComp; // dereference the pointer to return a reference
+                }
             }
+        }else{
+            return ComponentStore::GetInstance().tryGetComponent<T>(entityID);
         }
+
         throw std::runtime_error("Component not found"); // throw an exception if not found
     }
 

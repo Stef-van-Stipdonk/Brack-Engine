@@ -18,7 +18,7 @@ struct ParticleComponent : public IComponent {
         return std::make_unique<ParticleComponent>(*this);
     }
 
-    void Accept(ComponentVisitor &visitor) override {
+    void accept(ComponentVisitor &visitor) override {
         visitor.visit(*this);
     }
 

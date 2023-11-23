@@ -31,7 +31,7 @@ struct BoxCollisionComponent : public CollisionComponent {
     }
 
 
-    void Accept(ComponentVisitor &visitor) override {
+    void accept(ComponentVisitor &visitor) override {
         visitor.visit(*this);
     }
 
