@@ -8,7 +8,7 @@
 #include <memory>
 #include <vector>
 #include <Components/CircleCollisionComponent.hpp>
-#include "../../lib/Box2d/include/box2d/box2d.h"
+#include "box2d/box2d.h"
 
 class ContactListener;
 
