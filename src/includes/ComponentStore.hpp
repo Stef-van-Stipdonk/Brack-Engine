@@ -81,6 +81,9 @@ public:
         return result;
     }
 
+    const std::unordered_map<std::type_index, std::unordered_map<uint32_t, std::unique_ptr<IComponent>>>& getComponents() const {
+        return components;
+    }
 
     template<typename T>
     typename std::enable_if<std::is_base_of<IComponent, T>::value>::type
