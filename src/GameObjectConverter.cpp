@@ -16,11 +16,11 @@ GameObject GameObjectConverter::getGameObject(entity entityID) {
 
 void GameObjectConverter::addGameObject(GameObject *gameObject) {
     ComponentVisitor componentVisitor;
-    auto &components = gameObject->GetAllComponents();
-    if (gameObject->GetEntityID() == 0)
-        gameObject->SetEntityID(EntityManager::getInstance().createEntity());
+    auto &components = gameObject->getAllComponents();
+    if (gameObject->getEntityId() == 0)
+        gameObject->setEntityId(EntityManager::getInstance().createEntity());
     for (auto &component: components) {
-        component->entityID = gameObject->GetEntityID();
+        component->entityID = gameObject->getEntityId();
         component->accept(componentVisitor);
     }
 }
@@ -28,10 +28,10 @@ void GameObjectConverter::addGameObject(GameObject *gameObject) {
 
 void GameObjectConverter::addCamera(Camera *camera) {
     ComponentVisitor componentVisitor;
-    if (camera->GetEntityID() == 0)
-        camera->SetEntityID(EntityManager::getInstance().createEntity());
-    for (auto &component: camera->GetAllComponents()) {
-        component->entityID = camera->GetEntityID();
+    if (camera->getEntityId() == 0)
+        camera->setEntityId(EntityManager::getInstance().createEntity());
+    for (auto &component: camera->getAllComponents()) {
+        component->entityID = camera->getEntityId();
         component->accept(componentVisitor);
     }
 }
@@ -42,7 +42,7 @@ std::optional<GameObject> GameObjectConverter::getGameObjectByName(const std::st
         return std::nullopt;
 
     auto gameObject = GameObject();
-    gameObject.SetEntityID(entityId);
+    gameObject.setEntityId(entityId);
     return gameObject;
 }
 
@@ -51,7 +51,7 @@ std::vector<GameObject> GameObjectConverter::getGameObjectsByName(const std::str
     auto entityIds = EntityManager::getInstance().getEntitiesByName(name);
     for (auto entityId: entityIds) {
         auto gameObject = GameObject();
-        gameObject.SetEntityID(entityId);
+        gameObject.setEntityId(entityId);
         gameObjects.push_back(gameObject);
     }
     return gameObjects;
@@ -63,7 +63,7 @@ std::optional<GameObject> GameObjectConverter::getGameObjectByTag(const std::str
         return std::nullopt;
 
     auto gameObject = GameObject();
-    gameObject.SetEntityID(entityId);
+    gameObject.setEntityId(entityId);
     return gameObject;
 }
 
@@ -72,7 +72,7 @@ std::vector<GameObject> GameObjectConverter::getGameObjectsByTag(const std::stri
     auto entityIds = EntityManager::getInstance().getEntitiesByTag(tag);
     for (auto entityId: entityIds) {
         auto gameObject = GameObject();
-        gameObject.SetEntityID(entityId);
+        gameObject.setEntityId(entityId);
         gameObjects.push_back(gameObject);
     }
     return gameObjects;

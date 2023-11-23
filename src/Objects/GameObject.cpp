@@ -4,94 +4,118 @@
 
 #include <Components/TransformComponent.hpp>
 #include <Components/ObjectInfoComponent.hpp>
+#include <Components/ParentComponent.hpp>
+#include <Components/ChildComponent.hpp>
 #include "Objects/GameObject.hpp"
+#include <algorithm>
+#include <utility>
 
 GameObject::GameObject() {
-    AddComponent(std::make_unique<TransformComponent>());
-    AddComponent(std::make_unique<ObjectInfoComponent>());
+    addComponent(std::make_unique<TransformComponent>());
+    addComponent(std::make_unique<ObjectInfoComponent>());
 }
 
-std::vector<GameObject> GameObject::GetChildren() {
-    return std::vector<GameObject>();
-}
-
-std::string GameObject::GetName() const {
-    if (entityID == 0) {
-        return tryGetComponent<ObjectInfoComponent>().name;
-    }
-
-    return ComponentStore::GetInstance().tryGetComponent<ObjectInfoComponent>(entityID).name;
-
-}
-
-
-void GameObject::SetName(std::string name) {
-    if (entityID == 0) {
-        tryGetComponent<ObjectInfoComponent>().name = name;
-    } else {
-        ComponentStore::GetInstance().tryGetComponent<ObjectInfoComponent>(entityID).name = name;
+std::vector<GameObject> GameObject::getChildren() const {
+    try {
+        auto &childComponent = tryGetComponent<ChildComponent>();
+        std::vector<GameObject> children;
+        for (auto &childId: childComponent.children) {
+            auto child = GameObject();
+            child.setEntityId(childId);
+            children.push_back(child);
+        }
+    } catch (std::runtime_error &e) {
+        return {};
     }
 }
 
-std::string GameObject::GetTag() const {
-    if (entityID == 0) {
-        return tryGetComponent<ObjectInfoComponent>().tag;
-    }
-    return ComponentStore::GetInstance().tryGetComponent<ObjectInfoComponent>(entityID).tag;
+std::string GameObject::getName() const {
+    return tryGetComponent<ObjectInfoComponent>().name;
 }
 
-void GameObject::SetTag(std::string tag) {
-    if (entityID == 0) {
-        tryGetComponent<ObjectInfoComponent>().tag = tag;
-    } else {
-        ComponentStore::GetInstance().tryGetComponent<ObjectInfoComponent>(entityID).tag = tag;
-    }
+
+void GameObject::setName(std::string name) const {
+    tryGetComponent<ObjectInfoComponent>().name = std::move(name);
 }
 
-bool GameObject::IsActive() const {
-    if (entityID == 0) {
-        return tryGetComponent<ObjectInfoComponent>().isActive;
-    }
-    return ComponentStore::GetInstance().tryGetComponent<ObjectInfoComponent>(entityID).isActive;
+std::string GameObject::getTag() const {
+    return tryGetComponent<ObjectInfoComponent>().tag;
 }
 
-void GameObject::SetActive(bool active) {
-    if (entityID == 0) {
-        tryGetComponent<ObjectInfoComponent>().isActive = active;
-    } else {
-        ComponentStore::GetInstance().tryGetComponent<ObjectInfoComponent>(entityID).isActive = active;
-    }
+void GameObject::setTag(std::string name) const {
+    tryGetComponent<ObjectInfoComponent>().tag = std::move(name);
 }
 
-int GameObject::GetLayer() const {
-    if (entityID == 0) {
-        return tryGetComponent<ObjectInfoComponent>().layer;
-    }
-    return ComponentStore::GetInstance().tryGetComponent<ObjectInfoComponent>(entityID).layer;
+bool GameObject::isActive() const {
+    return tryGetComponent<ObjectInfoComponent>().isActive;
 }
 
-void GameObject::SetLayer(int layer) {
-    if (entityID == 0) {
-        tryGetComponent<ObjectInfoComponent>().layer = layer;
-    } else {
-        ComponentStore::GetInstance().tryGetComponent<ObjectInfoComponent>(entityID).layer = layer;
-    }
+void GameObject::setActive(bool active) const {
+    tryGetComponent<ObjectInfoComponent>().isActive = active;
 }
 
-GameObject &GameObject::GetParent() {
+
+int GameObject::getLayer() const {
+    return tryGetComponent<ObjectInfoComponent>().layer;
+}
+
+void GameObject::setLayer(int layer) const {
+    tryGetComponent<ObjectInfoComponent>().layer = layer;
+}
+
+GameObject &GameObject::getParent() {
     return *this;
 }
 
-entity GameObject::GetEntityID() const {
+entity GameObject::getEntityId() const {
     return entityID;
 }
 
-void GameObject::SetEntityID(entity id) {
+void GameObject::setEntityId(entity id) {
     entityID = id;
 }
 
-std::vector<std::unique_ptr<IComponent>> &GameObject::GetAllComponents() {
+std::vector<std::unique_ptr<IComponent>> &GameObject::getAllComponents() {
     return components;
+}
+
+void GameObject::addChild(GameObject &child) {
+    try {
+        auto &childComponent = ComponentStore::GetInstance().tryGetComponent<ChildComponent>(entityID);
+        childComponent.children.push_back(child.getEntityId());
+    } catch (std::runtime_error &e) {
+        addComponent(std::make_unique<ChildComponent>());
+        auto &childComponent = ComponentStore::GetInstance().tryGetComponent<ChildComponent>(entityID);
+        childComponent.children.push_back(child.getEntityId());
+    }
+
+    try {
+        auto &parentComponent = ComponentStore::GetInstance().tryGetComponent<ParentComponent>(child.getEntityId());
+        parentComponent.parentId = entityID;
+    } catch (std::runtime_error &e) {
+        child.addComponent(ParentComponent());
+        auto &parentComponent = ComponentStore::GetInstance().tryGetComponent<ParentComponent>(child.getEntityId());
+        parentComponent.parentId = entityID;
+    }
+}
+
+void GameObject::removeChild(GameObject &child) {
+    try {
+        auto &childComponent = tryGetComponent<ChildComponent>();
+        auto it = std::find(childComponent.children.begin(), childComponent.children.end(),
+                            child.getEntityId());
+        if (it != childComponent.children.end()) {
+            childComponent.children.erase(it);
+            if (childComponent.children.empty()) {
+                removeComponent<ChildComponent>();
+            }
+        }
+
+        child.removeComponent<ParentComponent>();
+    } catch (std::runtime_error &e) {
+        // Do nothing
+    }
+
 }
 
 
