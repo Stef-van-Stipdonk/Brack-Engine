@@ -8,7 +8,7 @@
 #include "Objects/Text.hpp"
 #include "../ConfigSingleton.hpp"
 
-Text::Text(const std::string& text) : UIObject() {
+Text::Text(const std::string &text) : GameObject() {
     auto textComponent = std::make_unique<TextComponent>();
     textComponent->text = text;
     AddComponent(std::move(textComponent));

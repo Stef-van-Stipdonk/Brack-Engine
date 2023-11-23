@@ -25,11 +25,11 @@ struct ChildComponent : public IComponent {
         visitor.visit(*this);
     }
 
-    ChildComponent(const ChildComponent& other) : IComponent(other){
+    ChildComponent(const ChildComponent &other) : IComponent(other) {
         children = other.children;
     }
 
-    std::vector<uint32_t> children;
+    std::vector<entity> children;
 };
 
 #endif //BRACK_ENGINE_CHILDCOMPONENT_HPP

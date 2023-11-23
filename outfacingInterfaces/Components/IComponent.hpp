@@ -7,6 +7,7 @@
 
 #include <cstdint>
 #include <memory>
+#include <Entity.hpp>
 
 class ComponentVisitor;
 
@@ -26,7 +27,7 @@ struct IComponent {
 
 
     // Als we nog achter andere overeenkomende dingen komen bij ieder component kunnen we die hier toevoegens
-    uint32_t entityID{0};
+    entity entityID{0};
     bool isActive = true;
 };
 

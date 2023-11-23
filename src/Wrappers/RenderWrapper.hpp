@@ -73,7 +73,7 @@ private:
     std::pair<SDL_Rect, std::unique_ptr<SDL_Texture, void (*)(SDL_Texture *)>> &
     GetCameraTexturePair(const CameraComponent &cameraComponent, const TransformComponent &transformComponent);
 
-    std::map<uint32_t, std::pair<SDL_Rect, std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)>>> cameraTextures;
+    std::map<entity, std::pair<SDL_Rect, std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)>>> cameraTextures;
     std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)> renderTexture;
     std::unordered_map<std::string, std::map<int, TTF_Font *>> fontCache;
     std::map<std::string, std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)>> textures;
