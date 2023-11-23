@@ -117,6 +117,8 @@ b2BodyType PhysicsWrapper::getBodyType(CollisionType collisionType) {
             return b2_dynamicBody;
         case KINEMATIC:
             return b2_kinematicBody;
+        default:
+            return b2_staticBody;
     }
 }
 
