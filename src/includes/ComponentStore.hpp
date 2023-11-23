@@ -40,7 +40,7 @@ public:
 
     template<typename T, typename...Args>
     typename std::enable_if<std::is_base_of<IComponent, T>::value>::type
-    addComponent(uint32_t entityId, Args &&...args) {
+    addComponent(entity entityId, Args &&...args) {
         if (entityId == 0)
             throw std::runtime_error(
                     "Entity ID cannot be 0, please make sure to implement a copy constructor for your component of type " +
@@ -55,10 +55,10 @@ public:
 
     template<typename T>
     typename std::enable_if<std::is_base_of<IComponent, T>::value, T &>::type
-    tryGetComponent(uint32_t entity) {
+    tryGetComponent(entity entityId) {
         auto itType = components.find(typeid(T));
         if (itType != components.end()) {
-            auto itEntity = itType->second.find(entity);
+            auto itEntity = itType->second.find(entityId);
             if (itEntity != itType->second.end()) {
                 // Cast and return a reference to the managed object
                 return *static_cast<T *>(itEntity->second.get());
@@ -68,7 +68,7 @@ public:
     }
 
     template<typename BaseT>
-    typename std::enable_if<std::is_base_of<IComponent, BaseT>::value, std::vector<BaseT*>>::type
+    typename std::enable_if<std::is_base_of<IComponent, BaseT>::value, std::vector<BaseT *>>::type
     getAllComponentsOfType() {
         std::vector<BaseT *> result;
         for (auto &[type, map]: components) {
@@ -82,23 +82,24 @@ public:
         return result;
     }
 
-    const std::unordered_map<std::type_index, std::unordered_map<uint32_t, std::unique_ptr<IComponent>>>& getComponents() const {
+    const std::unordered_map<std::type_index, std::unordered_map<entity, std::unique_ptr<IComponent>>> &
+    getComponents() const {
         return components;
     }
 
     template<typename T>
     typename std::enable_if<std::is_base_of<IComponent, T>::value>::type
-    removeComponent(uint32_t entity) {
+    removeComponent(entity entityId) {
         auto itType = components.find(typeid(T));
         if (itType != components.end()) {
-            itType->second.erase(entity);
+            itType->second.erase(entityId);
         }
     }
 
     template<typename T>
-    typename std::enable_if<std::is_base_of<IComponent, T>::value, std::vector<uint32_t>>::type
+    typename std::enable_if<std::is_base_of<IComponent, T>::value, std::vector<entity>>::type
     getEntitiesWithComponent() {
-        std::vector<uint32_t> entities;
+        std::vector<entity> entities;
         auto itType = components.find(typeid(T));
         if (itType != components.end()) {
             for (auto &pair: itType->second) {
@@ -114,7 +115,7 @@ private:
 
     ComponentStore() = default;
 
-    std::unordered_map<std::type_index, std::unordered_map<uint32_t, std::unique_ptr<IComponent>>> components;
+    std::unordered_map<std::type_index, std::unordered_map<entity, std::unique_ptr<IComponent>>> components;
 };
 
 #endif // SIMPLE_COMPONENTSTORE_HPP

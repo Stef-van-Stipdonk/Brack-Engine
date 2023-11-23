@@ -3,6 +3,7 @@
 //
 
 #include "AudioSystem.hpp"
+#include "../outfacingInterfaces/Entity.hpp"
 
 AudioSystem::AudioSystem() {
 
@@ -15,7 +16,7 @@ AudioSystem::~AudioSystem() {
 void AudioSystem::update(float deltaTime) {
 }
 
-void AudioSystem::PlayPause(uint32_t entityID) {
+void AudioSystem::PlayPause(entity entityId) {
 
 }
 

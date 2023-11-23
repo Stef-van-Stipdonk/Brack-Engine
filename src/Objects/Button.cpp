@@ -9,7 +9,7 @@
 #include <utility>
 #include "Objects/Button.hpp"
 
-Button::Button(const Vector2& size, const std::string& text) : UIObject() {
+Button::Button(const Vector2 &size, const std::string &text) : GameObject() {
     auto textComponent = std::make_unique<TextComponent>();
     textComponent->text = std::move(text);
     textComponent->orderInLayer = 0;
@@ -27,14 +27,14 @@ Button::Button(const Vector2& size, const std::string& text) : UIObject() {
     AddComponent(std::move(textComponent));
 }
 
-void Button::SetTextColor(const Color& color) {
+void Button::SetTextColor(const Color &color) {
     if (entityID == 0) {
         tryGetComponent<TextComponent>().color = std::make_unique<Color>(color);
     } else
         ComponentStore::GetInstance().tryGetComponent<TextComponent>(entityID).color = std::make_unique<Color>(color);
 }
 
-void Button::SetFontPath(const std::string& path) {
+void Button::SetFontPath(const std::string &path) {
     if (entityID == 0) {
         tryGetComponent<TextComponent>().fontPath = path;
     } else
@@ -48,18 +48,19 @@ void Button::SetFontSize(int fontSize) {
         ComponentStore::GetInstance().tryGetComponent<TextComponent>(entityID).fontSize = fontSize;
 }
 
-void Button::SetText(const std::string& string) {
+void Button::SetText(const std::string &string) {
     if (entityID == 0) {
         tryGetComponent<TextComponent>().text = string;
     } else
         ComponentStore::GetInstance().tryGetComponent<TextComponent>(entityID).text = string;
 }
 
-void Button::SetFill(const Color& color) {
+void Button::SetFill(const Color &color) {
     if (entityID == 0) {
         tryGetComponent<RectangleComponent>().fill = std::make_unique<Color>(color);
     } else
-        ComponentStore::GetInstance().tryGetComponent<RectangleComponent>(entityID).fill = std::make_unique<Color>(color);
+        ComponentStore::GetInstance().tryGetComponent<RectangleComponent>(entityID).fill = std::make_unique<Color>(
+                color);
 }
 
 void Button::SetClickEvent(std::function<void()> func) {
@@ -73,11 +74,12 @@ void Button::SetBorderWidth(int borderWidth) {
         ComponentStore::GetInstance().tryGetComponent<RectangleComponent>(entityID).borderWidth = borderWidth;
 }
 
-void Button::SetBorderColor(const Color& color) {
+void Button::SetBorderColor(const Color &color) {
     if (entityID == 0) {
         tryGetComponent<RectangleComponent>().borderColor = std::make_unique<Color>(color);
     } else
-        ComponentStore::GetInstance().tryGetComponent<RectangleComponent>(entityID).borderColor = std::make_unique<Color>(color);
+        ComponentStore::GetInstance().tryGetComponent<RectangleComponent>(
+                entityID).borderColor = std::make_unique<Color>(color);
 }
 
 bool Button::IsDisabled() const {

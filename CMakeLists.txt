@@ -79,7 +79,6 @@ add_library(${PROJECT_NAME} SHARED
         src/Objects/GameObject.cpp
         src/Objects/Camera.cpp
         src/Objects/Scene.cpp
-        src/Objects/UIObject.cpp
         src/Objects/Button.cpp
         src/Objects/Text.cpp
         src/EngineManagers/SceneManager.cpp

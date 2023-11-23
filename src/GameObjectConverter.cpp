@@ -6,11 +6,11 @@
 #include "includes/EntityManager.hpp"
 #include "Components/ComponentVisitor.hpp"
 
-Camera GameObjectConverter::getMainCamera(uint32_t entityID) {
+Camera GameObjectConverter::getMainCamera(entity entityID) {
     return {};
 }
 
-GameObject GameObjectConverter::getGameObject(uint32_t entityID) {
+GameObject GameObjectConverter::getGameObject(entity entityID) {
     return {};
 }
 

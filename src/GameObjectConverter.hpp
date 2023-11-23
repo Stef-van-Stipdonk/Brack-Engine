@@ -9,12 +9,13 @@
 #include <cstdint>
 #include <optional>
 #include "Objects/Camera.hpp"
+#include "../outfacingInterfaces/Entity.hpp"
 
 class GameObjectConverter {
 public:
-    static Camera getMainCamera(uint32_t entityID);
+    static Camera getMainCamera(entity entityID);
 
-    static GameObject getGameObject(uint32_t entityID);
+    static GameObject getGameObject(entity entityID);
 
     static void addGameObject(GameObject *gameObject);
 
