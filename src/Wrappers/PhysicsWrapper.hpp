@@ -28,16 +28,12 @@ public:
 
     void operator=(PhysicsWrapper &&) = delete;
 
-    void Initialize();
-
     void update(float deltaTime);
 
     void addCircles(std::vector<uint32_t> componentIds);
 
     void addBoxes(std::vector<uint32_t> componentIds);
 
-
-    void Cleanup();
 
     std::unordered_map<uint32_t, b2Body *> bodies;
 
