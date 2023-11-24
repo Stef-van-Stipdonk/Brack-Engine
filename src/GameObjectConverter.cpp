@@ -4,6 +4,7 @@
 
 #include <Components/ChildComponent.hpp>
 #include <Components/ParentComponent.hpp>
+#include <Components/BehaviourScript.hpp>
 #include "GameObjectConverter.hpp"
 #include "includes/EntityManager.hpp"
 #include "Components/ComponentVisitor.hpp"
@@ -32,6 +33,11 @@ void GameObjectConverter::addGameObject(GameObject *gameObject) {
     for (auto &component: gameObject->getAllComponents()) {
         component->entityID = entityId;
         component->accept(componentVisitor);
+    }
+
+    auto scripts = ComponentStore::GetInstance().getAllComponentsOfType<BehaviourScript>();
+    for (auto &script: scripts) {
+        script->onStart();
     }
 }
 

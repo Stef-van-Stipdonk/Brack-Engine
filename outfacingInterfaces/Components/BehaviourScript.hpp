@@ -23,7 +23,6 @@ struct BehaviourScript : public IComponent {
 
     virtual void accept(ComponentVisitor &visitor) override {
         visitor.visit(*this);
-        onStart();
     }
 
     BehaviourScript(const BehaviourScript &other) : IComponent(other) {}
