@@ -53,6 +53,10 @@ struct BehaviourScript : public IComponent {
     static std::vector<GameObject> getGameObjectsByTag(const std::string &tag) {
         return GameObjectConverter::getGameObjectsByTag(tag);
     }
+
+    std::vector<GameObject> getChildren() {
+        return GameObjectConverter::getChildren(entityID);
+    }
 };
 
 

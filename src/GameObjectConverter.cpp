@@ -2,36 +2,35 @@
 // Created by jesse on 04/11/2023.
 //
 
+#include <Components/ChildComponent.hpp>
+#include <Components/ParentComponent.hpp>
 #include "GameObjectConverter.hpp"
 #include "includes/EntityManager.hpp"
 #include "Components/ComponentVisitor.hpp"
 
-Camera GameObjectConverter::getMainCamera(entity entityID) {
-    return {};
-}
-
-GameObject GameObjectConverter::getGameObject(entity entityID) {
-    return {};
-}
 
 void GameObjectConverter::addGameObject(GameObject *gameObject) {
     ComponentVisitor componentVisitor;
-    auto &components = gameObject->getAllComponents();
+    auto entityId = gameObject->getEntityId();
     if (gameObject->getEntityId() == 0)
-        gameObject->setEntityId(EntityManager::getInstance().createEntity());
-    for (auto &component: components) {
-        component->entityID = gameObject->getEntityId();
-        component->accept(componentVisitor);
+        entityId = EntityManager::getInstance().createEntity();
+
+    for (const auto &child: gameObject->getChildren()) {
+        try {
+            auto &parentComponent = child->tryGetComponent<ParentComponent>();
+            parentComponent.parentId = entityId;
+        } catch (std::runtime_error &e) {}
     }
-}
 
+    auto parent = gameObject->getParent();
+    if (parent.has_value()) {
+        auto &parentComponent = parent.value().tryGetComponent<ChildComponent>();
+        parentComponent.children.emplace_back(entityId);
+    }
 
-void GameObjectConverter::addCamera(Camera *camera) {
-    ComponentVisitor componentVisitor;
-    if (camera->getEntityId() == 0)
-        camera->setEntityId(EntityManager::getInstance().createEntity());
-    for (auto &component: camera->getAllComponents()) {
-        component->entityID = camera->getEntityId();
+    gameObject->setEntityId(entityId);
+    for (auto &component: gameObject->getAllComponents()) {
+        component->entityID = entityId;
         component->accept(componentVisitor);
     }
 }
@@ -76,4 +75,30 @@ std::vector<GameObject> GameObjectConverter::getGameObjectsByTag(const std::stri
         gameObjects.push_back(gameObject);
     }
     return gameObjects;
+}
+
+std::vector<GameObject> GameObjectConverter::getChildren(entity entityID) {
+    auto children = std::vector<GameObject>();
+    try {
+        auto &childComponent = ComponentStore::GetInstance().tryGetComponent<ChildComponent>(entityID);
+        for (auto childId: childComponent.children) {
+            auto gameObject = GameObject();
+            gameObject.setEntityId(childId);
+            children.push_back(gameObject);
+        }
+        return children;
+    } catch (std::runtime_error &e) {
+        return children;
+    }
+}
+
+std::optional<GameObject> GameObjectConverter::getParent(entity entityID) {
+    try {
+        auto &parentComponent = ComponentStore::GetInstance().tryGetComponent<ParentComponent>(entityID);
+        auto gameObject = GameObject();
+        gameObject.setEntityId(parentComponent.parentId);
+        return gameObject;
+    } catch (std::runtime_error &e) {
+        return std::nullopt;
+    }
 }

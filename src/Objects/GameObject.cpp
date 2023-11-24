@@ -9,24 +9,35 @@
 #include "Objects/GameObject.hpp"
 #include <algorithm>
 #include <utility>
+#include <optional>
 
 GameObject::GameObject() {
     addComponent(std::make_unique<TransformComponent>());
     addComponent(std::make_unique<ObjectInfoComponent>());
 }
 
-std::vector<GameObject> GameObject::getChildren() const {
+std::vector<GameObject *> GameObject::getChildren() const {
+    if (entityID == 0) {
+        return children;
+    }
     try {
         auto &childComponent = tryGetComponent<ChildComponent>();
-        std::vector<GameObject> children;
+        std::vector<GameObject *> childrenFromComponent;
         for (auto &childId: childComponent.children) {
-            auto child = GameObject();
-            child.setEntityId(childId);
-            children.push_back(child);
+            auto *child = new GameObject();
+            child->setEntityId(childId);
+            childrenFromComponent.push_back(child);
         }
+        return childrenFromComponent;
     } catch (std::runtime_error &e) {
         return {};
     }
+}
+
+std::optional<GameObject> GameObject::getParent() {
+    if (parent == nullptr)
+        return std::nullopt;
+    return *parent;
 }
 
 std::string GameObject::getName() const {
@@ -63,10 +74,6 @@ void GameObject::setLayer(int layer) const {
     tryGetComponent<ObjectInfoComponent>().layer = layer;
 }
 
-GameObject &GameObject::getParent() {
-    return *this;
-}
-
 entity GameObject::getEntityId() const {
     return entityID;
 }
@@ -81,22 +88,28 @@ std::vector<std::unique_ptr<IComponent>> &GameObject::getAllComponents() {
 
 void GameObject::addChild(GameObject &child) {
     try {
-        auto &childComponent = ComponentStore::GetInstance().tryGetComponent<ChildComponent>(entityID);
-        childComponent.children.push_back(child.getEntityId());
+        auto &childComponent = tryGetComponent<ChildComponent>();
+        if (entityID != 0)
+            childComponent.children.push_back(child.getEntityId());
     } catch (std::runtime_error &e) {
         addComponent(std::make_unique<ChildComponent>());
-        auto &childComponent = ComponentStore::GetInstance().tryGetComponent<ChildComponent>(entityID);
-        childComponent.children.push_back(child.getEntityId());
+        if (entityID != 0) {
+            auto &childComponent = tryGetComponent<ChildComponent>();
+            childComponent.children.push_back(child.getEntityId());
+        }
     }
 
     try {
-        auto &parentComponent = ComponentStore::GetInstance().tryGetComponent<ParentComponent>(child.getEntityId());
+        auto &parentComponent = child.tryGetComponent<ParentComponent>();
         parentComponent.parentId = entityID;
     } catch (std::runtime_error &e) {
         child.addComponent(ParentComponent());
-        auto &parentComponent = ComponentStore::GetInstance().tryGetComponent<ParentComponent>(child.getEntityId());
+        auto &parentComponent = child.tryGetComponent<ParentComponent>();
         parentComponent.parentId = entityID;
     }
+
+    child.parent = this;
+    children.emplace_back(&child);
 }
 
 void GameObject::removeChild(GameObject &child) {
@@ -106,6 +119,8 @@ void GameObject::removeChild(GameObject &child) {
                             child.getEntityId());
         if (it != childComponent.children.end()) {
             childComponent.children.erase(it);
+            std::remove(children.begin(), children.end(), (&child));
+            child.parent = nullptr;
             if (childComponent.children.empty()) {
                 removeComponent<ChildComponent>();
             }
@@ -117,8 +132,3 @@ void GameObject::removeChild(GameObject &child) {
     }
 
 }
-
-
-
-
-

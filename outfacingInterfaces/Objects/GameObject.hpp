@@ -11,6 +11,7 @@
 #include <string>
 #include <typeinfo>
 #include <stdexcept>
+#include <optional>
 #include "../src/includes/ComponentStore.hpp"
 #include "../Entity.hpp"
 
@@ -106,9 +107,9 @@ public:
         }
     }
 
-    GameObject &getParent();
+    std::optional<GameObject> getParent();
 
-    std::vector<GameObject> getChildren() const;
+    std::vector<GameObject *> getChildren() const;
 
     void addChild(GameObject &child);
 
@@ -139,6 +140,8 @@ public:
 protected:
     entity entityID = 0;
     std::vector<std::unique_ptr<IComponent>> components;
+    GameObject *parent = nullptr;
+    std::vector<GameObject *> children;
 };
 
 
