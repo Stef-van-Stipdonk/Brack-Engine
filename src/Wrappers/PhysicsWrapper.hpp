@@ -5,18 +5,55 @@
 #ifndef BRACK_ENGINE_PHYSICSWRAPPER_HPP
 #define BRACK_ENGINE_PHYSICSWRAPPER_HPP
 
+#include <memory>
+#include <vector>
+#include <Components/CircleCollisionComponent.hpp>
+#include "box2d/box2d.h"
+
+class ContactListener;
 
 class PhysicsWrapper {
 public:
-    PhysicsWrapper();
 
     ~PhysicsWrapper();
 
-    bool Initialize();
+    static PhysicsWrapper &getInstance();
 
-    void Run();
 
-    void Cleanup();
+    PhysicsWrapper(PhysicsWrapper &other) = delete;
+
+    void operator=(const PhysicsWrapper &) = delete;
+
+    PhysicsWrapper(PhysicsWrapper &&other) = delete;
+
+    void operator=(PhysicsWrapper &&) = delete;
+
+    void update(float deltaTime);
+
+    void addCircles(std::vector<uint32_t> componentIds);
+
+    void addBoxes(std::vector<uint32_t> componentIds);
+
+
+    std::unordered_map<uint32_t, b2Body *> bodies;
+
+private:
+    PhysicsWrapper();
+
+    static PhysicsWrapper instance;
+
+    std::unique_ptr<ContactListener> contactListener;
+
+    std::unique_ptr<b2World> world;
+
+    b2BodyType getBodyType(CollisionType collisionType);
+};
+
+class ContactListener : public b2ContactListener {
+public:
+    void BeginContact(b2Contact *contact) override;
+
+    void EndContact(b2Contact *contact) override;
 };
 
 
