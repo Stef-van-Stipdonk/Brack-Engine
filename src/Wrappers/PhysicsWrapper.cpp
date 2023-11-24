@@ -161,7 +161,6 @@ void ContactListener::BeginContact(b2Contact *contact) {
     if (std::find(boxEntities.begin(), boxEntities.end(), contactBComponent) != boxEntities.end()) {
         compStore.tryGetComponent<BoxCollisionComponent>(contactBComponent).collidedWith.push_back(contactAComponent);
     }
-    Logger::GetInstance().Debug("Collision");
 
 }
 
@@ -187,31 +186,29 @@ void ContactListener::EndContact(b2Contact *contact) {
 
     }
     if (std::find(circleEntities.begin(), circleEntities.end(), contactAComponent) != circleEntities.end()) {
-        auto component = compStore.tryGetComponent<CircleCollisionComponent>(contactAComponent);
+        auto &component = compStore.tryGetComponent<CircleCollisionComponent>(contactAComponent);
         component.collidedWith.erase(
                 std::remove(component.collidedWith.begin(), component.collidedWith.end(), contactBComponent),
                 component.collidedWith.end());
-
     }
     if (std::find(circleEntities.begin(), circleEntities.end(), contactBComponent) != circleEntities.end()) {
-        auto component = compStore.tryGetComponent<CircleCollisionComponent>(contactBComponent);
+        auto &component = compStore.tryGetComponent<CircleCollisionComponent>(contactBComponent);
         component.collidedWith.erase(
                 std::remove(component.collidedWith.begin(), component.collidedWith.end(), contactAComponent),
                 component.collidedWith.end());
     }
     if (std::find(boxEntities.begin(), boxEntities.end(), contactAComponent) != boxEntities.end()) {
-        auto component = compStore.tryGetComponent<BoxCollisionComponent>(contactAComponent);
+        auto &component = compStore.tryGetComponent<BoxCollisionComponent>(contactAComponent);
         component.collidedWith.erase(
                 std::remove(component.collidedWith.begin(), component.collidedWith.end(), contactBComponent),
                 component.collidedWith.end());
     }
     if (std::find(boxEntities.begin(), boxEntities.end(), contactBComponent) != boxEntities.end()) {
-        auto component = compStore.tryGetComponent<BoxCollisionComponent>(contactBComponent);
+        auto &component = compStore.tryGetComponent<BoxCollisionComponent>(contactBComponent);
         component.collidedWith.erase(
                 std::remove(component.collidedWith.begin(), component.collidedWith.end(), contactAComponent),
                 component.collidedWith.end());
     }
-    Logger::GetInstance().Debug("Collision removed");
 
 
 }
