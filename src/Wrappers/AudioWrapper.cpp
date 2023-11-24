@@ -88,7 +88,41 @@ void AudioWrapper::clearUnusedChannels() {
     }
 }
 
-void AudioWrapper::playSound(AudioArchetype &audioComponent) {
+void AudioWrapper::playSoundTrack(AudioArchetype &audioComponent) {
+    if (!system) {
+        Logger::Error("FMOD audio system is not initialized.");
+        return;
+    }
+
+    if (!isValidAudioPath(audioComponent)) {
+        Logger::Error("Invalid audio file path.");
+        return;
+    }
+
+    soundTrackChannelPair.first = soundTrackChannel; // Set the channel ID
+    auto audioPath = ConfigSingleton::GetInstance().GetBaseAssetPath() + audioComponent.getAudioPath();
+
+    FMOD::Sound* sound = nullptr;
+
+    FMOD_RESULT result = system->createSound(audioPath.c_str(), FMOD_LOOP_NORMAL, 0, &sound);
+
+    if (result != FMOD_OK) {
+        Logger::Error("Failed to create sound: " + std::string(FMOD_ErrorString(result)));
+        return;
+    }
+
+    result = system->playSound(sound, nullptr, false, &soundTrackChannelPair.second);
+    soundTrackChannelPair.second->setVolume(audioComponent.volume); // Set volume
+
+    if (result != FMOD_OK) {
+        Logger::Error("Failed to play sound on SoundTrack channel: " + std::string(FMOD_ErrorString(result)));
+        return;
+    }
+
+    Logger::Debug("Uploaded sound to Soundtrack Channel: " + std::to_string(soundTrackChannelPair.first) + ", Path: " + audioComponent.getAudioPath());
+}
+
+void AudioWrapper::playSoundEffect(AudioArchetype &audioComponent) {
     if (!system) {
         Logger::Error("FMOD audio system is not initialized.");
         return;
@@ -105,64 +139,41 @@ void AudioWrapper::playSound(AudioArchetype &audioComponent) {
         Logger::Error("No available SFX channels.");
         return;
     }
+    auto audioPath = ConfigSingleton::GetInstance().GetBaseAssetPath() + audioComponent.getAudioPath();
 
-    if (audioComponent.getIsSoundTrack()) {
-        soundTrackChannelPair.first = soundTrackChannel; // Set the channel ID
-        soundTrackChannelPair.second->setVolume(audioComponent.volume); // Set volume
+    // Find an available SFX channel to play the sound
+    int channelID = findAvailableSoundEffectsChannel();
 
-        FMOD::Sound* sound = nullptr;
-        FMOD_MODE mode = audioComponent.getIsSoundTrack() ? FMOD_LOOP_NORMAL : FMOD_DEFAULT; // Set looping for SoundTrack
-
-        FMOD_RESULT result = system->createSound(audioComponent.getAudioPath().c_str(), mode, 0, &sound);
-
-        if (result != FMOD_OK) {
-            Logger::Error("Failed to create sound: " + std::string(FMOD_ErrorString(result)));
-            return;
-        }
-
-        result = system->playSound(sound, nullptr, false, &soundTrackChannelPair.second);
-
-        if (result != FMOD_OK) {
-            Logger::Error("Failed to play sound on SoundTrack channel: " + std::string(FMOD_ErrorString(result)));
-            return;
-        }
-
-        Logger::Debug("Uploaded sound to Soundtrack Channel: " + std::to_string(soundTrackChannelPair.first) + ", Path: " + audioComponent.getAudioPath());
-    } else { // SoundEffect
-        // Find an available SFX channel to play the sound
-        int channelID = findAvailableSoundEffectsChannel();
-
-        if (channelID == -1) {
-            Logger::Debug("All SFX channels are currently in use.");
-            return;
-        }
-
-        FMOD::Sound* sound = nullptr;
-        FMOD_RESULT result = system->createSound(audioComponent.getAudioPath().c_str(), FMOD_DEFAULT, 0, &sound);
-
-        if (result != FMOD_OK) {
-            Logger::Error("Failed to create sound: " + std::string(FMOD_ErrorString(result)));
-            return;
-        }
-
-        // Play the sound on the available SFX channel
-        FMOD::Channel* channel = nullptr;
-        result = system->playSound(sound, nullptr, false, &channel);
-
-        if (result != FMOD_OK) {
-            Logger::Error("Failed to play sound on SFX channel: " + std::string(FMOD_ErrorString(result)));
-            return;
-        }
-
-        // Set the channel's ID and volume
-        channel->setUserData(reinterpret_cast<void*>(channelID));
-        channel->setVolume(audioComponent.volume);
-
-        // Add the channel to the map
-        soundEffectsChannelMap[channelID] = channel;
-
-        Logger::Debug("Uploaded sound to Channel: " + std::to_string(channelID) + ", Path: " + audioComponent.getAudioPath());
+    if (channelID == -1) {
+        Logger::Debug("All SFX channels are currently in use.");
+        return;
     }
+
+    FMOD::Sound* sound = nullptr;
+    FMOD_RESULT result = system->createSound(audioPath.c_str(), FMOD_DEFAULT, 0, &sound);
+
+    if (result != FMOD_OK) {
+        Logger::Error("Failed to create sound: " + std::string(FMOD_ErrorString(result)));
+        return;
+    }
+
+    // Play the sound on the available SFX channel
+    FMOD::Channel* channel = nullptr;
+    result = system->playSound(sound, nullptr, false, &channel);
+
+    if (result != FMOD_OK) {
+        Logger::Error("Failed to play sound on SFX channel: " + std::string(FMOD_ErrorString(result)));
+        return;
+    }
+
+    // Set the channel's ID and volume
+    channel->setUserData(reinterpret_cast<void*>(channelID));
+    channel->setVolume(audioComponent.volume);
+
+    // Add the channel to the map
+    soundEffectsChannelMap[channelID] = channel;
+
+    Logger::Debug("Uploaded sound to Channel: " + std::to_string(channelID) + ", Path: " + audioComponent.getAudioPath());
 }
 
 void AudioWrapper::pauseSound(AudioArchetype &audioComponent) {
@@ -247,6 +258,9 @@ void AudioWrapper::resumeSound(AudioArchetype &audioComponent) {
             }
         }
     }
+    if(!anySoundsPaused){
+        soundTrackChannelPair.second->isPlaying(&anySoundsPaused);
+    }
 
     if (!anySoundsPaused) {
         return;
@@ -324,7 +338,7 @@ void AudioWrapper::resumeSound(AudioArchetype &audioComponent) {
 }
 
 bool AudioWrapper::isValidAudioPath(const AudioArchetype& audioComponent){
-    std::ifstream file(audioComponent.getAudioPath());
+    std::ifstream file(ConfigSingleton::GetInstance().GetBaseAssetPath() + audioComponent.getAudioPath());
 
     if (!file.good()) {
         Logger::Error("Audio file not found at path: " + audioComponent.getAudioPath());

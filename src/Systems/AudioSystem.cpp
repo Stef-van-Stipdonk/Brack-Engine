@@ -16,15 +16,21 @@ AudioSystem::~AudioSystem() {
 void AudioSystem::update(float deltaTime) {
     auto audiocomponents = ComponentStore::GetInstance().getAllComponentsOfType<AudioArchetype>();
     for(auto audioComponent : audiocomponents){
-        if(audioComponent->startPlaying){
+        if(audioComponent->isSoundTrack && audioComponent->startPlaying && !audioComponent->pauseSound){
             audioComponent->startPlaying = false;
-            audioWrapper->playSound(*audioComponent);
+            audioWrapper->playSoundTrack(*audioComponent);
+        }else if(!audioComponent->isSoundTrack && audioComponent->startPlaying && !audioComponent->pauseSound){
+            audioComponent->startPlaying = false;
+            audioWrapper->playSoundEffect(*audioComponent);
         }
-        if(audioComponent->pauseSound){
-            audioWrapper->pauseSound(*audioComponent);
-        }
-        else{
+
+        if(audioComponent->pauseSound && audioComponent->startPlaying){
+            audioComponent->pauseSound = false;
+            audioComponent->startPlaying = false;
             audioWrapper->resumeSound(*audioComponent);
+        }
+        else if (audioComponent->pauseSound){
+            audioWrapper->pauseSound(*audioComponent);
         }
     }
 }

@@ -21,8 +21,8 @@ BrackEngine::BrackEngine(Config &&config) {
     SystemManager::GetInstance().AddSystem(std::make_shared<InputSystem>());
     SystemManager::GetInstance().AddSystem(std::make_shared<ClickSystem>());
     SystemManager::GetInstance().AddSystem(std::make_shared<AudioSystem>());
-    SystemManager::GetInstance().AddSystem(std::make_shared<BehaviourScriptSystem>());
     SystemManager::GetInstance().AddSystem(std::make_shared<MovementSystem>());
+    SystemManager::GetInstance().AddSystem(std::make_shared<BehaviourScriptSystem>());
     SystemManager::GetInstance().AddSystem(std::make_shared<RenderingSystem>());
     lastTime = std::chrono::high_resolution_clock::now();
 

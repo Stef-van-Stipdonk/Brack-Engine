@@ -22,7 +22,9 @@ public:
 
     void cleanUp();
 
-    void playSound(AudioArchetype &audioComponent);
+    void playSoundEffect(AudioArchetype &audioComponent);
+
+    void playSoundTrack(AudioArchetype &audioComponent);
 
     void pauseSound(AudioArchetype &audioComponent);
 

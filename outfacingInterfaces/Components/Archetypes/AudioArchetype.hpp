@@ -19,16 +19,23 @@ public:
     }
 
 
-    AudioArchetype(const AudioArchetype &other) : IComponent(other), isSoundTrack(other.isSoundTrack) {}
+    AudioArchetype(const AudioArchetype &other) :
+        IComponent(other),
+        audioPath(other.audioPath),
+        isSoundTrack(other.isSoundTrack),
+        pauseSound(other.pauseSound),
+        startPlaying(other.startPlaying),
+        volume(other.volume){}
 
     void accept(ComponentVisitor &visitor) override {
-
         visitor.visit(*this);
     }
 
     bool pauseSound = false;
     bool startPlaying = false;
     float volume;
+    const std::string audioPath;
+    bool isSoundTrack;
 
     bool getIsSoundTrack() const {
         return isSoundTrack;
@@ -37,11 +44,6 @@ public:
     std::string getAudioPath() const{
         return audioPath;
     }
-
-
-private:
-    const std::string audioPath;
-    const bool isSoundTrack;
 };
 
 #endif //BRACKOCALYPSE_AUDIOARCHETYPE_HPP
