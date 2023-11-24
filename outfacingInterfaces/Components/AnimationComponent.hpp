@@ -27,7 +27,7 @@ struct AnimationComponent : public IComponent {
 
     AnimationComponent(const AnimationComponent &other) : IComponent(other) {
         isLooping = other.isLooping;
-        animationSpeed = other.animationSpeed;
+        animationDuration = other.animationDuration;
         frameCount = other.frameCount;
         currentFrame = other.currentFrame;
         if (other.startPosition != nullptr)
@@ -35,7 +35,7 @@ struct AnimationComponent : public IComponent {
     }
 
     bool isLooping;
-    float animationSpeed;
+    float animationDuration;
     int frameCount, currentFrame;
     std::unique_ptr<Vector2> startPosition;
 };

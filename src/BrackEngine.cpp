@@ -13,6 +13,7 @@
 #include "Systems/BehaviourScriptSystem.hpp"
 #include "Systems/ClickSystem.hpp"
 #include "Systems/AudioSystem.hpp"
+#include "Systems/AnimationSystem.hpp"
 
 BrackEngine::BrackEngine(Config &&config) {
     ConfigSingleton::GetInstance().SetConfig(config);
@@ -22,6 +23,8 @@ BrackEngine::BrackEngine(Config &&config) {
     SystemManager::GetInstance().AddSystem(std::make_shared<BehaviourScriptSystem>());
     SystemManager::GetInstance().AddSystem(std::make_shared<MovementSystem>());
     SystemManager::GetInstance().AddSystem(std::make_shared<RenderingSystem>());
+    SystemManager::GetInstance().AddSystem(std::make_shared<AnimationSystem>());
+
 
     lastTime = std::chrono::high_resolution_clock::now();
 
@@ -89,7 +92,7 @@ void BrackEngine::UpdateFPS(float deltaTime) {
     textComponent.text = std::to_string(FPSSingleton::GetInstance().GetFPS());;
 }
 
-void BrackEngine::save(const std::string& filePath, const std::string& content) const {
+void BrackEngine::save(const std::string &filePath, const std::string &content) const {
     std::ofstream file(filePath, std::ios::binary);
 
     // Check if the file can be opened for writing
@@ -100,7 +103,7 @@ void BrackEngine::save(const std::string& filePath, const std::string& content) 
 
     // Write the size of the string first
     size_t size = content.size();
-    if (!file.write(reinterpret_cast<const char*>(&size), sizeof(size_t))) {
+    if (!file.write(reinterpret_cast<const char *>(&size), sizeof(size_t))) {
         std::cerr << "Error writing size to file: " << filePath << std::endl;
         file.close(); // Close the file before returning
         return;
@@ -114,7 +117,7 @@ void BrackEngine::save(const std::string& filePath, const std::string& content) 
     file.close();
 }
 
-std::string BrackEngine::load(const std::string& filePath) const {
+std::string BrackEngine::load(const std::string &filePath) const {
     std::ifstream file(filePath, std::ios::binary);
 
     // Check if the file can be opened for reading
@@ -125,7 +128,7 @@ std::string BrackEngine::load(const std::string& filePath) const {
 
     // Read the size of the string first
     size_t size;
-    if (!file.read(reinterpret_cast<char*>(&size), sizeof(size_t))) {
+    if (!file.read(reinterpret_cast<char *>(&size), sizeof(size_t))) {
         std::cerr << "Error reading size from file: " << filePath << std::endl;
         return "";
     }
