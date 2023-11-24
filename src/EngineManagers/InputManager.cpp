@@ -56,7 +56,32 @@ void InputManager::SetMousePosition(const Vector2 &position) {
     mousePosition = std::make_unique<Vector2>(position);
 }
 
-Vector2 &InputManager::GetMousePosition() const {
+std::map<int, InputState> InputManager::getActiveKeyInputs() {
+    std::map<int, InputState> activeKeyInputs;
+    for (const auto &item: keyInputs) {
+        if (item.second != None) {
+            activeKeyInputs[item.first] = item.second;
+        }
+    }
+    return activeKeyInputs;
+}
+
+std::map<int, InputState> InputManager::getMouseInputs() {
+    std::map<int, InputState> activeMouseInputs;
+    for (const auto &item: mouseInputs) {
+        if (item.second != None) {
+            activeMouseInputs[item.first] = item.second;
+        }
+    }
+    return activeMouseInputs;
+}
+
+
+std::unique_ptr<Vector2> &InputManager::getMousePositions() {
+    return mousePosition;
+}
+
+Vector2 &InputManager::getMousePosition() const {
     return *mousePosition;
 }
 

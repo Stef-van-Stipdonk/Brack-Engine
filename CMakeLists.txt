@@ -61,7 +61,6 @@ add_library(${PROJECT_NAME} SHARED
         src/Systems/MovementSystem.cpp
         src/Systems/BehaviourScriptSystem.cpp
         src/Systems/ParticleSystem.cpp
-        src/Systems/ReplaySystem.cpp
         src/Systems/AISystem.cpp
         src/Systems/LoadSystem.cpp
         src/Systems/SaveSystem.cpp

@@ -47,7 +47,13 @@ public:
 
     void SetMousePosition(const Vector2 &position);
 
-    Vector2 &GetMousePosition() const;
+    std::map<int, InputState> getActiveKeyInputs();
+
+    std::map<int, InputState> getMouseInputs();
+
+    std::unique_ptr<Vector2> &getMousePositions();
+
+    Vector2 &getMousePosition() const;
 
     void UpdateEvents();
 

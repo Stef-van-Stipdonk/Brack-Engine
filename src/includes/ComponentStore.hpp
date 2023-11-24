@@ -53,6 +53,10 @@ public:
     }
 
 
+    void clearComponents() {
+        components.clear();
+    }
+
     template<typename T>
     typename std::enable_if<std::is_base_of<IComponent, T>::value, T &>::type
     tryGetComponent(entity entityId) {
@@ -66,6 +70,7 @@ public:
         }
         throw std::runtime_error("Component not found");
     }
+
 
     template<typename BaseT>
     typename std::enable_if<std::is_base_of<IComponent, BaseT>::value, std::vector<BaseT *>>::type

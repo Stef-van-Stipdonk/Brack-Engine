@@ -50,6 +50,12 @@ void EntityManager::addEntityWithTag(entity entityId, const std::string &tag) {
         entitiesByTag[tag].push_back(entityId);
 }
 
+void EntityManager::addEntity(entity entity, std::string name, std::string tag) {
+    addEntityWithName(entity, name);
+    addEntityWithTag(entity, tag);
+}
+
+
 std::vector<entity> EntityManager::getEntitiesByName(const std::string &name) const {
     if (entitiesByName.find(name) != entitiesByName.end())
         return entitiesByName.at(name);
@@ -72,4 +78,20 @@ entity EntityManager::getEntityByTag(const std::string &tag) const {
     if (entitiesByTag.find(tag) != entitiesByTag.end())
         return entitiesByTag.at(tag)[0];
     return 0;
+}
+
+std::map<std::string, std::vector<entity>> EntityManager::getEntitiesByNameMap() const {
+    return entitiesByName;
+}
+
+std::map<std::string, std::vector<entity>> EntityManager::getEntitiesByTagMap() const {
+    return entitiesByTag;
+}
+
+void EntityManager::setEntitiesByNameMap(const std::map<std::string, std::vector<entity>> &entitiesByName) {
+    EntityManager::entitiesByName = entitiesByName;
+}
+
+void EntityManager::setEntitiesByTagMap(const std::map<std::string, std::vector<entity>> &entitiesByTag) {
+    EntityManager::entitiesByTag = entitiesByTag;
 }
