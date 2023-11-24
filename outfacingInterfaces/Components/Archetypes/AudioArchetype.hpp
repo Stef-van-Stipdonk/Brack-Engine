@@ -18,7 +18,11 @@ public:
         return std::make_unique<AudioArchetype>(*this);
     }
 
-    void Accept(ComponentVisitor &visitor) override {
+
+    AudioArchetype(const AudioArchetype &other) : IComponent(other), isSoundTrack(other.isSoundTrack) {}
+
+    void accept(ComponentVisitor &visitor) override {
+
         visitor.visit(*this);
     }
 

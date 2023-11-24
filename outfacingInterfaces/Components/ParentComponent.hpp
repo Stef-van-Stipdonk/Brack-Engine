@@ -19,7 +19,7 @@ struct ParentComponent : public IComponent {
         return std::make_unique<ParentComponent>(*this);
     }
 
-    void Accept(ComponentVisitor &visitor) override {
+    void accept(ComponentVisitor &visitor) override {
         visitor.visit(*this);
     }
 

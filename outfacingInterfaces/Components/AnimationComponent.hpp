@@ -17,7 +17,7 @@ struct AnimationComponent : public IComponent {
             startPosition = nullptr;
     };
 
-    void Accept(ComponentVisitor &visitor) override {
+    void accept(ComponentVisitor &visitor) override {
         visitor.visit(*this);
     }
 

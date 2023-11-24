@@ -16,9 +16,9 @@ BehaviourScriptSystem::~BehaviourScriptSystem() {
 
 
 void BehaviourScriptSystem::update(float deltaTime) {
-    auto entities = ComponentStore::GetInstance().getAllComponentsOfType<BehaviourScript>();
-    for (auto entity: entities) {
-        entity->onUpdate(deltaTime);
+    auto behaviorScripts = ComponentStore::GetInstance().getAllComponentsOfType<BehaviourScript>();
+    for (auto script: behaviorScripts) {
+        script->onUpdate(deltaTime);
     }
 }
 

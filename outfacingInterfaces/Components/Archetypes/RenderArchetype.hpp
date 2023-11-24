@@ -19,7 +19,7 @@ public:
         return std::make_unique<RenderArchetype>(*this);
     }
 
-    void Accept(ComponentVisitor &visitor) override {
+    void accept(ComponentVisitor &visitor) override {
         visitor.visit<RenderArchetype>(*this);
     }
 
