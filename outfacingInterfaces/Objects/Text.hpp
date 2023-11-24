@@ -6,22 +6,22 @@
 #define BRACK_ENGINE_TEXT_HPP
 
 #include <memory>
-#include "UIObject.hpp"
+#include "GameObject.hpp"
 #include "Helpers/Color.hpp"
 
-class Text : public UIObject {
+class Text : public GameObject {
 public:
-    explicit Text(const std::string& text);
+    explicit Text(const std::string &text);
 
-    ~Text()  = default;
+    ~Text() = default;
 
-    void SetText(const std::string& text);
+    void SetText(const std::string &text);
 
-    void SetFontPath(const std::string& font);
+    void SetFontPath(const std::string &font);
 
     void SetFontSize(int fontSize);
 
-    void SetColor(const Color& color);
+    void SetColor(const Color &color);
 
 };
 

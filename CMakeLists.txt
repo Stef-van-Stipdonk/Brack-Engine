@@ -5,13 +5,13 @@ set(CMAKE_CXX_STANDARD 17)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules")
 
-
 if (WIN32 OR WIN64)
     set(SDL2_PATH "${CMAKE_CURRENT_SOURCE_DIR}/lib/SDL")
     set(SDL2_TTF_PATH "${CMAKE_CURRENT_SOURCE_DIR}/lib/SDL")
     set(SDL2_IMAGE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/lib/SDL")
 
     include_directories(${SDL2_INCLUDE_DIR} ${SDL2_TTF_INCLUDE_DIR} ${SDL2_IMAGE_DIR})
+
 
     find_package(SDL2 REQUIRED)
     find_package(SDL2_ttf REQUIRED)
@@ -78,7 +78,6 @@ add_library(${PROJECT_NAME} SHARED
         src/Objects/GameObject.cpp
         src/Objects/Camera.cpp
         src/Objects/Scene.cpp
-        src/Objects/UIObject.cpp
         src/Objects/Button.cpp
         src/Objects/Text.cpp
         src/EngineManagers/SceneManager.cpp
@@ -106,7 +105,31 @@ add_library(${PROJECT_NAME} SHARED
         outfacingInterfaces/Components/SoundTrackComponent.hpp
         outfacingInterfaces/Components/SoundEffectComponent.hpp
         src/Managers/Entities/ComponentStore.cpp
+        outfacingInterfaces/Helpers/CollisionType.hpp
 )
+
+if (WIN32 OR WIN64)
+    # Use the bundled Box2D for Windows
+    set(BOX2D_PATH "${CMAKE_CURRENT_SOURCE_DIR}/lib/Box2d")
+    add_subdirectory(${BOX2D_PATH})
+    include_directories(${BOX2D_PATH})
+    target_link_libraries(${PROJECT_NAME} PRIVATE box2d)
+
+elseif (APPLE)
+
+    find_library(BOX2D_LIBRARY NAMES box2d)
+    find_path(BOX2D_INCLUDE_DIR Box2D/Box2D.h)
+
+    message(STATUS "Box2D Library: ${BOX2D_LIBRARY}")
+    message(STATUS "Box2D Include: ${BOX2D_INCLUDE_DIR}")
+
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${BOX2D_LIBRARY})
+    target_include_directories(${PROJECT_NAME} PRIVATE ${BOX2D_INCLUDE_DIR})
+elseif (UNIX)
+    set(BOX2D_PATH "${CMAKE_CURRENT_SOURCE_DIR}/lib/Box2d")
+    add_subdirectory(${BOX2D_PATH})
+    target_link_libraries(${PROJECT_NAME} PRIVATE box2d)
+endif ()
 
 option(USER_LOG_TO_FILE "Enable user logging to a file" OFF)
 
@@ -166,6 +189,7 @@ set(LIBRARY_FILES ${CMAKE_CURRENT_SOURCE_DIR}/lib/dll)
 
 if (WIN32 OR WIN64)
     target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARY})
+
     target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_IMAGE_LIBRARY})
 
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)

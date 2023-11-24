@@ -9,7 +9,7 @@
 #include <utility>
 #include "Objects/Button.hpp"
 
-Button::Button(const Vector2& size, const std::string& text) : UIObject() {
+Button::Button(const Vector2 &size, const std::string &text) : GameObject() {
     auto textComponent = std::make_unique<TextComponent>();
     textComponent->text = std::move(text);
     textComponent->orderInLayer = 0;
@@ -61,7 +61,8 @@ void Button::setFill(const Color& color) {
     if (entityID == 0) {
         tryGetComponent<RectangleComponent>().fill = std::make_unique<Color>(color);
     } else
-        ComponentStore::GetInstance().tryGetComponent<RectangleComponent>(entityID).fill = std::make_unique<Color>(color);
+        ComponentStore::GetInstance().tryGetComponent<RectangleComponent>(entityID).fill = std::make_unique<Color>(
+                color);
 }
 
 void Button::setClickEvent(std::function<void()> func) {
@@ -79,7 +80,8 @@ void Button::setBorderColor(const Color& color) {
     if (entityID == 0) {
         tryGetComponent<RectangleComponent>().borderColor = std::make_unique<Color>(color);
     } else
-        ComponentStore::GetInstance().tryGetComponent<RectangleComponent>(entityID).borderColor = std::make_unique<Color>(color);
+        ComponentStore::GetInstance().tryGetComponent<RectangleComponent>(
+                entityID).borderColor = std::make_unique<Color>(color);
 }
 
 bool Button::isDisabled() const {

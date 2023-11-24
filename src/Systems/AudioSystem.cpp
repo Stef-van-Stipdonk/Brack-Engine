@@ -3,9 +3,6 @@
 //
 
 #include "AudioSystem.hpp"
-#include "../includes/EntityManager.hpp"
-#include <fstream>
-#include <Components/Archetypes/AudioArchetype.hpp>
 
 AudioSystem::AudioSystem() : audioWrapper(new AudioWrapper()) {
 }
@@ -34,8 +31,6 @@ void AudioSystem::update(float deltaTime) {
         }
     }
 }
-
-
 
 const std::string AudioSystem::getName() const {
     return "AudioSystem";

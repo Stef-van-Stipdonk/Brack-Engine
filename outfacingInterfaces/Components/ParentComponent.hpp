@@ -23,11 +23,11 @@ struct ParentComponent : public IComponent {
         visitor.visit(*this);
     }
 
-    ParentComponent(const ParentComponent& other) : IComponent(other) {
+    ParentComponent(const ParentComponent &other) : IComponent(other) {
         parentID = other.parentID;
     }
 
-    uint32_t parentID;
+    entity parentID;
 };
 
 #endif //BRACK_ENGINE_PARENTCOMPONENT_HPP

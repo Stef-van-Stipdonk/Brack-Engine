@@ -8,11 +8,11 @@
 
 #include <Helpers/Color.hpp>
 #include <functional>
-#include "UIObject.hpp"
+#include "GameObject.hpp"
 
-class Button : public UIObject {
+class Button : public GameObject {
 public:
-    Button(const Vector2& size, const std::string& text);
+    Button(const Vector2 &size, const std::string &text);
 
     ~Button() = default;
 
@@ -26,6 +26,7 @@ public:
     void setClickEvent(std::function<void()> func);
     bool isDisabled() const;
     void setDisabled(bool disabled);
+
 };
 
 #endif //BRACK_ENGINE_BUTTON_HPP

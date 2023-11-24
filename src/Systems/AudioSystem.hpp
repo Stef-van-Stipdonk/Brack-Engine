@@ -10,6 +10,7 @@
 #include <memory>
 #include "ISystem.hpp"
 #include "../Wrappers/AudioWrapper.hpp"
+#include "../outfacingInterfaces/Entity.hpp"
 
 class AudioSystem : public ISystem {
 public:
@@ -18,6 +19,7 @@ public:
     ~AudioSystem() override;
 
     const std::string getName() const override;
+
     void cleanUp() override;
 
     void update(float deltaTime) override;
