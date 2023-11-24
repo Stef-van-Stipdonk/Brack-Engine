@@ -21,6 +21,8 @@ public:
     void SetOnScreenPosition(const Vector2& position);
 
     void SetSize(const Vector2& size);
+
+    void SetRotation(const int rotation);
 };
 
 

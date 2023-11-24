@@ -86,7 +86,10 @@ void RenderWrapper::RenderFrame() {
     SDL_SetRenderTarget(renderer.get(), nullptr);
     SDL_SetRenderDrawColor(renderer.get(), 0, 0, 0, 255); // RGBA format
     SDL_RenderClear(renderer.get());
-    SDL_RenderCopy(renderer.get(), renderTexture.get(), nullptr, nullptr);
+    SDL_RenderCopy(renderer.get(),
+                   renderTexture.get(),
+                   nullptr,
+                   nullptr);
     SDL_RenderPresent(renderer.get());
     SDL_SetRenderTarget(renderer.get(), renderTexture.get());
     SDL_SetRenderDrawColor(renderer.get(), 0, 0, 0, 255); // RGBA format
@@ -147,8 +150,8 @@ RenderWrapper::GetCameraTexturePair(const CameraComponent &cameraComponent,
                                     const TransformComponent &transformComponent) {
     auto cameraTexture = cameraTextures.find(cameraComponent.entityID);
     if (cameraTexture == cameraTextures.end()) {
-        auto width = cameraComponent.size->getX();
-        auto height = cameraComponent.size->getY();
+        auto width = cameraComponent.size->getX() + 300;
+        auto height = cameraComponent.size->getY() + 300;
         auto xPosition = cameraComponent.onScreenPosition->getX() - width / 2;
         auto yPosition = cameraComponent.onScreenPosition->getY() - height / 2;
 
@@ -159,8 +162,8 @@ RenderWrapper::GetCameraTexturePair(const CameraComponent &cameraComponent,
                                std::make_pair(rect, std::unique_ptr<SDL_Texture, void (*)(SDL_Texture *)>(
                                        SDL_CreateTexture(renderer.get(), SDL_PIXELFORMAT_RGBA8888,
                                                          SDL_TEXTUREACCESS_TARGET,
-                                                         cameraComponent.size->getX(),
-                                                         cameraComponent.size->getY()),
+                                                         width,
+                                                         height),
                                        [](SDL_Texture *t) { SDL_DestroyTexture(t); }))));
     }
     cameraTexture = cameraTextures.find(cameraComponent.entityID);
@@ -312,8 +315,20 @@ void RenderWrapper::RenderToMainTexture() {
     SDL_SetRenderTarget(renderer.get(), renderTexture.get());
 
     for (auto &cameraTexture: cameraTextures) {
-        SDL_RenderCopy(renderer.get(), cameraTexture.second.second.get(), nullptr,
-                       &cameraTexture.second.first);
+//        int textureWidth, textureHeight;
+//        SDL_QueryTexture(cameraTexture.second.second.get(), nullptr, nullptr, &textureWidth, &textureHeight);
+        int centerX = cameraTexture.second.first.w / 2;
+        int centerY = cameraTexture.second.first.h / 2;
+        SDL_Point rotationCenter = { centerX, centerY };
+
+        auto transformComp = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(cameraTexture.first);
+        SDL_RenderCopyEx(renderer.get(),
+                         cameraTexture.second.second.get(),
+                         nullptr,
+                         &cameraTexture.second.first,
+                         transformComp.rotation,
+                         &rotationCenter,
+                         SDL_FLIP_NONE);
     }
 }
 
