@@ -36,6 +36,7 @@ struct AnimationComponent : public IComponent {
 
     bool isLooping;
     float animationDuration;
+    float animateTime;
     int frameCount, currentFrame;
     std::unique_ptr<Vector2> startPosition;
 };

@@ -15,32 +15,28 @@ AnimationSystem::~AnimationSystem() {
 }
 
 void AnimationSystem::update(float deltaTime) {
+    timePassed += deltaTime;
+    Logger::GetInstance().Info(std::to_string(deltaTime));
     auto animationComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<AnimationComponent>();
+    int newX = 0;
+    int newY = 0;
     for (auto entityId: animationComponentIds) {
+
         auto &spriteComponent = ComponentStore::GetInstance().tryGetComponent<SpriteComponent>(entityId);
 
-/*        auto &animationComponent = ComponentStore::GetInstance().tryGetComponent<AnimationComponent>(entityId);
-            int totalFrames = animationComponent.frameCount;
-            float frameDuration = animationComponent.animationDuration / totalFrames;
-
-            animationComponent.currentFrame += static_cast<int>(deltaTime / frameDuration);
-
-            // Reset to the first frame if looping
-            if (animationComponent.isLooping) {
-                animationComponent.currentFrame %= totalFrames;
-            } else {
-                // Clamp to the last frame if not looping
-                animationComponent.currentFrame = std::min(animationComponent.currentFrame, totalFrames - 1);
-
-
-        }*/
-
-        if (spriteComponent.spriteSize->getX() * (spriteComponent.tileOffset->getX() + 1) >
-            spriteComponent.imageSize->getX()) {
-            spriteComponent.tileOffset->setX(0);
-        } else {
-            spriteComponent.tileOffset->setX(spriteComponent.tileOffset->getX() + 1);
+        auto &animationComponent = ComponentStore::GetInstance().tryGetComponent<AnimationComponent>(entityId);
+        animationComponent.animateTime += deltaTime;
+        if (animationComponent.animateTime >= animationComponent.animationDuration / animationComponent.frameCount) {
+            animationComponent.animateTime -= animationComponent.animationDuration / animationComponent.frameCount;
+            animationComponent.currentFrame++;
+            if (animationComponent.currentFrame >= animationComponent.frameCount) {
+                animationComponent.currentFrame = 0;
+            }
         }
+
+
+        spriteComponent.tileOffset->setX(newX);
+        spriteComponent.tileOffset->setY(newY);
 
 
     }
