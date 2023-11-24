@@ -183,8 +183,8 @@ void AudioWrapper::pauseSound(AudioArchetype &audioComponent) {
     }
 
     if(!audioComponent.getIsSoundTrack()){
-        for (auto it = soundEffectsChannelMap.begin(); it != soundEffectsChannelMap.end(); ++it) {
-            FMOD::Channel* channel = it->second;
+        for (auto & it : soundEffectsChannelMap) {
+            FMOD::Channel* channel = it.second;
             if (channel) {
                 FMOD::Sound* sound = nullptr;
                 FMOD_RESULT result = channel->getCurrentSound(&sound);
@@ -242,8 +242,8 @@ void AudioWrapper::resumeSound(AudioArchetype &audioComponent) {
     }
 
     bool anySoundsPaused = false;
-    for (auto it = soundEffectsChannelMap.begin(); it != soundEffectsChannelMap.end(); ++it) {
-        FMOD::Channel* channel = it->second;
+    for (auto & it : soundEffectsChannelMap) {
+        FMOD::Channel* channel = it.second;
         if (channel) {
             bool isPlaying;
             FMOD_RESULT result = channel->isPlaying(&isPlaying);
@@ -267,8 +267,8 @@ void AudioWrapper::resumeSound(AudioArchetype &audioComponent) {
     }
 
     if (!audioComponent.getIsSoundTrack()) {
-        for (auto it = soundEffectsChannelMap.begin(); it != soundEffectsChannelMap.end(); ++it) {
-            FMOD::Channel* channel = it->second;
+        for (auto & it : soundEffectsChannelMap) {
+            FMOD::Channel* channel = it.second;
             if (channel) {
                 FMOD::Sound* sound = nullptr;
                 FMOD_RESULT result = channel->getCurrentSound(&sound);
