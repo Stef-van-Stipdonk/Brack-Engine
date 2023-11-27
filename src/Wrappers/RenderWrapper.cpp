@@ -265,7 +265,7 @@ RenderWrapper::RenderUiSprite(const SpriteComponent &spriteComponent, const Tran
                          static_cast<int>(spriteComponent.spriteSize->getX() * transformComponent.scale->getX()),
                          static_cast<int>(spriteComponent.spriteSize->getY() * transformComponent.scale->getY())};
 
-    render(texture->second.get(), &srcRect, &destRect, transformComponent);
+    render(texture->second.get(), &srcRect, &destRect, transformComponent.rotation);
 }
 
 void RenderWrapper::RenderUiText(const TextComponent &textComponent, const TransformComponent &transformComponent) {
@@ -309,7 +309,7 @@ void RenderWrapper::RenderUiText(const TextComponent &textComponent, const Trans
     render(texture,
            nullptr,
            &rect,
-           transformComponent);
+           transformComponent.rotation);
 
     SDL_FreeSurface(surface);
     SDL_DestroyTexture(texture);
@@ -324,7 +324,7 @@ void RenderWrapper::RenderToMainTexture() {
         render(cameraTexture.second.second.get(),
                nullptr,
                &cameraTexture.second.first,
-               transformComp);
+               transformComp.rotation);
     }
 }
 
@@ -375,7 +375,7 @@ RenderWrapper::RenderSprite(const CameraComponent &cameraComponent, const Transf
     render(texture->second.get(),
            &srcRect,
            &destRect,
-           transformComponent);
+           transformComponent.rotation);
 }
 
 void
@@ -435,7 +435,7 @@ RenderWrapper::RenderText(const CameraComponent &cameraComponent, const Transfor
             static_cast<int>(sizeX),
             static_cast<int>(sizeY)};
 
-    render(texture, nullptr, &rect, transformComponent);
+    render(texture, nullptr, &rect, transformComponent.rotation);
 
     SDL_FreeSurface(surface);
     SDL_DestroyTexture(texture);
@@ -512,7 +512,7 @@ void RenderWrapper::RenderUiRectangle(const RectangleComponent &rectangleCompone
     }
 }
 
-void RenderWrapper::render(SDL_Texture* texture, SDL_Rect* srcrect, SDL_Rect* dstrect, const TransformComponent& transformComponent) {
+void RenderWrapper::render(SDL_Texture* texture, SDL_Rect* srcrect, SDL_Rect* dstrect, float rotation) const {
     int centerX = dstrect->w / 2;
     int centerY = dstrect->h / 2;
     SDL_Point rotationCenter = { centerX, centerY };
@@ -521,7 +521,7 @@ void RenderWrapper::render(SDL_Texture* texture, SDL_Rect* srcrect, SDL_Rect* ds
                      texture,
                      srcrect,
                      dstrect,
-                     transformComponent.rotation,
+                     rotation,
                      &rotationCenter,
                      SDL_FLIP_NONE);
 }

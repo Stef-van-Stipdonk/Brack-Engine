@@ -94,7 +94,7 @@ std::vector<std::unique_ptr<IComponent>> &GameObject::GetAllComponents() {
     return components;
 }
 
-void GameObject::setRotation(const float rotation) const {
+void GameObject::setRotation(float rotation) const {
     if (entityID == 0) {
         tryGetComponent<TransformComponent>().rotation = rotation;
     } else
