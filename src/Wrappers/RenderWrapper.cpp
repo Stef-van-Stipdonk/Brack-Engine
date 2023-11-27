@@ -265,7 +265,7 @@ RenderWrapper::RenderUiSprite(const SpriteComponent &spriteComponent, const Tran
                          static_cast<int>(spriteComponent.spriteSize->getX() * transformComponent.scale->getX()),
                          static_cast<int>(spriteComponent.spriteSize->getY() * transformComponent.scale->getY())};
 
-    SDL_RenderCopy(renderer.get(), texture->second.get(), &srcRect, &destRect);
+    render(texture->second.get(), &srcRect, &destRect, transformComponent);
 }
 
 void RenderWrapper::RenderUiText(const TextComponent &textComponent, const TransformComponent &transformComponent) {
@@ -305,7 +305,11 @@ void RenderWrapper::RenderUiText(const TextComponent &textComponent, const Trans
 
     SDL_Rect rect = {static_cast<int>(transformComponent.position->getX()),
                      static_cast<int>(transformComponent.position->getY()), surface->w, surface->h};
-    SDL_RenderCopy(renderer.get(), texture, nullptr, &rect);
+
+    render(texture,
+           nullptr,
+           &rect,
+           transformComponent);
 
     SDL_FreeSurface(surface);
     SDL_DestroyTexture(texture);
@@ -315,20 +319,12 @@ void RenderWrapper::RenderToMainTexture() {
     SDL_SetRenderTarget(renderer.get(), renderTexture.get());
 
     for (auto &cameraTexture: cameraTextures) {
-//        int textureWidth, textureHeight;
-//        SDL_QueryTexture(cameraTexture.second.second.get(), nullptr, nullptr, &textureWidth, &textureHeight);
-        int centerX = cameraTexture.second.first.w / 2;
-        int centerY = cameraTexture.second.first.h / 2;
-        SDL_Point rotationCenter = { centerX, centerY };
-
         auto transformComp = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(cameraTexture.first);
-        SDL_RenderCopyEx(renderer.get(),
-                         cameraTexture.second.second.get(),
-                         nullptr,
-                         &cameraTexture.second.first,
-                         transformComp.rotation,
-                         &rotationCenter,
-                         SDL_FLIP_NONE);
+
+        render(cameraTexture.second.second.get(),
+               nullptr,
+               &cameraTexture.second.first,
+               transformComp);
     }
 }
 
@@ -376,8 +372,10 @@ RenderWrapper::RenderSprite(const CameraComponent &cameraComponent, const Transf
             static_cast<int>(width),
             static_cast<int>(height)};
 
-
-    SDL_RenderCopy(renderer.get(), texture->second.get(), &srcRect, &destRect);
+    render(texture->second.get(),
+           &srcRect,
+           &destRect,
+           transformComponent);
 }
 
 void
@@ -437,7 +435,7 @@ RenderWrapper::RenderText(const CameraComponent &cameraComponent, const Transfor
             static_cast<int>(sizeX),
             static_cast<int>(sizeY)};
 
-    SDL_RenderCopy(renderer.get(), texture, nullptr, &rect);
+    render(texture, nullptr, &rect, transformComponent);
 
     SDL_FreeSurface(surface);
     SDL_DestroyTexture(texture);
@@ -512,5 +510,19 @@ void RenderWrapper::RenderUiRectangle(const RectangleComponent &rectangleCompone
             SDL_RenderDrawRect(renderer.get(), &borderRect);
         }
     }
+}
+
+void RenderWrapper::render(SDL_Texture* texture, SDL_Rect* srcrect, SDL_Rect* dstrect, const TransformComponent& transformComponent) {
+    int centerX = dstrect->w / 2;
+    int centerY = dstrect->h / 2;
+    SDL_Point rotationCenter = { centerX, centerY };
+
+    SDL_RenderCopyEx(renderer.get(),
+                     texture,
+                     srcrect,
+                     dstrect,
+                     transformComponent.rotation,
+                     &rotationCenter,
+                     SDL_FLIP_NONE);
 }
 
