@@ -132,6 +132,8 @@ public:
 
     int getLayer() const;
 
+    void setRotation(float rotation) const;
+
     void setLayer(int layer) const;
 
     entity getEntityId() const;
