@@ -10,7 +10,8 @@
 
 struct AnimationComponent : public IComponent {
 
-    explicit AnimationComponent() : IComponent() {}
+    explicit AnimationComponent() : IComponent() {
+    }
 
     ~AnimationComponent() override {
         if (startPosition != nullptr)
@@ -28,8 +29,10 @@ struct AnimationComponent : public IComponent {
     AnimationComponent(const AnimationComponent &other) : IComponent(other) {
         isLooping = other.isLooping;
         animationDuration = other.animationDuration;
-        frameCount = other.frameCount;
+        endFrame = other.endFrame;
         currentFrame = other.currentFrame;
+        startFrame = other.startFrame;
+        animateTime = other.animateTime;
         if (other.startPosition != nullptr)
             startPosition = std::make_unique<Vector2>(*other.startPosition);
     }
@@ -37,7 +40,7 @@ struct AnimationComponent : public IComponent {
     bool isLooping;
     float animationDuration;
     float animateTime;
-    int frameCount, currentFrame;
+    int endFrame, currentFrame, startFrame;
     std::unique_ptr<Vector2> startPosition;
 };
 

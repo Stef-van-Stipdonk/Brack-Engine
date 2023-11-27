@@ -16,7 +16,6 @@ AnimationSystem::~AnimationSystem() {
 
 void AnimationSystem::update(float deltaTime) {
     timePassed += deltaTime;
-    Logger::GetInstance().Info(std::to_string(deltaTime));
     auto animationComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<AnimationComponent>();
     int newX = 0;
     int newY = 0;
@@ -24,26 +23,26 @@ void AnimationSystem::update(float deltaTime) {
     for (auto entityId: animationComponentIds) {
 
         auto &spriteComponent = ComponentStore::GetInstance().tryGetComponent<SpriteComponent>(entityId);
-
         auto &animationComponent = ComponentStore::GetInstance().tryGetComponent<AnimationComponent>(entityId);
+
         animationComponent.animateTime += deltaTime;
-        if (animationComponent.animateTime >= animationComponent.animationDuration / animationComponent.frameCount) {
-            animationComponent.animateTime -= animationComponent.animationDuration / animationComponent.frameCount;
+        if (animationComponent.animateTime >= animationComponent.animationDuration / animationComponent.endFrame) {
+            animationComponent.animateTime -= animationComponent.animationDuration / animationComponent.endFrame;
             animationComponent.currentFrame++;
-            if (animationComponent.currentFrame >= animationComponent.frameCount) {
-                animationComponent.currentFrame = 0;
+
+            if (animationComponent.currentFrame > animationComponent.endFrame) {
+                animationComponent.currentFrame = animationComponent.startFrame;
+
             }
+            int spriteAmountX = round(spriteComponent.imageSize->getX() / spriteComponent.spriteSize->getX());
+
+            int spriteIndex = animationComponent.currentFrame;
+            newX = spriteIndex % spriteAmountX;
+            newY = spriteIndex / spriteAmountX;
+
+            spriteComponent.tileOffset->setX(newX);
+            spriteComponent.tileOffset->setY(newY);
         }
-        Logger::GetInstance().Debug(std::to_string(animationComponent.currentFrame));
-        int spriteWidth = round(spriteComponent.imageSize->getX() / spriteComponent.spriteSize->getX());
-
-        newX = animationComponent.currentFrame % spriteWidth;
-        newY = animationComponent.currentFrame / spriteWidth;
-        Logger::GetInstance().Debug(std::to_string(animationComponent.currentFrame));
-        Logger::GetInstance().Debug(std::to_string(newX) + ", " + std::to_string(newY));
-
-        spriteComponent.tileOffset->setX(newX);
-        spriteComponent.tileOffset->setY(newY);
 
 
     }
