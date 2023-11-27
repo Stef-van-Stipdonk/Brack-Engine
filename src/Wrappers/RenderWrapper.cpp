@@ -150,8 +150,8 @@ RenderWrapper::GetCameraTexturePair(const CameraComponent &cameraComponent,
                                     const TransformComponent &transformComponent) {
     auto cameraTexture = cameraTextures.find(cameraComponent.entityID);
     if (cameraTexture == cameraTextures.end()) {
-        auto width = cameraComponent.size->getX() + 300;
-        auto height = cameraComponent.size->getY() + 300;
+        auto width = cameraComponent.size->getX();
+        auto height = cameraComponent.size->getY();
         auto xPosition = cameraComponent.onScreenPosition->getX() - width / 2;
         auto yPosition = cameraComponent.onScreenPosition->getY() - height / 2;
 
