@@ -98,14 +98,6 @@ void GameObject::addChild(GameObject &child) {
             childComponent.children.push_back(child.getEntityId());
         }
     }
-    void GameObject::setRotation(float rotation) const {
-        if (entityID == 0) {
-            tryGetComponent<TransformComponent>().rotation = rotation;
-        } else
-            ComponentStore::GetInstance().tryGetComponent<TransformComponent>(
-                    entityID).rotation = rotation;
-    }
-
 
     try {
         auto &parentComponent = child.tryGetComponent<ParentComponent>();
@@ -118,6 +110,14 @@ void GameObject::addChild(GameObject &child) {
 
     child.parent = this;
     children.emplace_back(&child);
+}
+
+void GameObject::setRotation(float rotation) const {
+    if (entityID == 0) {
+        tryGetComponent<TransformComponent>().rotation = rotation;
+    } else
+        ComponentStore::GetInstance().tryGetComponent<TransformComponent>(
+                entityID).rotation = rotation;
 }
 
 void GameObject::removeChild(GameObject &child) {
