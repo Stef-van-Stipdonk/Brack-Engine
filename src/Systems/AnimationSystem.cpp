@@ -20,6 +20,7 @@ void AnimationSystem::update(float deltaTime) {
     auto animationComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<AnimationComponent>();
     int newX = 0;
     int newY = 0;
+
     for (auto entityId: animationComponentIds) {
 
         auto &spriteComponent = ComponentStore::GetInstance().tryGetComponent<SpriteComponent>(entityId);
@@ -33,7 +34,13 @@ void AnimationSystem::update(float deltaTime) {
                 animationComponent.currentFrame = 0;
             }
         }
+        Logger::GetInstance().Debug(std::to_string(animationComponent.currentFrame));
+        int spriteWidth = round(spriteComponent.imageSize->getX() / spriteComponent.spriteSize->getX());
 
+        newX = animationComponent.currentFrame % spriteWidth;
+        newY = animationComponent.currentFrame / spriteWidth;
+        Logger::GetInstance().Debug(std::to_string(animationComponent.currentFrame));
+        Logger::GetInstance().Debug(std::to_string(newX) + ", " + std::to_string(newY));
 
         spriteComponent.tileOffset->setX(newX);
         spriteComponent.tileOffset->setY(newY);
