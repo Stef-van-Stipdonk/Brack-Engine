@@ -13,6 +13,7 @@
 #include "Systems/BehaviourScriptSystem.hpp"
 #include "Systems/ClickSystem.hpp"
 #include "Systems/AudioSystem.hpp"
+#include "Systems/PhysicsSystem.hpp"
 #include "Systems/AnimationSystem.hpp"
 
 BrackEngine::BrackEngine(Config &&config) {
@@ -25,6 +26,7 @@ BrackEngine::BrackEngine(Config &&config) {
     SystemManager::GetInstance().AddSystem(std::make_shared<RenderingSystem>());
     SystemManager::GetInstance().AddSystem(std::make_shared<AnimationSystem>());
 
+    SystemManager::GetInstance().AddSystem(std::make_shared<PhysicsSystem>());
 
     lastTime = std::chrono::high_resolution_clock::now();
 
