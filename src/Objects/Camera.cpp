@@ -40,11 +40,3 @@ void Camera::SetOnScreenPosition(const Vector2 &position) {
                 entityID).onScreenPosition = std::make_unique<Vector2>(position);
 }
 
-void Camera::SetRotation(const int rotation) {
-    if (entityID == 0) {
-        tryGetComponent<TransformComponent>().rotation = rotation;
-    } else
-        ComponentStore::GetInstance().tryGetComponent<TransformComponent>(
-                entityID).rotation = rotation;
-}
-
