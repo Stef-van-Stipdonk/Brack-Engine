@@ -38,7 +38,6 @@ void BrackEngine::Run() {
         auto deltaTime = GetDeltaTime();
         SystemManager::GetInstance().UpdateSystems(deltaTime);
         FPSSingleton::GetInstance().End();
-//        Logger::Info("FPS: " + std::to_string(FPSSingleton::getInstance().GetFPS()));
         if (ConfigSingleton::GetInstance().ShowFPS())
             UpdateFPS(deltaTime);
     }

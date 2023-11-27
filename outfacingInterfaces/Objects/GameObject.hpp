@@ -45,7 +45,10 @@ public:
     template<typename T>
     typename std::enable_if<std::is_base_of<IComponent, T>::value>::type
     addComponent(std::unique_ptr<T> component) {
-        components.push_back(std::move(component));
+        if (entityID == 0)
+            components.push_back(std::move(component));
+        else
+            ComponentStore::GetInstance().addComponent<T>(entityID, *component.get());
     }
 
     template<typename T>
