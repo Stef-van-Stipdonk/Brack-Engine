@@ -22,9 +22,7 @@ public:
 
     void cleanUp();
 
-    void playSoundEffect(AudioArchetype &audioComponent);
-
-    void playSoundTrack(AudioArchetype &audioComponent);
+    void playSound(AudioArchetype &audioComponent);
 
     void pauseSound(AudioArchetype &audioComponent);
 
@@ -39,6 +37,9 @@ public:
     void clearUnusedChannels() ;
 
 private:
+    void playSoundOnChannel(FMOD::Channel *&channel, int channelID, AudioArchetype &audioComponent);
+    void pauseChannel(FMOD::Channel* channel, AudioArchetype &audioComponent);
+    void resumeChannel(FMOD::Channel* channel, AudioArchetype &audioComponent);
     FMOD::System *system;
     std::unordered_map<int, FMOD::Channel*> soundEffectsChannelMap;
     std::pair<int, FMOD::Channel*> soundTrackChannelPair;
