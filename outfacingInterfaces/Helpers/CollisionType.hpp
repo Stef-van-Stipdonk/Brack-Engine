@@ -1,0 +1,12 @@
+//
+// Created by Olaf van den Berg on 20-11-2023.
+//
+
+#ifndef BRACKOCALYPSE_COLLISIONTYPE_HPP
+#define BRACKOCALYPSE_COLLISIONTYPE_HPP
+enum CollisionType {
+    STATIC,
+    DYNAMIC,
+    KINEMATIC
+};
+#endif //BRACKOCALYPSE_COLLISIONTYPE_HPP

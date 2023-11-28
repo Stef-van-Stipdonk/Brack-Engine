@@ -14,7 +14,7 @@
 #include "Systems/BehaviourScriptSystem.hpp"
 #include "Systems/ClickSystem.hpp"
 #include "Systems/AudioSystem.hpp"
-#include "Systems/ReplaySystem.hpp"
+#include "Systems/PhysicsSystem.hpp"
 
 BrackEngine::BrackEngine(Config &&config) {
     ConfigSingleton::GetInstance().SetConfig(config);
@@ -24,7 +24,7 @@ BrackEngine::BrackEngine(Config &&config) {
     SystemManager::GetInstance().AddSystem(std::make_shared<BehaviourScriptSystem>());
     SystemManager::GetInstance().AddSystem(std::make_shared<MovementSystem>());
     SystemManager::GetInstance().AddSystem(std::make_shared<RenderingSystem>());
-    SystemManager::GetInstance().AddSystem(std::make_shared<ReplaySystem<AIComponent, VelocityComponent>>("help.txt"));
+    SystemManager::GetInstance().AddSystem(std::make_shared<PhysicsSystem>());
 
     lastTime = std::chrono::high_resolution_clock::now();
 
