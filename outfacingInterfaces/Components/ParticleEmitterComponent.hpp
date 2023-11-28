@@ -17,16 +17,17 @@ struct ParticleEmitterComponent : public IComponent {
         return std::make_unique<ParticleEmitterComponent>(*this);
     }
 
-
     void accept(ComponentVisitor &visitor) override {
         visitor.visit(*this);
     }
 
     ParticleEmitterComponent(const ParticleEmitterComponent& other) : IComponent(other) {
         amount = other.amount;
+        lifeTimeInSeconds = other.lifeTimeInSeconds;
     }
 
     int amount;
+    float lifeTimeInSeconds;
 };
 
 
