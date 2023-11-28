@@ -81,7 +81,6 @@ add_library(${PROJECT_NAME} SHARED
         src/Objects/Button.cpp
         src/Objects/Text.cpp
         src/EngineManagers/SceneManager.cpp
-        src/EngineManagers/ReplayManager.cpp
         src/EngineManagers/InputManager.cpp
         outfacingInterfaces/Helpers/InputState.hpp
         src/BrackEngine.cpp
@@ -104,6 +103,8 @@ add_library(${PROJECT_NAME} SHARED
         outfacingInterfaces/Components/RectangleComponent.hpp
         src/Managers/Entities/ComponentStore.cpp
         outfacingInterfaces/Helpers/CollisionType.hpp
+        src/Systems/ReplaySystem.hpp
+        src/Systems/ReplaySystem.cpp
 )
 
 if (WIN32 OR WIN64)

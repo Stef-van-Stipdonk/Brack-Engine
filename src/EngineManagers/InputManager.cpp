@@ -51,6 +51,20 @@ bool InputManager::IsMouseReleased(const int key) const {
     return mouseInputs.find(key)->second == Released;
 }
 
+void InputManager::SetKeyInputs(std::map<int, InputState> &inputs) {
+    keyInputs = inputs;
+}
+
+void InputManager::SetMouseInputs(std::map<int, InputState> &inputs) {
+    for (const auto &input: inputs) {
+        auto it = mouseInputs.find(input.first);
+        if (it != mouseInputs.end()) {
+            // Update only if the key exists in mouseInputs
+            it->second = input.second;
+        }
+    }
+}
+
 void InputManager::SetMousePosition(const Vector2 &position) {
     mousePosition.reset();
     mousePosition = std::make_unique<Vector2>(position);

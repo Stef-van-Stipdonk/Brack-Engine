@@ -12,7 +12,7 @@ AnimationSystem::~AnimationSystem() {
 
 }
 
-void AnimationSystem::update(float deltaTime) {
+void AnimationSystem::update(int deltaTime) {
 
 }
 
@@ -22,3 +22,4 @@ const std::string AnimationSystem::getName() const {
 
 void AnimationSystem::cleanUp() {
 }
+

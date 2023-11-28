@@ -41,7 +41,11 @@ public:
 
     std::vector<entity> getEntitiesByName(const std::string &name) const;
 
-    void addEntity(entity entity, std::string name, std::string tag);
+    void addEntitiesByTags(std::map<std::string, std::vector<entity>> entitiesByTag);
+
+    void addEntitiesByName(std::map<std::string, std::vector<entity>> entitiesByName);
+
+    void addEntity(entity entity);
 
     entity getEntityByName(const std::string &name) const;
 

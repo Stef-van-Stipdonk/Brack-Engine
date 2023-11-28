@@ -4,6 +4,7 @@
 
 #include <Components/ObjectInfoComponent.hpp>
 #include <Components/AIComponent.hpp>
+#include <Helpers/KeyMap.hpp>
 #include "BrackEngine.hpp"
 #include "Systems/RenderingSystem.hpp"
 #include "Logger.hpp"
@@ -15,6 +16,7 @@
 #include "Systems/ClickSystem.hpp"
 #include "Systems/AudioSystem.hpp"
 #include "Systems/PhysicsSystem.hpp"
+#include "Systems/ReplaySystem.hpp"
 
 BrackEngine::BrackEngine(Config &&config) {
     ConfigSingleton::GetInstance().SetConfig(config);
@@ -25,6 +27,7 @@ BrackEngine::BrackEngine(Config &&config) {
     SystemManager::GetInstance().AddSystem(std::make_shared<MovementSystem>());
     SystemManager::GetInstance().AddSystem(std::make_shared<RenderingSystem>());
     SystemManager::GetInstance().AddSystem(std::make_shared<PhysicsSystem>());
+    SystemManager::GetInstance().AddSystem(std::make_shared<ReplaySystem>(1000));
 
     lastTime = std::chrono::high_resolution_clock::now();
 
@@ -39,24 +42,26 @@ void BrackEngine::Run() {
         auto deltaTime = GetDeltaTime();
         SystemManager::GetInstance().UpdateSystems(deltaTime);
         FPSSingleton::GetInstance().End();
-//        Logger::Info("FPS: " + std::to_string(FPSSingleton::getInstance().GetFPS()));
         if (ConfigSingleton::GetInstance().ShowFPS())
             UpdateFPS(deltaTime);
+
+        if (InputManager::GetInstance().IsKeyPressed(KeyMap::ESCAPE))
+            toggleReplay();
     }
 
     SystemManager::GetInstance().CleanUp();
 }
 
-float BrackEngine::GetDeltaTime() {
+int BrackEngine::GetDeltaTime() {
     auto currentTime = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<float> deltaTime = std::chrono::duration_cast<std::chrono::duration<float>>(
+    std::chrono::duration<int, std::milli> deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(
             currentTime - lastTime);
     lastTime = currentTime;
 
-    float deltaTimeInSeconds = deltaTime.count();
-    return deltaTimeInSeconds;
-
+    int deltaTimeInMilliseconds = deltaTime.count();
+    return deltaTimeInMilliseconds;
 }
+
 
 void BrackEngine::CreateFPS() {
     auto entityId = EntityManager::getInstance().createEntity();
@@ -90,6 +95,10 @@ void BrackEngine::UpdateFPS(float deltaTime) {
             1);//TODO ophalen met tag of name van component
 
     textComponent.text = std::to_string(FPSSingleton::GetInstance().GetFPS());;
+}
+
+void BrackEngine::toggleReplay() {
+    SystemManager::GetInstance().GetSystem<ReplaySystem>().lock()->toggleReplay();
 }
 
 void BrackEngine::save(const std::string &filePath, const std::string &content) const {

@@ -22,7 +22,9 @@ public:
 
     void cleanUp() override;
 
-    void update(float deltaTime) override;
+    void update(int deltaTime) override;
+
+    AudioSystem(const AudioSystem &other);
 
 private:
     void PlayPause(entity entityID);

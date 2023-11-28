@@ -11,7 +11,6 @@
 #include "../src/includes/EntityManager.hpp"
 #include "../src/includes/SystemManager.hpp"
 #include "EngineManagers/SceneManager.hpp"
-#include "EngineManagers/ReplayManager.hpp"
 #include "EngineManagers/InputManager.hpp"
 #include "Config.hpp"
 #include "../src/includes/ComponentStore.hpp"
@@ -24,12 +23,14 @@ public:
 
     void Run();
 
-    void save(const std::string& filePath, const std::string& content) const;
+    void save(const std::string &filePath, const std::string &content) const;
 
-    std::string load(const std::string& filePath) const;
+    void toggleReplay();
+
+    std::string load(const std::string &filePath) const;
 
 private:
-    float GetDeltaTime();
+    int GetDeltaTime();
 
     void CreateFPS();
 

@@ -24,3 +24,7 @@ AudioWrapper::~AudioWrapper() {
 AudioWrapper::AudioWrapper() {
 
 }
+
+AudioWrapper::AudioWrapper(const AudioWrapper &other) {
+    
+}

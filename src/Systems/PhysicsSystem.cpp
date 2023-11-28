@@ -14,7 +14,7 @@ PhysicsSystem::~PhysicsSystem() {
 
 }
 
-void PhysicsSystem::update(float deltaTime) {
+void PhysicsSystem::update(int deltaTime) {
     handleCircles();
     handleBoxes();
 
@@ -50,7 +50,9 @@ void PhysicsSystem::handleBoxes() {
     PhysicsWrapper::getInstance().addBoxes(boxCollisionComponentIds);
 }
 
-
+PhysicsSystem::PhysicsSystem(const PhysicsSystem &other) {
+    physicsWrapper = std::make_unique<PhysicsWrapper>(*other.physicsWrapper);
+}
 
 
 

@@ -30,7 +30,7 @@ struct BehaviourScript : public IComponent {
 
     virtual void onStart() {};
 
-    virtual void onUpdate(float deltaTime) {};
+    virtual void onUpdate(int deltaTime) {};
 
     template<typename T>
     typename std::enable_if<std::is_base_of<IComponent, T>::value, T &>::type

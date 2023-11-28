@@ -23,6 +23,8 @@ public:
 
     void StopPauseChannel(int channelIndex);
 
+    AudioWrapper(const AudioWrapper &other);
+
 private:
     FMOD_SYSTEM *system;
 };

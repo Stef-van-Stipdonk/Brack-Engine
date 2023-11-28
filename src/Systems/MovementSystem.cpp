@@ -14,7 +14,7 @@ MovementSystem::~MovementSystem() {
 
 }
 
-void MovementSystem::update(float deltaTime) {
+void MovementSystem::update(int deltaTime) {
     auto entities = ComponentStore::GetInstance().getEntitiesWithComponent<VelocityComponent>();
     for (auto entity: entities) {
         auto velocityComponent = ComponentStore::GetInstance().tryGetComponent<VelocityComponent>(entity);
@@ -23,7 +23,7 @@ void MovementSystem::update(float deltaTime) {
         }
         auto &transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(entity);
         transformComponent.position = std::make_unique<Vector2>(
-                *transformComponent.position + velocityComponent.velocity * deltaTime
+                *transformComponent.position + velocityComponent.velocity * (deltaTime / 1000.0f)
         );
     }
 }
@@ -35,3 +35,4 @@ const std::string MovementSystem::getName() const {
 void MovementSystem::cleanUp() {
 
 }
+

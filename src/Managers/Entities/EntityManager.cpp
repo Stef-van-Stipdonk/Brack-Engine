@@ -18,6 +18,22 @@ void EntityManager::destroyEntity(entity entityId) {
     entities.erase(entityId);
 }
 
+void EntityManager::addEntitiesByTags(std::map<std::string, std::vector<entity>> entitiesByTag) {
+    for (auto &pair: entitiesByTag) {
+        for (auto &entity: pair.second) {
+            addEntityWithTag(entity, pair.first);
+        }
+    }
+}
+
+void EntityManager::addEntitiesByName(std::map<std::string, std::vector<entity>> entitiesByName) {
+    for (auto &pair: entitiesByName) {
+        for (auto &entity: pair.second) {
+            addEntityWithName(entity, pair.first);
+        }
+    }
+}
+
 const std::unordered_set<entity> &EntityManager::getAllEntities() const {
     return entities;
 }
@@ -50,9 +66,8 @@ void EntityManager::addEntityWithTag(entity entityId, const std::string &tag) {
         entitiesByTag[tag].push_back(entityId);
 }
 
-void EntityManager::addEntity(entity entity, std::string name, std::string tag) {
-    addEntityWithName(entity, name);
-    addEntityWithTag(entity, tag);
+void EntityManager::addEntity(entity entity) {
+    entities.insert(entity);
 }
 
 

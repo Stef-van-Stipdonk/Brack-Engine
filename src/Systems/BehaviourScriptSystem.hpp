@@ -18,7 +18,7 @@ public:
 
     void cleanUp() override;
 
-    void update(float deltaTime) override;
+    void update(int deltaTime) override;
 
 private:
 

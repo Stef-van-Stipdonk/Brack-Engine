@@ -13,7 +13,7 @@ RenderingSystem::~RenderingSystem() {
 
 }
 
-void RenderingSystem::update(float deltaTime) {
+void RenderingSystem::update(int deltaTime) {
     SortRenderComponents();
 #if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
     auto boxCollisionComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<BoxCollisionComponent>();
@@ -116,3 +116,8 @@ void RenderingSystem::SortRenderComponents() {
             components.insert(&rectangleComponent);
     }
 }
+
+RenderingSystem::RenderingSystem(const RenderingSystem &other) {
+    sdl2Wrapper = std::make_unique<RenderWrapper>();
+}
+

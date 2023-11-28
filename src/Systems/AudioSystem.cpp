@@ -13,7 +13,7 @@ AudioSystem::~AudioSystem() {
 
 }
 
-void AudioSystem::update(float deltaTime) {
+void AudioSystem::update(int deltaTime) {
 }
 
 void AudioSystem::PlayPause(entity entityId) {
@@ -26,4 +26,8 @@ const std::string AudioSystem::getName() const {
 
 void AudioSystem::cleanUp() {
 
+}
+
+AudioSystem::AudioSystem(const AudioSystem &other) {
+    audioWrapper = std::make_unique<AudioWrapper>(*other.audioWrapper);
 }

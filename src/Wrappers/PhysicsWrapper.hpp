@@ -20,7 +20,7 @@ public:
     static PhysicsWrapper &getInstance();
 
 
-    PhysicsWrapper(PhysicsWrapper &other) = delete;
+    PhysicsWrapper(const PhysicsWrapper &other);
 
     void operator=(const PhysicsWrapper &) = delete;
 
@@ -36,7 +36,8 @@ public:
 
 
     std::unordered_map<uint32_t, b2Body *> bodies;
-
+    std::vector<uint32_t> boxBodies;
+    std::vector<uint32_t> circleBodies;
 private:
     PhysicsWrapper();
 
@@ -51,6 +52,8 @@ private:
 
 class ContactListener : public b2ContactListener {
 public:
+    ContactListener() = default;
+
     void BeginContact(b2Contact *contact) override;
 
     void EndContact(b2Contact *contact) override;

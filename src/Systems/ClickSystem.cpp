@@ -12,7 +12,7 @@ ClickSystem::ClickSystem() {}
 
 ClickSystem::~ClickSystem() {}
 
-void ClickSystem::update(float deltaTime) {
+void ClickSystem::update(int deltaTime) {
     if (!InputManager::GetInstance().IsMouseReleased(LEFT_MOUSE)) return;
 
     auto &componentStore = ComponentStore::GetInstance();
@@ -77,3 +77,4 @@ const std::string ClickSystem::getName() const {
 void ClickSystem::cleanUp() {
 
 }
+

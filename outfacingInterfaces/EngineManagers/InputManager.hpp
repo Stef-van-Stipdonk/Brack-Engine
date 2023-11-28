@@ -47,6 +47,10 @@ public:
 
     void SetMousePosition(const Vector2 &position);
 
+    void SetKeyInputs(std::map<int, InputState> &inputs);
+
+    void SetMouseInputs(std::map<int, InputState> &inputs);
+
     std::map<int, InputState> getActiveKeyInputs();
 
     std::map<int, InputState> getMouseInputs();

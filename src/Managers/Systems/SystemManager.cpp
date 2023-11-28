@@ -30,7 +30,7 @@ void SystemManager::AddSystem(std::shared_ptr<ISystem> system, bool printGraph) 
     SortSystems();
 }
 
-void SystemManager::UpdateSystems(float deltaTime) {
+void SystemManager::UpdateSystems(int deltaTime) {
     for (auto &system: systems) {
         system->update(deltaTime);
     }
@@ -121,7 +121,7 @@ void SystemManager::PrintDependencyGraph() const {
     for (const auto &system: systems) {
         std::cout << system->getName() << " depends on: ";
         for (const auto &dependency: system->getDependencies()) {
-            if (auto dep = dependency.lock()) { // Lock the weak_ptr to get a shared_ptr
+            if (auto dep = dependency.lock()) {
                 std::cout << dep->getName() << ", ";
             }
         }
@@ -132,5 +132,9 @@ void SystemManager::PrintDependencyGraph() const {
 }
 
 void SystemManager::CleanUp() {
+    systems.clear();
+}
+
+void SystemManager::clearSystems() {
     systems.clear();
 }

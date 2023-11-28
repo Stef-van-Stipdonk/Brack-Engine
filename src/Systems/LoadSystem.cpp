@@ -12,7 +12,7 @@ LoadSystem::~LoadSystem() {
 
 }
 
-void LoadSystem::update(float deltaTime) {
+void LoadSystem::update(int deltaTime) {
 
 }
 
@@ -23,3 +23,4 @@ const std::string LoadSystem::getName() const {
 void LoadSystem::cleanUp() {
 
 }
+

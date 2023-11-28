@@ -512,10 +512,10 @@ void RenderWrapper::RenderUiRectangle(const RectangleComponent &rectangleCompone
     }
 }
 
-void RenderWrapper::render(SDL_Texture* texture, SDL_Rect* srcrect, SDL_Rect* dstrect, float rotation) const {
+void RenderWrapper::render(SDL_Texture *texture, SDL_Rect *srcrect, SDL_Rect *dstrect, float rotation) const {
     int centerX = dstrect->w / 2;
     int centerY = dstrect->h / 2;
-    SDL_Point rotationCenter = { centerX, centerY };
+    SDL_Point rotationCenter = {centerX, centerY};
 
     SDL_RenderCopyEx(renderer.get(),
                      texture,
