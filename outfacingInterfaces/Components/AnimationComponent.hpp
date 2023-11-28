@@ -31,17 +31,16 @@ struct AnimationComponent : public IComponent {
         animationDuration = other.animationDuration;
         endFrame = other.endFrame;
         currentFrame = other.currentFrame;
-        startFrame = other.startFrame;
-        animateTime = other.animateTime;
+        elapsedTime = other.elapsedTime;
         if (other.startPosition != nullptr)
             startPosition = std::make_unique<Vector2>(*other.startPosition);
     }
 
-    bool isLooping;
-    float animationDuration;
-    float animateTime;
-    int endFrame, currentFrame, startFrame;
-    std::unique_ptr<Vector2> startPosition;
+    bool isLooping = true;
+    float animationDuration = 0.0f;
+    float elapsedTime = 0.0f;
+    int endFrame, currentFrame = 0;
+    std::unique_ptr<Vector2> startPosition = std::make_unique<Vector2>(0, 0);
 };
 
 #endif //BRACK_ENGINE_ANIMATIONCOMPONENT_HPP

@@ -20,8 +20,6 @@ public:
 
     void update(float deltaTime) override;
 
-private:
-    float timePassed;
 };
 
 
