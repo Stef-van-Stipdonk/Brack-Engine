@@ -67,6 +67,7 @@ public:
 
 private:
     bool Initialize();
+    void render(SDL_Texture* texture, SDL_Rect* srcrect, SDL_Rect* dstrect, float rotation) const;
 
     std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)> GetSpriteTexture(std::string filePath);
 
