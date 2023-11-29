@@ -28,18 +28,18 @@ struct AnimationComponent : public IComponent {
 
     AnimationComponent(const AnimationComponent &other) : IComponent(other) {
         isLooping = other.isLooping;
-        animationDuration = other.animationDuration;
-        endFrame = other.endFrame;
+        fps = other.fps;
+        frameCount = other.frameCount;
         currentFrame = other.currentFrame;
         elapsedTime = other.elapsedTime;
         if (other.startPosition != nullptr)
             startPosition = std::make_unique<Vector2>(*other.startPosition);
     }
 
-    bool isLooping = true;
-    float animationDuration = 0.0f;
+    bool isLooping = true, isPlaying = true;
+    float fps = 0.0f;
     float elapsedTime = 0.0f;
-    int endFrame, currentFrame = 0;
+    int frameCount = 0, currentFrame = 0;
     std::unique_ptr<Vector2> startPosition = std::make_unique<Vector2>(0, 0);
 };
 

@@ -16,34 +16,40 @@ AnimationSystem::~AnimationSystem() {
 
 void AnimationSystem::update(float deltaTime) {
     auto animationComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<AnimationComponent>();
-    int newX = 0;
-    int newY = 0;
+
 
     for (auto entityId: animationComponentIds) {
 
         auto &spriteComponent = ComponentStore::GetInstance().tryGetComponent<SpriteComponent>(entityId);
         auto &animationComponent = ComponentStore::GetInstance().tryGetComponent<AnimationComponent>(entityId);
-        if (animationComponent.isLooping) {
+        if (animationComponent.isPlaying) {
             animationComponent.elapsedTime += deltaTime;
-            if (animationComponent.elapsedTime >= animationComponent.animationDuration / animationComponent.endFrame) {
-                animationComponent.elapsedTime -= animationComponent.animationDuration / animationComponent.endFrame;
+            float frameDuration = 1.0f / (animationComponent.fps / animationComponent.frameCount);
+
+            if (animationComponent.elapsedTime >= frameDuration) {
+                animationComponent.elapsedTime -= frameDuration;
                 animationComponent.currentFrame++;
 
-                if (animationComponent.currentFrame > animationComponent.endFrame) {
+                if (animationComponent.currentFrame >= animationComponent.frameCount) {
+                    if (!animationComponent.isLooping) {
+                        animationComponent.isPlaying = false;
+                    }
                     spriteComponent.tileOffset = std::make_unique<Vector2>(*animationComponent.startPosition);
-                    animationComponent.currentFrame =
-                            spriteComponent.tileOffset->getX() +
-                            spriteComponent.tileOffset->getY() *
-                            round(spriteComponent.imageSize->getX() / spriteComponent.spriteSize->getX());
+                    animationComponent.currentFrame = 0;
 
                     continue;
 
                 }
                 int spriteAmountX = round(spriteComponent.imageSize->getX() / spriteComponent.spriteSize->getX());
+                int newX = animationComponent.startPosition->getX() + animationComponent.currentFrame;
+                int newY = animationComponent.startPosition->getY();
 
-                int spriteIndex = animationComponent.currentFrame;
-                newX = spriteIndex % spriteAmountX;
-                newY = spriteIndex / spriteAmountX;
+                while (newX >= spriteAmountX) {
+                    newX = newX - spriteAmountX;
+                    newY++;
+                }
+
+
                 spriteComponent.tileOffset = std::make_unique<Vector2>(newX, newY);
 
             }
