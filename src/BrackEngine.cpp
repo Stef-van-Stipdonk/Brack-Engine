@@ -14,6 +14,7 @@
 #include "Systems/ClickSystem.hpp"
 #include "Systems/AudioSystem.hpp"
 #include "Systems/PhysicsSystem.hpp"
+#include "Systems/AnimationSystem.hpp"
 
 BrackEngine::BrackEngine(Config &&config) {
     ConfigSingleton::GetInstance().SetConfig(config);
@@ -22,8 +23,9 @@ BrackEngine::BrackEngine(Config &&config) {
     SystemManager::GetInstance().AddSystem(std::make_shared<AudioSystem>());
     SystemManager::GetInstance().AddSystem(std::make_shared<BehaviourScriptSystem>());
     SystemManager::GetInstance().AddSystem(std::make_shared<MovementSystem>());
-    SystemManager::GetInstance().AddSystem(std::make_shared<RenderingSystem>());
     SystemManager::GetInstance().AddSystem(std::make_shared<PhysicsSystem>());
+    SystemManager::GetInstance().AddSystem(std::make_shared<AnimationSystem>());
+    SystemManager::GetInstance().AddSystem(std::make_shared<RenderingSystem>());
 
     lastTime = std::chrono::high_resolution_clock::now();
 
