@@ -58,7 +58,9 @@ public:
 
         component->entityID = entityId;
         
-        components[typeid(*component)][entityId] = std::move(component);
+        IComponent &componentRef = *component;
+
+        components[typeid(componentRef)][entityId] = std::move(component);
     }
 
 
