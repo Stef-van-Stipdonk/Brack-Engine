@@ -111,6 +111,8 @@ public:
     void PrintDependencyGraph() const;
 
     void SortSystems();
+
+    void clearSystemsCache();
 private:
 
     SystemManager() = default;
