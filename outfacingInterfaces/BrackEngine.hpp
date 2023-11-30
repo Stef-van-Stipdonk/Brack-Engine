@@ -24,11 +24,11 @@ public:
     void Run();
 
     void save(const std::string &filePath, const std::string &content) const;
-    
+
     std::string load(const std::string &filePath) const;
 
 private:
-    int GetDeltaTime();
+    milliseconds GetDeltaTime();
 
     void CreateFPS();
 

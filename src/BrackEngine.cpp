@@ -49,14 +49,14 @@ void BrackEngine::Run() {
     SystemManager::GetInstance().CleanUp();
 }
 
-int BrackEngine::GetDeltaTime() {
+milliseconds BrackEngine::GetDeltaTime() {
     auto currentTime = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<int, std::milli> deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(
+    std::chrono::duration<float> deltaTime = std::chrono::duration_cast<std::chrono::duration<float>>(
             currentTime - lastTime);
     lastTime = currentTime;
 
-    int deltaTimeInMilliseconds = deltaTime.count();
-    return deltaTimeInMilliseconds;
+    float deltaTimeInSeconds = deltaTime.count();
+    return deltaTimeInSeconds * 1000;
 }
 
 

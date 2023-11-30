@@ -5,6 +5,6 @@
 #ifndef BRACKOCALYPSE_MILLISECONDS_HPP
 #define BRACKOCALYPSE_MILLISECONDS_HPP
 
-typedef int milliseconds;
+typedef float milliseconds;
 
 #endif //BRACKOCALYPSE_MILLISECONDS_HPP

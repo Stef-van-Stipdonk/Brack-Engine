@@ -23,7 +23,7 @@ void MovementSystem::update(milliseconds deltaTime) {
         }
         auto &transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(entity);
         transformComponent.position = std::make_unique<Vector2>(
-                *transformComponent.position + velocityComponent.velocity * (deltaTime / 1000.0f)
+                *transformComponent.position + velocityComponent.velocity * deltaTime
         );
     }
 }
