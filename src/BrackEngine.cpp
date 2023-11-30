@@ -11,6 +11,7 @@
 #include "ConfigSingleton.hpp"
 #include "Systems/InputSystem.hpp"
 #include "FPSSingleton.hpp"
+#include "Systems/AudioSystem.hpp"
 #include "Systems/MovementSystem.hpp"
 #include "Systems/BehaviourScriptSystem.hpp"
 #include "Systems/ClickSystem.hpp"
@@ -25,6 +26,7 @@ BrackEngine::BrackEngine(Config &&config) {
     SystemManager::GetInstance().AddSystem(std::make_shared<InputSystem>());
     SystemManager::GetInstance().AddSystem(std::make_shared<ClickSystem>());
     SystemManager::GetInstance().AddSystem(std::make_shared<AudioSystem>());
+
     SystemManager::GetInstance().AddSystem(std::make_shared<BehaviourScriptSystem>());
     SystemManager::GetInstance().AddSystem(std::make_shared<MovementSystem>());
     SystemManager::GetInstance().AddSystem(std::make_shared<PhysicsSystem>());

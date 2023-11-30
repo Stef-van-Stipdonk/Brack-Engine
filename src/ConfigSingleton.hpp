@@ -40,6 +40,8 @@ public:
 
     std::string GetBaseAssetPath() const;
 
+    int getAmountOfSoundEffectsChannels() const;
+
     uint32_t GetFPSLimit() const;
 
     void ToggleIsRunning();
@@ -55,6 +57,7 @@ private:
     bool fullscreen = false;
     std::string BaseAssetPath = "../../Brackocalypse/Assets/";
     bool showFPS = true;
+    int amountOfSoundEffectsChannels = 3;
     uint32_t fpsLimit = 60;
 };
 

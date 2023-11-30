@@ -12,7 +12,6 @@ if (WIN32 OR WIN64)
 
     include_directories(${SDL2_INCLUDE_DIR} ${SDL2_TTF_INCLUDE_DIR} ${SDL2_IMAGE_DIR})
 
-
     find_package(SDL2 REQUIRED)
     find_package(SDL2_ttf REQUIRED)
     find_package(SDL2_image REQUIRED)
@@ -40,7 +39,6 @@ add_library(${PROJECT_NAME} SHARED
         outfacingInterfaces/Components/ObjectInfoComponent.hpp
         outfacingInterfaces/Components/RigidBodyComponent.hpp
         outfacingInterfaces/Components/AIComponent.hpp
-        outfacingInterfaces/Components/AudioComponent.hpp
         outfacingInterfaces/Components/TransformComponent.hpp
         src/Helpers/Vector2.cpp
         outfacingInterfaces/Components/VelocityComponent.hpp
@@ -101,6 +99,8 @@ add_library(${PROJECT_NAME} SHARED
         src/Helpers/UserLogger.cpp
         outfacingInterfaces/Helpers/UserLogger.hpp
         outfacingInterfaces/Components/RectangleComponent.hpp
+        outfacingInterfaces/Components/SoundTrackComponent.hpp
+        outfacingInterfaces/Components/SoundEffectComponent.hpp
         src/Managers/Entities/ComponentStore.cpp
         outfacingInterfaces/Helpers/CollisionType.hpp
         src/Systems/ReplaySystem.hpp
@@ -208,7 +208,23 @@ else ()
 endif ()
 
 target_link_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/FMod)
-target_link_libraries(${PROJECT_NAME} PRIVATE fmod)
+
+if (WIN32 OR WIN64)
+    include_directories(${CMAKE_SOURCE_DIR}/lib/FMod/include)
+    target_link_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/lib/FMod)
+    target_link_libraries(${PROJECT_NAME} PRIVATE fmod)
+else ()
+    find_library(FMOD_LIBRARY NAMES fmod PATHS "${CMAKE_CURRENT_SOURCE_DIR}/lib/FMod")
+    find_path(FMOD_INCLUDE_DIR fmod.h PATHS "${CMAKE_CURRENT_SOURCE_DIR}/lib/FMod/include")
+
+    message(STATUS "FMOD Library: ${FMOD_LIBRARY}")
+    message(STATUS "FMOD Include: ${FMOD_INCLUDE_DIR}")
+
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${FMOD_LIBRARY})
+    target_include_directories(${PROJECT_NAME} PRIVATE ${FMOD_INCLUDE_DIR})
+endif ()
+
+
 target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_TTF_LIBRARIES})
 
 

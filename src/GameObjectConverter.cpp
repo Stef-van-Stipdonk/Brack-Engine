@@ -39,6 +39,7 @@ void GameObjectConverter::addGameObject(GameObject *gameObject) {
     for (auto &script: scripts) {
         script->onStart();
     }
+
 }
 
 std::optional<GameObject> GameObjectConverter::getGameObjectByName(const std::string &name) {
