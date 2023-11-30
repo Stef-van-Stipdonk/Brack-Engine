@@ -7,6 +7,7 @@
 
 #include "IComponent.hpp"
 #include "../../src/Components/ComponentVisitor.hpp"
+#include "../outfacingInterfaces/Milliseconds.hpp"
 #include "../../src/GameObjectConverter.hpp"
 #include <functional>
 #include <Objects/GameObject.hpp>
@@ -30,7 +31,7 @@ struct BehaviourScript : public IComponent {
 
     virtual void onStart() {};
 
-    virtual void onUpdate(int deltaTime) {};
+    virtual void onUpdate(milliseconds deltaTime) {};
 
     template<typename T>
     typename std::enable_if<std::is_base_of<IComponent, T>::value, T &>::type

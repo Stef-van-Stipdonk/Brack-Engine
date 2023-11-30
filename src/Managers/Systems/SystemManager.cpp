@@ -30,7 +30,7 @@ void SystemManager::AddSystem(std::shared_ptr<ISystem> system, bool printGraph) 
     SortSystems();
 }
 
-void SystemManager::UpdateSystems(int deltaTime) {
+void SystemManager::UpdateSystems(milliseconds deltaTime) {
     for (auto &system: systems) {
         system->update(deltaTime);
     }

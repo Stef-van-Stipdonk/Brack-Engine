@@ -15,6 +15,7 @@ MovementSystem::~MovementSystem() {
 }
 
 void MovementSystem::update(milliseconds deltaTime) {
+//    Logger::GetInstance().Info("Milliseconds: " + std::to_string(deltaTime) + "\n");
     auto entities = ComponentStore::GetInstance().getEntitiesWithComponent<VelocityComponent>();
     for (auto entity: entities) {
         auto velocityComponent = ComponentStore::GetInstance().tryGetComponent<VelocityComponent>(entity);

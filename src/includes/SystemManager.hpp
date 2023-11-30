@@ -103,7 +103,7 @@ public:
     /// <param name="printGraph">Whether or not to print the dependency graph after adding the system to see the state of the graph</param>
     void AddSystems(std::vector<std::shared_ptr<ISystem>> newSystems, bool printGraph = false);
 
-    void UpdateSystems(int deltaTime);
+    void UpdateSystems(milliseconds deltaTime);
 
     void CleanUp();
 
