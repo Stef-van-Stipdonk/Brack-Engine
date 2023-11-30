@@ -14,7 +14,7 @@ public:
 
     ~LoadSystem() override;
 
-    void update(int deltaTime) override;
+    void update(milliseconds deltaTime) override;
 
     const std::string getName() const override;
 

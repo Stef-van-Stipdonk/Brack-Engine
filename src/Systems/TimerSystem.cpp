@@ -12,7 +12,7 @@ TimerSystem::~TimerSystem() {
 
 }
 
-void TimerSystem::update(int deltaTime) {
+void TimerSystem::update(milliseconds deltaTime) {
 
 }
 

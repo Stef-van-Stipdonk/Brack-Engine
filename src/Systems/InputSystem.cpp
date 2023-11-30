@@ -13,7 +13,7 @@ InputSystem::~InputSystem() {
     inputWrapper.reset();
 }
 
-void InputSystem::update(int deltaTime) {
+void InputSystem::update(milliseconds deltaTime) {
     InputManager::GetInstance().UpdateEvents();
     inputWrapper->HandleEvents();
 }

@@ -22,7 +22,7 @@ public:
 
     void cleanUp() override;
 
-    void update(int deltaTime) override;
+    void update(milliseconds deltaTime) override;
 
     AudioSystem(const AudioSystem &other);
 

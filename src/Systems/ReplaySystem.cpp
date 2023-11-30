@@ -5,9 +5,7 @@
 #include "ReplaySystem.hpp"
 #include "RenderingSystem.hpp"
 
-ReplaySystem::ReplaySystem(int replayStorageDuration, int snapshotInterval) : snapshotInterval(snapshotInterval),
-                                                                              replayStorageDuration(
-                                                                                      replayStorageDuration) {}
+ReplaySystem::ReplaySystem() {}
 
 ReplaySystem::~ReplaySystem() {
     cleanUp();
@@ -17,7 +15,25 @@ void ReplaySystem::toggleReplay() {
     replayStart = !replayStart;
 }
 
-void ReplaySystem::update(int deltaTime) {
+void ReplaySystem::startRecording(milliseconds replayStorageDuration, milliseconds snapshotIntervalDuration) {
+    recording = true;
+    this->replayStorageDuration = replayStorageDuration;
+    this->snapshotInterval = snapshotIntervalDuration;
+}
+
+void ReplaySystem::stopRecording() {
+    recording = false;
+    replayStart = false;
+    snapshots = std::queue<std::pair<float, std::unique_ptr<ECSSnapshot>>>();
+    currentSnapshot = nullptr;
+    totalTimeOfSnapshots = 0;
+    timeElapsedSinceLastSnapshot = 0;
+}
+
+void ReplaySystem::update(milliseconds deltaTime) {
+    if (!recording)
+        return;
+
     if (replayStart) {
         replay();
     }

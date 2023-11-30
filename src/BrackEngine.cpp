@@ -27,7 +27,7 @@ BrackEngine::BrackEngine(Config &&config) {
     SystemManager::GetInstance().AddSystem(std::make_shared<MovementSystem>());
     SystemManager::GetInstance().AddSystem(std::make_shared<RenderingSystem>());
     SystemManager::GetInstance().AddSystem(std::make_shared<PhysicsSystem>());
-    SystemManager::GetInstance().AddSystem(std::make_shared<ReplaySystem>(1000));
+    SystemManager::GetInstance().AddSystem(std::make_shared<ReplaySystem>());
 
     lastTime = std::chrono::high_resolution_clock::now();
 
@@ -44,9 +44,6 @@ void BrackEngine::Run() {
         FPSSingleton::GetInstance().End();
         if (ConfigSingleton::GetInstance().ShowFPS())
             UpdateFPS(deltaTime);
-
-        if (InputManager::GetInstance().IsKeyPressed(KeyMap::ESCAPE))
-            toggleReplay();
     }
 
     SystemManager::GetInstance().CleanUp();
@@ -95,10 +92,6 @@ void BrackEngine::UpdateFPS(float deltaTime) {
             1);//TODO ophalen met tag of name van component
 
     textComponent.text = std::to_string(FPSSingleton::GetInstance().GetFPS());;
-}
-
-void BrackEngine::toggleReplay() {
-    SystemManager::GetInstance().GetSystem<ReplaySystem>().lock()->toggleReplay();
 }
 
 void BrackEngine::save(const std::string &filePath, const std::string &content) const {

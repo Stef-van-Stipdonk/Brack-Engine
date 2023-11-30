@@ -24,9 +24,7 @@ public:
     void Run();
 
     void save(const std::string &filePath, const std::string &content) const;
-
-    void toggleReplay();
-
+    
     std::string load(const std::string &filePath) const;
 
 private:

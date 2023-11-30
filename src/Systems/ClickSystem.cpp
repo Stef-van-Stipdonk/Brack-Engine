@@ -12,7 +12,7 @@ ClickSystem::ClickSystem() {}
 
 ClickSystem::~ClickSystem() {}
 
-void ClickSystem::update(int deltaTime) {
+void ClickSystem::update(milliseconds deltaTime) {
     if (!InputManager::GetInstance().IsMouseReleased(LEFT_MOUSE)) return;
 
     auto &componentStore = ComponentStore::GetInstance();

@@ -14,7 +14,7 @@ BehaviourScriptSystem::~BehaviourScriptSystem() {
 
 }
 
-void BehaviourScriptSystem::update(int deltaTime) {
+void BehaviourScriptSystem::update(milliseconds deltaTime) {
     auto behaviorScripts = ComponentStore::GetInstance().getAllComponentsOfType<BehaviourScript>();
     for (auto script: behaviorScripts) {
         script->onUpdate(deltaTime);

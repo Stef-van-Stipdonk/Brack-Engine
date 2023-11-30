@@ -30,7 +30,7 @@ public:
 
     RenderingSystem(const RenderingSystem &other);
 
-    void update(int deltaTime) override;
+    void update(milliseconds deltaTime) override;
 
 private:
     void SortRenderComponents();

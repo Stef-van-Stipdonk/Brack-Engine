@@ -105,6 +105,9 @@ add_library(${PROJECT_NAME} SHARED
         outfacingInterfaces/Helpers/CollisionType.hpp
         src/Systems/ReplaySystem.hpp
         src/Systems/ReplaySystem.cpp
+        src/Managers/ReplayManager.cpp
+        outfacingInterfaces/EngineManagers/ReplayManager.hpp
+        outfacingInterfaces/Milliseconds.hpp
 )
 
 if (WIN32 OR WIN64)

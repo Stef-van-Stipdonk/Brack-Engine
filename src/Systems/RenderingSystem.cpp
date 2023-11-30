@@ -13,7 +13,7 @@ RenderingSystem::~RenderingSystem() {
 
 }
 
-void RenderingSystem::update(int deltaTime) {
+void RenderingSystem::update(milliseconds deltaTime) {
     SortRenderComponents();
 #if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
     auto boxCollisionComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<BoxCollisionComponent>();

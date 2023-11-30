@@ -9,6 +9,7 @@
 #include "../includes/ComponentStore.hpp"
 #include "../includes/SystemManager.hpp"
 #include <queue>
+#include "../outfacingInterfaces/Milliseconds.hpp"
 
 
 class ReplaySystem : public ISystem {
@@ -21,13 +22,17 @@ public:
         std::unordered_map<std::type_index, std::unordered_map<entity, std::unique_ptr<IComponent>>> componentStates;
     };
 
-    ReplaySystem(int replayStorageDuration, int snapshotInterval = 30);
+    ReplaySystem();
 
-    ~ReplaySystem() override;;
+    ~ReplaySystem() override;
+
+    void startRecording(milliseconds replayStorageDuration, milliseconds snapshotIntervalDuration);
+
+    void stopRecording();
 
     void toggleReplay();
 
-    void update(int deltaTime) override;;
+    void update(milliseconds deltaTime) override;;
 
     void replay();
 
@@ -38,14 +43,16 @@ public:
 private:
     std::queue<std::pair<float, std::unique_ptr<ECSSnapshot>>> snapshots;
     std::unique_ptr<ECSSnapshot> currentSnapshot = nullptr;
-    int snapshotInterval;
-    int totalTimeOfSnapshots = 0;
-    int timeElapsedSinceLastSnapshot = 0;
-    int replayStorageDuration;
+    milliseconds snapshotInterval;
+    milliseconds totalTimeOfSnapshots = 0;
+    milliseconds timeElapsedSinceLastSnapshot = 0;
+    milliseconds replayStorageDuration;
     bool replayStart = false;
+    bool recording;
 
 
     std::unique_ptr<ECSSnapshot> createEcsDeepSnapshot();
 
     void restore_ecs_snapshot(const ECSSnapshot &snapshot);
+
 };

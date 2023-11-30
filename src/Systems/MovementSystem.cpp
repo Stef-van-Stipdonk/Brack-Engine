@@ -14,7 +14,7 @@ MovementSystem::~MovementSystem() {
 
 }
 
-void MovementSystem::update(int deltaTime) {
+void MovementSystem::update(milliseconds deltaTime) {
     auto entities = ComponentStore::GetInstance().getEntitiesWithComponent<VelocityComponent>();
     for (auto entity: entities) {
         auto velocityComponent = ComponentStore::GetInstance().tryGetComponent<VelocityComponent>(entity);

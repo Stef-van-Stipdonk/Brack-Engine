@@ -13,7 +13,7 @@ AudioSystem::~AudioSystem() {
 
 }
 
-void AudioSystem::update(int deltaTime) {
+void AudioSystem::update(milliseconds deltaTime) {
 }
 
 void AudioSystem::PlayPause(entity entityId) {

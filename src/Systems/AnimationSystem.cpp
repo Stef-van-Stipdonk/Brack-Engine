@@ -12,7 +12,7 @@ AnimationSystem::~AnimationSystem() {
 
 }
 
-void AnimationSystem::update(int deltaTime) {
+void AnimationSystem::update(milliseconds deltaTime) {
 
 }
 

@@ -12,7 +12,7 @@ SaveSystem::~SaveSystem() {
 
 }
 
-void SaveSystem::update(int deltaTime) {
+void SaveSystem::update(milliseconds deltaTime) {
 
 }
 
