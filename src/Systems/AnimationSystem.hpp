@@ -18,7 +18,6 @@ public:
 
     void cleanUp() override;
 
-
     void update(milliseconds deltaTime) override;
 };
 
