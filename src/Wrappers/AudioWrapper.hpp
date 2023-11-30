@@ -7,7 +7,7 @@
 
 
 #include "Components/Archetypes/AudioArchetype.hpp"
-#include "fmod.hpp"
+#include <fmod.h>
 #include <vector>
 #include <memory>
 #include <unordered_map>
@@ -37,12 +37,12 @@ public:
     void clearUnusedChannels() ;
 
 private:
-    void playSoundOnChannel(FMOD::Channel *&channel, int channelID, AudioArchetype &audioComponent);
-    void pauseChannel(FMOD::Channel* channel, AudioArchetype &audioComponent);
-    void resumeChannel(FMOD::Channel* channel, AudioArchetype &audioComponent);
-    FMOD::System *system;
-    std::unordered_map<int, FMOD::Channel*> soundEffectsChannelMap;
-    std::pair<int, FMOD::Channel*> soundTrackChannelPair;
+    void playSoundOnChannel(FMOD_CHANNEL *&channel, int channelID, AudioArchetype &audioComponent);
+    void pauseChannel(FMOD_CHANNEL* channel, AudioArchetype &audioComponent);
+    void resumeChannel(FMOD_CHANNEL* channel, AudioArchetype &audioComponent);
+    FMOD_SYSTEM *system;
+    std::unordered_map<int, FMOD_CHANNEL*> soundEffectsChannelMap;
+    std::pair<int, FMOD_CHANNEL*> soundTrackChannelPair;
     int soundTrackChannel = 10;
 };
 

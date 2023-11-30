@@ -6,14 +6,12 @@
 #include <algorithm>
 #include "AudioWrapper.hpp"
 
-
-
 AudioWrapper::AudioWrapper() : system(nullptr) {
-    FMOD_RESULT result = FMOD::System_Create(&system);
+    FMOD_RESULT result = FMOD_System_Create(&system, FMOD_VERSION);
     if (result != FMOD_OK) {
         Logger::Error("FMOD system creation failed: " + std::string(FMOD_ErrorString(result)));
     } else {
-        result = system->init(32, FMOD_INIT_NORMAL, nullptr); // Use system->init
+        result = FMOD_System_Init(system, 32, FMOD_INIT_NORMAL, nullptr); // Use system->init
         if (result != FMOD_OK) {
             Logger::Error("FMOD system initialization failed: " + std::string(FMOD_ErrorString(result)));
         }
@@ -22,7 +20,7 @@ AudioWrapper::AudioWrapper() : system(nullptr) {
 
 AudioWrapper::~AudioWrapper() {
     if (system) {
-        FMOD_RESULT result = system->release();
+        FMOD_RESULT result = FMOD_System_Release(system);
         if (result != FMOD_OK) {
             Logger::Error("Failed to release FMOD system: " + std::string(FMOD_ErrorString(result)));
         }
@@ -31,7 +29,7 @@ AudioWrapper::~AudioWrapper() {
 
 void AudioWrapper::cleanUp() {
     if (system) {
-        FMOD_RESULT result = system->release();
+        FMOD_RESULT result = FMOD_System_Release(system);;
         if (result != FMOD_OK) {
             Logger::Error("Failed to release FMOD system: " + std::string(FMOD_ErrorString(result)));
         }
@@ -61,12 +59,12 @@ void AudioWrapper::clearUnusedChannels() {
     std::vector<int> channelsToRelease;
 
     for (auto it = soundEffectsChannelMap.begin(); it != soundEffectsChannelMap.end();) {
-        FMOD::Channel* channel = it->second;
-        bool isPlaying; // Declaration without initialization
+        FMOD_CHANNEL* channel = it->second;
+        int isPlaying = 0; // Declaration without initialization
 
         // Checking if the channel is playing
         if (channel) {
-            FMOD_RESULT result = channel->isPlaying(&isPlaying);
+            FMOD_RESULT result = FMOD_Channel_IsPlaying(channel,&isPlaying);
             if (result != FMOD_OK) {
                 Logger::Error("Error checking if channel is playing: " + std::string(FMOD_ErrorString(result)));
                 ++it;
@@ -122,48 +120,48 @@ void AudioWrapper::playSound(AudioArchetype &audioComponent) {
     }
 }
 
-void AudioWrapper::playSoundOnChannel(FMOD::Channel *&channel, int channelID, AudioArchetype &audioComponent) {
-    FMOD::Sound* sound = nullptr;
+void AudioWrapper::playSoundOnChannel(FMOD_CHANNEL *&channel, int channelID, AudioArchetype &audioComponent) {
+    FMOD_SOUND* sound = nullptr;
     FMOD_MODE mode = audioComponent.isSoundTrack ? FMOD_LOOP_NORMAL : FMOD_DEFAULT;
     auto audioPath = ConfigSingleton::GetInstance().GetBaseAssetPath() + audioComponent.getAudioPath();
-    FMOD_RESULT result = system->createSound(audioPath.c_str(), mode, 0, &sound);
+    FMOD_RESULT result = FMOD_System_CreateSound(system, audioPath.c_str(), mode, 0, &sound);
 
     if (result != FMOD_OK) {
         Logger::Error("Failed to create sound: " + std::string(FMOD_ErrorString(result)));
         return;
     }
 
-    result = system->playSound(sound, nullptr, false, &channel);
+    result = FMOD_System_PlaySound(system, sound, nullptr, false, &channel);
 
     if (result != FMOD_OK) {
         Logger::Error("Failed to play sound on channel: " + std::string(FMOD_ErrorString(result)));
         return;
     }
 
-    channel->setUserData(reinterpret_cast<void*>(channelID));
-    channel->setVolume(audioComponent.volume);
+    FMOD_System_SetUserData(system,reinterpret_cast<void*>(channelID));
+    FMOD_Channel_SetVolume(channel, audioComponent.volume);
 
     Logger::Debug("Uploaded sound to Channel: " + std::to_string(channelID) + ", Path: " + audioPath);
 }
 
-void AudioWrapper::pauseChannel(FMOD::Channel *channel, AudioArchetype &audioComponent) {
+void AudioWrapper::pauseChannel(FMOD_CHANNEL *channel, AudioArchetype &audioComponent) {
     if (channel) {
-        FMOD::Sound* sound = nullptr;
-        FMOD_RESULT result = channel->getCurrentSound(&sound);
+        FMOD_SOUND* sound = nullptr;
+        FMOD_RESULT result = FMOD_Channel_GetCurrentSound(channel, &sound);
         if (result != FMOD_OK) {
             Logger::Error("Error getting current sound: " + std::string(FMOD_ErrorString(result)));
             return;
         }
 
         char audioPath[256];
-        result = sound->getName(audioPath, sizeof(audioPath));
+        result = FMOD_Sound_GetName(sound, audioPath, sizeof(audioPath));
         if (result != FMOD_OK) {
             Logger::Error("Error getting sound name: " + std::string(FMOD_ErrorString(result)));
             return;
         }
 
         if (std::string(audioPath) == getFileName(audioComponent.getAudioPath())) {
-            result = channel->setPaused(true);
+            result = FMOD_Channel_SetPaused(channel, true);
             if (result != FMOD_OK) {
                 Logger::Error("Error pausing channel: " + std::string(FMOD_ErrorString(result)));
             }
@@ -187,32 +185,32 @@ void AudioWrapper::pauseSound(AudioArchetype &audioComponent) {
     }
 }
 
-void AudioWrapper::resumeChannel(FMOD::Channel *channel, AudioArchetype &audioComponent) {
+void AudioWrapper::resumeChannel(FMOD_CHANNEL *channel, AudioArchetype &audioComponent) {
     if (channel) {
-        FMOD::Sound* sound = nullptr;
-        FMOD_RESULT result = channel->getCurrentSound(&sound);
+        FMOD_SOUND * sound = nullptr;
+        FMOD_RESULT result = FMOD_Channel_GetCurrentSound(channel, &sound);
         if (result != FMOD_OK) {
             Logger::Error("Error getting current sound: " + std::string(FMOD_ErrorString(result)));
             return;
         }
 
         char audioPath[256];
-        result = sound->getName(audioPath, sizeof(audioPath));
+        result = FMOD_Sound_GetName(sound, audioPath, sizeof(audioPath));
         if (result != FMOD_OK) {
             Logger::Error("Error getting sound name: " + std::string(FMOD_ErrorString(result)));
             return;
         }
 
         if (std::string(audioPath) == getFileName(audioComponent.getAudioPath())) {
-            bool isPaused;
-            result = channel->getPaused(&isPaused);
+            int isPaused = 0;
+            result = FMOD_Channel_GetPaused(channel, &isPaused);
             if (result != FMOD_OK) {
                 Logger::Error("Error checking if channel is paused: " + std::string(FMOD_ErrorString(result)));
                 return;
             }
 
             if (isPaused) {
-                result = channel->setPaused(false); // Resume the channel
+                result = FMOD_Channel_SetPaused(channel, false); // Resume the channel
                 if (result != FMOD_OK) {
                     Logger::Error("Error resuming channel: " + std::string(FMOD_ErrorString(result)));
                 }
@@ -227,25 +225,25 @@ void AudioWrapper::resumeSound(AudioArchetype &audioComponent) {
         return;
     }
 
-    bool anySoundsPaused = false;
+    int anySoundsPaused = 0;
     for (auto & it : soundEffectsChannelMap) {
-        FMOD::Channel* channel = it.second;
+        FMOD_CHANNEL* channel = it.second;
         if (channel) {
-            bool isPlaying;
-            FMOD_RESULT result = channel->isPlaying(&isPlaying);
+            int isPlaying = 0;
+            FMOD_RESULT result = FMOD_Channel_IsPlaying(channel, &isPlaying);
             if (result != FMOD_OK) {
                 Logger::Error("Error checking if channel is playing: " + std::string(FMOD_ErrorString(result)));
                 continue;
             }
             if (!isPlaying) {
-                anySoundsPaused = true;
+                anySoundsPaused = 1;
                 Logger::Debug("Paused Sound Found");
                 break; // Exit the loop as soon as a paused sound is found
             }
         }
     }
     if(!anySoundsPaused){
-        soundTrackChannelPair.second->isPlaying(&anySoundsPaused);
+        FMOD_Channel_IsPlaying(soundTrackChannelPair.second, &anySoundsPaused);
     }
 
     if (!anySoundsPaused) {
