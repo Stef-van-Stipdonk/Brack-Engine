@@ -10,7 +10,7 @@ AudioSystem::AudioSystem() : audioWrapper(new AudioWrapper()) {
 AudioSystem::~AudioSystem() {
 }
 
-void AudioSystem::update(float deltaTime) {
+void AudioSystem::update(milliseconds deltaTime) {
     auto audiocomponents = ComponentStore::GetInstance().getAllComponentsOfType<AudioArchetype>();
     for(auto audioComponent : audiocomponents){
         if(audioComponent->startPlaying && !audioComponent->pauseSound){
@@ -40,4 +40,8 @@ void AudioSystem::cleanUp() {
             audioComponent.startPlaying = false;
     }
     audioWrapper->cleanUp();
+}
+
+AudioSystem::AudioSystem(const AudioSystem &other) {
+    audioWrapper = std::make_unique<AudioWrapper>(*other.audioWrapper);
 }

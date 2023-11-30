@@ -36,6 +36,8 @@ public:
 
     void clearUnusedChannels() ;
 
+    AudioWrapper(const AudioWrapper &other);
+
 private:
     void playSoundOnChannel(FMOD_CHANNEL *&channel, int channelID, AudioArchetype &audioComponent);
     void pauseChannel(FMOD_CHANNEL* channel, AudioArchetype &audioComponent);

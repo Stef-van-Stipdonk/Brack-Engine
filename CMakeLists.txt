@@ -59,7 +59,6 @@ add_library(${PROJECT_NAME} SHARED
         src/Systems/MovementSystem.cpp
         src/Systems/BehaviourScriptSystem.cpp
         src/Systems/ParticleSystem.cpp
-        src/Systems/ReplaySystem.cpp
         src/Systems/AISystem.cpp
         src/Systems/LoadSystem.cpp
         src/Systems/SaveSystem.cpp
@@ -80,7 +79,6 @@ add_library(${PROJECT_NAME} SHARED
         src/Objects/Button.cpp
         src/Objects/Text.cpp
         src/EngineManagers/SceneManager.cpp
-        src/EngineManagers/ReplayManager.cpp
         src/EngineManagers/InputManager.cpp
         outfacingInterfaces/Helpers/InputState.hpp
         src/BrackEngine.cpp
@@ -105,6 +103,11 @@ add_library(${PROJECT_NAME} SHARED
         outfacingInterfaces/Components/SoundEffectComponent.hpp
         src/Managers/Entities/ComponentStore.cpp
         outfacingInterfaces/Helpers/CollisionType.hpp
+        src/Systems/ReplaySystem.hpp
+        src/Systems/ReplaySystem.cpp
+        src/Managers/ReplayManager.cpp
+        outfacingInterfaces/EngineManagers/ReplayManager.hpp
+        outfacingInterfaces/Milliseconds.hpp
 )
 
 if (WIN32 OR WIN64)

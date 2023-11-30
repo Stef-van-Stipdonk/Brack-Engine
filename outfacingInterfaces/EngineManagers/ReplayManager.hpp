@@ -1,17 +1,24 @@
 //
-// Created by jesse on 02/11/2023.
+// Created by Stef van Stipdonk on 30/11/2023.
 //
 
-#ifndef BRACK_ENGINE_REPLAYMANAGER_HPP
-#define BRACK_ENGINE_REPLAYMANAGER_HPP
+#ifndef BRACKOCALYPSE_REPLAYMANAGER_HPP
+#define BRACKOCALYPSE_REPLAYMANAGER_HPP
 
-#include <string>
-#include <memory>
-#include "../../src/includes/EntityManager.hpp"
+#include <Milliseconds.hpp>
 
 class ReplayManager {
 public:
-    static ReplayManager &GetInstance();
+    ReplayManager &getInstance();
+
+    void startRecording(milliseconds replayStorageDuration, milliseconds snapshotIntervalDuration);
+
+    void stopRecording();
+
+    void toggleReplay();
+
+private:
+    ReplayManager() = default;
 
     ~ReplayManager() = default;
 
@@ -19,27 +26,10 @@ public:
 
     ReplayManager &operator=(const ReplayManager &) = delete;
 
-    ReplayManager &operator=(ReplayManager &&) = delete;
-
     ReplayManager(ReplayManager &&) = delete;
 
-    void StartReplay(std::string filePath);
-
-    void PauseReplay();
-
-    void StopReplayCapture();
-
-    void StartReplayPlayback(std::string filePath);
-
-    void PauseReplayPlayback();
-
-    void StopReplayPlayback();
-
-private:
-    static ReplayManager instance;
-
-    ReplayManager() = default;
+    ReplayManager &operator=(ReplayManager &&) = delete;
 };
 
 
-#endif //BRACK_ENGINE_REPLAYMANAGER_HPP
+#endif //BRACKOCALYPSE_REPLAYMANAGER_HPP
