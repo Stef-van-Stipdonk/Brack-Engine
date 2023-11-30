@@ -132,3 +132,13 @@ void InputManager::UpdateEvents() {
         }
     }
 }
+
+void InputManager::clearInputs() {
+    for (auto &item: keyInputs) {
+        item.second = None;
+    }
+
+    for (auto &item: mouseInputs) {
+        item.second = None;
+    }
+}

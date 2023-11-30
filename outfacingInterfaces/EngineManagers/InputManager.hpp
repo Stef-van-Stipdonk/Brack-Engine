@@ -61,6 +61,8 @@ public:
 
     void UpdateEvents();
 
+    void clearInputs();
+
 private:
     InputManager();
 

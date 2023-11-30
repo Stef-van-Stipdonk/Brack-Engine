@@ -14,7 +14,7 @@ ReplaySystem::~ReplaySystem() {
 }
 
 void ReplaySystem::toggleReplay() {
-    replayStart = !replayStart;
+    replayStart = true;
 }
 
 void ReplaySystem::startRecording(milliseconds replayStorageDuration, milliseconds snapshotIntervalDuration) {
@@ -35,32 +35,31 @@ void ReplaySystem::stopRecording() {
 void ReplaySystem::update(milliseconds deltaTime) {
     if (!recording)
         return;
-
+    
     if (replayStart) {
         replay();
+    } else {
+        if (timeElapsedSinceLastSnapshot < snapshotInterval) {
+            timeElapsedSinceLastSnapshot += deltaTime;
+            return;
+        }
+
+        auto snapshot = createEcsDeepSnapshot();
+        snapshots.push(std::make_pair(snapshotInterval, std::move(snapshot)));
+
+        totalTimeOfSnapshots += deltaTime;
+
+        while (totalTimeOfSnapshots > replayStorageDuration) {
+            auto toBeDeletedSnapshot = std::move(snapshots.front());
+            totalTimeOfSnapshots -= toBeDeletedSnapshot.first;
+
+            if (toBeDeletedSnapshot.second != nullptr)
+                toBeDeletedSnapshot.second.reset();
+
+            snapshots.pop();
+        }
+        timeElapsedSinceLastSnapshot = 0;
     }
-
-    if (timeElapsedSinceLastSnapshot < snapshotInterval) {
-        timeElapsedSinceLastSnapshot += deltaTime;
-        return;
-    }
-
-    auto snapshot = createEcsDeepSnapshot();
-    snapshots.push(std::make_pair(snapshotInterval, std::move(snapshot)));
-
-    totalTimeOfSnapshots += deltaTime;
-
-    while (totalTimeOfSnapshots > replayStorageDuration) {
-        auto toBeDeletedSnapshot = std::move(snapshots.front());
-        totalTimeOfSnapshots -= toBeDeletedSnapshot.first;
-
-        if (toBeDeletedSnapshot.second != nullptr)
-            toBeDeletedSnapshot.second.reset();
-
-        snapshots.pop();
-    }
-
-    timeElapsedSinceLastSnapshot = 0;
 }
 
 void ReplaySystem::replay() {
@@ -88,6 +87,7 @@ void ReplaySystem::replay() {
 
     replayStart = false;
     restore_ecs_snapshot(*currentSnapshot);
+    InputManager::GetInstance().clearInputs();
     if (currentSnapshot != nullptr)
         currentSnapshot.reset();
 
