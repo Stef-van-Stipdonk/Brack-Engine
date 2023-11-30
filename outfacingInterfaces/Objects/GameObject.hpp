@@ -21,6 +21,10 @@ public:
 
     ~GameObject() {
         components.clear();
+        delete parent;
+        for (auto &child: children) {
+            delete child;
+        }
     };
 
     GameObject &operator=(const GameObject &other) {
