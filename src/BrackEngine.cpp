@@ -3,6 +3,7 @@
 //
 
 #include <Components/ObjectInfoComponent.hpp>
+#include <Components/PersistenceTag.hpp>
 #include "BrackEngine.hpp"
 #include "Systems/RenderingSystem.hpp"
 #include "Logger.hpp"
@@ -18,14 +19,14 @@
 
 BrackEngine::BrackEngine(Config &&config) {
     ConfigSingleton::GetInstance().SetConfig(config);
-    SystemManager::GetInstance().AddSystem(std::make_shared<InputSystem>());
-    SystemManager::GetInstance().AddSystem(std::make_shared<ClickSystem>());
-    SystemManager::GetInstance().AddSystem(std::make_shared<AudioSystem>());
-    SystemManager::GetInstance().AddSystem(std::make_shared<BehaviourScriptSystem>());
-    SystemManager::GetInstance().AddSystem(std::make_shared<MovementSystem>());
-    SystemManager::GetInstance().AddSystem(std::make_shared<PhysicsSystem>());
-    SystemManager::GetInstance().AddSystem(std::make_shared<AnimationSystem>());
-    SystemManager::GetInstance().AddSystem(std::make_shared<RenderingSystem>());
+    SystemManager::getInstance().AddSystem(std::make_shared<InputSystem>());
+    SystemManager::getInstance().AddSystem(std::make_shared<ClickSystem>());
+    SystemManager::getInstance().AddSystem(std::make_shared<AudioSystem>());
+    SystemManager::getInstance().AddSystem(std::make_shared<BehaviourScriptSystem>());
+    SystemManager::getInstance().AddSystem(std::make_shared<MovementSystem>());
+    SystemManager::getInstance().AddSystem(std::make_shared<PhysicsSystem>());
+    SystemManager::getInstance().AddSystem(std::make_shared<AnimationSystem>());
+    SystemManager::getInstance().AddSystem(std::make_shared<RenderingSystem>());
 
     lastTime = std::chrono::high_resolution_clock::now();
 
@@ -38,14 +39,14 @@ void BrackEngine::Run() {
     while (ConfigSingleton::GetInstance().IsRunning()) {
         FPSSingleton::GetInstance().Start();
         auto deltaTime = GetDeltaTime();
-        SystemManager::GetInstance().UpdateSystems(deltaTime);
+        SystemManager::getInstance().UpdateSystems(deltaTime);
         FPSSingleton::GetInstance().End();
 //        Logger::Info("FPS: " + std::to_string(FPSSingleton::getInstance().GetFPS()));
         if (ConfigSingleton::GetInstance().ShowFPS())
             UpdateFPS(deltaTime);
     }
 
-    SystemManager::GetInstance().CleanUp();
+    SystemManager::getInstance().CleanUp();
 }
 
 float BrackEngine::GetDeltaTime() {
@@ -76,6 +77,7 @@ void BrackEngine::CreateFPS() {
     ComponentStore::GetInstance().addComponent<TransformComponent>(entityId);
     ComponentStore::GetInstance().addComponent<ObjectInfoComponent>(objectInfoComponent);
     ComponentStore::GetInstance().addComponent<TextComponent>(textComponent);
+    ComponentStore::GetInstance().addComponent<PersistenceTag>(entityId);
 
     EntityManager::getInstance().addEntityWithName(entityId, objectInfoComponent.name);
     EntityManager::getInstance().addEntityWithTag(entityId, objectInfoComponent.tag);

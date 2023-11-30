@@ -27,7 +27,7 @@
 
 class SystemManager {
 public:
-    static SystemManager &GetInstance();
+    static SystemManager &getInstance();
 
     ~SystemManager() = default;
 
