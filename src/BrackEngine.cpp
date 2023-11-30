@@ -40,7 +40,6 @@ void BrackEngine::Run() {
         auto deltaTime = GetDeltaTime();
         SystemManager::GetInstance().UpdateSystems(deltaTime);
         FPSSingleton::GetInstance().End();
-//        Logger::Info("FPS: " + std::to_string(FPSSingleton::getInstance().GetFPS()));
         if (ConfigSingleton::GetInstance().ShowFPS())
             UpdateFPS(deltaTime);
     }
@@ -72,6 +71,8 @@ void BrackEngine::CreateFPS() {
     textComponent.fontSize = 32;
     textComponent.color = std::make_unique<Color>(255, 0, 0, 255);
     textComponent.entityID = entityId;
+    textComponent.sortingLayer = 0;
+    textComponent.orderInLayer = 0;
 
     ComponentStore::GetInstance().addComponent<TransformComponent>(entityId);
     ComponentStore::GetInstance().addComponent<ObjectInfoComponent>(objectInfoComponent);
