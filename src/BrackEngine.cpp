@@ -3,6 +3,8 @@
 //
 
 #include <Components/ObjectInfoComponent.hpp>
+#include <Components/AIComponent.hpp>
+#include <Helpers/KeyMap.hpp>
 #include "BrackEngine.hpp"
 #include "Systems/RenderingSystem.hpp"
 #include "Logger.hpp"
@@ -14,7 +16,9 @@
 #include "Systems/ClickSystem.hpp"
 #include "Systems/AudioSystem.hpp"
 #include "Systems/PhysicsSystem.hpp"
+#include "Systems/ReplaySystem.hpp"
 #include "Systems/AnimationSystem.hpp"
+
 
 BrackEngine::BrackEngine(Config &&config) {
     ConfigSingleton::GetInstance().SetConfig(config);
@@ -24,6 +28,7 @@ BrackEngine::BrackEngine(Config &&config) {
     SystemManager::GetInstance().AddSystem(std::make_shared<BehaviourScriptSystem>());
     SystemManager::GetInstance().AddSystem(std::make_shared<MovementSystem>());
     SystemManager::GetInstance().AddSystem(std::make_shared<PhysicsSystem>());
+    SystemManager::GetInstance().AddSystem(std::make_shared<ReplaySystem>(lastTime));
     SystemManager::GetInstance().AddSystem(std::make_shared<AnimationSystem>());
     SystemManager::GetInstance().AddSystem(std::make_shared<RenderingSystem>());
 
@@ -37,7 +42,7 @@ void BrackEngine::Run() {
     Logger::Debug("Updating systems");
     while (ConfigSingleton::GetInstance().IsRunning()) {
         FPSSingleton::GetInstance().Start();
-        auto deltaTime = GetDeltaTime();
+        milliseconds deltaTime = GetDeltaTime();
         SystemManager::GetInstance().UpdateSystems(deltaTime);
         FPSSingleton::GetInstance().End();
         if (ConfigSingleton::GetInstance().ShowFPS())
@@ -47,16 +52,17 @@ void BrackEngine::Run() {
     SystemManager::GetInstance().CleanUp();
 }
 
-float BrackEngine::GetDeltaTime() {
+milliseconds BrackEngine::GetDeltaTime() {
     auto currentTime = std::chrono::high_resolution_clock::now();
     std::chrono::duration<float> deltaTime = std::chrono::duration_cast<std::chrono::duration<float>>(
             currentTime - lastTime);
     lastTime = currentTime;
 
     float deltaTimeInSeconds = deltaTime.count();
-    return deltaTimeInSeconds;
-
+    milliseconds deltaTimeInMilliSeconds = deltaTimeInSeconds * 1000.0f;
+    return deltaTimeInMilliSeconds;
 }
+
 
 void BrackEngine::CreateFPS() {
     auto entityId = EntityManager::getInstance().createEntity();

@@ -12,7 +12,7 @@ ParticleSystem::~ParticleSystem() {
 
 }
 
-void ParticleSystem::update(float deltaTime) {
+void ParticleSystem::update(milliseconds deltaTime) {
 
 }
 
@@ -23,3 +23,4 @@ const std::string ParticleSystem::getName() const {
 void ParticleSystem::cleanUp() {
 
 }
+

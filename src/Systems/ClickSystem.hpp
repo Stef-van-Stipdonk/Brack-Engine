@@ -16,12 +16,14 @@ public:
 
     void cleanUp() override;
 
-    void update(float deltaTime) override;
+    void update(milliseconds deltaTime) override;
 
     ClickSystem();
+
 private:
-    void CheckBoxCollision(const ClickableComponent& clickableComponent, const Vector2& mousePosition);
-    void CheckCircleCollision(const ClickableComponent& clickableComponent, const Vector2& mousePosition);
+    void CheckBoxCollision(const ClickableComponent &clickableComponent, const Vector2 &mousePosition);
+
+    void CheckCircleCollision(const ClickableComponent &clickableComponent, const Vector2 &mousePosition);
 };
 
 

@@ -14,7 +14,7 @@ BehaviourScriptSystem::~BehaviourScriptSystem() {
 
 }
 
-void BehaviourScriptSystem::update(float deltaTime) {
+void BehaviourScriptSystem::update(milliseconds deltaTime) {
     auto behaviorScripts = ComponentStore::GetInstance().getAllComponentsOfType<BehaviourScript>();
     for (auto script: behaviorScripts) {
         script->onUpdate(deltaTime);
@@ -28,3 +28,5 @@ const std::string BehaviourScriptSystem::getName() const {
 void BehaviourScriptSystem::cleanUp() {
 
 }
+
+

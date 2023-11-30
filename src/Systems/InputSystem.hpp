@@ -16,9 +16,12 @@ public:
 
     ~InputSystem() override;
 
-    void update(float deltaTime) override;
+    void update(milliseconds deltaTime) override;
 
     const std::string getName() const override;
+
+    InputSystem(const InputSystem &other);
+
     void cleanUp() override;
 
 private:
