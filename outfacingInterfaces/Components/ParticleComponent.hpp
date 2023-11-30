@@ -5,9 +5,11 @@
 #ifndef BRACK_ENGINE_PARTICLECOMPONENT_HPP
 #define BRACK_ENGINE_PARTICLECOMPONENT_HPP
 
+#include <memory>
+#include <Helpers/Color.hpp>
+#include <Milliseconds.hpp>
 #include "IComponent.hpp"
 #include "../../src/Components/ComponentVisitor.hpp"
-
 
 struct ParticleComponent : public IComponent {
     explicit ParticleComponent() : IComponent() {}
@@ -23,11 +25,10 @@ struct ParticleComponent : public IComponent {
     }
 
     ParticleComponent(const ParticleComponent& other) : IComponent(other) {
-        lifetimeInSeconds = other.lifetimeInSeconds;
+        lifeTime = other.lifeTime;
     }
 
-    float lifetimeInSeconds;
+    milliseconds lifeTime;
 };
-
 
 #endif //BRACK_ENGINE_PARTICLECOMPONENT_HPP

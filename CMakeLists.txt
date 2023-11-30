@@ -214,7 +214,7 @@ if (WIN32 OR WIN64)
     target_link_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/lib/FMod)
     target_link_libraries(${PROJECT_NAME} PRIVATE fmod)
 else ()
-    find_library(FMOD_LIBRARY NAMES fmod PATHS "${CMAKE_CURRENT_SOURCE_DIR}/lib/FMod")
+    find_library(FMOD_LIBRARY NAMES libfmod.so.13 PATHS "${CMAKE_CURRENT_SOURCE_DIR}/lib/FMod")
     find_path(FMOD_INCLUDE_DIR fmod.h PATHS "${CMAKE_CURRENT_SOURCE_DIR}/lib/FMod/include")
 
     message(STATUS "FMOD Library: ${FMOD_LIBRARY}")

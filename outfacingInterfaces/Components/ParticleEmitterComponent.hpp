@@ -5,11 +5,16 @@
 #ifndef BRACK_ENGINE_PARTICLEEMITTERCOMPONENT_HPP
 #define BRACK_ENGINE_PARTICLEEMITTERCOMPONENT_HPP
 
+#include <Milliseconds.hpp>
+#include <memory>
+#include <Helpers/Color.hpp>
+#include <Helpers/Vector2.hpp>
 #include "IComponent.hpp"
 #include "../../src/Components/ComponentVisitor.hpp"
 
 struct ParticleEmitterComponent : public IComponent {
-    explicit ParticleEmitterComponent() : IComponent() {}
+    explicit ParticleEmitterComponent(int maxAmount) : IComponent(), maxAmount(maxAmount), activeParticles(maxAmount, 0.0) {
+    }
 
     ~ParticleEmitterComponent() override = default;
 
@@ -22,13 +27,25 @@ struct ParticleEmitterComponent : public IComponent {
     }
 
     ParticleEmitterComponent(const ParticleEmitterComponent& other) : IComponent(other) {
-        amount = other.amount;
-        lifeTimeInSeconds = other.lifeTimeInSeconds;
+        maxAmount = other.maxAmount;
+        speed = other.speed;
+        particleSize = other.particleSize;
+        emitInterval = other.emitInterval;
+        untilNextEmit = other.untilNextEmit;
+        lifeTime = other.lifeTime;
+        activeParticles = other.activeParticles;
+        color = std::make_unique<Color>(other.color->r,other.color->g, other.color->b, other.color->a);
     }
 
-    int amount;
-    float lifeTimeInSeconds;
-};
+    std::vector<milliseconds> activeParticles;
+    milliseconds emitInterval;
+    milliseconds untilNextEmit = 0;
 
+    int maxAmount;
+    float speed;
+    Vector2 particleSize;
+    milliseconds lifeTime;
+    std::unique_ptr<Color> color = std::make_unique<Color>(0, 0, 0, 255);
+};
 
 #endif //BRACK_ENGINE_PARTICLEEMITTERCOMPONENT_HPP

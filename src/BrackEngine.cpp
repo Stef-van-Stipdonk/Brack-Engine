@@ -19,6 +19,7 @@
 #include "Systems/PhysicsSystem.hpp"
 #include "Systems/ReplaySystem.hpp"
 #include "Systems/AnimationSystem.hpp"
+#include "Systems/ParticleSystem.hpp"
 
 
 BrackEngine::BrackEngine(Config &&config) {
@@ -32,6 +33,7 @@ BrackEngine::BrackEngine(Config &&config) {
     SystemManager::GetInstance().AddSystem(std::make_shared<PhysicsSystem>());
     SystemManager::GetInstance().AddSystem(std::make_shared<ReplaySystem>(lastTime));
     SystemManager::GetInstance().AddSystem(std::make_shared<AnimationSystem>());
+    SystemManager::GetInstance().AddSystem(std::make_shared<ParticleSystem>());
     SystemManager::GetInstance().AddSystem(std::make_shared<RenderingSystem>());
 
     lastTime = std::chrono::high_resolution_clock::now();

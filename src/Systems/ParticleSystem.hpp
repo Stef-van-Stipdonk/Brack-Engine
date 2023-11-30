@@ -19,6 +19,8 @@ public:
     const std::string getName() const override;
 
     void cleanUp() override;
+
+    Vector2 generateRandomDirection(float speed);
 };
 
 
