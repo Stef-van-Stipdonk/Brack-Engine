@@ -27,7 +27,7 @@ BrackEngine::BrackEngine(Config &&config) {
     SystemManager::GetInstance().AddSystem(std::make_shared<MovementSystem>());
     SystemManager::GetInstance().AddSystem(std::make_shared<RenderingSystem>());
     SystemManager::GetInstance().AddSystem(std::make_shared<PhysicsSystem>());
-    SystemManager::GetInstance().AddSystem(std::make_shared<ReplaySystem>());
+    SystemManager::GetInstance().AddSystem(std::make_shared<ReplaySystem>(lastTime));
 
     lastTime = std::chrono::high_resolution_clock::now();
 
@@ -56,9 +56,7 @@ milliseconds BrackEngine::GetDeltaTime() {
     lastTime = currentTime;
 
     float deltaTimeInSeconds = deltaTime.count();
-    Logger::GetInstance().Info("DeltaTime: " + std::to_string(deltaTimeInSeconds) + "\n");
     milliseconds deltaTimeInMilliSeconds = deltaTimeInSeconds * 1000.0f;
-    Logger::GetInstance().Info("DeltaTime in milliseconds: " + std::to_string(deltaTimeInMilliSeconds) + "\n");
     return deltaTimeInMilliSeconds;
 }
 

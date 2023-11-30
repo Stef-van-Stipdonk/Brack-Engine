@@ -5,7 +5,9 @@
 #include "ReplaySystem.hpp"
 #include "RenderingSystem.hpp"
 
-ReplaySystem::ReplaySystem() {}
+ReplaySystem::ReplaySystem(std::chrono::time_point<std::chrono::high_resolution_clock> &lastTime) : lastTime(lastTime) {
+
+}
 
 ReplaySystem::~ReplaySystem() {
     cleanUp();
@@ -88,6 +90,9 @@ void ReplaySystem::replay() {
     restore_ecs_snapshot(*currentSnapshot);
     if (currentSnapshot != nullptr)
         currentSnapshot.reset();
+
+    lastTime = std::chrono::high_resolution_clock::now();
+
 }
 
 const std::string ReplaySystem::getName() const {

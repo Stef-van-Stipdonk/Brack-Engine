@@ -22,7 +22,7 @@ public:
         std::unordered_map<std::type_index, std::unordered_map<entity, std::unique_ptr<IComponent>>> componentStates;
     };
 
-    ReplaySystem();
+    ReplaySystem(std::chrono::time_point<std::chrono::high_resolution_clock> &lastTime);
 
     ~ReplaySystem() override;
 
@@ -49,7 +49,7 @@ private:
     milliseconds replayStorageDuration;
     bool replayStart = false;
     bool recording;
-
+    std::chrono::time_point<std::chrono::high_resolution_clock> &lastTime;
 
     std::unique_ptr<ECSSnapshot> createEcsDeepSnapshot();
 
