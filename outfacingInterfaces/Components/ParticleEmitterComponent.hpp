@@ -34,7 +34,7 @@ struct ParticleEmitterComponent : public IComponent {
         untilNextEmit = other.untilNextEmit;
         lifeTime = other.lifeTime;
         activeParticles = other.activeParticles;
-        color = std::make_unique<Color>(other.color->r,other.color->g, other.color->b, other.color->a);
+        color = std::make_unique<Color>(*other.color);
     }
 
     std::vector<milliseconds> activeParticles;
@@ -45,7 +45,7 @@ struct ParticleEmitterComponent : public IComponent {
     float speed;
     Vector2 particleSize;
     milliseconds lifeTime;
-    std::unique_ptr<Color> color = std::make_unique<Color>(0, 0, 0, 255);
+    std::unique_ptr<Color> color = std::make_unique<Color>(255, 255, 255, 255);
 };
 
 #endif //BRACK_ENGINE_PARTICLEEMITTERCOMPONENT_HPP
