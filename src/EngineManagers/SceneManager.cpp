@@ -5,11 +5,14 @@
 #include "EngineManagers/SceneManager.hpp"
 #include "Objects/Scene.hpp"
 #include "../GameObjectConverter.hpp"
+#include "../../src/includes/SystemManager.hpp"
 
 SceneManager SceneManager::instance;
 
 void SceneManager::setActiveScene(Scene &scene) {
     EntityManager::getInstance().clearAllEntities();
+    SystemManager::getInstance().clearSystemsCache();
+
     for (auto camera: scene.GetAllCameras())
         GameObjectConverter::addCamera(camera);
 

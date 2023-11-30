@@ -96,6 +96,12 @@ public:
         }
     }
 
+    void removeAllComponents(const entity entityId) {
+        for(auto& component : components) {
+            component.second.erase(entityId);
+        }
+    }
+
     template<typename T>
     typename std::enable_if<std::is_base_of<IComponent, T>::value, std::vector<entity>>::type
     getEntitiesWithComponent() {
