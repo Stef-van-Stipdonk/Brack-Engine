@@ -28,3 +28,7 @@ const std::string BehaviourScriptSystem::getName() const {
 void BehaviourScriptSystem::cleanUp() {
 
 }
+
+void BehaviourScriptSystem::clearCache() {
+
+}

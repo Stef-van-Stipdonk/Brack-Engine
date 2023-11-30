@@ -118,6 +118,7 @@ public:
 
     const std::vector<std::weak_ptr<ISystem>>& getDependencies() const { return outgoingEdges; }
 
+    virtual void clearCache() = 0;
 private:
 
 };

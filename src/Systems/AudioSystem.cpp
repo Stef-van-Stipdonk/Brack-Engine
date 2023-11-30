@@ -27,3 +27,7 @@ const std::string AudioSystem::getName() const {
 void AudioSystem::cleanUp() {
 
 }
+
+void AudioSystem::clearCache() {
+
+}

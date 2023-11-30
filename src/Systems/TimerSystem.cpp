@@ -23,3 +23,7 @@ const std::string TimerSystem::getName() const {
 void TimerSystem::cleanUp() {
 
 }
+
+void TimerSystem::clearCache() {
+
+}

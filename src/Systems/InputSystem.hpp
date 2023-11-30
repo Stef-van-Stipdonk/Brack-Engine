@@ -20,6 +20,7 @@ public:
 
     const std::string getName() const override;
     void cleanUp() override;
+    void clearCache() override;
 
 private:
     std::unique_ptr<InputWrapper> inputWrapper;

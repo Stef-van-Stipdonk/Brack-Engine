@@ -76,3 +76,7 @@ const std::string ClickSystem::getName() const {
 void ClickSystem::cleanUp() {
 
 }
+
+void ClickSystem::clearCache() {
+
+}

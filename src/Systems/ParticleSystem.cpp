@@ -23,3 +23,7 @@ const std::string ParticleSystem::getName() const {
 void ParticleSystem::cleanUp() {
 
 }
+
+void ParticleSystem::clearCache() {
+
+}

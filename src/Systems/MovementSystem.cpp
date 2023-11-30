@@ -35,3 +35,7 @@ const std::string MovementSystem::getName() const {
 void MovementSystem::cleanUp() {
 
 }
+
+void MovementSystem::clearCache() {
+
+}

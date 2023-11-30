@@ -23,3 +23,7 @@ const std::string SaveSystem::getName() const {
 void SaveSystem::cleanUp() {
 
 }
+
+void SaveSystem::clearCache() {
+
+}

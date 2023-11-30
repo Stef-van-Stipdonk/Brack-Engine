@@ -23,3 +23,7 @@ const std::string CollisionSystem::getName() const {
 void CollisionSystem::cleanUp() {
 
 }
+
+void CollisionSystem::clearCache() {
+
+}

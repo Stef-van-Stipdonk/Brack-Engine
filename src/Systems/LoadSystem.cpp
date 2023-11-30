@@ -23,3 +23,7 @@ const std::string LoadSystem::getName() const {
 void LoadSystem::cleanUp() {
 
 }
+
+void LoadSystem::clearCache() {
+
+}

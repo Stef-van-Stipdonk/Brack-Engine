@@ -526,3 +526,8 @@ void RenderWrapper::render(SDL_Texture* texture, SDL_Rect* srcrect, SDL_Rect* ds
                      SDL_FLIP_NONE);
 }
 
+void RenderWrapper::cleanCache() {
+    cameraTextures.clear();
+    textures.clear();
+}
+

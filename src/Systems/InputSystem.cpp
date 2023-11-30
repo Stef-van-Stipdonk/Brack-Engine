@@ -25,3 +25,7 @@ const std::string InputSystem::getName() const {
 void InputSystem::cleanUp() {
 
 }
+
+void InputSystem::clearCache() {
+
+}

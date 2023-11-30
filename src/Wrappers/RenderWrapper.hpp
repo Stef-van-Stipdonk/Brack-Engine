@@ -62,6 +62,7 @@ public:
     void RenderFrame();
 
     static void Cleanup();
+    void cleanCache();
 
     void ResizeWindow(Vector2 size);
 

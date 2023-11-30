@@ -31,3 +31,7 @@ const std::string ReplaySystem::getName() const {
 void ReplaySystem::cleanUp() {
 
 }
+
+void ReplaySystem::clearCache() {
+
+}

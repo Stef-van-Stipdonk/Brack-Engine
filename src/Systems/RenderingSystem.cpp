@@ -116,3 +116,8 @@ void RenderingSystem::SortRenderComponents() {
             components.insert(&rectangleComponent);
     }
 }
+
+void RenderingSystem::clearCache() {
+    sdl2Wrapper->cleanCache();
+    components.clear();
+}

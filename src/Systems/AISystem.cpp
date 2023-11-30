@@ -23,3 +23,7 @@ const std::string AISystem::getName() const {
 void AISystem::cleanUp() {
 
 }
+
+void AISystem::clearCache() {
+
+}

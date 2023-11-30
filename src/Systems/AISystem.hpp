@@ -18,6 +18,8 @@ public:
     void cleanUp() override;
 
     void update(float deltaTime) override;
+
+    void clearCache() override;
 };
 
 

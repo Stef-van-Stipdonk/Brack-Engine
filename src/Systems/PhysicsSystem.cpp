@@ -50,6 +50,10 @@ void PhysicsSystem::handleBoxes() {
     PhysicsWrapper::getInstance().addBoxes(boxCollisionComponentIds);
 }
 
+void PhysicsSystem::clearCache() {
+
+}
+
 
 
 
