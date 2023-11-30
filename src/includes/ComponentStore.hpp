@@ -52,6 +52,21 @@ public:
         components[typeid(T)][entityId] = std::make_unique<T>(component);
     }
 
+    void addComponent(entity entityId, std::unique_ptr<IComponent> component) {
+        if (entityId == 0)
+            throw std::runtime_error("Entity ID cannot be 0.");
+
+        component->entityID = entityId;
+        
+        IComponent &componentRef = *component;
+
+        components[typeid(componentRef)][entityId] = std::move(component);
+    }
+
+
+    void clearComponents() {
+        components.clear();
+    }
 
     template<typename T>
     typename std::enable_if<std::is_base_of<IComponent, T>::value, T &>::type
@@ -66,6 +81,7 @@ public:
         }
         throw std::runtime_error("Component not found");
     }
+
 
     template<typename BaseT>
     typename std::enable_if<std::is_base_of<IComponent, BaseT>::value, std::vector<BaseT *>>::type
@@ -82,9 +98,17 @@ public:
         return result;
     }
 
-    const std::unordered_map<std::type_index, std::unordered_map<entity, std::unique_ptr<IComponent>>> &
-    getComponents() const {
-        return components;
+    std::unordered_map<std::type_index, std::unordered_map<entity, std::unique_ptr<IComponent>>> getComponents() {
+        std::unordered_map<std::type_index, std::unordered_map<entity, std::unique_ptr<IComponent>>> deepCopy;
+
+        for (auto &[type, entityMap]: components) {
+            for (auto &[entityId, component]: entityMap) {
+                // Using the clone method to create a deep copy of each component
+                deepCopy[type][entityId] = component->clone();
+            }
+        }
+
+        return deepCopy;
     }
 
     template<typename T>

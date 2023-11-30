@@ -14,7 +14,7 @@ PhysicsSystem::~PhysicsSystem() {
 
 }
 
-void PhysicsSystem::update(float deltaTime) {
+void PhysicsSystem::update(milliseconds deltaTime) {
     handleCircles();
     handleBoxes();
 

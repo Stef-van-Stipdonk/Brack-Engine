@@ -12,7 +12,7 @@ CollisionSystem::~CollisionSystem() {
 
 }
 
-void CollisionSystem::update(float deltaTime) {
+void CollisionSystem::update(milliseconds deltaTime) {
 
 }
 

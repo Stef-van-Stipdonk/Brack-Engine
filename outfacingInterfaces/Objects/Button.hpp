@@ -16,25 +16,17 @@ public:
 
     ~Button() = default;
 
-    void SetText(const std::string &string);
+    void setText(const std::string& string);
+    void setTextColor(const Color& color);
+    void setBorderWidth(int borderWidth);
+    void setBorderColor(const Color& color);
+    void setFill(const Color& color);
+    void setFontPath(const std::string& path);
+    void setFontSize(int fontSize);
+    void setClickEvent(std::function<void()> func);
+    bool isDisabled() const;
+    void setDisabled(bool disabled);
 
-    void SetTextColor(const Color &color);
-
-    void SetBorderWidth(int borderWidth);
-
-    void SetBorderColor(const Color &color);
-
-    void SetFill(const Color &color);
-
-    void SetFontPath(const std::string &path);
-
-    void SetFontSize(int fontSize);
-
-    void SetClickEvent(std::function<void()> func);
-
-    bool IsDisabled() const;
-
-    void SetDisabled(bool disabled);
 };
 
 #endif //BRACK_ENGINE_BUTTON_HPP

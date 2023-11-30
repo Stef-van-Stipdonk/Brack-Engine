@@ -12,7 +12,7 @@ LoadSystem::~LoadSystem() {
 
 }
 
-void LoadSystem::update(float deltaTime) {
+void LoadSystem::update(milliseconds deltaTime) {
 
 }
 

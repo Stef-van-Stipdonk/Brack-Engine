@@ -10,7 +10,7 @@
 
 struct AudioArchetype : public IComponent {
 public:
-    explicit AudioArchetype() : IComponent() {}
+    explicit AudioArchetype(std::string path, bool isSoundTrack) : IComponent(), audioPath(std::move(path)), isSoundTrack(isSoundTrack) {}
 
     ~AudioArchetype() override = default;
 
@@ -18,10 +18,31 @@ public:
         return std::make_unique<AudioArchetype>(*this);
     }
 
-    AudioArchetype(const AudioArchetype &other) : IComponent(other) {}
+
+    AudioArchetype(const AudioArchetype &other) :
+        IComponent(other),
+        audioPath(other.audioPath),
+        isSoundTrack(other.isSoundTrack),
+        pauseSound(other.pauseSound),
+        startPlaying(other.startPlaying),
+        volume(other.volume){}
 
     void accept(ComponentVisitor &visitor) override {
         visitor.visit(*this);
+    }
+
+    bool pauseSound = false;
+    bool startPlaying = false;
+    float volume;
+    const std::string audioPath;
+    bool isSoundTrack;
+
+    bool getIsSoundTrack() const {
+        return isSoundTrack;
+    }
+
+    std::string getAudioPath() const{
+        return audioPath;
     }
 };
 

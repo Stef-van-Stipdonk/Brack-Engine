@@ -13,7 +13,7 @@ InputSystem::~InputSystem() {
     inputWrapper.reset();
 }
 
-void InputSystem::update(float deltaTime) {
+void InputSystem::update(milliseconds deltaTime) {
     InputManager::GetInstance().UpdateEvents();
     inputWrapper->HandleEvents();
 }
@@ -29,3 +29,8 @@ void InputSystem::cleanUp() {
 void InputSystem::clearCache() {
 
 }
+
+InputSystem::InputSystem(const InputSystem &other) {
+    inputWrapper = std::make_unique<InputWrapper>(*other.inputWrapper);
+}
+

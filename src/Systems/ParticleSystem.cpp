@@ -12,7 +12,7 @@ ParticleSystem::~ParticleSystem() {
 
 }
 
-void ParticleSystem::update(float deltaTime) {
+void ParticleSystem::update(milliseconds deltaTime) {
 
 }
 

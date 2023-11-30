@@ -12,7 +12,7 @@ AISystem::~AISystem() {
 
 }
 
-void AISystem::update(float deltaTime) {
+void AISystem::update(milliseconds deltaTime) {
 
 }
 

@@ -4,18 +4,23 @@
 
 #include <Components/ObjectInfoComponent.hpp>
 #include <Components/PersistenceTag.hpp>
+#include <Components/AIComponent.hpp>
+#include <Helpers/KeyMap.hpp>
 #include "BrackEngine.hpp"
 #include "Systems/RenderingSystem.hpp"
 #include "Logger.hpp"
 #include "ConfigSingleton.hpp"
 #include "Systems/InputSystem.hpp"
 #include "FPSSingleton.hpp"
+#include "Systems/AudioSystem.hpp"
 #include "Systems/MovementSystem.hpp"
 #include "Systems/BehaviourScriptSystem.hpp"
 #include "Systems/ClickSystem.hpp"
 #include "Systems/AudioSystem.hpp"
 #include "Systems/PhysicsSystem.hpp"
+#include "Systems/ReplaySystem.hpp"
 #include "Systems/AnimationSystem.hpp"
+
 
 BrackEngine::BrackEngine(Config &&config) {
     ConfigSingleton::GetInstance().SetConfig(config);
@@ -41,7 +46,6 @@ void BrackEngine::Run() {
         auto deltaTime = GetDeltaTime();
         SystemManager::getInstance().UpdateSystems(deltaTime);
         FPSSingleton::GetInstance().End();
-//        Logger::Info("FPS: " + std::to_string(FPSSingleton::getInstance().GetFPS()));
         if (ConfigSingleton::GetInstance().ShowFPS())
             UpdateFPS(deltaTime);
     }
@@ -49,16 +53,17 @@ void BrackEngine::Run() {
     SystemManager::getInstance().CleanUp();
 }
 
-float BrackEngine::GetDeltaTime() {
+milliseconds BrackEngine::GetDeltaTime() {
     auto currentTime = std::chrono::high_resolution_clock::now();
     std::chrono::duration<float> deltaTime = std::chrono::duration_cast<std::chrono::duration<float>>(
             currentTime - lastTime);
     lastTime = currentTime;
 
     float deltaTimeInSeconds = deltaTime.count();
-    return deltaTimeInSeconds;
-
+    milliseconds deltaTimeInMilliSeconds = deltaTimeInSeconds * 1000.0f;
+    return deltaTimeInMilliSeconds;
 }
+
 
 void BrackEngine::CreateFPS() {
     auto entityId = EntityManager::getInstance().createEntity();
@@ -73,6 +78,8 @@ void BrackEngine::CreateFPS() {
     textComponent.fontSize = 32;
     textComponent.color = std::make_unique<Color>(255, 0, 0, 255);
     textComponent.entityID = entityId;
+    textComponent.sortingLayer = 0;
+    textComponent.orderInLayer = 0;
 
     ComponentStore::GetInstance().addComponent<TransformComponent>(entityId);
     ComponentStore::GetInstance().addComponent<ObjectInfoComponent>(objectInfoComponent);

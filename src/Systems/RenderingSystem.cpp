@@ -13,7 +13,7 @@ RenderingSystem::~RenderingSystem() {
 
 }
 
-void RenderingSystem::update(float deltaTime) {
+void RenderingSystem::update(milliseconds deltaTime) {
     SortRenderComponents();
 #if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
     auto boxCollisionComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<BoxCollisionComponent>();
@@ -25,7 +25,7 @@ void RenderingSystem::update(float deltaTime) {
         if (!cameraComponent.isActive)
             continue;
         auto &cameraTransformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(cameraId);
-        sdl2Wrapper->RenderCamera(cameraComponent, cameraTransformComponent);
+        sdl2Wrapper->RenderCamera(cameraComponent);
         for (auto component: components) {
             auto &transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(
                     component->entityID);
@@ -121,3 +121,8 @@ void RenderingSystem::clearCache() {
     sdl2Wrapper->cleanCache();
     components.clear();
 }
+
+RenderingSystem::RenderingSystem(const RenderingSystem &other) {
+    sdl2Wrapper = std::make_unique<RenderWrapper>();
+}
+

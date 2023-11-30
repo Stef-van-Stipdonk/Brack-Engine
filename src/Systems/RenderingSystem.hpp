@@ -29,7 +29,9 @@ public:
 
     const std::string getName() const override;
 
-    void update(float deltaTime) override;
+    RenderingSystem(const RenderingSystem &other);
+
+    void update(milliseconds deltaTime) override;
 
 private:
     void SortRenderComponents();

@@ -16,13 +16,14 @@ public:
 
     ~PhysicsSystem() override;
 
-    void update(float deltaTime) override;
-    
+    void update(milliseconds deltaTime) override;
+
     const std::string getName() const override;
 
     void cleanUp() override;
     void clearCache() override;
 
+    PhysicsSystem(const PhysicsSystem &other);
 
 private:
     std::unique_ptr<PhysicsWrapper> physicsWrapper;

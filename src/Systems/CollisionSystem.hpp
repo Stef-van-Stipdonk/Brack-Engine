@@ -15,10 +15,11 @@ public:
     ~CollisionSystem() override;
 
     const std::string getName() const override;
+
     void cleanUp() override;
     void clearCache() override;
 
-    void update(float deltaTime) override;
+    void update(milliseconds deltaTime) override;
 };
 
 

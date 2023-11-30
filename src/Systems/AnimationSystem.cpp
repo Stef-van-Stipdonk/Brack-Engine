@@ -14,7 +14,7 @@ AnimationSystem::~AnimationSystem() {
 
 }
 
-void AnimationSystem::update(float deltaTime) {
+void AnimationSystem::update(milliseconds deltaTime) {
     auto animationComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<AnimationComponent>();
 
 
@@ -57,8 +57,6 @@ void AnimationSystem::update(float deltaTime) {
 
 
     }
-
-
 }
 
 const std::string AnimationSystem::getName() const {
