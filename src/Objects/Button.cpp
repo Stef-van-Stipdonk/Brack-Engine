@@ -67,21 +67,6 @@ void Button::SetClickEvent(std::function<void()> func) {
     tryGetComponent<ClickableComponent>().OnClick = std::move(func);
 }
 
-void Button::SetBorderWidth(int borderWidth) {
-    if (entityID == 0) {
-        tryGetComponent<RectangleComponent>().borderWidth = borderWidth;
-    } else
-        ComponentStore::GetInstance().tryGetComponent<RectangleComponent>(entityID).borderWidth = borderWidth;
-}
-
-void Button::SetBorderColor(const Color &color) {
-    if (entityID == 0) {
-        tryGetComponent<RectangleComponent>().borderColor = std::make_unique<Color>(color);
-    } else
-        ComponentStore::GetInstance().tryGetComponent<RectangleComponent>(
-                entityID).borderColor = std::make_unique<Color>(color);
-}
-
 bool Button::IsDisabled() const {
     return tryGetComponent<ClickableComponent>().disabled;
 }
