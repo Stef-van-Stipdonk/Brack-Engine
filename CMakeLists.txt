@@ -213,7 +213,7 @@ if (WIN32 OR WIN64)
     include_directories(${CMAKE_SOURCE_DIR}/lib/FMod/include)
     target_link_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/lib/FMod)
     target_link_libraries(${PROJECT_NAME} PRIVATE fmod)
-else ()
+elseif (APPLE)
     find_library(FMOD_LIBRARY NAMES fmod PATHS "${CMAKE_CURRENT_SOURCE_DIR}/lib/FMod")
     find_path(FMOD_INCLUDE_DIR fmod.h PATHS "${CMAKE_CURRENT_SOURCE_DIR}/lib/FMod/include")
 
@@ -222,6 +222,9 @@ else ()
 
     target_link_libraries(${PROJECT_NAME} PRIVATE ${FMOD_LIBRARY})
     target_include_directories(${PROJECT_NAME} PRIVATE ${FMOD_INCLUDE_DIR})
+elseif (UNIX)
+    find_library(FMOD_LIBRARY NAMES libfmod.so.13 PATHS "${CMAKE_CURRENT_SOURCE_DIR}/lib/FMod")
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${FMOD_LIBRARY})
 endif ()
 
 
