@@ -18,6 +18,22 @@ void EntityManager::destroyEntity(entity entityId) {
     entities.erase(entityId);
 }
 
+void EntityManager::addEntitiesByTags(std::map<std::string, std::vector<entity>> entitiesByTag) {
+    for (auto &pair: entitiesByTag) {
+        for (auto &entity: pair.second) {
+            addEntityWithTag(entity, pair.first);
+        }
+    }
+}
+
+void EntityManager::addEntitiesByName(std::map<std::string, std::vector<entity>> entitiesByName) {
+    for (auto &pair: entitiesByName) {
+        for (auto &entity: pair.second) {
+            addEntityWithName(entity, pair.first);
+        }
+    }
+}
+
 const std::unordered_set<entity> &EntityManager::getAllEntities() const {
     return entities;
 }
@@ -50,6 +66,11 @@ void EntityManager::addEntityWithTag(entity entityId, const std::string &tag) {
         entitiesByTag[tag].push_back(entityId);
 }
 
+void EntityManager::addEntity(entity entity) {
+    entities.insert(entity);
+}
+
+
 std::vector<entity> EntityManager::getEntitiesByName(const std::string &name) const {
     if (entitiesByName.find(name) != entitiesByName.end())
         return entitiesByName.at(name);
@@ -72,4 +93,20 @@ entity EntityManager::getEntityByTag(const std::string &tag) const {
     if (entitiesByTag.find(tag) != entitiesByTag.end())
         return entitiesByTag.at(tag)[0];
     return 0;
+}
+
+std::map<std::string, std::vector<entity>> EntityManager::getEntitiesByNameMap() const {
+    return entitiesByName;
+}
+
+std::map<std::string, std::vector<entity>> EntityManager::getEntitiesByTagMap() const {
+    return entitiesByTag;
+}
+
+void EntityManager::setEntitiesByNameMap(const std::map<std::string, std::vector<entity>> &entitiesByName) {
+    EntityManager::entitiesByName = entitiesByName;
+}
+
+void EntityManager::setEntitiesByTagMap(const std::map<std::string, std::vector<entity>> &entitiesByTag) {
+    EntityManager::entitiesByTag = entitiesByTag;
 }

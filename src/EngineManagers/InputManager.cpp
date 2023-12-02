@@ -52,9 +52,48 @@ bool InputManager::IsMouseReleased(const int key) const {
     return mouseInputs.find(key)->second == Released;
 }
 
+void InputManager::SetKeyInputs(std::map<int, InputState> &inputs) {
+    keyInputs = inputs;
+}
+
+void InputManager::SetMouseInputs(std::map<int, InputState> &inputs) {
+    for (const auto &input: inputs) {
+        auto it = mouseInputs.find(input.first);
+        if (it != mouseInputs.end()) {
+            // Update only if the key exists in mouseInputs
+            it->second = input.second;
+        }
+    }
+}
+
 void InputManager::SetMousePosition(const Vector2 &position) {
     mousePosition.reset();
     mousePosition = std::make_unique<Vector2>(position);
+}
+
+std::map<int, InputState> InputManager::getActiveKeyInputs() {
+    std::map<int, InputState> activeKeyInputs;
+    for (const auto &item: keyInputs) {
+        if (item.second != None) {
+            activeKeyInputs[item.first] = item.second;
+        }
+    }
+    return activeKeyInputs;
+}
+
+std::map<int, InputState> InputManager::getMouseInputs() {
+    std::map<int, InputState> activeMouseInputs;
+    for (const auto &item: mouseInputs) {
+        if (item.second != None) {
+            activeMouseInputs[item.first] = item.second;
+        }
+    }
+    return activeMouseInputs;
+}
+
+
+std::unique_ptr<Vector2> &InputManager::getMousePositions() {
+    return mousePosition;
 }
 
 Vector2 &InputManager::GetScreenMousePosition() const {
@@ -119,4 +158,15 @@ bool InputManager::isPositionInsideSquare(const Vector2 &position, const Vector2
     float maxY = squarePosition.getY() + squareSize.getY() / 2;
 
     return position.getX() >= minX && position.getX() <= maxX && position.getY() >= minY && position.getY() <= maxY;
+}
+
+void InputManager::clearInputs() {
+    for (auto &item: keyInputs) {
+        item.second = None;
+    }
+
+    for (auto &item: mouseInputs) {
+        item.second = None;
+    }
+
 }

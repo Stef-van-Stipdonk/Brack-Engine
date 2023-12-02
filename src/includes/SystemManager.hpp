@@ -40,22 +40,24 @@ public:
     SystemManager &operator=(SystemManager &&) = delete;
 
     /// <summary>
-/// Finds a system by type and returns a weak pointer to it
-/// </summary>
+    /// Finds a system by type and returns a weak pointer to it
+    /// </summary>
+    /// <typeparam name="T">The type of system to find</typeparam>
+    /// <returns>A weak pointer to the system</returns>
     template<typename T>
-    typename std::enable_if<std::is_base_of<ISystem, T>::value, std::weak_ptr<T>>::type
-    FindSystem() {
-        for (auto& system : systems) {
-            auto castedSystem = std::dynamic_pointer_cast<T>(system);
-            if (castedSystem) {
-                return std::weak_ptr<T>(castedSystem);
-            }
+    std::weak_ptr<T> GetSystem() {
+        auto systemIt = std::find_if(systems.begin(), systems.end(),
+                                     [](const std::shared_ptr<ISystem> &system) {
+                                         return std::dynamic_pointer_cast<T>(system) != nullptr;
+                                     });
+
+        if (systemIt != systems.end()) {
+            return std::dynamic_pointer_cast<T>(*systemIt);
+        } else {
+            Logger::Warning(std::string("System not found: ") + typeid(T).name());
+            return std::weak_ptr<T>();
         }
-
-        Logger::Warning(std::string("System not found: ") + typeid(T).name());
-        return std::weak_ptr<T>();
     }
-
 
 
     template<typename T>
@@ -63,7 +65,7 @@ public:
     RemoveSystem() {
         // Find the system to remove
         auto systemToRemoveIt = std::find_if(systems.begin(), systems.end(),
-                                             [](const std::shared_ptr<ISystem>& system) {
+                                             [](const std::shared_ptr<ISystem> &system) {
                                                  return std::dynamic_pointer_cast<T>(system) != nullptr;
                                              });
 
@@ -71,7 +73,7 @@ public:
             auto systemToRemove = *systemToRemoveIt;
 
             // Remove this system as a dependency from other systems
-            for (auto& system : systems) {
+            for (auto &system: systems) {
                 system->removeDependency(systemToRemove);
             }
 
@@ -82,7 +84,6 @@ public:
             Logger::Warning(std::string("System not found: ") + typeid(T).name());
         }
     }
-
 
 
     /// <summary>
@@ -102,7 +103,8 @@ public:
     /// <param name="printGraph">Whether or not to print the dependency graph after adding the system to see the state of the graph</param>
     void AddSystems(std::vector<std::shared_ptr<ISystem>> newSystems, bool printGraph = false);
 
-    void UpdateSystems(float deltaTime);
+    void UpdateSystems(milliseconds deltaTime);
+
     void CleanUp();
 
     /// <summary>
@@ -111,12 +113,18 @@ public:
     void PrintDependencyGraph() const;
 
     void SortSystems();
+
+    std::vector<std::shared_ptr<ISystem>> getCopyOfSystems();
+
+    void clearSystems();
+
 private:
 
     SystemManager() = default;
 
     static SystemManager instance;
     std::vector<std::shared_ptr<ISystem>> systems;
+
 };
 
 

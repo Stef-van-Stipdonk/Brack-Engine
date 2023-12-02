@@ -22,11 +22,11 @@ public:
 
     void cleanUp() override;
 
-    void update(float deltaTime) override;
+    void update(milliseconds deltaTime) override;
+
+    AudioSystem(const AudioSystem &other);
 
 private:
-    void PlayPause(entity entityID);
-
     std::unique_ptr<AudioWrapper> audioWrapper;
 };
 

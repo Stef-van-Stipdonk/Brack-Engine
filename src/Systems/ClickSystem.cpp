@@ -12,11 +12,11 @@ ClickSystem::ClickSystem() {}
 
 ClickSystem::~ClickSystem() {}
 
-void ClickSystem::update(float deltaTime) {
+void ClickSystem::update(milliseconds deltaTime) {
     if (!InputManager::GetInstance().IsMouseReleased(LEFT_MOUSE)) return;
 
     auto &componentStore = ComponentStore::GetInstance();
-    auto &mousePosition = InputManager::GetInstance().GetScreenMousePosition();
+    auto &mousePosition = InputManager::GetInstance().getMousePosition();
     auto clickableComponentIds = componentStore.getEntitiesWithComponent<ClickableComponent>();
     for (int entityId: clickableComponentIds) {
         auto clickableComponent = componentStore.tryGetComponent<ClickableComponent>(entityId);
@@ -26,7 +26,8 @@ void ClickSystem::update(float deltaTime) {
     }
 }
 
-void ClickSystem::CheckBoxCollision(const ClickableComponent &clickableComponent, const Vector2 &mousePosition) {
+void ClickSystem::CheckBoxCollision(const ClickableComponent &clickableComponent,
+                                    const Vector2 &mousePosition) {
     try {
         auto boxColliderComponent = ComponentStore::GetInstance().tryGetComponent<BoxCollisionComponent>(
                 clickableComponent.entityID);
@@ -76,3 +77,4 @@ const std::string ClickSystem::getName() const {
 void ClickSystem::cleanUp() {
 
 }
+

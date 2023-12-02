@@ -64,7 +64,7 @@ public:
     static void Cleanup();
 
     void ResizeWindow(Vector2 size);
-
+    
 private:
     bool Initialize();
 

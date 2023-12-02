@@ -47,11 +47,19 @@ public:
 
     void SetMousePosition(const Vector2 &position);
 
-    Vector2 &GetScreenMousePosition() const;
+    void SetKeyInputs(std::map<int, InputState> &inputs);
 
-    Vector2 getWorldMousePosition() const;
+    void SetMouseInputs(std::map<int, InputState> &inputs);
 
+    std::map<int, InputState> getActiveKeyInputs();
+
+    std::map<int, InputState> getMouseInputs();
+
+    std::unique_ptr<Vector2> &getMousePositions();
+    
     void UpdateEvents();
+
+    void clearInputs();
 
 private:
     InputManager();
