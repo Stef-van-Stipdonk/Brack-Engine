@@ -28,7 +28,7 @@ void AnimationSystem::update(milliseconds deltaTime) {
         auto &animationComponent = ComponentStore::GetInstance().tryGetComponent<AnimationComponent>(entityId);
         if (animationComponent.isPlaying) {
             animationComponent.elapsedTime += deltaTime;
-            float frameDuration = 1.0f / animationComponent.fps;
+            float frameDuration = 1000.0f / animationComponent.fps;
 
             if (animationComponent.elapsedTime >= frameDuration) {
                 animationComponent.elapsedTime -= frameDuration;
