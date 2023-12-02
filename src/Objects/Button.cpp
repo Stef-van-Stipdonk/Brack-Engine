@@ -13,9 +13,11 @@ Button::Button(const Vector2 &size, const std::string &text) : GameObject() {
     auto textComponent = std::make_unique<TextComponent>();
     textComponent->text = std::move(text);
     textComponent->orderInLayer = 0;
+    textComponent->sortingLayer = 0;
 
     auto rectangleComponent = std::make_unique<RectangleComponent>(size);
     rectangleComponent->orderInLayer = 1;
+    rectangleComponent->sortingLayer = 0;
 
     auto boxCollisionComponent = std::make_unique<BoxCollisionComponent>(size);
 
