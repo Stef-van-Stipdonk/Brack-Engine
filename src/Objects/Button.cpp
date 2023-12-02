@@ -27,35 +27,35 @@ Button::Button(const Vector2 &size, const std::string &text) : GameObject() {
     addComponent(std::move(textComponent));
 }
 
-void Button::SetTextColor(const Color &color) {
+void Button::setTextColor(const Color &color) {
     if (entityID == 0) {
         tryGetComponent<TextComponent>().color = std::make_unique<Color>(color);
     } else
         ComponentStore::GetInstance().tryGetComponent<TextComponent>(entityID).color = std::make_unique<Color>(color);
 }
 
-void Button::SetFontPath(const std::string &path) {
+void Button::setFontPath(const std::string &path) {
     if (entityID == 0) {
         tryGetComponent<TextComponent>().fontPath = path;
     } else
         ComponentStore::GetInstance().tryGetComponent<TextComponent>(entityID).fontPath = path;
 }
 
-void Button::SetFontSize(int fontSize) {
+void Button::setFontSize(int fontSize) {
     if (entityID == 0) {
         tryGetComponent<TextComponent>().fontSize = fontSize;
     } else
         ComponentStore::GetInstance().tryGetComponent<TextComponent>(entityID).fontSize = fontSize;
 }
 
-void Button::SetText(const std::string &string) {
+void Button::setText(const std::string &string) {
     if (entityID == 0) {
         tryGetComponent<TextComponent>().text = string;
     } else
         ComponentStore::GetInstance().tryGetComponent<TextComponent>(entityID).text = string;
 }
 
-void Button::SetFill(const Color &color) {
+void Button::setFill(const Color &color) {
     if (entityID == 0) {
         tryGetComponent<RectangleComponent>().fill = std::make_unique<Color>(color);
     } else
@@ -63,15 +63,15 @@ void Button::SetFill(const Color &color) {
                 color);
 }
 
-void Button::SetClickEvent(std::function<void()> func) {
+void Button::setClickEvent(std::function<void()> func) {
     tryGetComponent<ClickableComponent>().OnClick = std::move(func);
 }
 
-bool Button::IsDisabled() const {
+bool Button::isDisabled() const {
     return tryGetComponent<ClickableComponent>().disabled;
 }
 
-void Button::SetDisabled(bool disabled) {
+void Button::setDisabled(bool disabled) {
     if (entityID == 0) {
         tryGetComponent<ClickableComponent>().disabled = disabled;
     } else

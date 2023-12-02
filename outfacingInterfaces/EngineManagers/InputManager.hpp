@@ -56,7 +56,11 @@ public:
     std::map<int, InputState> getMouseInputs();
 
     std::unique_ptr<Vector2> &getMousePositions();
-    
+
+    Vector2 &getScreenMousePosition() const;
+
+    Vector2 getWorldMousePosition() const;
+
     void UpdateEvents();
 
     void clearInputs();

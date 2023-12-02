@@ -96,7 +96,7 @@ std::unique_ptr<Vector2> &InputManager::getMousePositions() {
     return mousePosition;
 }
 
-Vector2 &InputManager::GetScreenMousePosition() const {
+Vector2 &InputManager::getScreenMousePosition() const {
     return *mousePosition;
 }
 
