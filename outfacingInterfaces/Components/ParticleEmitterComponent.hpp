@@ -35,6 +35,8 @@ struct ParticleEmitterComponent : public IComponent {
         lifeTime = other.lifeTime;
         activeParticles = other.activeParticles;
         color = std::make_unique<Color>(*other.color);
+        orderInLayer = other.orderInLayer;
+        sortingLayer = other.sortingLayer;
     }
 
     std::vector<milliseconds> activeParticles;
@@ -43,6 +45,8 @@ struct ParticleEmitterComponent : public IComponent {
 
     int maxAmount;
     float speed;
+    int sortingLayer;
+    int orderInLayer;
     Vector2 particleSize;
     milliseconds lifeTime;
     std::unique_ptr<Color> color = std::make_unique<Color>(255, 255, 255, 255);

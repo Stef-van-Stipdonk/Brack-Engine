@@ -52,6 +52,8 @@ void ParticleSystem::update(milliseconds deltaTime) {
 
             auto rectangleComponent = std::make_unique<RectangleComponent>(particleEmitterComponent.particleSize);
             rectangleComponent->fill = std::make_unique<Color>(*particleEmitterComponent.color);
+            rectangleComponent->sortingLayer = particleEmitterComponent.sortingLayer;
+            rectangleComponent->orderInLayer = particleEmitterComponent.orderInLayer;
 
             auto velocityComponent = std::make_unique<VelocityComponent>();
             velocityComponent->velocity = generateRandomDirection(particleEmitterComponent.speed);
