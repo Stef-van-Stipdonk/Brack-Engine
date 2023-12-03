@@ -118,6 +118,8 @@ public:
 
     std::vector<std::shared_ptr<ISystem>> getCopyOfSystems();
 
+    void clearSystems();
+
 private:
 
     SystemManager() = default;

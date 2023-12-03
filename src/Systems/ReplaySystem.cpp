@@ -77,7 +77,7 @@ void ReplaySystem::replay() {
         auto snapshot = std::move(snapshots.front());
         std::this_thread::sleep_for(std::chrono::milliseconds(static_cast<int>(snapshot.first)));
         restore_ecs_snapshot(*snapshot.second);
-        auto renderingSystem = SystemManager::GetInstance().GetSystem<RenderingSystem>();
+        auto renderingSystem = SystemManager::getInstance().GetSystem<RenderingSystem>();
         renderingSystem.lock()->update(snapshot.first);
         if (snapshot.second != nullptr)
             snapshot.second.reset();
