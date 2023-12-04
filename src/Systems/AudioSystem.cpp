@@ -47,5 +47,5 @@ AudioSystem::AudioSystem(const AudioSystem &other) {
 }
 
 void AudioSystem::clearCache() {
-
+    audioWrapper->clearChannels();
 }
