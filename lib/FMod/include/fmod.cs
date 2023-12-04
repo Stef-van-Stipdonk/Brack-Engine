@@ -3811,7 +3811,7 @@ namespace FMOD
         {
             return FMOD5_Reverb3D_GetProperties(this.handle, ref properties);
         }
-        public RESULT setEntityActive(bool active)
+        public RESULT setActive(bool active)
         {
             return FMOD5_Reverb3D_SetActive(this.handle, active);
         }
