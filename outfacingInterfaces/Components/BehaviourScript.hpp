@@ -56,6 +56,14 @@ struct BehaviourScript : public IComponent {
     std::optional<GameObject> getParent() {
         return GameObjectConverter::getParent(entityID);
     }
+
+    void setActive(bool active) {
+        EntityManager::getInstance().setEntityActive(entityID, active);
+    }
+
+    bool isActive() {
+        return EntityManager::getInstance().isEntityActive(entityID);
+    }
 };
 
 

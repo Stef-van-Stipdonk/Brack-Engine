@@ -30,6 +30,15 @@ void GameObjectConverter::addGameObject(GameObject *gameObject) {
     gameObject->setEntityId(entityId);
     std::vector<std::unique_ptr<IComponent>> components = std::move(gameObject->getAllComponents());
     for (auto &component: components) {
+        if (auto *objectInfoComponent = dynamic_cast<ObjectInfoComponent *>(component.get())) {
+            if (!objectInfoComponent->name.empty()) {
+                EntityManager::getInstance().addEntityWithName(entityId, objectInfoComponent->name);
+            }
+            if (!objectInfoComponent->tag.empty()) {
+                EntityManager::getInstance().addEntityWithTag(entityId, objectInfoComponent->tag);
+            }
+            EntityManager::getInstance().setEntityActive(entityId, objectInfoComponent->isActive);
+        }
         ComponentStore::GetInstance().addComponent(entityId, std::move(component));
     }
 
