@@ -48,18 +48,14 @@ std::optional<GameObject> GameObjectConverter::getGameObjectByName(const std::st
     if (entityId == 0)
         return std::nullopt;
 
-    auto gameObject = GameObject();
-    gameObject.setEntityId(entityId);
-    return gameObject;
+    return GameObject(entityId);
 }
 
 std::vector<GameObject> GameObjectConverter::getGameObjectsByName(const std::string &name) {
     auto gameObjects = std::vector<GameObject>();
     auto entityIds = EntityManager::getInstance().getEntitiesByName(name);
     for (auto entityId: entityIds) {
-        auto gameObject = GameObject();
-        gameObject.setEntityId(entityId);
-        gameObjects.push_back(gameObject);
+        gameObjects.emplace_back(entityId);
     }
     return gameObjects;
 }
@@ -69,18 +65,14 @@ std::optional<GameObject> GameObjectConverter::getGameObjectByTag(const std::str
     if (entityId == 0)
         return std::nullopt;
 
-    auto gameObject = GameObject();
-    gameObject.setEntityId(entityId);
-    return gameObject;
+    return GameObject(entityId);
 }
 
 std::vector<GameObject> GameObjectConverter::getGameObjectsByTag(const std::string &tag) {
     auto gameObjects = std::vector<GameObject>();
     auto entityIds = EntityManager::getInstance().getEntitiesByTag(tag);
     for (auto entityId: entityIds) {
-        auto gameObject = GameObject();
-        gameObject.setEntityId(entityId);
-        gameObjects.push_back(gameObject);
+        gameObjects.emplace_back(entityId);
     }
     return gameObjects;
 }
@@ -90,9 +82,7 @@ std::vector<GameObject> GameObjectConverter::getChildren(entity entityID) {
     try {
         auto &childComponent = ComponentStore::GetInstance().tryGetComponent<ChildComponent>(entityID);
         for (auto childId: childComponent.children) {
-            auto gameObject = GameObject();
-            gameObject.setEntityId(childId);
-            children.push_back(gameObject);
+            children.emplace_back(childId);
         }
         return children;
     } catch (std::runtime_error &e) {
@@ -103,9 +93,7 @@ std::vector<GameObject> GameObjectConverter::getChildren(entity entityID) {
 std::optional<GameObject> GameObjectConverter::getParent(entity entityID) {
     try {
         auto &parentComponent = ComponentStore::GetInstance().tryGetComponent<ParentComponent>(entityID);
-        auto gameObject = GameObject();
-        gameObject.setEntityId(parentComponent.parentId);
-        return gameObject;
+        return GameObject(parentComponent.parentId);
     } catch (std::runtime_error &e) {
         return std::nullopt;
     }

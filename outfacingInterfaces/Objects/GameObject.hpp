@@ -19,6 +19,8 @@ class GameObject {
 public:
     GameObject();
 
+    GameObject(entity id);
+
     ~GameObject() {
 
     };

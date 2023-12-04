@@ -16,6 +16,10 @@ GameObject::GameObject() {
     addComponent(std::make_unique<ObjectInfoComponent>());
 }
 
+GameObject::GameObject(entity id) {
+    entityID = id;
+}
+
 std::vector<GameObject *> GameObject::getChildren() const {
     if (entityID == 0) {
         return children;
@@ -24,8 +28,7 @@ std::vector<GameObject *> GameObject::getChildren() const {
         auto &childComponent = tryGetComponent<ChildComponent>();
         std::vector<GameObject *> childrenFromComponent;
         for (auto &childId: childComponent.children) {
-            auto *child = new GameObject();
-            child->setEntityId(childId);
+            auto *child = new GameObject(childId);
             childrenFromComponent.push_back(child);
         }
         return childrenFromComponent;
