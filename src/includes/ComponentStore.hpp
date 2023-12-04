@@ -7,6 +7,7 @@
 #include <memory>
 #include <random>
 #include <Components/ObjectInfoComponent.hpp>
+#include <Components/ParentComponent.hpp>
 #include "Components/IComponent.hpp"
 #include "../Logger.hpp"
 #include "EntityManager.hpp"
@@ -127,8 +128,11 @@ public:
         auto itType = components.find(typeid(T));
         if (itType != components.end()) {
             for (auto &pair: itType->second) {
-                if (EntityManager::getInstance().isEntityActive(pair.first))
+                auto &objectInfoComponent = tryGetComponent<ObjectInfoComponent>(pair.first);
+                if (EntityManager::getInstance().isEntityActive(pair.first) && objectInfoComponent.isActive) {
                     entities.push_back(pair.first);
+                }
+
             }
         }
         return entities;
