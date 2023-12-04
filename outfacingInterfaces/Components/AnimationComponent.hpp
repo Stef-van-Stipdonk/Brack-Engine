@@ -28,6 +28,7 @@ struct AnimationComponent : public IComponent {
 
     AnimationComponent(const AnimationComponent &other) : IComponent(other) {
         isLooping = other.isLooping;
+        isPlaying = other.isPlaying;
         fps = other.fps;
         frameCount = other.frameCount;
         currentFrame = other.currentFrame;

@@ -7,6 +7,7 @@
 
 #include "IComponent.hpp"
 #include "../../src/Components/ComponentVisitor.hpp"
+#include "../outfacingInterfaces/Milliseconds.hpp"
 #include "../../src/GameObjectConverter.hpp"
 #include <functional>
 #include <Objects/GameObject.hpp>
@@ -23,14 +24,13 @@ struct BehaviourScript : public IComponent {
 
     virtual void accept(ComponentVisitor &visitor) override {
         visitor.visit(*this);
-        onStart();
     }
 
     BehaviourScript(const BehaviourScript &other) : IComponent(other) {}
 
     virtual void onStart() {};
 
-    virtual void onUpdate(float deltaTime) {};
+    virtual void onUpdate(milliseconds deltaTime) {};
 
     template<typename T>
     typename std::enable_if<std::is_base_of<IComponent, T>::value, T &>::type
@@ -52,6 +52,14 @@ struct BehaviourScript : public IComponent {
 
     static std::vector<GameObject> getGameObjectsByTag(const std::string &tag) {
         return GameObjectConverter::getGameObjectsByTag(tag);
+    }
+
+    std::vector<GameObject> getChildren() {
+        return GameObjectConverter::getChildren(entityID);
+    }
+
+    std::optional<GameObject> getParent() {
+        return GameObjectConverter::getParent(entityID);
     }
 };
 

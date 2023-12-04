@@ -22,8 +22,6 @@ struct RectangleComponent : public RenderArchetype {
     RectangleComponent(const RectangleComponent &other) : RenderArchetype(other) {
         size = std::make_unique<Vector2>(*other.size);
         fill = std::make_unique<Color>(*other.fill);
-        borderWidth = other.borderWidth;
-        borderColor = std::make_unique<Color>(*other.borderColor);
     }
 
     virtual std::unique_ptr<IComponent> clone() const override {
@@ -36,8 +34,6 @@ struct RectangleComponent : public RenderArchetype {
 
     std::unique_ptr<Vector2> size = std::make_unique<Vector2>(0, 0);
     std::unique_ptr<Color> fill = std::make_unique<Color>(0, 0, 0, 255);
-    int borderWidth = 0;
-    std::unique_ptr<Color> borderColor = std::make_unique<Color>(0, 0, 0, 255);
 };
 
 #endif //BRACKOCALYPSE_RECTANGLECOMPONENT_HPP

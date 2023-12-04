@@ -23,19 +23,28 @@ PhysicsWrapper &PhysicsWrapper::getInstance() {
     return instance;
 }
 
+PhysicsWrapper::PhysicsWrapper(const PhysicsWrapper &other) {
+    b2Vec2 gravity(0.0f, -9.8f);
+    world = std::make_unique<b2World>(gravity);
+//    addBoxes(other.boxBodies);
+//    addCircles(other.circleBodies);
+//    bodies = other.bodies;
+    contactListener = std::make_unique<ContactListener>();
+}
+
 
 void PhysicsWrapper::update(float deltaTime) {
+    deltaTime = deltaTime / 1000.0f;
     const int32 velocityIterations{6};
     const int32 positionIterations{2};
 
     world->Step(deltaTime, velocityIterations, positionIterations);
-
 }
 
 
 void PhysicsWrapper::addCircles(std::vector<uint32_t> componentIds) {
+    circleBodies.insert(circleBodies.end(), componentIds.begin(), componentIds.end());
 
-//    Check if Entity is already in bodies
     if (bodies.find(componentIds.front()) == bodies.end()) {
         for (auto componentId: componentIds) {
             auto &circleCollisionComp = ComponentStore::GetInstance().tryGetComponent<CircleCollisionComponent>(
@@ -72,6 +81,8 @@ void PhysicsWrapper::addCircles(std::vector<uint32_t> componentIds) {
 }
 
 void PhysicsWrapper::addBoxes(std::vector<uint32_t> componentIds) {
+    boxBodies.insert(boxBodies.end(), componentIds.begin(), componentIds.end());
+
 
 //    Check if Entity is already in bodies
     if (bodies.find(componentIds.front()) == bodies.end()) {
