@@ -3,6 +3,7 @@
 //
 
 #include "AudioSystem.hpp"
+#include "../includes/ComponentStore.hpp"
 
 AudioSystem::AudioSystem() : audioWrapper(new AudioWrapper()) {
 }
@@ -12,18 +13,17 @@ AudioSystem::~AudioSystem() {
 
 void AudioSystem::update(milliseconds deltaTime) {
     auto audiocomponents = ComponentStore::GetInstance().getAllComponentsOfType<AudioArchetype>();
-    for(auto audioComponent : audiocomponents){
-        if(audioComponent->startPlaying && !audioComponent->pauseSound){
+    for (auto audioComponent: audiocomponents) {
+        if (audioComponent->startPlaying && !audioComponent->pauseSound) {
             audioComponent->startPlaying = false;
             audioWrapper->playSound(*audioComponent);
         }
 
-        if(audioComponent->pauseSound && audioComponent->startPlaying){
+        if (audioComponent->pauseSound && audioComponent->startPlaying) {
             audioComponent->pauseSound = false;
             audioComponent->startPlaying = false;
             audioWrapper->resumeSound(*audioComponent);
-        }
-        else if (audioComponent->pauseSound){
+        } else if (audioComponent->pauseSound) {
             audioWrapper->pauseSound(*audioComponent);
         }
     }
@@ -35,9 +35,9 @@ const std::string AudioSystem::getName() const {
 
 void AudioSystem::cleanUp() {
     auto entities = ComponentStore::GetInstance().getEntitiesWithComponent<AudioArchetype>();
-    for(auto entity : entities){
+    for (auto entity: entities) {
         auto audioComponent = ComponentStore::GetInstance().tryGetComponent<AudioArchetype>(entity);
-            audioComponent.startPlaying = false;
+        audioComponent.startPlaying = false;
     }
     audioWrapper->cleanUp();
 }

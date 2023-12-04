@@ -4,6 +4,7 @@
 
 #include <Components/VelocityComponent.hpp>
 #include <Components/ChildComponent.hpp>
+#include <Components/TransformComponent.hpp>
 #include "MovementSystem.hpp"
 #include "../includes/ComponentStore.hpp"
 

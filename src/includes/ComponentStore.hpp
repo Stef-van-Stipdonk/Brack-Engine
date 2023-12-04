@@ -6,6 +6,8 @@
 #include <vector>
 #include <memory>
 #include <random>
+#include <Components/ObjectInfoComponent.hpp>
+#include <Components/ParentComponent.hpp>
 #include "Components/IComponent.hpp"
 #include "../Logger.hpp"
 #include "EntityManager.hpp"
@@ -48,7 +50,6 @@ public:
 
         T component(std::forward<Args>(args)...);
         component.entityID = entityId;
-
         components[typeid(T)][entityId] = std::make_unique<T>(component);
     }
 
@@ -57,7 +58,7 @@ public:
             throw std::runtime_error("Entity ID cannot be 0.");
 
         component->entityID = entityId;
-        
+
         IComponent &componentRef = *component;
 
         components[typeid(componentRef)][entityId] = std::move(component);
@@ -133,7 +134,10 @@ public:
         auto itType = components.find(typeid(T));
         if (itType != components.end()) {
             for (auto &pair: itType->second) {
-                entities.push_back(pair.first);
+                auto &objectInfoComponent = tryGetComponent<ObjectInfoComponent>(pair.first);
+                if (EntityManager::getInstance().isEntityActive(pair.first) && objectInfoComponent.isActive) {
+                    entities.push_back(pair.first);
+                }
             }
         }
         return entities;

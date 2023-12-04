@@ -3,6 +3,7 @@
 //
 
 #include <Components/AnimationComponent.hpp>
+#include <Components/SpriteComponent.hpp>
 #include "AnimationSystem.hpp"
 #include "../includes/ComponentStore.hpp"
 
@@ -21,15 +22,18 @@ void AnimationSystem::update(milliseconds deltaTime) {
     for (auto entityId: animationComponentIds) {
 
         auto &spriteComponent = ComponentStore::GetInstance().tryGetComponent<SpriteComponent>(entityId);
+        if (spriteComponent.imageSize->getX() == 0 && spriteComponent.imageSize->getY() == 0) {
+            Logger::GetInstance().Error("Image size is 0,0");
+            return;
+        }
         auto &animationComponent = ComponentStore::GetInstance().tryGetComponent<AnimationComponent>(entityId);
         if (animationComponent.isPlaying) {
             animationComponent.elapsedTime += deltaTime;
-            float frameDuration = 1.0f / (animationComponent.fps / animationComponent.frameCount);
+            float frameDuration = 1000.0f / animationComponent.fps;
 
             if (animationComponent.elapsedTime >= frameDuration) {
                 animationComponent.elapsedTime -= frameDuration;
                 animationComponent.currentFrame++;
-
                 if (animationComponent.currentFrame >= animationComponent.frameCount) {
                     if (!animationComponent.isLooping) {
                         animationComponent.isPlaying = false;
@@ -40,6 +44,7 @@ void AnimationSystem::update(milliseconds deltaTime) {
                     continue;
 
                 }
+
                 int spriteAmountX = round(spriteComponent.imageSize->getX() / spriteComponent.spriteSize->getX());
                 int newX = animationComponent.startPosition->getX() + animationComponent.currentFrame;
                 int newY = animationComponent.startPosition->getY();
@@ -49,13 +54,9 @@ void AnimationSystem::update(milliseconds deltaTime) {
                     newY++;
                 }
 
-
                 spriteComponent.tileOffset = std::make_unique<Vector2>(newX, newY);
-
             }
         }
-
-
     }
 }
 

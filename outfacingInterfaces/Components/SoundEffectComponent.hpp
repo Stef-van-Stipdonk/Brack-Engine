@@ -15,10 +15,6 @@ public:
 
     ~SoundEffectComponent() = default;
 
-    void accept(ComponentVisitor &visitor) override {
-        visitor.visit(*this);
-    }
-
     virtual std::unique_ptr<IComponent> clone() const override {
         return std::make_unique<SoundEffectComponent>(*this);
     }

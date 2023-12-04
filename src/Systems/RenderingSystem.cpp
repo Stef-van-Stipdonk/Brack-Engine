@@ -5,6 +5,7 @@
 #include <Components/Archetypes/RenderArchetype.hpp>
 #include "RenderingSystem.hpp"
 #include "../includes/EntityManager.hpp"
+#include "../includes/ComponentStore.hpp"
 
 RenderingSystem::RenderingSystem() : sdl2Wrapper(new RenderWrapper()) {
 }

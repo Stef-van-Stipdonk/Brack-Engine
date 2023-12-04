@@ -6,7 +6,8 @@
 #define BRACK_ENGINE_ANIMATIONCOMPONENT_HPP
 
 #include <memory>
-#include "SpriteComponent.hpp"
+#include <Helpers/Vector2.hpp>
+#include "IComponent.hpp"
 
 struct AnimationComponent : public IComponent {
 
@@ -18,16 +19,13 @@ struct AnimationComponent : public IComponent {
             startPosition = nullptr;
     };
 
-    void accept(ComponentVisitor &visitor) override {
-        visitor.visit(*this);
-    }
-
     virtual std::unique_ptr<IComponent> clone() const override {
         return std::make_unique<AnimationComponent>(*this);
     }
 
     AnimationComponent(const AnimationComponent &other) : IComponent(other) {
         isLooping = other.isLooping;
+        isPlaying = other.isPlaying;
         fps = other.fps;
         frameCount = other.frameCount;
         currentFrame = other.currentFrame;

@@ -16,6 +16,7 @@
 #include <Components/BoxCollisionComponent.hpp>
 #include <Components/CircleCollisionComponent.hpp>
 #include <Components/RectangleComponent.hpp>
+#include <unordered_map>
 
 struct SDLWindowDeleter {
     void operator()(SDL_Window *window) const {
@@ -65,7 +66,7 @@ public:
     void cleanCache();
 
     void ResizeWindow(Vector2 size);
-    
+
 private:
     bool Initialize();
 

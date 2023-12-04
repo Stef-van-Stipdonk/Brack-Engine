@@ -6,12 +6,14 @@
 #define BRACK_ENGINE_BOXCOLLISIONCOMPONENT_HPP
 
 #include <memory>
+#include <vector>
 #include <Helpers/CollisionType.hpp>
-#include "CollisionComponent.hpp"
+#include "IComponent.hpp"
+#include "Helpers/Vector2.hpp"
 
 
-struct BoxCollisionComponent : public CollisionComponent {
-    explicit BoxCollisionComponent(Vector2 size) : CollisionComponent(), size(std::make_unique<Vector2>(size)) {}
+struct BoxCollisionComponent : public IComponent {
+    explicit BoxCollisionComponent(Vector2 size) : IComponent(), size(std::make_unique<Vector2>(size)) {}
 
 
     virtual std::unique_ptr<IComponent> clone() const override {
@@ -23,17 +25,13 @@ struct BoxCollisionComponent : public CollisionComponent {
             size = nullptr;
     };
 
-    BoxCollisionComponent(const BoxCollisionComponent &other) : CollisionComponent(other) {
+    BoxCollisionComponent(const BoxCollisionComponent &other) : IComponent(other) {
         if (other.size != nullptr)
             size = std::make_unique<Vector2>(*other.size);
         collisionType = other.collisionType;
         collidedWith = other.collidedWith;
     }
 
-
-    void accept(ComponentVisitor &visitor) override {
-        visitor.visit(*this);
-    }
 
     std::unique_ptr<Vector2> size;
     CollisionType collisionType;
