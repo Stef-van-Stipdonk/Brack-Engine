@@ -20,20 +20,20 @@ GameObject::GameObject(entity id) {
     entityID = id;
 }
 
-std::vector<GameObject *> GameObject::getChildren() const {
+std::vector<std::unique_ptr<GameObject>> &&GameObject::getChildren() {
     if (entityID == 0) {
-        return children;
+        return std::move(children);
     }
     try {
         auto &childComponent = tryGetComponent<ChildComponent>();
-        std::vector<GameObject *> childrenFromComponent;
+        std::vector<std::unique_ptr<GameObject>> childrenFromComponent;
         for (auto &childId: childComponent.children) {
-            auto *child = new GameObject(childId);
-            childrenFromComponent.push_back(child);
+            auto child = std::make_unique<GameObject>(childId);
+            childrenFromComponent.push_back(std::move(child));
         }
-        return childrenFromComponent;
+        return std::move(childrenFromComponent);
     } catch (std::runtime_error &e) {
-        return {};
+        return std::move(children);
     }
 }
 
@@ -67,7 +67,7 @@ bool GameObject::isActive() const {
 void GameObject::setActive(bool active) const {
     tryGetComponent<ObjectInfoComponent>().isActive = active;
     EntityManager::getInstance().setEntityActive(entityID, active);
-    for (auto &child: getChildren()) {
+    for (auto &child: children) {
         EntityManager::getInstance().setEntityActive(child->getEntityId(), active);
     }
 }
@@ -96,30 +96,30 @@ std::vector<std::unique_ptr<IComponent>> &&GameObject::getAllComponents() {
     return std::move(components);
 }
 
-void GameObject::addChild(GameObject &child) {
+void GameObject::addChild(std::unique_ptr<GameObject> child) {
     try {
         auto &childComponent = tryGetComponent<ChildComponent>();
         if (entityID != 0)
-            childComponent.children.push_back(child.getEntityId());
+            childComponent.children.push_back(child->getEntityId());
     } catch (std::runtime_error &e) {
         addComponent(std::make_unique<ChildComponent>());
         if (entityID != 0) {
             auto &childComponent = tryGetComponent<ChildComponent>();
-            childComponent.children.push_back(child.getEntityId());
+            childComponent.children.push_back(child->getEntityId());
         }
     }
 
     try {
-        auto &parentComponent = child.tryGetComponent<ParentComponent>();
+        auto &parentComponent = child->tryGetComponent<ParentComponent>();
         parentComponent.parentId = entityID;
     } catch (std::runtime_error &e) {
-        child.addComponent(ParentComponent());
-        auto &parentComponent = child.tryGetComponent<ParentComponent>();
+        child->addComponent(ParentComponent());
+        auto &parentComponent = child->tryGetComponent<ParentComponent>();
         parentComponent.parentId = entityID;
     }
 
-    child.parent = this;
-    children.emplace_back(&child);
+    child->parent = this;
+    children.emplace_back(std::move(child));
 }
 
 void GameObject::setRotation(float rotation) const {
@@ -128,25 +128,4 @@ void GameObject::setRotation(float rotation) const {
     } else
         ComponentStore::GetInstance().tryGetComponent<TransformComponent>(
                 entityID).rotation = rotation;
-}
-
-void GameObject::removeChild(GameObject &child) {
-    try {
-        auto &childComponent = tryGetComponent<ChildComponent>();
-        auto it = std::find(childComponent.children.begin(), childComponent.children.end(),
-                            child.getEntityId());
-        if (it != childComponent.children.end()) {
-            childComponent.children.erase(it);
-            std::remove(children.begin(), children.end(), (&child));
-            child.parent = nullptr;
-            if (childComponent.children.empty()) {
-                removeComponent<ChildComponent>();
-            }
-        }
-
-        child.removeComponent<ParentComponent>();
-    } catch (std::runtime_error &e) {
-        // Do nothing
-    }
-
 }

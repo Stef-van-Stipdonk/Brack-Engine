@@ -132,7 +132,6 @@ public:
                 if (EntityManager::getInstance().isEntityActive(pair.first) && objectInfoComponent.isActive) {
                     entities.push_back(pair.first);
                 }
-
             }
         }
         return entities;

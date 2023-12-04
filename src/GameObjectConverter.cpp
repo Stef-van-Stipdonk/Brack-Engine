@@ -14,7 +14,9 @@ void GameObjectConverter::addGameObject(GameObject *gameObject) {
     if (gameObject->getEntityId() == 0)
         entityId = EntityManager::getInstance().createEntity();
 
-    for (const auto &child: gameObject->getChildren()) {
+    auto children = std::move(gameObject->getChildren());
+
+    for (auto &child: children) {
         try {
             auto &parentComponent = child->tryGetComponent<ParentComponent>();
             parentComponent.parentId = entityId;
@@ -42,9 +44,9 @@ void GameObjectConverter::addGameObject(GameObject *gameObject) {
         ComponentStore::GetInstance().addComponent(entityId, std::move(component));
     }
 
-    auto scripts = ComponentStore::GetInstance().getAllComponentsOfType<BehaviourScript>();
-    for (auto &script: scripts) {
-        script->onStart();
+    for (auto &child: children) {
+        child->setEntityId(EntityManager::getInstance().createEntity());
+        addGameObject(child.get());
     }
 
 }

@@ -114,11 +114,9 @@ public:
 
     std::optional<GameObject> getParent();
 
-    std::vector<GameObject *> getChildren() const;
+    std::vector<std::unique_ptr<GameObject>> &&getChildren();
 
-    void addChild(GameObject &child);
-
-    void removeChild(GameObject &child);
+    void addChild(std::unique_ptr<GameObject> child);
 
     std::string getName() const;
 
@@ -148,7 +146,7 @@ protected:
     entity entityID = 0;
     std::vector<std::unique_ptr<IComponent>> components;
     GameObject *parent = nullptr;
-    std::vector<GameObject *> children;
+    std::vector<std::unique_ptr<GameObject>> children;
 };
 
 
