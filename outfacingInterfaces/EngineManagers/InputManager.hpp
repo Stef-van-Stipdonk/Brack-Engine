@@ -57,7 +57,9 @@ public:
 
     std::unique_ptr<Vector2> &getMousePositions();
 
-    Vector2 &getMousePosition() const;
+    Vector2 &getScreenMousePosition() const;
+
+    Vector2 getWorldMousePosition() const;
 
     void UpdateEvents();
 
@@ -71,6 +73,9 @@ private:
     std::map<int, InputState> keyInputs;
     std::map<int, InputState> mouseInputs;
     std::unique_ptr<Vector2> mousePosition;
+
+    bool
+    isPositionInsideSquare(const Vector2 &position, const Vector2 &squarePosition, const Vector2 &squareSize) const;
 };
 
 

@@ -29,14 +29,14 @@ Button::Button(const Vector2 &size, const std::string &text) : GameObject() {
     addComponent(std::move(textComponent));
 }
 
-void Button::setTextColor(const Color& color) {
+void Button::setTextColor(const Color &color) {
     if (entityID == 0) {
         tryGetComponent<TextComponent>().color = std::make_unique<Color>(color);
     } else
         ComponentStore::GetInstance().tryGetComponent<TextComponent>(entityID).color = std::make_unique<Color>(color);
 }
 
-void Button::setFontPath(const std::string& path) {
+void Button::setFontPath(const std::string &path) {
     if (entityID == 0) {
         tryGetComponent<TextComponent>().fontPath = path;
     } else
@@ -50,14 +50,14 @@ void Button::setFontSize(int fontSize) {
         ComponentStore::GetInstance().tryGetComponent<TextComponent>(entityID).fontSize = fontSize;
 }
 
-void Button::setText(const std::string& string) {
+void Button::setText(const std::string &string) {
     if (entityID == 0) {
         tryGetComponent<TextComponent>().text = string;
     } else
         ComponentStore::GetInstance().tryGetComponent<TextComponent>(entityID).text = string;
 }
 
-void Button::setFill(const Color& color) {
+void Button::setFill(const Color &color) {
     if (entityID == 0) {
         tryGetComponent<RectangleComponent>().fill = std::make_unique<Color>(color);
     } else
@@ -67,21 +67,6 @@ void Button::setFill(const Color& color) {
 
 void Button::setClickEvent(std::function<void()> func) {
     tryGetComponent<ClickableComponent>().OnClick = std::move(func);
-}
-
-void Button::setBorderWidth(int borderWidth) {
-    if (entityID == 0) {
-        tryGetComponent<RectangleComponent>().borderWidth = borderWidth;
-    } else
-        ComponentStore::GetInstance().tryGetComponent<RectangleComponent>(entityID).borderWidth = borderWidth;
-}
-
-void Button::setBorderColor(const Color& color) {
-    if (entityID == 0) {
-        tryGetComponent<RectangleComponent>().borderColor = std::make_unique<Color>(color);
-    } else
-        ComponentStore::GetInstance().tryGetComponent<RectangleComponent>(
-                entityID).borderColor = std::make_unique<Color>(color);
 }
 
 bool Button::isDisabled() const {

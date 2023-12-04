@@ -57,6 +57,10 @@ struct BehaviourScript : public IComponent {
     std::vector<GameObject> getChildren() {
         return GameObjectConverter::getChildren(entityID);
     }
+
+    std::optional<GameObject> getParent() {
+        return GameObjectConverter::getParent(entityID);
+    }
 };
 
 
