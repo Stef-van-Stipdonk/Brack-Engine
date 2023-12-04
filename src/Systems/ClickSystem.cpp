@@ -6,7 +6,9 @@
 #include <Helpers/MouseMap.hpp>
 #include <Components/BoxCollisionComponent.hpp>
 #include <Components/CircleCollisionComponent.hpp>
+#include <Components/TransformComponent.hpp>
 #include "ClickSystem.hpp"
+#include "../includes/ComponentStore.hpp"
 
 ClickSystem::ClickSystem() {}
 

@@ -7,11 +7,9 @@
 #include <Components/BehaviourScript.hpp>
 #include "GameObjectConverter.hpp"
 #include "includes/EntityManager.hpp"
-#include "Components/ComponentVisitor.hpp"
 
 
 void GameObjectConverter::addGameObject(GameObject *gameObject) {
-    ComponentVisitor componentVisitor;
     auto entityId = gameObject->getEntityId();
     if (gameObject->getEntityId() == 0)
         entityId = EntityManager::getInstance().createEntity();
@@ -32,7 +30,6 @@ void GameObjectConverter::addGameObject(GameObject *gameObject) {
     gameObject->setEntityId(entityId);
     std::vector<std::unique_ptr<IComponent>> components = std::move(gameObject->getAllComponents());
     for (auto &component: components) {
-        component->accept(componentVisitor);
         ComponentStore::GetInstance().addComponent(entityId, std::move(component));
     }
 

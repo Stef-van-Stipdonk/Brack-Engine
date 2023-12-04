@@ -6,7 +6,6 @@
 #define BRACK_ENGINE_OBJECTINFOCOMPONENT_HPP
 
 #include "IComponent.hpp"
-#include "../../src/Components/ComponentVisitor.hpp"
 #include <string>
 
 struct ObjectInfoComponent : public IComponent {
@@ -17,12 +16,6 @@ struct ObjectInfoComponent : public IComponent {
 
     virtual std::unique_ptr<IComponent> clone() const override {
         return std::make_unique<ObjectInfoComponent>(*this);
-    }
-
-    void accept(ComponentVisitor &visitor) override {
-        visitor.visit(*this);
-        EntityManager::getInstance().addEntityWithName(entityID, name);
-        EntityManager::getInstance().addEntityWithTag(entityID, tag);
     }
 
     ObjectInfoComponent(const ObjectInfoComponent &other) : IComponent(other) {

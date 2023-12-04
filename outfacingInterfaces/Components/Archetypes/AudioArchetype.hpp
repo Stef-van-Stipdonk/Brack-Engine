@@ -6,11 +6,12 @@
 #define BRACKOCALYPSE_AUDIOARCHETYPE_HPP
 
 #include <Components/IComponent.hpp>
-#include "../../../src/Components/ComponentVisitor.hpp"
+#include <string>
 
 struct AudioArchetype : public IComponent {
 public:
-    explicit AudioArchetype(std::string path, bool isSoundTrack) : IComponent(), audioPath(std::move(path)), isSoundTrack(isSoundTrack) {}
+    explicit AudioArchetype(std::string path, bool isSoundTrack)
+            : IComponent(), audioPath(std::move(path)), isSoundTrack(isSoundTrack) {}
 
     ~AudioArchetype() override = default;
 
@@ -20,16 +21,12 @@ public:
 
 
     AudioArchetype(const AudioArchetype &other) :
-        IComponent(other),
-        audioPath(other.audioPath),
-        isSoundTrack(other.isSoundTrack),
-        pauseSound(other.pauseSound),
-        startPlaying(other.startPlaying),
-        volume(other.volume){}
-
-    void accept(ComponentVisitor &visitor) override {
-        visitor.visit(*this);
-    }
+            IComponent(other),
+            audioPath(other.audioPath),
+            isSoundTrack(other.isSoundTrack),
+            pauseSound(other.pauseSound),
+            startPlaying(other.startPlaying),
+            volume(other.volume) {}
 
     bool pauseSound = false;
     bool startPlaying = false;
@@ -41,7 +38,7 @@ public:
         return isSoundTrack;
     }
 
-    std::string getAudioPath() const{
+    std::string getAudioPath() const {
         return audioPath;
     }
 };

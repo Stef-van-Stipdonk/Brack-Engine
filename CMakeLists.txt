@@ -42,7 +42,6 @@ add_library(${PROJECT_NAME} SHARED
         outfacingInterfaces/Components/TransformComponent.hpp
         src/Helpers/Vector2.cpp
         outfacingInterfaces/Components/VelocityComponent.hpp
-        outfacingInterfaces/Components/CollisionComponent.hpp
         outfacingInterfaces/Components/BoxCollisionComponent.hpp
         outfacingInterfaces/Components/CircleCollisionComponent.hpp
         outfacingInterfaces/Components/CameraComponent.hpp
@@ -91,8 +90,6 @@ add_library(${PROJECT_NAME} SHARED
         outfacingInterfaces/Helpers/MouseMap.hpp
         src/FPSSingleton.cpp
         src/Wrappers/FPSWrapper.cpp
-        src/Components/ComponentVisitor.hpp
-        src/Components/ComponentVisitor.hpp
         src/Systems/ClickSystem.cpp
         src/Systems/ClickSystem.hpp
         outfacingInterfaces/Components/Archetypes/AudioArchetype.hpp

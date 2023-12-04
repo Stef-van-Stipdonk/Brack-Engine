@@ -4,6 +4,7 @@
 #include "../includes/SystemManager.hpp"
 #include "../ConfigSingleton.hpp"
 #include "../Logger.hpp"
+#include "../includes/ComponentStore.hpp"
 
 RenderWrapper::RenderWrapper() : renderer(nullptr, nullptr), renderTexture(nullptr, nullptr) {
     Initialize();
