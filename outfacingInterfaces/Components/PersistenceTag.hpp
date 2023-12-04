@@ -6,7 +6,6 @@
 #define BRACK_ENGINE_PERSISTENCETAG_HPP
 
 #include "IComponent.hpp"
-#include "../../src/Components/ComponentVisitor.hpp"
 
 struct PersistenceTag : public IComponent {
     explicit PersistenceTag() : IComponent() {}
@@ -18,10 +17,6 @@ struct PersistenceTag : public IComponent {
     }
 
     PersistenceTag(const PersistenceTag& other) : IComponent(other) {}
-
-    void accept(ComponentVisitor &visitor) override {
-        visitor.visit(*this);
-    }
 };
 
 #endif //BRACK_ENGINE_PERSISTENCETAG_HPP
