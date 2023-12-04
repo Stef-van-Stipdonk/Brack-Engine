@@ -80,6 +80,9 @@ entity GameObject::getEntityId() const {
 
 void GameObject::setEntityId(entity id) {
     entityID = id;
+    for (auto &component: components) {
+        component->entityID = id;
+    }
 }
 
 std::vector<std::unique_ptr<IComponent>> &&GameObject::getAllComponents() {

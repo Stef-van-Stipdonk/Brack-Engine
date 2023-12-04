@@ -128,7 +128,7 @@ public:
 
     bool isActive() const;
 
-    void setActive(bool active) const;
+    virtual void setActive(bool active) const;
 
     int getLayer() const;
 
