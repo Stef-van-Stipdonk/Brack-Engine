@@ -110,3 +110,14 @@ void EntityManager::setEntitiesByNameMap(const std::map<std::string, std::vector
 void EntityManager::setEntitiesByTagMap(const std::map<std::string, std::vector<entity>> &entitiesByTag) {
     EntityManager::entitiesByTag = entitiesByTag;
 }
+
+bool EntityManager::isEntityActive(entity entityID) const {
+    auto it = activeEntities.find(entityID);
+    if (it != activeEntities.end())
+        return activeEntities.at(entityID);
+    return false;
+}
+
+void EntityManager::setEntityActive(entity entityID, bool active) {
+    activeEntities[entityID] = active;
+}

@@ -5,8 +5,10 @@
 #include <Helpers/KeyMap.hpp>
 #include <Helpers/MouseMap.hpp>
 #include <Components/CameraComponent.hpp>
+#include <Components/TransformComponent.hpp>
 #include "EngineManagers/InputManager.hpp"
 #include "../Logger.hpp"
+#include "../includes/ComponentStore.hpp"
 
 InputManager InputManager::instance;
 

@@ -8,8 +8,6 @@
 #include <memory>
 #include "Helpers/Color.hpp"
 #include "VelocityComponent.hpp"
-#include "../../src/Components/ComponentVisitor.hpp"
-
 
 struct CameraComponent : public IComponent {
     explicit CameraComponent() : IComponent() {}
@@ -25,10 +23,6 @@ struct CameraComponent : public IComponent {
 
     virtual std::unique_ptr<IComponent> clone() const override {
         return std::make_unique<CameraComponent>(*this);
-    }
-
-    void accept(ComponentVisitor &visitor) override {
-        visitor.visit(*this);
     }
 
     std::unique_ptr<Vector2> size = std::make_unique<Vector2>(100, 100);

@@ -7,17 +7,12 @@
 
 #include <cstdint>
 #include "IComponent.hpp"
-#include "../../src/Components/ComponentVisitor.hpp"
 
 struct AIComponent : public IComponent {
 
     explicit AIComponent() {}
 
     ~AIComponent() override = default;
-
-    void accept(ComponentVisitor &visitor) override {
-        visitor.visit(*this);
-    }
 
     AIComponent(const AIComponent &other) : IComponent(other) {
         destinationEntityID = other.destinationEntityID;

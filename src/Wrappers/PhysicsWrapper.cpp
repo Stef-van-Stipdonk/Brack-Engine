@@ -3,10 +3,12 @@
 //
 
 #include "PhysicsWrapper.hpp"
+#include "../includes/ComponentStore.hpp"
 #include <vector>
 #include <algorithm>
 #include <Components/CircleCollisionComponent.hpp>
 #include <Components/BoxCollisionComponent.hpp>
+#include <Components/TransformComponent.hpp>
 
 PhysicsWrapper PhysicsWrapper::instance;
 

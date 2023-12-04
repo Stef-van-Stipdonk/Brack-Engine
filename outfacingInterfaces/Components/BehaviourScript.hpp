@@ -6,7 +6,6 @@
 #define BRACK_ENGINE_BEHAVIOURSCRIPT_HPP
 
 #include "IComponent.hpp"
-#include "../../src/Components/ComponentVisitor.hpp"
 #include "../outfacingInterfaces/Milliseconds.hpp"
 #include "../../src/GameObjectConverter.hpp"
 #include <functional>
@@ -20,10 +19,6 @@ struct BehaviourScript : public IComponent {
 
     virtual std::unique_ptr<IComponent> clone() const override {
         return std::make_unique<BehaviourScript>(*this);
-    }
-
-    virtual void accept(ComponentVisitor &visitor) override {
-        visitor.visit(*this);
     }
 
     BehaviourScript(const BehaviourScript &other) : IComponent(other) {}
@@ -60,6 +55,14 @@ struct BehaviourScript : public IComponent {
 
     std::optional<GameObject> getParent() {
         return GameObjectConverter::getParent(entityID);
+    }
+
+    void setActive(bool active) {
+        EntityManager::getInstance().setEntityActive(entityID, active);
+    }
+
+    bool isActive() {
+        return EntityManager::getInstance().isEntityActive(entityID);
     }
 };
 

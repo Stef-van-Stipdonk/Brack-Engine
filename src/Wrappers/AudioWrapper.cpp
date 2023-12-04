@@ -5,6 +5,7 @@
 
 #include <algorithm>
 #include "AudioWrapper.hpp"
+#include "../Logger.hpp"
 
 AudioWrapper::AudioWrapper() : system(nullptr) {
     FMOD_RESULT result = FMOD_System_Create(&system, FMOD_VERSION);
@@ -59,19 +60,20 @@ void AudioWrapper::clearUnusedChannels() {
     std::vector<int> channelsToRelease;
 
     for (auto it = soundEffectsChannelMap.begin(); it != soundEffectsChannelMap.end();) {
-        FMOD_CHANNEL* channel = it->second;
+        FMOD_CHANNEL *channel = it->second;
         int isPlaying = 0; // Declaration without initialization
 
         // Checking if the channel is playing
         if (channel) {
-            FMOD_RESULT result = FMOD_Channel_IsPlaying(channel,&isPlaying);
+            FMOD_RESULT result = FMOD_Channel_IsPlaying(channel, &isPlaying);
             if (result != FMOD_OK) {
                 Logger::Error("Error checking if channel is playing: " + std::string(FMOD_ErrorString(result)));
                 ++it;
                 continue;
             }
 
-            Logger::Debug("Channel ID: " + std::to_string(it->first) + ", Is playing: " + (isPlaying ? "true" : "false"));
+            Logger::Debug(
+                    "Channel ID: " + std::to_string(it->first) + ", Is playing: " + (isPlaying ? "true" : "false"));
 
             if (!isPlaying) {
                 channelsToRelease.push_back(it->first); // Marking channel for release
@@ -97,11 +99,11 @@ void AudioWrapper::playSound(AudioArchetype &audioComponent) {
         return;
     }
 
-    if(audioComponent.isSoundTrack){
+    if (audioComponent.isSoundTrack) {
         soundTrackChannelPair.first = soundTrackChannel; // Set the channel ID
 
         playSoundOnChannel(soundTrackChannelPair.second, soundTrackChannel, audioComponent);
-    }else{
+    } else {
         int availableSFXChannels = ConfigSingleton::GetInstance().getAmountOfSoundEffectsChannels();
 
         if (availableSFXChannels <= 0) {
@@ -121,7 +123,7 @@ void AudioWrapper::playSound(AudioArchetype &audioComponent) {
 }
 
 void AudioWrapper::playSoundOnChannel(FMOD_CHANNEL *&channel, int channelID, AudioArchetype &audioComponent) {
-    FMOD_SOUND* sound = nullptr;
+    FMOD_SOUND *sound = nullptr;
     FMOD_MODE mode = audioComponent.isSoundTrack ? FMOD_LOOP_NORMAL : FMOD_DEFAULT;
     auto audioPath = ConfigSingleton::GetInstance().GetBaseAssetPath() + audioComponent.getAudioPath();
     FMOD_RESULT result = FMOD_System_CreateSound(system, audioPath.c_str(), mode, 0, &sound);
@@ -138,7 +140,7 @@ void AudioWrapper::playSoundOnChannel(FMOD_CHANNEL *&channel, int channelID, Aud
         return;
     }
 
-    FMOD_System_SetUserData(system,reinterpret_cast<void*>(channelID));
+    FMOD_System_SetUserData(system, reinterpret_cast<void *>(channelID));
     FMOD_Channel_SetVolume(channel, audioComponent.volume);
 
     Logger::Debug("Uploaded sound to Channel: " + std::to_string(channelID) + ", Path: " + audioPath);
@@ -146,7 +148,7 @@ void AudioWrapper::playSoundOnChannel(FMOD_CHANNEL *&channel, int channelID, Aud
 
 void AudioWrapper::pauseChannel(FMOD_CHANNEL *channel, AudioArchetype &audioComponent) {
     if (channel) {
-        FMOD_SOUND* sound = nullptr;
+        FMOD_SOUND *sound = nullptr;
         FMOD_RESULT result = FMOD_Channel_GetCurrentSound(channel, &sound);
         if (result != FMOD_OK) {
             Logger::Error("Error getting current sound: " + std::string(FMOD_ErrorString(result)));
@@ -175,19 +177,18 @@ void AudioWrapper::pauseSound(AudioArchetype &audioComponent) {
         return;
     }
 
-    if(!audioComponent.getIsSoundTrack()){
-        for (const auto& it : soundEffectsChannelMap) {
+    if (!audioComponent.getIsSoundTrack()) {
+        for (const auto &it: soundEffectsChannelMap) {
             pauseChannel(it.second, audioComponent);
         }
-    }
-    else {
+    } else {
         pauseChannel(soundTrackChannelPair.second, audioComponent);
     }
 }
 
 void AudioWrapper::resumeChannel(FMOD_CHANNEL *channel, AudioArchetype &audioComponent) {
     if (channel) {
-        FMOD_SOUND * sound = nullptr;
+        FMOD_SOUND *sound = nullptr;
         FMOD_RESULT result = FMOD_Channel_GetCurrentSound(channel, &sound);
         if (result != FMOD_OK) {
             Logger::Error("Error getting current sound: " + std::string(FMOD_ErrorString(result)));
@@ -226,8 +227,8 @@ void AudioWrapper::resumeSound(AudioArchetype &audioComponent) {
     }
 
     int anySoundsPaused = 0;
-    for (auto & it : soundEffectsChannelMap) {
-        FMOD_CHANNEL* channel = it.second;
+    for (auto &it: soundEffectsChannelMap) {
+        FMOD_CHANNEL *channel = it.second;
         if (channel) {
             int isPlaying = 0;
             FMOD_RESULT result = FMOD_Channel_IsPlaying(channel, &isPlaying);
@@ -242,7 +243,7 @@ void AudioWrapper::resumeSound(AudioArchetype &audioComponent) {
             }
         }
     }
-    if(!anySoundsPaused){
+    if (!anySoundsPaused) {
         FMOD_Channel_IsPlaying(soundTrackChannelPair.second, &anySoundsPaused);
     }
 
@@ -251,7 +252,7 @@ void AudioWrapper::resumeSound(AudioArchetype &audioComponent) {
     }
 
     if (!audioComponent.getIsSoundTrack()) {
-        for (const auto& it : soundEffectsChannelMap) {
+        for (const auto &it: soundEffectsChannelMap) {
             resumeChannel(it.second, audioComponent);
         }
     } else {
@@ -259,7 +260,7 @@ void AudioWrapper::resumeSound(AudioArchetype &audioComponent) {
     }
 }
 
-bool AudioWrapper::isValidAudioPath(const AudioArchetype& audioComponent){
+bool AudioWrapper::isValidAudioPath(const AudioArchetype &audioComponent) {
     std::ifstream file(ConfigSingleton::GetInstance().GetBaseAssetPath() + audioComponent.getAudioPath());
 
     if (!file.good()) {
@@ -289,7 +290,7 @@ bool AudioWrapper::isValidAudioPath(const AudioArchetype& audioComponent){
     return true;
 }
 
-std::string AudioWrapper::getFileName(const std::string& audioPath) {
+std::string AudioWrapper::getFileName(const std::string &audioPath) {
     size_t lastSlash = audioPath.find_last_of("/\\");
     std::string fileName = audioPath.substr(lastSlash + 1);
 
