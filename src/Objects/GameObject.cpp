@@ -82,8 +82,8 @@ void GameObject::setEntityId(entity id) {
     entityID = id;
 }
 
-std::vector<std::unique_ptr<IComponent>> &GameObject::getAllComponents() {
-    return components;
+std::vector<std::unique_ptr<IComponent>> &&GameObject::getAllComponents() {
+    return std::move(components);
 }
 
 void GameObject::addChild(GameObject &child) {

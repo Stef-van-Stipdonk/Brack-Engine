@@ -30,9 +30,10 @@ void GameObjectConverter::addGameObject(GameObject *gameObject) {
     }
 
     gameObject->setEntityId(entityId);
-    for (auto &component: gameObject->getAllComponents()) {
-        component->entityID = entityId;
+    std::vector<std::unique_ptr<IComponent>> components = std::move(gameObject->getAllComponents());
+    for (auto &component: components) {
         component->accept(componentVisitor);
+        ComponentStore::GetInstance().addComponent(entityId, std::move(component));
     }
 
     auto scripts = ComponentStore::GetInstance().getAllComponentsOfType<BehaviourScript>();

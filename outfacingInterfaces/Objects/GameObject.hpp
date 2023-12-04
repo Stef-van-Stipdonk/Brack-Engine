@@ -20,7 +20,7 @@ public:
     GameObject();
 
     ~GameObject() {
-        
+
     };
 
     GameObject &operator=(const GameObject &other) {
@@ -140,7 +140,7 @@ public:
 
     void setEntityId(entity id);
 
-    std::vector<std::unique_ptr<IComponent>> &getAllComponents();
+    std::vector<std::unique_ptr<IComponent>> &&getAllComponents();
 
 protected:
     entity entityID = 0;
