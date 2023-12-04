@@ -36,6 +36,8 @@ public:
 
     static std::vector<GameObject> getGameObjectsByTag(const std::string &tag);
 
+    static Vector2 getWorldPosition(const TransformComponent &transformComponent);
+
 private:
     SceneManager() = default;
 
