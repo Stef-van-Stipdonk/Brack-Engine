@@ -7,6 +7,7 @@
 
 
 #include <memory>
+#include "../Components/TransformComponent.hpp"
 #include "../../src/includes/EntityManager.hpp"
 #include "../../src/GameObjectConverter.hpp"
 

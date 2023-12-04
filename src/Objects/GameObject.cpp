@@ -61,7 +61,7 @@ void GameObject::setTag(std::string name) const {
 }
 
 bool GameObject::isActive() const {
-    return tryGetComponent<ObjectInfoComponent>().isActive;
+    return EntityManager::getInstance().isEntityActive(entityID) && tryGetComponent<ObjectInfoComponent>().isActive;
 }
 
 void GameObject::setActive(bool active) const {

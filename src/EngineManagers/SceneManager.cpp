@@ -4,7 +4,6 @@
 
 #include <Components/ChildComponent.hpp>
 #include <Components/ParentComponent.hpp>
-#include <Components/TransformComponent.hpp>
 #include "EngineManagers/SceneManager.hpp"
 #include "Objects/Scene.hpp"
 #include "../GameObjectConverter.hpp"
@@ -49,6 +48,7 @@ Vector2 SceneManager::getWorldPosition(const TransformComponent &transformCompon
                 transformComponent.entityID).parentId;
         auto &parentTransform = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(parentId);
         position += getWorldPosition(parentTransform);
+        return position;
     }
     catch (std::runtime_error &e) {
         return position;
