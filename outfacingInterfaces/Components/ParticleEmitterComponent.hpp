@@ -7,10 +7,10 @@
 
 #include <Milliseconds.hpp>
 #include <memory>
+#include <vector>
 #include <Helpers/Color.hpp>
 #include <Helpers/Vector2.hpp>
 #include "IComponent.hpp"
-#include "../../src/Components/ComponentVisitor.hpp"
 
 struct ParticleEmitterComponent : public IComponent {
     explicit ParticleEmitterComponent(int maxAmount) : IComponent(), maxAmount(maxAmount), activeParticles(maxAmount, 0.0) {
@@ -20,10 +20,6 @@ struct ParticleEmitterComponent : public IComponent {
 
     virtual std::unique_ptr<IComponent> clone() const override{
         return std::make_unique<ParticleEmitterComponent>(*this);
-    }
-
-    void accept(ComponentVisitor &visitor) override {
-        visitor.visit(*this);
     }
 
     ParticleEmitterComponent(const ParticleEmitterComponent& other) : IComponent(other) {

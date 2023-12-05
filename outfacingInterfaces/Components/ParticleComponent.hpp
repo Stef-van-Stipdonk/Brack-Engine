@@ -9,7 +9,6 @@
 #include <Helpers/Color.hpp>
 #include <Milliseconds.hpp>
 #include "IComponent.hpp"
-#include "../../src/Components/ComponentVisitor.hpp"
 
 struct ParticleComponent : public IComponent {
     explicit ParticleComponent() : IComponent() {}
@@ -18,10 +17,6 @@ struct ParticleComponent : public IComponent {
 
     virtual std::unique_ptr<IComponent> clone() const override {
         return std::make_unique<ParticleComponent>(*this);
-    }
-
-    void accept(ComponentVisitor &visitor) override {
-        visitor.visit(*this);
     }
 
     ParticleComponent(const ParticleComponent& other) : IComponent(other) {

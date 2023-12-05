@@ -6,10 +6,28 @@
 #include <Components/ParticleComponent.hpp>
 #include <Components/RectangleComponent.hpp>
 #include <Components/VelocityComponent.hpp>
+#include <Components/TransformComponent.hpp>
 #include "ParticleSystem.hpp"
+#include "../includes/ComponentStore.hpp"
+#include "../ConfigSingleton.hpp"
 
 ParticleSystem::ParticleSystem() {
+    for (int i = 0; i < ConfigSingleton::GetInstance().getParticleLimit(); ++i) {
+        auto particleEntity = EntityManager::getInstance().createEntity();
 
+        auto particleComponent = std::make_unique<ParticleComponent>();
+        auto rectangleComponent = std::make_unique<RectangleComponent>(Vector2(0,0));
+        auto velocityComponent = std::make_unique<VelocityComponent>();
+        auto transformComponent = std::make_unique<TransformComponent>();
+        auto objectInfoComponent = std::make_unique<ObjectInfoComponent>();
+        objectInfoComponent->isActive = false;
+
+        ComponentStore::GetInstance().addComponent(particleEntity, std::move(transformComponent));
+        ComponentStore::GetInstance().addComponent(particleEntity, std::move(velocityComponent));
+        ComponentStore::GetInstance().addComponent(particleEntity, std::move(rectangleComponent));
+        ComponentStore::GetInstance().addComponent(particleEntity, std::move(particleComponent));
+        ComponentStore::GetInstance().addComponent(particleEntity, std::move(objectInfoComponent));
+    }
 }
 
 ParticleSystem::~ParticleSystem() {
@@ -21,11 +39,9 @@ void ParticleSystem::update(milliseconds deltaTime) {
     for (auto id: particleIds) {
         auto& particleComponent = ComponentStore::GetInstance().tryGetComponent<ParticleComponent>(id);
         if(particleComponent.lifeTime <= 0){
-            ComponentStore::GetInstance().removeComponent<ParticleComponent>(id);
-            ComponentStore::GetInstance().removeComponent<TransformComponent>(id);
-            ComponentStore::GetInstance().removeComponent<VelocityComponent>(id);
-            ComponentStore::GetInstance().removeComponent<RectangleComponent>(id);
-            EntityManager::getInstance().destroyEntity(id);
+            auto& objectInfoComponent = ComponentStore::GetInstance().tryGetComponent<ObjectInfoComponent>(id);
+            objectInfoComponent.isActive = false;
+            EntityManager::getInstance().setEntityActive(id, false);
         }else{
             particleComponent.lifeTime -= deltaTime;
         }
@@ -33,12 +49,17 @@ void ParticleSystem::update(milliseconds deltaTime) {
 
     auto particleEmitterEntityIds = ComponentStore::GetInstance().getEntitiesWithComponent<ParticleEmitterComponent>();
     for (auto id: particleEmitterEntityIds) {
+        auto inactiveParticleIds = ComponentStore::GetInstance().getInactiveEntitiesWithComponent<ParticleComponent>();
+        if(inactiveParticleIds.empty()) return;
+
         auto& particleEmitterComponent = ComponentStore::GetInstance().tryGetComponent<ParticleEmitterComponent>(id);
         auto& particleEmitterTransformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(id);
+
         size_t availablePosition = 0;
         for (size_t i = 0; i < particleEmitterComponent.activeParticles.size(); ++i) {
             if (particleEmitterComponent.activeParticles[i] <= 0) {
                 availablePosition = i;
+                break;
             }else{
                 particleEmitterComponent.activeParticles[i] -= deltaTime;
             }
@@ -46,27 +67,29 @@ void ParticleSystem::update(milliseconds deltaTime) {
 
         if(particleEmitterComponent.activeParticles[availablePosition] <= 0 && particleEmitterComponent.untilNextEmit <= 0){
             particleEmitterComponent.untilNextEmit = particleEmitterComponent.emitInterval;
-            auto particleEntity = EntityManager::getInstance().createEntity();
-            auto particleComponent = std::make_unique<ParticleComponent>();
-            particleComponent->lifeTime = particleEmitterComponent.lifeTime;
+            entity inactiveParticleId = inactiveParticleIds[0];
 
-            auto rectangleComponent = std::make_unique<RectangleComponent>(particleEmitterComponent.particleSize);
-            rectangleComponent->fill = std::make_unique<Color>(*particleEmitterComponent.color);
-            rectangleComponent->sortingLayer = particleEmitterComponent.sortingLayer;
-            rectangleComponent->orderInLayer = particleEmitterComponent.orderInLayer;
+            auto& particleComponent = ComponentStore::GetInstance().tryGetComponent<ParticleComponent>(inactiveParticleId);
+            auto& rectangleComponent = ComponentStore::GetInstance().tryGetComponent<RectangleComponent>(inactiveParticleId);
+            auto& velocityComponent = ComponentStore::GetInstance().tryGetComponent<VelocityComponent>(inactiveParticleId);
+            auto& transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(inactiveParticleId);
+            auto& objectInfoComponent = ComponentStore::GetInstance().tryGetComponent<ObjectInfoComponent>(inactiveParticleId);
 
-            auto velocityComponent = std::make_unique<VelocityComponent>();
-            velocityComponent->velocity = generateRandomDirection(particleEmitterComponent.speed);
+            particleComponent.lifeTime = particleEmitterComponent.lifeTime;
 
-            auto transformComponent = std::make_unique<TransformComponent>();
-            transformComponent->position = std::make_unique<Vector2>(particleEmitterTransformComponent.position->getX(), particleEmitterTransformComponent.position->getY());
+            rectangleComponent.fill = std::make_unique<Color>(*particleEmitterComponent.color);
+            rectangleComponent.sortingLayer = particleEmitterComponent.sortingLayer;
+            rectangleComponent.orderInLayer = particleEmitterComponent.orderInLayer;
+            rectangleComponent.size = std::make_unique<Vector2>(particleEmitterComponent.particleSize);
 
-            ComponentStore::GetInstance().addComponent(particleEntity, std::move(transformComponent));
-            ComponentStore::GetInstance().addComponent(particleEntity, std::move(velocityComponent));
-            ComponentStore::GetInstance().addComponent(particleEntity, std::move(rectangleComponent));
-            ComponentStore::GetInstance().addComponent(particleEntity, std::move(particleComponent));
+            velocityComponent.velocity = generateRandomDirection(particleEmitterComponent.speed);
 
-            particleEmitterComponent.activeParticles.push_back(particleEmitterComponent.lifeTime);
+            transformComponent.position = std::make_unique<Vector2>(*particleEmitterTransformComponent.position);
+
+            objectInfoComponent.isActive = true;
+            EntityManager::getInstance().setEntityActive(inactiveParticleId, true);
+
+            particleEmitterComponent.activeParticles[availablePosition] = particleEmitterComponent.lifeTime;
         }
         particleEmitterComponent.untilNextEmit -= deltaTime;
     }

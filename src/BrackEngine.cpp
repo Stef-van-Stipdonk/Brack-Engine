@@ -99,8 +99,9 @@ void BrackEngine::UpdateFPS(float deltaTime) {
         return;
 
     totalTime = 0;
+    entity fpsId = EntityManager::getInstance().getEntityByTag("FPS");
     auto &textComponent = ComponentStore::GetInstance().tryGetComponent<TextComponent>(
-            1);//TODO ophalen met tag of name van component
+            fpsId);
 
     textComponent.text = std::to_string(FPSSingleton::GetInstance().GetFPS());;
 }
