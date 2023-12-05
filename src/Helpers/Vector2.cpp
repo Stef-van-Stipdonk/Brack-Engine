@@ -72,3 +72,23 @@ bool Vector2::operator==(const Vector2 &other) const {
 bool Vector2::operator!=(const Vector2 &other) const {
     return x != other.x || y != other.y;
 }
+
+void Vector2::operator+=(const Vector2 &other) {
+    x += other.x;
+    y += other.y;
+}
+
+void Vector2::operator-=(const Vector2 &other) {
+    x -= other.x;
+    y -= other.y;
+}
+
+void Vector2::operator*=(const float &other) {
+    x *= other;
+    y *= other;
+}
+
+void Vector2::operator/=(const float &other) {
+    x /= other;
+    y /= other;
+}

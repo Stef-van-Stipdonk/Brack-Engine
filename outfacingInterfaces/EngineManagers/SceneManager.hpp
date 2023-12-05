@@ -7,6 +7,7 @@
 
 
 #include <memory>
+#include "../Components/TransformComponent.hpp"
 #include "../../src/includes/EntityManager.hpp"
 #include "../../src/GameObjectConverter.hpp"
 
@@ -35,6 +36,8 @@ public:
     static std::optional<GameObject> getGameObjectByTag(const std::string &tag);
 
     static std::vector<GameObject> getGameObjectsByTag(const std::string &tag);
+
+    static Vector2 getWorldPosition(const TransformComponent &transformComponent);
 
 private:
     SceneManager() = default;

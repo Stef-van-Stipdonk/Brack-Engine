@@ -149,7 +149,7 @@ Vector2 InputManager::getWorldMousePosition() const {
             return mouseWorldPosition;
         }
     }
-    return Vector2(0, 0);
+    return {0, 0};
 }
 
 bool InputManager::isPositionInsideSquare(const Vector2 &position, const Vector2 &squarePosition,
