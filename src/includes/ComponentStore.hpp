@@ -10,6 +10,8 @@
 #include "../Logger.hpp"
 #include "EntityManager.hpp"
 
+class BehaviourScript;
+
 class ComponentStore {
 public:
     ComponentStore(const ComponentStore &) = delete;
@@ -36,6 +38,8 @@ public:
                     std::string(typeid(T).name()));
 
         components[typeid(T)][entityId] = std::make_unique<T>(component);
+        checkBehaviourScript(components[typeid(T)][entityId]);
+
     }
 
     template<typename T, typename...Args>
@@ -49,7 +53,9 @@ public:
         T component(std::forward<Args>(args)...);
         component.entityID = entityId;
 
+
         components[typeid(T)][entityId] = std::make_unique<T>(component);
+        checkBehaviourScript(components[typeid(T)][entityId]);
     }
 
     void addComponent(entity entityId, std::unique_ptr<IComponent> component) {
@@ -57,10 +63,12 @@ public:
             throw std::runtime_error("Entity ID cannot be 0.");
 
         component->entityID = entityId;
-        
+
         IComponent &componentRef = *component;
 
         components[typeid(componentRef)][entityId] = std::move(component);
+        checkBehaviourScript(components[typeid(componentRef)][entityId]);
+
     }
 
 
@@ -133,13 +141,20 @@ public:
         return entities;
     }
 
+    std::vector<std::reference_wrapper<BehaviourScript>> getNotStartedBehaviourScripts() {
+        return notStartedBehaviourScripts;
+    }
+
 
 private:
     static ComponentStore instance;
 
     ComponentStore() = default;
 
+    std::vector<std::reference_wrapper<BehaviourScript>> notStartedBehaviourScripts;
     std::unordered_map<std::type_index, std::unordered_map<entity, std::unique_ptr<IComponent>>> components;
+
+    void checkBehaviourScript(std::unique_ptr<IComponent> &component);
 };
 
 #endif // SIMPLE_COMPONENTSTORE_HPP
