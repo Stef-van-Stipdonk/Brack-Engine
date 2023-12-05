@@ -35,6 +35,11 @@ ParticleSystem::~ParticleSystem() {
 }
 
 void ParticleSystem::update(milliseconds deltaTime) {
+    updateParticles(deltaTime);
+    updateParticleEmitters(deltaTime);
+}
+
+void ParticleSystem::updateParticles(milliseconds deltaTime) {
     auto particleIds = ComponentStore::GetInstance().getEntitiesWithComponent<ParticleComponent>();
     for (auto id: particleIds) {
         auto& particleComponent = ComponentStore::GetInstance().tryGetComponent<ParticleComponent>(id);
@@ -46,7 +51,9 @@ void ParticleSystem::update(milliseconds deltaTime) {
             particleComponent.lifeTime -= deltaTime;
         }
     }
+}
 
+void ParticleSystem::updateParticleEmitters(milliseconds deltaTime) {
     auto particleEmitterEntityIds = ComponentStore::GetInstance().getEntitiesWithComponent<ParticleEmitterComponent>();
     for (auto id: particleEmitterEntityIds) {
         auto inactiveParticleIds = ComponentStore::GetInstance().getInactiveEntitiesWithComponent<ParticleComponent>();
