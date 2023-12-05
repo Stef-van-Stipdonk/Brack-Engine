@@ -137,6 +137,11 @@ public:
         if (itType != components.end()) {
             itType->second.erase(entityId);
         }
+
+        auto component = std::find(entityToComponent[entityId].begin(), entityToComponent[entityId].end(), typeid(T));
+        if (component != entityToComponent[entityId].end()) {
+            entityToComponent[entityId].erase(component);
+        }
     }
 
     template<typename T>
