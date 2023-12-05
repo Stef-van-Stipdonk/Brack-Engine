@@ -4,8 +4,11 @@
 
 #include <Helpers/KeyMap.hpp>
 #include <Helpers/MouseMap.hpp>
+#include <Components/CameraComponent.hpp>
+#include <Components/TransformComponent.hpp>
 #include "EngineManagers/InputManager.hpp"
 #include "../Logger.hpp"
+#include "../includes/ComponentStore.hpp"
 
 InputManager InputManager::instance;
 
@@ -95,7 +98,7 @@ std::unique_ptr<Vector2> &InputManager::getMousePositions() {
     return mousePosition;
 }
 
-Vector2 &InputManager::getMousePosition() const {
+Vector2 &InputManager::getScreenMousePosition() const {
     return *mousePosition;
 }
 
@@ -133,6 +136,32 @@ void InputManager::UpdateEvents() {
     }
 }
 
+Vector2 InputManager::getWorldMousePosition() const {
+    auto cameraIds = ComponentStore::GetInstance().getEntitiesWithComponent<CameraComponent>();
+    for (auto id: cameraIds) {
+        auto &camera = ComponentStore::GetInstance().tryGetComponent<CameraComponent>(id);
+        auto &cameraPosition = camera.onScreenPosition;
+        auto &cameraSize = camera.size;
+        if (isPositionInsideSquare(*mousePosition, *cameraPosition, *cameraSize)) {
+            auto &cameraTransform = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(id);
+            auto mouseDistance = *mousePosition - *cameraPosition;
+            auto mouseWorldPosition = *cameraTransform.position + mouseDistance;
+            return mouseWorldPosition;
+        }
+    }
+    return {0, 0};
+}
+
+bool InputManager::isPositionInsideSquare(const Vector2 &position, const Vector2 &squarePosition,
+                                          const Vector2 &squareSize) const {
+    float minX = squarePosition.getX() - squareSize.getX() / 2;
+    float maxX = squarePosition.getX() + squareSize.getX() / 2;
+    float minY = squarePosition.getY() - squareSize.getY() / 2;
+    float maxY = squarePosition.getY() + squareSize.getY() / 2;
+
+    return position.getX() >= minX && position.getX() <= maxX && position.getY() >= minY && position.getY() <= maxY;
+}
+
 void InputManager::clearInputs() {
     for (auto &item: keyInputs) {
         item.second = None;
@@ -141,4 +170,5 @@ void InputManager::clearInputs() {
     for (auto &item: mouseInputs) {
         item.second = None;
     }
+
 }

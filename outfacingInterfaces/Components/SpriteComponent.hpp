@@ -7,7 +7,6 @@
 
 #include "TransformComponent.hpp"
 #include "Helpers/Color.hpp"
-#include "../../src/Components/ComponentVisitor.hpp"
 #include <string>
 #include <memory>
 #include <Components/Archetypes/RenderArchetype.hpp>
@@ -50,10 +49,6 @@ struct SpriteComponent : public RenderArchetype {
         sortingLayer = other.sortingLayer;
         orderInLayer = other.orderInLayer;
         margin = other.margin;
-    }
-
-    void accept(ComponentVisitor &visitor) override {
-        visitor.visit(*this);
     }
 
     std::string spritePath = "";

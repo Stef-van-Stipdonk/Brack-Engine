@@ -8,7 +8,6 @@
 #include <cstdint>
 #include <vector>
 #include "IComponent.hpp"
-#include "../../src/Components/ComponentVisitor.hpp"
 
 
 struct ChildComponent : public IComponent {
@@ -19,11 +18,7 @@ struct ChildComponent : public IComponent {
     }
 
     ~ChildComponent() override = default;
-
-
-    void accept(ComponentVisitor &visitor) override {
-        visitor.visit(*this);
-    }
+    
 
     ChildComponent(const ChildComponent &other) : IComponent(other) {
         children = other.children;

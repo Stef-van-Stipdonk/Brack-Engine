@@ -5,7 +5,8 @@
 #ifndef BRACK_ENGINE_VELOCITYCOMPONENT_HPP
 #define BRACK_ENGINE_VELOCITYCOMPONENT_HPP
 
-#include "TransformComponent.hpp"
+#include "IComponent.hpp"
+#include "Helpers/Vector2.hpp"
 
 struct VelocityComponent : public IComponent {
     explicit VelocityComponent() : IComponent() {}
@@ -18,10 +19,6 @@ struct VelocityComponent : public IComponent {
 
     VelocityComponent(const VelocityComponent &other) : IComponent(other) {
         velocity = other.velocity;
-    }
-
-    void accept(ComponentVisitor &visitor) override {
-        visitor.visit(*this);
     }
 
     Vector2 velocity;

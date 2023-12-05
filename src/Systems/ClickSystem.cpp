@@ -6,7 +6,9 @@
 #include <Helpers/MouseMap.hpp>
 #include <Components/BoxCollisionComponent.hpp>
 #include <Components/CircleCollisionComponent.hpp>
+#include <Components/TransformComponent.hpp>
 #include "ClickSystem.hpp"
+#include "../includes/ComponentStore.hpp"
 
 ClickSystem::ClickSystem() {}
 
@@ -16,7 +18,7 @@ void ClickSystem::update(milliseconds deltaTime) {
     if (!InputManager::GetInstance().IsMouseReleased(LEFT_MOUSE)) return;
 
     auto &componentStore = ComponentStore::GetInstance();
-    auto &mousePosition = InputManager::GetInstance().getMousePosition();
+    auto &mousePosition = InputManager::GetInstance().getScreenMousePosition();
     auto clickableComponentIds = componentStore.getEntitiesWithComponent<ClickableComponent>();
     for (int entityId: clickableComponentIds) {
         auto clickableComponent = componentStore.tryGetComponent<ClickableComponent>(entityId);

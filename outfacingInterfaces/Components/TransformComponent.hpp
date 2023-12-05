@@ -8,7 +8,6 @@
 #include <memory>
 #include "IComponent.hpp"
 #include "Helpers/Vector2.hpp"
-#include "../../src/Components/ComponentVisitor.hpp"
 
 
 struct TransformComponent : public IComponent {
@@ -25,10 +24,6 @@ struct TransformComponent : public IComponent {
 
     virtual std::unique_ptr<IComponent> clone() const override {
         return std::make_unique<TransformComponent>(*this);
-    }
-
-    void accept(ComponentVisitor &visitor) override {
-        visitor.visit(*this);
     }
 
     TransformComponent(const TransformComponent &other) : IComponent(other) {

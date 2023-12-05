@@ -90,6 +90,7 @@ void BrackEngine::CreateFPS() {
 
     EntityManager::getInstance().addEntityWithName(entityId, objectInfoComponent.name);
     EntityManager::getInstance().addEntityWithTag(entityId, objectInfoComponent.tag);
+    EntityManager::getInstance().setEntityActive(entityId, true);
 }
 
 void BrackEngine::UpdateFPS(float deltaTime) {

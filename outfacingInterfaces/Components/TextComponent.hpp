@@ -8,7 +8,6 @@
 #include <string>
 #include <memory>
 #include "Helpers/Color.hpp"
-#include "../../src/Components/ComponentVisitor.hpp"
 #include "Components/Archetypes/RenderArchetype.hpp"
 
 
@@ -26,11 +25,6 @@ struct TextComponent : public RenderArchetype {
 
         if (other.color != nullptr)
             color = std::make_unique<Color>(*other.color);
-    }
-
-
-    void accept(ComponentVisitor &visitor) override {
-        visitor.visit(*this);
     }
 
     std::string text = "";

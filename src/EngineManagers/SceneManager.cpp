@@ -40,3 +40,17 @@ std::optional<GameObject> SceneManager::getGameObjectByTag(const std::string &ta
 std::vector<GameObject> SceneManager::getGameObjectsByTag(const std::string &tag) {
     return GameObjectConverter::getGameObjectsByTag(tag);
 }
+
+Vector2 SceneManager::getWorldPosition(const TransformComponent &transformComponent) {
+    auto position = *transformComponent.position;
+    try {
+        auto parentId = ComponentStore::GetInstance().tryGetComponent<ParentComponent>(
+                transformComponent.entityID).parentId;
+        auto &parentTransform = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(parentId);
+        position += getWorldPosition(parentTransform);
+        return position;
+    }
+    catch (std::runtime_error &e) {
+        return position;
+    }
+}
