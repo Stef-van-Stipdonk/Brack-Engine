@@ -59,10 +59,7 @@ struct BehaviourScript : public IComponent {
 
     void setActive(bool active) {
         EntityManager::getInstance().setEntityActive(entityID, active);
-    }
-
-    bool isActive() {
-        return EntityManager::getInstance().isEntityActive(entityID);
+        tryGetComponent<ObjectInfoComponent>().isActive = active;
     }
 };
 
