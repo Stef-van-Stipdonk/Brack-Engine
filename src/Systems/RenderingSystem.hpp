@@ -37,6 +37,8 @@ private:
 
     std::multiset<RenderArchetype *, CompareByLayer> components;
     std::multiset<RenderArchetype *, CompareByLayer> uiComponents;
+    std::set<CollisionArchetype *> collisionComponents;
+    std::set<CollisionArchetype *> uiCollisionComponents;
     std::unique_ptr<RenderWrapper> sdl2Wrapper;
 };
 

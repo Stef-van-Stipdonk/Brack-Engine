@@ -5,6 +5,7 @@
 #ifndef BRACK_ENGINE_SPRITECOMPONENT_HPP
 #define BRACK_ENGINE_SPRITECOMPONENT_HPP
 
+
 #include "TransformComponent.hpp"
 #include "Helpers/Color.hpp"
 #include <string>

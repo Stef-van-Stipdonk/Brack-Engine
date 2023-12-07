@@ -91,30 +91,107 @@ void RenderingSystem::SortRenderComponents() {
         auto &spriteComponent = ComponentStore::GetInstance().tryGetComponent<SpriteComponent>(entityId);
         if (!spriteComponent.isActive)
             continue;
-        if (spriteComponent.sortingLayer == 0) // UI layer
+
+        if (spriteComponent.sortingLayer == 0) {
             uiComponents.insert(&spriteComponent);
-        else
+#if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
+            try {
+                auto &boxCollisionComponent = ComponentStore::GetInstance().tryGetComponent<BoxCollisionComponent>(
+                        entityId);
+                uiCollisionComponents.insert(&boxCollisionComponent);
+            } catch (std::exception &e) {}
+            try {
+                auto &circleCollisionComponent = ComponentStore::GetInstance().tryGetComponent<CircleCollisionComponent>(
+                        entityId);
+                uiCollisionComponents.insert(&circleCollisionComponent);
+            } catch (std::exception &e) {}
+#endif
+        }// UI layer
+        else {
             components.insert(&spriteComponent);
+#if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
+            try {
+                auto &boxCollisionComponent = ComponentStore::GetInstance().tryGetComponent<BoxCollisionComponent>(
+                        entityId);
+                collisionComponents.insert(&boxCollisionComponent);
+            } catch (std::exception &e) {}
+            try {
+                auto &circleCollisionComponent = ComponentStore::GetInstance().tryGetComponent<CircleCollisionComponent>(
+                        entityId);
+                collisionComponents.insert(&circleCollisionComponent);
+            } catch (std::exception &e) {}
+#endif
+        }
     }
     auto textComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<TextComponent>();
     for (auto entityId: textComponentIds) {
         auto &textComponent = ComponentStore::GetInstance().tryGetComponent<TextComponent>(entityId);
         if (!textComponent.isActive)
             continue;
-        if (textComponent.sortingLayer == 0) // UI layer
+        if (textComponent.sortingLayer == 0) {
             uiComponents.insert(&textComponent);
-        else
+#if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
+            try {
+                auto &boxCollisionComponent = ComponentStore::GetInstance().tryGetComponent<BoxCollisionComponent>(
+                        entityId);
+                uiCollisionComponents.insert(&boxCollisionComponent);
+            } catch (std::exception &e) {}
+            try {
+                auto &circleCollisionComponent = ComponentStore::GetInstance().tryGetComponent<CircleCollisionComponent>(
+                        entityId);
+                uiCollisionComponents.insert(&circleCollisionComponent);
+            } catch (std::exception &e) {}
+#endif
+        } else {
             components.insert(&textComponent);
+#if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
+            try {
+                auto &boxCollisionComponent = ComponentStore::GetInstance().tryGetComponent<BoxCollisionComponent>(
+                        entityId);
+                collisionComponents.insert(&boxCollisionComponent);
+            } catch (std::exception &e) {}
+            try {
+                auto &circleCollisionComponent = ComponentStore::GetInstance().tryGetComponent<CircleCollisionComponent>(
+                        entityId);
+                collisionComponents.insert(&circleCollisionComponent);
+            } catch (std::exception &e) {}
+#endif
+        }
     }
     auto RectangleComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<RectangleComponent>();
     for (auto entityId: RectangleComponentIds) {
         auto &rectangleComponent = ComponentStore::GetInstance().tryGetComponent<RectangleComponent>(entityId);
         if (!rectangleComponent.isActive)
             continue;
-        if (rectangleComponent.sortingLayer == 0) // UI layer
+        if (rectangleComponent.sortingLayer == 0) {
             uiComponents.insert(&rectangleComponent);
-        else
+#if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
+            try {
+                auto &boxCollisionComponent = ComponentStore::GetInstance().tryGetComponent<BoxCollisionComponent>(
+                        entityId);
+                uiCollisionComponents.insert(&boxCollisionComponent);
+            } catch (std::exception &e) {}
+            try {
+                auto &circleCollisionComponent = ComponentStore::GetInstance().tryGetComponent<CircleCollisionComponent>(
+                        entityId);
+                uiCollisionComponents.insert(&circleCollisionComponent);
+            } catch (std::exception &e) {}
+#endif
+        } else {
             components.insert(&rectangleComponent);
+#if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
+            try {
+                auto &boxCollisionComponent = ComponentStore::GetInstance().tryGetComponent<BoxCollisionComponent>(
+                        entityId);
+                collisionComponents.insert(&boxCollisionComponent);
+            } catch (std::exception &e) {}
+            try {
+                auto &circleCollisionComponent = ComponentStore::GetInstance().tryGetComponent<CircleCollisionComponent>(
+                        entityId);
+                collisionComponents.insert(&circleCollisionComponent);
+            } catch (std::exception &e) {}
+#endif
+        }
     }
 }
 
