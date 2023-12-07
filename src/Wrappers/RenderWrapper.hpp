@@ -50,6 +50,12 @@ public:
                           const CircleCollisionComponent &circleCollisionComponent,
                           const TransformComponent &transformComponent);
 
+    void RenderUiBoxCollision(const BoxCollisionComponent &boxCollisionComponent,
+                              const TransformComponent &transformComponent);
+
+    void RenderUiCircleCollision(const CircleCollisionComponent &circleCollisionComponent,
+                                 const TransformComponent &transformComponent);
+
 
     void RenderUiSprite(const SpriteComponent &spriteComponent, const TransformComponent &transformComponent);
 

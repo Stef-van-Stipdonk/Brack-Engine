@@ -40,20 +40,15 @@ void RenderingSystem::update(milliseconds deltaTime) {
                                              transformComponent);
         }
 #if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
-        for (auto entityId: boxCollisionComponentIds) {
-            auto &boxCollisionComponent = ComponentStore::GetInstance().tryGetComponent<BoxCollisionComponent>(
-                    entityId);
-            auto &transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(entityId);
-            sdl2Wrapper->RenderBoxCollision(cameraComponent, cameraTransformComponent, boxCollisionComponent,
-                                            transformComponent);
-        }
-
-        for (auto entityId: circleCollisionComponentIds) {
-            auto &circleCollisionComponent = ComponentStore::GetInstance().tryGetComponent<CircleCollisionComponent>(
-                    entityId);
-            auto &transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(entityId);
-            sdl2Wrapper->RenderCircleCollision(cameraComponent, cameraTransformComponent, circleCollisionComponent,
-                                               transformComponent);
+        for (auto component: collisionComponents) {
+            auto &transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(
+                    component->entityID);
+            if (auto *boxCollisionComponent = dynamic_cast<const BoxCollisionComponent *>(component))
+                sdl2Wrapper->RenderBoxCollision(cameraComponent, cameraTransformComponent, *boxCollisionComponent,
+                                                transformComponent);
+            else if (auto *circleCollisionComponent = dynamic_cast<const CircleCollisionComponent *>(component))
+                sdl2Wrapper->RenderCircleCollision(cameraComponent, cameraTransformComponent, *circleCollisionComponent,
+                                                   transformComponent);
         }
 #endif
     }
@@ -70,6 +65,18 @@ void RenderingSystem::update(milliseconds deltaTime) {
         else if (auto *rectangleComponent = dynamic_cast<const RectangleComponent *>(component))
             sdl2Wrapper->RenderUiRectangle(*rectangleComponent, transformComponent);
     }
+
+#if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
+    for (auto component: uiCollisionComponents) {
+        auto &transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(
+                component->entityID);
+        if (auto *boxCollisionComponent = dynamic_cast<const BoxCollisionComponent *>(component))
+            sdl2Wrapper->RenderUiBoxCollision(*boxCollisionComponent, transformComponent);
+        else if (auto *circleCollisionComponent = dynamic_cast<const CircleCollisionComponent *>(component))
+            sdl2Wrapper->RenderUiCircleCollision(*circleCollisionComponent, transformComponent);
+    }
+#endif
+
     sdl2Wrapper->RenderFrame();
 
 }
@@ -85,6 +92,10 @@ const std::string RenderingSystem::getName() const {
 void RenderingSystem::SortRenderComponents() {
     components.clear();
     uiComponents.clear();
+#if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
+    collisionComponents.clear();
+    uiCollisionComponents.clear();
+#endif
 
     auto spriteComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<SpriteComponent>();
     for (auto entityId: spriteComponentIds) {

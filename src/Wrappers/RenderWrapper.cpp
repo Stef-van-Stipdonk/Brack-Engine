@@ -4,6 +4,7 @@
 #include "../includes/SystemManager.hpp"
 #include "../ConfigSingleton.hpp"
 #include "../includes/ComponentStore.hpp"
+#include "../../outfacingInterfaces/EngineManagers/SceneManager.hpp"
 
 RenderWrapper::RenderWrapper() : renderer(nullptr, nullptr), renderTexture(nullptr, nullptr) {
     Initialize();
@@ -568,6 +569,31 @@ void RenderWrapper::RenderUiRectangle(const RectangleComponent &rectangleCompone
     SDL_DestroyTexture(rectangleTexture);
 }
 
+void RenderWrapper::RenderUiBoxCollision(const BoxCollisionComponent &boxCollisionComponent,
+                                         const TransformComponent &transformComponent) {
+#if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
+    auto worldPosition = SceneManager::getWorldPosition(transformComponent);
+    auto worldScale = SceneManager::getWorldScale(transformComponent);
+
+    SDL_Rect squareRect = {
+            static_cast<int>(worldPosition.getX()),
+            static_cast<int>(worldPosition.getY()),
+            static_cast<int>(boxCollisionComponent.size->getX() * worldScale.getX()),
+            static_cast<int>(boxCollisionComponent.size->getY() * worldScale.getY())};
+
+    SDL_SetRenderDrawColor(renderer.get(), 255, 0, 0, 255);
+    SDL_RenderDrawRect(renderer.get(), &squareRect);
+#endif
+}
+
+void RenderWrapper::RenderUiCircleCollision(const CircleCollisionComponent &circleCollisionComponent,
+                                            const TransformComponent &transformComponent) {
+#if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
+    auto worldPosition = SceneManager::getWorldPosition(transformComponent);
+    auto worldScale = SceneManager::getWorldScale(transformComponent);
+#endif
+}
+
 void RenderWrapper::render(SDL_Texture *texture, SDL_Rect *srcrect, SDL_Rect *dstrect, float rotation, const bool flipX,
                            const bool flipY) const {
     int centerX = dstrect->w / 2;
@@ -588,4 +614,3 @@ void RenderWrapper::render(SDL_Texture *texture, SDL_Rect *srcrect, SDL_Rect *ds
                      &rotationCenter,
                      flip);
 }
-
