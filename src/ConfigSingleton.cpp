@@ -34,6 +34,10 @@ bool ConfigSingleton::IsFullscreen() const {
     return fullscreen;
 }
 
+int ConfigSingleton::getParticleLimit() const {
+    return particleLimit;
+}
+
 std::string ConfigSingleton::GetBaseAssetPath() const {
     return BaseAssetPath;
 }
@@ -51,6 +55,7 @@ void ConfigSingleton::SetConfig(Config config) {
     showFPS = config.showFPS;
     amountOfSoundEffectsChannels = config.amountOfSoundEffectsChannels;
     fpsLimit = config.fpsLimit;
+    particleLimit = config.particleLimit;
 }
 
 bool ConfigSingleton::ShowFPS() const {
