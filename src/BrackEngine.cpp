@@ -33,8 +33,8 @@ BrackEngine::BrackEngine(Config &&config) {
     SystemManager::getInstance().AddSystem(std::make_shared<PhysicsSystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<AnimationSystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<RenderingSystem>());
+    SystemManager::getInstance().AddSystem(std::make_shared<ParticleSystem>());
 
-    SystemManager::GetInstance().AddSystem(std::make_shared<ParticleSystem>());
     lastTime = std::chrono::high_resolution_clock::now();
 
     if (ConfigSingleton::GetInstance().ShowFPS())
