@@ -35,15 +35,19 @@ public:
 
     static std::optional<GameObject> getGameObjectByTag(const std::string &tag);
 
-    static std::vector<GameObject> getGameObjectsByTag(const std::string &tag);
+    static std::vector<GameObject *> getGameObjectsByTag(const std::string &tag);
 
     static Vector2 getWorldPosition(const TransformComponent &transformComponent);
+
+    std::string getActiveSceneSignature();
 
 private:
     SceneManager() = default;
 
     static SceneManager instance;
     bool hasChanged = false;
+
+    std::string activeSceneSignature;
 
 };
 
