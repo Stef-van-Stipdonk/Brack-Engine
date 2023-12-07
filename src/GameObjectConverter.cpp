@@ -35,10 +35,6 @@ void GameObjectConverter::addGameObject(GameObject *gameObject) {
         component->accept(componentVisitor);
     }
 
-    auto scripts = ComponentStore::GetInstance().getAllComponentsOfType<BehaviourScript>();
-    for (auto &script: scripts) {
-        script->onStart();
-    }
 
 }
 

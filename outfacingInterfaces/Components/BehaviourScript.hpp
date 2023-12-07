@@ -61,6 +61,9 @@ struct BehaviourScript : public IComponent {
     std::optional<GameObject> getParent() {
         return GameObjectConverter::getParent(entityID);
     }
+
+    virtual int getPriority() const {};
+
 };
 
 

@@ -16,5 +16,17 @@ void ComponentStore::checkBehaviourScript(std::unique_ptr<IComponent> &component
     if (behaviourScript != nullptr) {
         notStartedBehaviourScripts.push_back(std::ref(*behaviourScript));
     }
+}
 
+void ComponentStore::removeBehaviourScript(BehaviourScript &behaviourScript) {
+    auto it = std::find_if(
+            notStartedBehaviourScripts.begin(),
+            notStartedBehaviourScripts.end(),
+            [&](const std::reference_wrapper<BehaviourScript> &ref) {
+                return &ref.get() == &behaviourScript;
+            }
+    );
+    if (it != notStartedBehaviourScripts.end()) {
+        notStartedBehaviourScripts.erase(it);
+    }
 }

@@ -14,9 +14,17 @@ BehaviourScriptSystem::~BehaviourScriptSystem() {
 
 }
 
+bool compareByPriority(const BehaviourScript *obj1, const BehaviourScript *obj2) {
+    return obj1->getPriority() < obj2->getPriority();
+}
+
+
 void BehaviourScriptSystem::update(milliseconds deltaTime) {
     auto behaviorScripts = ComponentStore::GetInstance().getAllComponentsOfType<BehaviourScript>();
-    auto notStartedBehaviourScripts = ComponentStore::GetInstance().getNotStartedBehaviourScripts();
+    auto notStartedBehaviourScripts = ComponentStore::GetInstance().notStartedBehaviourScripts;
+    std::sort(behaviorScripts.begin(), behaviorScripts.end(), compareByPriority);
+
+
     for (auto script: behaviorScripts) {
         auto &scriptref = *script;
         auto it = std::find_if(
@@ -27,11 +35,13 @@ void BehaviourScriptSystem::update(milliseconds deltaTime) {
                 }
         );
         if (it != notStartedBehaviourScripts.end()) {
-            notStartedBehaviourScripts.erase(it);
+            script->onStart();
+            ComponentStore::GetInstance().removeBehaviourScript(scriptref);
         }
         script->onUpdate(deltaTime);
     }
 }
+
 
 const std::string BehaviourScriptSystem::getName() const {
     return "BehaviourScriptSystem";

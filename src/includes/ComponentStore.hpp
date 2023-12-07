@@ -141,20 +141,21 @@ public:
         return entities;
     }
 
-    std::vector<std::reference_wrapper<BehaviourScript>> getNotStartedBehaviourScripts() {
-        return notStartedBehaviourScripts;
-    }
 
+    std::vector<std::reference_wrapper<BehaviourScript>> notStartedBehaviourScripts;
 
+    void removeBehaviourScript(BehaviourScript &behaviourScript);
+
+    int behaviourScriptCount = 0;
 private:
     static ComponentStore instance;
 
     ComponentStore() = default;
 
-    std::vector<std::reference_wrapper<BehaviourScript>> notStartedBehaviourScripts;
     std::unordered_map<std::type_index, std::unordered_map<entity, std::unique_ptr<IComponent>>> components;
 
     void checkBehaviourScript(std::unique_ptr<IComponent> &component);
+
 };
 
 #endif // SIMPLE_COMPONENTSTORE_HPP
