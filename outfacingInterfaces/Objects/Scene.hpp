@@ -19,25 +19,33 @@ public:
 
     ~Scene() = default;
 
-    void AddGameObject(std::unique_ptr<GameObject> gameObject);
+    void addGameObject(std::unique_ptr<GameObject> gameObject);
 
-    std::unique_ptr<GameObject> &GetGameObjectByName(char *name);
+    GameObject *getGameObjectByName(const std::string name);
 
-    std::vector<GameObject *> GetGameObjectsByTag(const std::string &tag);
+    std::vector<GameObject *> getGameObjectsByTag(const std::string &tag);
 
-    std::vector<GameObject *> GetAllGameObjects();
+    std::vector<GameObject *> getAllGameObjects();
 
-    std::vector<Camera *> GetAllCameras();
+    std::vector<Camera *> getAllCameras();
 
-    void RemoveGameObject(GameObject &gameObject);
+    void removeGameObject(GameObject &gameObject);
 
-    std::vector<std::unique_ptr<Camera>> &GetCameras();
+    void removeGameObjectByName(std::string name);
 
-    void AddCamera(Camera &&camera);
+    std::vector<std::unique_ptr<Camera>> &getCameras();
+
+    void addCamera(Camera &&camera);
+
+    std::string getSignature();
 
 private:
     std::vector<std::unique_ptr<GameObject>> gameObjects;
     std::vector<std::unique_ptr<Camera>> cameras;
+
+    std::string generateSignature();
+
+    std::string signature;
 
 };
 

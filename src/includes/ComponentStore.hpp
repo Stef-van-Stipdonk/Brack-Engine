@@ -2,6 +2,7 @@
 #define SIMPLE_COMPONENTSTORE_HPP
 
 #include <unordered_map>
+#include <algorithm>
 #include <typeindex>
 #include <vector>
 #include <memory>
@@ -38,6 +39,12 @@ public:
                     std::string(typeid(T).name()));
 
         components[typeid(T)][entityId] = std::make_unique<T>(component);
+
+        if (entityToComponent.size() <= entityId) {
+            entityToComponent.resize(entityId + 100);
+        }
+
+        entityToComponent[entityId].push_back(typeid(T));
     }
 
     template<typename T, typename...Args>
@@ -51,6 +58,12 @@ public:
         T component(std::forward<Args>(args)...);
         component.entityID = entityId;
         components[typeid(T)][entityId] = std::make_unique<T>(component);
+
+        if (entityToComponent.size() <= entityId) {
+            entityToComponent.resize(entityId + 100);
+        }
+
+        entityToComponent[entityId].push_back(typeid(T));
     }
 
     void addComponent(entity entityId, std::unique_ptr<IComponent> component) {
@@ -62,6 +75,12 @@ public:
         IComponent &componentRef = *component;
 
         components[typeid(componentRef)][entityId] = std::move(component);
+
+        if (entityToComponent.size() <= entityId) {
+            entityToComponent.resize(entityId + 100);
+        }
+
+        entityToComponent[entityId].push_back(typeid(componentRef));
     }
 
 
@@ -119,6 +138,11 @@ public:
         if (itType != components.end()) {
             itType->second.erase(entityId);
         }
+
+        auto component = std::find(entityToComponent[entityId].begin(), entityToComponent[entityId].end(), typeid(T));
+        if (component != entityToComponent[entityId].end()) {
+            entityToComponent[entityId].erase(component);
+        }
     }
 
     void removeAllComponents(const entity entityId) {
@@ -160,12 +184,15 @@ public:
     }
 
 
+    void removeComponentsOfEntity(entity entityId);
+
 private:
     static ComponentStore instance;
 
     ComponentStore() = default;
 
     std::unordered_map<std::type_index, std::unordered_map<entity, std::unique_ptr<IComponent>>> components;
+    std::vector<std::vector<std::type_index>> entityToComponent;
 };
 
 #endif // SIMPLE_COMPONENTSTORE_HPP

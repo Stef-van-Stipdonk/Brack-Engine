@@ -71,9 +71,12 @@ private:
     EntityManager() = default;
 
     std::unordered_set<entity> entities;
-    entity nextID = 1; // Start from 1 for simplicity.
-    std::map<std::string, std::vector<entity>> entitiesByName;
-    std::map<std::string, std::vector<entity>> entitiesByTag;
+    entity nextID = 1;
+    std::vector<entity> reserveEntities;
+    std::map<entity, std::string> entityToName;
+    std::map<entity, std::string> entityToTag;
+    std::map<std::string, std::vector<entity>> nameToEntity;
+    std::map<std::string, std::vector<entity>> tagToEntity;
     std::map<entity, bool> activeEntities;
 };
 
