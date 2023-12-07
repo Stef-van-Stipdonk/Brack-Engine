@@ -31,6 +31,8 @@ public:
     static void removeGameObject(GameObject &gameObject);
 
     static void removeGameObject(GameObject *gameObject);
+
+    static void removeGameObjectImpl(GameObject *gameObject);
 };
 
 

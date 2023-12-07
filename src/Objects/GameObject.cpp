@@ -26,12 +26,11 @@ std::vector<std::unique_ptr<GameObject>> &&GameObject::getChildren() {
     }
     try {
         auto &childComponent = tryGetComponent<ChildComponent>();
-        std::vector<std::unique_ptr<GameObject>> childrenFromComponent;
         for (auto &childId: childComponent.children) {
             auto child = std::make_unique<GameObject>(childId);
-            childrenFromComponent.push_back(std::move(child));
+            children.push_back(std::move(child));
         }
-        return std::move(childrenFromComponent);
+        return std::move(children);
     } catch (std::runtime_error &e) {
         return std::move(children);
     }

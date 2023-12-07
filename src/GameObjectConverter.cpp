@@ -123,7 +123,8 @@ void GameObjectConverter::removeGameObject(GameObject *gameObject) {
                 parentComponent.children.end());
     }
 
-//    ComponentStore::GetInstance().removeComponentsOfEntity(gameObject->getEntityId());
+    ComponentStore::GetInstance().removeComponentsOfEntity(gameObject->getEntityId());
+    EntityManager::getInstance().destroyEntity(gameObject->getEntityId());
 }
 
 void GameObjectConverter::removeGameObject(GameObject &gameObject) {
@@ -139,5 +140,8 @@ void GameObjectConverter::removeGameObject(GameObject &gameObject) {
                 std::remove(parentComponent.children.begin(), parentComponent.children.end(), gameObject.getEntityId()),
                 parentComponent.children.end());
     }
+
+    ComponentStore::GetInstance().removeComponentsOfEntity(gameObject.getEntityId());
+    EntityManager::getInstance().destroyEntity(gameObject.getEntityId());
 }
 
