@@ -24,3 +24,6 @@ void AISystem::cleanUp() {
 
 }
 
+void AISystem::clearCache() {
+
+}

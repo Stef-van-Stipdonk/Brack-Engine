@@ -39,6 +39,7 @@ public:
     const std::string getName() const override;
 
     void cleanUp() override;
+    void clearCache() override;
 
 private:
     std::queue<std::pair<float, std::unique_ptr<ECSSnapshot>>> snapshots;

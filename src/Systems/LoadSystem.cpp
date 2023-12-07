@@ -24,3 +24,6 @@ void LoadSystem::cleanUp() {
 
 }
 
+void LoadSystem::clearCache() {
+
+}

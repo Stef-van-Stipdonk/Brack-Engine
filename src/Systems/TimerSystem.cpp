@@ -24,3 +24,6 @@ void TimerSystem::cleanUp() {
 
 }
 
+void TimerSystem::clearCache() {
+
+}

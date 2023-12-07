@@ -23,7 +23,6 @@ void PhysicsSystem::update(milliseconds deltaTime) {
 }
 
 void PhysicsSystem::cleanUp() {
-
 }
 
 const std::string PhysicsSystem::getName() const {
@@ -50,9 +49,11 @@ void PhysicsSystem::handleBoxes() {
     PhysicsWrapper::getInstance().addBoxes(boxCollisionComponentIds);
 }
 
-PhysicsSystem::PhysicsSystem(const PhysicsSystem &other) {
-    physicsWrapper = std::make_unique<PhysicsWrapper>(*other.physicsWrapper);
+void PhysicsSystem::clearCache() {
+    PhysicsWrapper::getInstance().cleanCache();
 }
+
+
 
 
 

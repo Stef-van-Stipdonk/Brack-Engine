@@ -29,4 +29,6 @@ void BehaviourScriptSystem::cleanUp() {
 
 }
 
+void BehaviourScriptSystem::clearCache() {
 
+}

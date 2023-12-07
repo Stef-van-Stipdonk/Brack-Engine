@@ -38,3 +38,6 @@ void MovementSystem::cleanUp() {
 
 }
 
+void MovementSystem::clearCache() {
+
+}

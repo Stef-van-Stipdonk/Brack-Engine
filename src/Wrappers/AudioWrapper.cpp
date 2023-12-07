@@ -296,3 +296,11 @@ std::string AudioWrapper::getFileName(const std::string &audioPath) {
 
     return fileName;
 }
+
+void AudioWrapper::clearChannels() {
+    FMOD_Channel_Stop(soundTrackChannelPair.second);
+
+    for(auto sound : soundEffectsChannelMap) {
+        FMOD_Channel_Stop(sound.second);
+    }
+}
