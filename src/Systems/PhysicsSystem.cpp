@@ -23,7 +23,6 @@ void PhysicsSystem::update(milliseconds deltaTime) {
 }
 
 void PhysicsSystem::cleanUp() {
-
 }
 
 const std::string PhysicsSystem::getName() const {
@@ -51,7 +50,7 @@ void PhysicsSystem::handleBoxes() {
 }
 
 void PhysicsSystem::clearCache() {
-
+    PhysicsWrapper::getInstance().cleanCache();
 }
 
 

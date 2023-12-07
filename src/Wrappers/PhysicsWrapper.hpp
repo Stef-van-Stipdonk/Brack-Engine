@@ -35,6 +35,7 @@ public:
 
     void addBoxes(std::vector<uint32_t> componentIds);
 
+    void cleanCache();
 
     std::unordered_map<uint32_t, b2Body *> bodies;
     std::vector<uint32_t> boxBodies;

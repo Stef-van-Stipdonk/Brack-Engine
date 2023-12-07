@@ -60,7 +60,7 @@ Scene::Scene(Camera &&mainCamera) {
 }
 
 Scene::Scene() {
-//    AddCamera(Camera());
+    AddCamera(Camera());
 }
 
 std::vector<std::unique_ptr<Camera>> &Scene::GetCameras() {
