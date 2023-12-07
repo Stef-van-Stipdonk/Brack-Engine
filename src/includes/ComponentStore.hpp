@@ -2,6 +2,7 @@
 #define SIMPLE_COMPONENTSTORE_HPP
 
 #include <unordered_map>
+#include <algorithm>
 #include <typeindex>
 #include <vector>
 #include <memory>
