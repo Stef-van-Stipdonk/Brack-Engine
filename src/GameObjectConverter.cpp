@@ -48,6 +48,9 @@ void GameObjectConverter::addGameObject(GameObject *gameObject) {
         child->setEntityId(EntityManager::getInstance().createEntity());
         addGameObject(child.get());
     }
+    for (auto &behaviourScript: gameObject->getAllBehaviourScripts()) {
+        BehaviourScriptStore::getInstance().addBehaviourScript(entityId, std::move(behaviourScript));
+    }
 
 }
 

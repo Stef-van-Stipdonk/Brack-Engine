@@ -14,6 +14,8 @@
 #include <optional>
 #include "../src/includes/ComponentStore.hpp"
 #include "../Entity.hpp"
+#include "../src/includes/BehaviourScriptStore.hpp"
+#include "../../src/includes/BehaviourScriptStore.hpp"
 
 class GameObject {
 public:
@@ -21,9 +23,7 @@ public:
 
     GameObject(entity id);
 
-    ~GameObject() {
-
-    };
+    ~GameObject() = default;
 
     GameObject &operator=(const GameObject &other) {
         if (this != &other) {
@@ -47,6 +47,7 @@ public:
     template<typename T>
     typename std::enable_if<std::is_base_of<IComponent, T>::value>::type
     addComponent(std::unique_ptr<T> component) {
+
         if (entityID == 0)
             components.push_back(std::move(component));
         else
@@ -59,6 +60,21 @@ public:
         addComponent(std::make_unique<T>(component));
     }
 
+    template<typename T>
+    typename std::enable_if<std::is_base_of<IComponent, T>::value>::type
+    addBehaviourScript(T component) {
+        addComponent(std::make_unique<T>(component));
+    }
+
+    template<typename T>
+    typename std::enable_if<std::is_base_of<IComponent, T>::value>::type
+    addBehaviourScript(std::unique_ptr<T> component) {
+
+        if (entityID == 0)
+            behaviourScripts.push_back(std::move(component));
+        else
+            BehaviourScriptStore::getInstance().addComponent<T>(entityID, *component.get());
+    }
 
     GameObject(const GameObject &other) {
         entityID = other.entityID;
@@ -71,6 +87,17 @@ public:
     template<typename T>
     typename std::enable_if<std::is_base_of<IComponent, T>::value, bool>::type
     hasComponent() const {
+        for (const auto &comp: components) {
+            if (dynamic_cast<const T *>(comp.get()) != nullptr) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    template<typename T>
+    typename std::enable_if<std::is_base_of<IComponent, T>::value, bool>::type
+    hasBehaviourScript() const {
         for (const auto &comp: components) {
             if (dynamic_cast<const T *>(comp.get()) != nullptr) {
                 return true;
@@ -142,9 +169,14 @@ public:
 
     std::vector<std::unique_ptr<IComponent>> &&getAllComponents();
 
+    std::vector<std::unique_ptr<IComponent>> &&getAllBehaviourScripts();
+
+
 protected:
     entity entityID = 0;
     std::vector<std::unique_ptr<IComponent>> components;
+    std::vector<std::unique_ptr<IComponent>> behaviourScripts;
+
     GameObject *parent = nullptr;
     std::vector<std::unique_ptr<GameObject>> children;
 };

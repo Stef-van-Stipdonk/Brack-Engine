@@ -32,7 +32,6 @@ add_library(${PROJECT_NAME} SHARED
         src/includes/ComponentStore.hpp
         src/Managers/Systems/SystemManager.cpp
         src/includes/SystemManager.hpp
-        outfacingInterfaces/IComponentStorage.hpp
         src/Wrappers/RenderWrapper.cpp
         outfacingInterfaces/Components/ChildComponent.hpp
         outfacingInterfaces/Components/ParentComponent.hpp

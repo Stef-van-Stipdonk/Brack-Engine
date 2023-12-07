@@ -26,12 +26,11 @@ std::vector<std::unique_ptr<GameObject>> &&GameObject::getChildren() {
     }
     try {
         auto &childComponent = tryGetComponent<ChildComponent>();
-        std::vector<std::unique_ptr<GameObject>> childrenFromComponent;
         for (auto &childId: childComponent.children) {
             auto child = std::make_unique<GameObject>(childId);
-            childrenFromComponent.push_back(std::move(child));
+            children.push_back(std::move(child));
         }
-        return std::move(childrenFromComponent);
+        return std::move(children);
     } catch (std::runtime_error &e) {
         return std::move(children);
     }
@@ -95,6 +94,11 @@ void GameObject::setEntityId(entity id) {
 std::vector<std::unique_ptr<IComponent>> &&GameObject::getAllComponents() {
     return std::move(components);
 }
+
+std::vector<std::unique_ptr<IComponent>> &&GameObject::getAllBehaviourScripts() {
+    return std::move(behaviourScripts);
+}
+
 
 void GameObject::addChild(std::unique_ptr<GameObject> child) {
     try {

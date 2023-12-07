@@ -21,23 +21,10 @@ bool compareByPriority(const BehaviourScript *obj1, const BehaviourScript *obj2)
 
 void BehaviourScriptSystem::update(milliseconds deltaTime) {
     auto behaviorScripts = ComponentStore::GetInstance().getAllComponentsOfType<BehaviourScript>();
-    auto notStartedBehaviourScripts = ComponentStore::GetInstance().notStartedBehaviourScripts;
     std::sort(behaviorScripts.begin(), behaviorScripts.end(), compareByPriority);
 
 
     for (auto script: behaviorScripts) {
-        auto &scriptref = *script;
-        auto it = std::find_if(
-                notStartedBehaviourScripts.begin(),
-                notStartedBehaviourScripts.end(),
-                [&](const std::reference_wrapper<BehaviourScript> &ref) {
-                    return &ref.get() == script;
-                }
-        );
-        if (it != notStartedBehaviourScripts.end()) {
-            script->onStart();
-            ComponentStore::GetInstance().removeBehaviourScript(scriptref);
-        }
         script->onUpdate(deltaTime);
     }
 }

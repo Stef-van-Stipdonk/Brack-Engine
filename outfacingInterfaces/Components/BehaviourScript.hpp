@@ -6,12 +6,12 @@
 #define BRACK_ENGINE_BEHAVIOURSCRIPT_HPP
 
 #include "IComponent.hpp"
-#include "../../src/Components/ComponentVisitor.hpp"
 #include "../outfacingInterfaces/Milliseconds.hpp"
 #include "../../src/GameObjectConverter.hpp"
+#include "../../src/includes/ComponentStore.hpp"
 #include <functional>
-#include <Objects/GameObject.hpp>
 #include <optional>
+
 
 struct BehaviourScript : public IComponent {
     explicit BehaviourScript() = default;
@@ -63,7 +63,7 @@ struct BehaviourScript : public IComponent {
         tryGetComponent<ObjectInfoComponent>().isActive = active;
     }
 
-    virtual int getPriority() const {};
+    [[nodiscard]] virtual int getPriority() const {};
 
 };
 
