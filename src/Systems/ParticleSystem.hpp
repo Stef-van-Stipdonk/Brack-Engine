@@ -20,6 +20,11 @@ public:
 
     void cleanUp() override;
     void clearCache() override;
+
+    Vector2 generateRandomDirection(milliseconds speed);
+private:
+    void updateParticles(milliseconds deltaTime);
+    void updateParticleEmitters(milliseconds deltaTime);
 };
 
 

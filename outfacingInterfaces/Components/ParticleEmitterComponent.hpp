@@ -5,11 +5,16 @@
 #ifndef BRACK_ENGINE_PARTICLEEMITTERCOMPONENT_HPP
 #define BRACK_ENGINE_PARTICLEEMITTERCOMPONENT_HPP
 
+#include <Milliseconds.hpp>
+#include <memory>
+#include <vector>
+#include <Helpers/Color.hpp>
+#include <Helpers/Vector2.hpp>
 #include "IComponent.hpp"
-#include "../../src/Components/ComponentVisitor.hpp"
 
 struct ParticleEmitterComponent : public IComponent {
-    explicit ParticleEmitterComponent() : IComponent() {}
+    explicit ParticleEmitterComponent(int maxAmount) : IComponent(), maxAmount(maxAmount), activeParticles(maxAmount, 0.0) {
+    }
 
     ~ParticleEmitterComponent() override = default;
 
@@ -17,17 +22,30 @@ struct ParticleEmitterComponent : public IComponent {
         return std::make_unique<ParticleEmitterComponent>(*this);
     }
 
-
-    void accept(ComponentVisitor &visitor) override {
-        visitor.visit(*this);
-    }
-
     ParticleEmitterComponent(const ParticleEmitterComponent& other) : IComponent(other) {
-        amount = other.amount;
+        maxAmount = other.maxAmount;
+        speed = other.speed;
+        particleSize = other.particleSize;
+        emitInterval = other.emitInterval;
+        untilNextEmit = other.untilNextEmit;
+        lifeTime = other.lifeTime;
+        activeParticles = other.activeParticles;
+        color = std::make_unique<Color>(*other.color);
+        orderInLayer = other.orderInLayer;
+        sortingLayer = other.sortingLayer;
     }
 
-    int amount;
-};
+    std::vector<milliseconds> activeParticles;
+    milliseconds emitInterval;
+    milliseconds untilNextEmit = 0;
 
+    int maxAmount;
+    float speed;
+    int sortingLayer;
+    int orderInLayer;
+    Vector2 particleSize;
+    milliseconds lifeTime;
+    std::unique_ptr<Color> color = std::make_unique<Color>(255, 255, 255, 255);
+};
 
 #endif //BRACK_ENGINE_PARTICLEEMITTERCOMPONENT_HPP
