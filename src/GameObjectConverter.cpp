@@ -51,12 +51,12 @@ void GameObjectConverter::addGameObject(GameObject *gameObject) {
 
 }
 
-std::optional<GameObject> GameObjectConverter::getGameObjectByName(const std::string &name) {
+std::optional<GameObject *> GameObjectConverter::getGameObjectByName(const std::string &name) {
     auto entityId = EntityManager::getInstance().getEntityByName(name);
     if (entityId == 0)
         return std::nullopt;
 
-    return GameObject(entityId);
+    return new GameObject(entityId);
 }
 
 std::vector<GameObject> GameObjectConverter::getGameObjectsByName(const std::string &name) {
@@ -76,11 +76,12 @@ std::optional<GameObject> GameObjectConverter::getGameObjectByTag(const std::str
     return GameObject(entityId);
 }
 
-std::vector<GameObject> GameObjectConverter::getGameObjectsByTag(const std::string &tag) {
-    auto gameObjects = std::vector<GameObject>();
+std::vector<GameObject *> GameObjectConverter::getGameObjectsByTag(const std::string &tag) {
+    auto gameObjects = std::vector<GameObject *>();
     auto entityIds = EntityManager::getInstance().getEntitiesByTag(tag);
     for (auto entityId: entityIds) {
-        gameObjects.emplace_back(entityId);
+        auto gameObject = new GameObject(entityId);
+        gameObjects.emplace_back(gameObject);
     }
     return gameObjects;
 }
@@ -106,3 +107,41 @@ std::optional<GameObject> GameObjectConverter::getParent(entity entityID) {
         return std::nullopt;
     }
 }
+
+void GameObjectConverter::removeGameObject(GameObject *gameObject) {
+    auto children = gameObject->getChildren();
+    for (auto &child: children) {
+        removeGameObject(*child);
+    }
+
+    auto parent = gameObject->getParent();
+    if (parent.has_value()) {
+        auto &parentComponent = parent.value().tryGetComponent<ChildComponent>();
+        parentComponent.children.erase(
+                std::remove(parentComponent.children.begin(), parentComponent.children.end(),
+                            gameObject->getEntityId()),
+                parentComponent.children.end());
+    }
+
+    ComponentStore::GetInstance().removeComponentsOfEntity(gameObject->getEntityId());
+    EntityManager::getInstance().destroyEntity(gameObject->getEntityId());
+}
+
+void GameObjectConverter::removeGameObject(GameObject &gameObject) {
+    auto children = gameObject.getChildren();
+    for (auto &child: children) {
+        removeGameObject(*child);
+    }
+
+    auto parent = gameObject.getParent();
+    if (parent.has_value()) {
+        auto &parentComponent = parent.value().tryGetComponent<ChildComponent>();
+        parentComponent.children.erase(
+                std::remove(parentComponent.children.begin(), parentComponent.children.end(), gameObject.getEntityId()),
+                parentComponent.children.end());
+    }
+
+    ComponentStore::GetInstance().removeComponentsOfEntity(gameObject.getEntityId());
+    EntityManager::getInstance().destroyEntity(gameObject.getEntityId());
+}
+
