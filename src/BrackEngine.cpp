@@ -19,6 +19,7 @@
 #include "Systems/PhysicsSystem.hpp"
 #include "Systems/ReplaySystem.hpp"
 #include "Systems/AnimationSystem.hpp"
+#include "Systems/ParticleSystem.hpp"
 
 
 BrackEngine::BrackEngine(Config &&config) {
@@ -32,6 +33,7 @@ BrackEngine::BrackEngine(Config &&config) {
     SystemManager::GetInstance().AddSystem(std::make_shared<PhysicsSystem>());
     SystemManager::GetInstance().AddSystem(std::make_shared<ReplaySystem>(lastTime));
     SystemManager::GetInstance().AddSystem(std::make_shared<AnimationSystem>());
+    SystemManager::GetInstance().AddSystem(std::make_shared<ParticleSystem>());
     SystemManager::GetInstance().AddSystem(std::make_shared<RenderingSystem>());
 
     lastTime = std::chrono::high_resolution_clock::now();
@@ -97,8 +99,9 @@ void BrackEngine::UpdateFPS(float deltaTime) {
         return;
 
     totalTime = 0;
+    entity fpsId = EntityManager::getInstance().getEntityByTag("FPS");
     auto &textComponent = ComponentStore::GetInstance().tryGetComponent<TextComponent>(
-            1);//TODO ophalen met tag of name van component
+            fpsId);
 
     textComponent.text = std::to_string(FPSSingleton::GetInstance().GetFPS());;
 }
