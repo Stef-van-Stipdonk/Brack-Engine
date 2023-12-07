@@ -61,6 +61,10 @@ public:
 
     void setEntitiesByTagMap(const std::map<std::string, std::vector<entity>> &entitiesByTag);
 
+    bool isEntityActive(entity entityID) const;
+
+    void setEntityActive(entity entityID, bool active);
+
 private:
     static EntityManager instance;
 
@@ -70,6 +74,7 @@ private:
     entity nextID = 1; // Start from 1 for simplicity.
     std::map<std::string, std::vector<entity>> entitiesByName;
     std::map<std::string, std::vector<entity>> entitiesByTag;
+    std::map<entity, bool> activeEntities;
 };
 
 

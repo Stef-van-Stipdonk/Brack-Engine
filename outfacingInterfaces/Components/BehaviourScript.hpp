@@ -22,10 +22,6 @@ struct BehaviourScript : public IComponent {
         return std::make_unique<BehaviourScript>(*this);
     }
 
-    virtual void accept(ComponentVisitor &visitor) override {
-        visitor.visit(*this);
-    }
-
     BehaviourScript(const BehaviourScript &other) : IComponent(other) {}
 
     virtual void onStart() {};
@@ -60,6 +56,11 @@ struct BehaviourScript : public IComponent {
 
     std::optional<GameObject> getParent() {
         return GameObjectConverter::getParent(entityID);
+    }
+
+    void setActive(bool active) {
+        EntityManager::getInstance().setEntityActive(entityID, active);
+        tryGetComponent<ObjectInfoComponent>().isActive = active;
     }
 
     virtual int getPriority() const {};

@@ -47,6 +47,14 @@ public:
 
     Vector2 operator/(const float &other) const;
 
+    void operator+=(const Vector2 &other);
+
+    void operator-=(const Vector2 &other);
+
+    void operator*=(const float &other);
+
+    void operator/=(const float &other);
+
 private:
     float x, y;
 };

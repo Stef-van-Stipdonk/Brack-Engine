@@ -6,11 +6,11 @@
 #include <vector>
 #include <memory>
 #include <random>
+#include <Components/ObjectInfoComponent.hpp>
+#include <Components/ParentComponent.hpp>
 #include "Components/IComponent.hpp"
 #include "../Logger.hpp"
 #include "EntityManager.hpp"
-
-class BehaviourScript;
 
 class ComponentStore {
 public:
@@ -38,8 +38,6 @@ public:
                     std::string(typeid(T).name()));
 
         components[typeid(T)][entityId] = std::make_unique<T>(component);
-        checkBehaviourScript(components[typeid(T)][entityId]);
-
     }
 
     template<typename T, typename...Args>
@@ -53,9 +51,7 @@ public:
         T component(std::forward<Args>(args)...);
         component.entityID = entityId;
 
-
         components[typeid(T)][entityId] = std::make_unique<T>(component);
-        checkBehaviourScript(components[typeid(T)][entityId]);
     }
 
     void addComponent(entity entityId, std::unique_ptr<IComponent> component) {
@@ -63,12 +59,10 @@ public:
             throw std::runtime_error("Entity ID cannot be 0.");
 
         component->entityID = entityId;
-
+        
         IComponent &componentRef = *component;
 
         components[typeid(componentRef)][entityId] = std::move(component);
-        checkBehaviourScript(components[typeid(componentRef)][entityId]);
-
     }
 
 
@@ -135,27 +129,38 @@ public:
         auto itType = components.find(typeid(T));
         if (itType != components.end()) {
             for (auto &pair: itType->second) {
-                entities.push_back(pair.first);
+                auto &objectInfoComponent = tryGetComponent<ObjectInfoComponent>(pair.first);
+                if (EntityManager::getInstance().isEntityActive(pair.first) && objectInfoComponent.isActive) {
+                    entities.push_back(pair.first);
+                }
+            }
+        }
+        return entities;
+    }
+
+    template<typename T>
+    typename std::enable_if<std::is_base_of<IComponent, T>::value, std::vector<entity>>::type
+    getInactiveEntitiesWithComponent() {
+        std::vector<entity> entities;
+        auto itType = components.find(typeid(T));
+        if (itType != components.end()) {
+            for (auto &pair: itType->second) {
+                auto &objectInfoComponent = tryGetComponent<ObjectInfoComponent>(pair.first);
+                if (!EntityManager::getInstance().isEntityActive(pair.first) || !objectInfoComponent.isActive) {
+                    entities.push_back(pair.first);
+                }
             }
         }
         return entities;
     }
 
 
-    std::vector<std::reference_wrapper<BehaviourScript>> notStartedBehaviourScripts;
-
-    void removeBehaviourScript(BehaviourScript &behaviourScript);
-
-    int behaviourScriptCount = 0;
 private:
     static ComponentStore instance;
 
     ComponentStore() = default;
 
     std::unordered_map<std::type_index, std::unordered_map<entity, std::unique_ptr<IComponent>>> components;
-
-    void checkBehaviourScript(std::unique_ptr<IComponent> &component);
-
 };
 
 #endif // SIMPLE_COMPONENTSTORE_HPP

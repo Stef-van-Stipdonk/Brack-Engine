@@ -19,6 +19,11 @@ public:
     const std::string getName() const override;
 
     void cleanUp() override;
+
+    Vector2 generateRandomDirection(milliseconds speed);
+private:
+    void updateParticles(milliseconds deltaTime);
+    void updateParticleEmitters(milliseconds deltaTime);
 };
 
 

@@ -42,7 +42,6 @@ add_library(${PROJECT_NAME} SHARED
         outfacingInterfaces/Components/TransformComponent.hpp
         src/Helpers/Vector2.cpp
         outfacingInterfaces/Components/VelocityComponent.hpp
-        outfacingInterfaces/Components/CollisionComponent.hpp
         outfacingInterfaces/Components/BoxCollisionComponent.hpp
         outfacingInterfaces/Components/CircleCollisionComponent.hpp
         outfacingInterfaces/Components/CameraComponent.hpp
@@ -91,8 +90,6 @@ add_library(${PROJECT_NAME} SHARED
         outfacingInterfaces/Helpers/MouseMap.hpp
         src/FPSSingleton.cpp
         src/Wrappers/FPSWrapper.cpp
-        src/Components/ComponentVisitor.hpp
-        src/Components/ComponentVisitor.hpp
         src/Systems/ClickSystem.cpp
         src/Systems/ClickSystem.hpp
         outfacingInterfaces/Components/Archetypes/AudioArchetype.hpp
@@ -213,6 +210,7 @@ if (WIN32 OR WIN64)
     include_directories(${CMAKE_SOURCE_DIR}/lib/FMod/include)
     target_link_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/lib/FMod)
     target_link_libraries(${PROJECT_NAME} PRIVATE fmod)
+
 elseif (APPLE)
     find_library(FMOD_LIBRARY NAMES fmod PATHS "${CMAKE_CURRENT_SOURCE_DIR}/lib/FMod")
     find_path(FMOD_INCLUDE_DIR fmod.h PATHS "${CMAKE_CURRENT_SOURCE_DIR}/lib/FMod/include")

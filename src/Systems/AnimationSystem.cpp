@@ -3,6 +3,7 @@
 //
 
 #include <Components/AnimationComponent.hpp>
+#include <Components/SpriteComponent.hpp>
 #include "AnimationSystem.hpp"
 #include "../includes/ComponentStore.hpp"
 

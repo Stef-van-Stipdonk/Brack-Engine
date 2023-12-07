@@ -5,8 +5,10 @@
 #include <Helpers/KeyMap.hpp>
 #include <Helpers/MouseMap.hpp>
 #include <Components/CameraComponent.hpp>
+#include <Components/TransformComponent.hpp>
 #include "EngineManagers/InputManager.hpp"
 #include "../Logger.hpp"
+#include "../includes/ComponentStore.hpp"
 
 InputManager InputManager::instance;
 
@@ -147,7 +149,7 @@ Vector2 InputManager::getWorldMousePosition() const {
             return mouseWorldPosition;
         }
     }
-    return Vector2(0, 0);
+    return {0, 0};
 }
 
 bool InputManager::isPositionInsideSquare(const Vector2 &position, const Vector2 &squarePosition,
