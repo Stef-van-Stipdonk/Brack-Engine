@@ -19,6 +19,7 @@ public:
     const std::string getName() const override;
 
     void cleanUp() override;
+    void clearCache() override;
 };
 
 

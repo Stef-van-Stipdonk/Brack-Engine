@@ -45,3 +45,7 @@ void AudioSystem::cleanUp() {
 AudioSystem::AudioSystem(const AudioSystem &other) {
     audioWrapper = std::make_unique<AudioWrapper>(*other.audioWrapper);
 }
+
+void AudioSystem::clearCache() {
+    audioWrapper->clearChannels();
+}

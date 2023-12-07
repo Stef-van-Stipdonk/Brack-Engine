@@ -95,11 +95,12 @@ void Scene::removeGameObject(GameObject &gameObject) {
 
 Scene::Scene(Camera &&mainCamera) {
     addCamera(std::move(mainCamera));
+    signature = generateSignature();
 }
 
 Scene::Scene() {
     addCamera(Camera());
-
+    signature = generateSignature();
 }
 
 std::vector<std::unique_ptr<Camera>> &Scene::getCameras() {

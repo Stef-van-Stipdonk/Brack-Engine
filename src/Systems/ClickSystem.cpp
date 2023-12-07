@@ -80,3 +80,6 @@ void ClickSystem::cleanUp() {
 
 }
 
+void ClickSystem::clearCache() {
+
+}

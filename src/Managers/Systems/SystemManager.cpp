@@ -36,7 +36,7 @@ void SystemManager::UpdateSystems(milliseconds deltaTime) {
     }
 }
 
-SystemManager &SystemManager::GetInstance() {
+SystemManager &SystemManager::getInstance() {
     return instance;
 }
 
@@ -133,6 +133,12 @@ void SystemManager::PrintDependencyGraph() const {
 
 void SystemManager::CleanUp() {
     systems.clear();
+}
+
+void SystemManager::clearSystemsCache() {
+    for(auto& system : systems) {
+        system->clearCache();
+    }
 }
 
 void SystemManager::clearSystems() {

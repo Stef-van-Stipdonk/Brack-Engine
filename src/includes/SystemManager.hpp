@@ -12,7 +12,7 @@
 
 class SystemManager {
 public:
-    static SystemManager &GetInstance();
+    static SystemManager &getInstance();
 
     ~SystemManager() = default;
 
@@ -98,6 +98,8 @@ public:
     void PrintDependencyGraph() const;
 
     void SortSystems();
+
+    void clearSystemsCache();
 
     std::vector<std::shared_ptr<ISystem>> getCopyOfSystems();
 

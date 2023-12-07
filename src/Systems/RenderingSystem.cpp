@@ -206,6 +206,11 @@ void RenderingSystem::SortRenderComponents() {
     }
 }
 
+void RenderingSystem::clearCache() {
+    sdl2Wrapper->cleanCache();
+    components.clear();
+}
+
 RenderingSystem::RenderingSystem(const RenderingSystem &other) {
     sdl2Wrapper = std::make_unique<RenderWrapper>();
 }
