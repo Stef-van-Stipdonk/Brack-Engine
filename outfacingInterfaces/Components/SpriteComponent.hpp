@@ -16,9 +16,6 @@ struct SpriteComponent : public RenderArchetype {
     explicit SpriteComponent() : RenderArchetype() {}
 
     ~SpriteComponent() override {
-        if (imageSize != nullptr)
-            imageSize = nullptr;
-
         if (spriteSize != nullptr)
             spriteSize = nullptr;
 
@@ -35,8 +32,6 @@ struct SpriteComponent : public RenderArchetype {
 
     SpriteComponent(const SpriteComponent &other) : RenderArchetype(other) {
         spritePath = other.spritePath;
-        if (other.imageSize != nullptr)
-            imageSize = std::make_unique<Vector2>(*other.imageSize);
 
         if (other.spriteSize != nullptr)
             spriteSize = std::make_unique<Vector2>(*other.spriteSize);
@@ -53,7 +48,6 @@ struct SpriteComponent : public RenderArchetype {
     }
 
     std::string spritePath = "";
-    std::unique_ptr<Vector2> imageSize = std::make_unique<Vector2>(0, 0);
     std::unique_ptr<Vector2> spriteSize = std::make_unique<Vector2>(0, 0);
     std::unique_ptr<Vector2> tileOffset = std::make_unique<Vector2>(0, 0);
     std::unique_ptr<Color> color = std::make_unique<Color>(0, 0, 0, 255);

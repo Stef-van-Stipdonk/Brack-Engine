@@ -30,9 +30,6 @@ bool RenderWrapper::Initialize() {
         SDL_Quit();
     }
 
-    // Create a window.
-    // You can customize the window size, title, and other settings as needed.
-    // For simplicity, this example creates a 800x600 window.
     std::unique_ptr<SDL_Window, SDLWindowDeleter> tempWindow(
             SDL_CreateWindow(ConfigSingleton::GetInstance().GetWindowTitle().c_str(),
                              SDL_WINDOWPOS_CENTERED,
@@ -47,7 +44,6 @@ bool RenderWrapper::Initialize() {
         return false;
     }
 
-    // Perform additional initialization as needed (e.g., renderer setup, resource loading).
     renderer = std::unique_ptr<SDL_Renderer, void (*)(SDL_Renderer *)>(
             SDL_CreateRenderer(window.get(), -1, SDL_RENDERER_ACCELERATED),
             [](SDL_Renderer *r) { SDL_DestroyRenderer(r); }
@@ -139,8 +135,7 @@ void RenderWrapper::RenderCamera(const CameraComponent &cameraComponent) {
     auto &backgroundColor = cameraComponent.backgroundColor;
     SDL_SetRenderDrawColor(renderer.get(), backgroundColor->r, backgroundColor->g, backgroundColor->b,
                            backgroundColor->a); // RGBA format
-
-
+                           
     auto &texturePair = GetCameraTexturePair(cameraComponent);
 
     SDL_SetRenderTarget(renderer.get(), texturePair.second.get());
