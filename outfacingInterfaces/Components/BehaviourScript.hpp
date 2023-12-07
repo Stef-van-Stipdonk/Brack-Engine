@@ -5,24 +5,32 @@
 #ifndef BRACK_ENGINE_BEHAVIOURSCRIPT_HPP
 #define BRACK_ENGINE_BEHAVIOURSCRIPT_HPP
 
-#include "IComponent.hpp"
 #include "../outfacingInterfaces/Milliseconds.hpp"
-#include "../../src/GameObjectConverter.hpp"
 #include "../../src/includes/ComponentStore.hpp"
 #include <functional>
 #include <optional>
 
+class GameObject;
 
-struct BehaviourScript : public IComponent {
+class BehaviourScript {
+public:
+
     explicit BehaviourScript() = default;
 
-    ~BehaviourScript() override = default;
 
-    virtual std::unique_ptr<IComponent> clone() const override {
-        return std::make_unique<BehaviourScript>(*this);
+    BehaviourScript(std::remove_reference<struct std::unique_ptr<struct BehaviourScript> &>::type type) {
+        entityID = type->entityID;
+        isActive = type->isActive;
     }
 
-    BehaviourScript(const BehaviourScript &other) : IComponent(other) {}
+    ~BehaviourScript() = default;
+
+    BehaviourScript(const BehaviourScript &other) {
+        entityID = other.entityID;
+        isActive = other.isActive;
+    }
+
+    virtual std::unique_ptr<BehaviourScript> clone() const = 0;
 
     virtual void onStart() {};
 
@@ -34,29 +42,6 @@ struct BehaviourScript : public IComponent {
         return ComponentStore::GetInstance().tryGetComponent<T>(entityID);
     }
 
-    static std::optional<GameObject> getGameObjectByName(const std::string &name) {
-        return GameObjectConverter::getGameObjectByName(name);
-    }
-
-    static std::vector<GameObject> getGameObjectsByName(const std::string &name) {
-        return GameObjectConverter::getGameObjectsByName(name);
-    }
-
-    static std::optional<GameObject> getGameObjectByTag(const std::string &tag) {
-        return GameObjectConverter::getGameObjectByTag(tag);
-    }
-
-    static std::vector<GameObject> getGameObjectsByTag(const std::string &tag) {
-        return GameObjectConverter::getGameObjectsByTag(tag);
-    }
-
-    std::vector<GameObject> getChildren() {
-        return GameObjectConverter::getChildren(entityID);
-    }
-
-    std::optional<GameObject> getParent() {
-        return GameObjectConverter::getParent(entityID);
-    }
 
     void setActive(bool active) {
         EntityManager::getInstance().setEntityActive(entityID, active);
@@ -65,6 +50,21 @@ struct BehaviourScript : public IComponent {
 
     [[nodiscard]] virtual int getPriority() const {};
 
+    std::optional<GameObject> getGameObjectByName(const std::string &name);
+
+    std::vector<GameObject> getGameObjectsByName(const std::string &name);
+
+    std::optional<GameObject> getGameObjectByTag(const std::string &tag);
+
+    std::vector<GameObject> getGameObjectsByTag(const std::string &tag);
+
+    std::vector<GameObject> getChildren();
+
+    std::optional<GameObject> getParent();
+
+    bool isActive = true;
+
+    entity entityID;
 };
 
 

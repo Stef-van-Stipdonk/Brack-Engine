@@ -95,7 +95,7 @@ std::vector<std::unique_ptr<IComponent>> &&GameObject::getAllComponents() {
     return std::move(components);
 }
 
-std::vector<std::unique_ptr<IComponent>> &&GameObject::getAllBehaviourScripts() {
+std::vector<std::unique_ptr<BehaviourScript>> && GameObject::getAllBehaviourScripts() {
     return std::move(behaviourScripts);
 }
 

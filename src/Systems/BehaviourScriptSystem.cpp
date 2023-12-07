@@ -5,6 +5,7 @@
 #include <Components/BehaviourScript.hpp>
 #include <Components/Archetypes/AudioArchetype.hpp>
 #include "BehaviourScriptSystem.hpp"
+#include "../includes/BehaviourScriptStore.hpp"
 
 BehaviourScriptSystem::BehaviourScriptSystem() {
 
@@ -14,18 +15,11 @@ BehaviourScriptSystem::~BehaviourScriptSystem() {
 
 }
 
-bool compareByPriority(const BehaviourScript *obj1, const BehaviourScript *obj2) {
-    return obj1->getPriority() < obj2->getPriority();
-}
-
 
 void BehaviourScriptSystem::update(milliseconds deltaTime) {
-    auto behaviorScripts = ComponentStore::GetInstance().getAllComponentsOfType<BehaviourScript>();
-    std::sort(behaviorScripts.begin(), behaviorScripts.end(), compareByPriority);
-
-
-    for (auto script: behaviorScripts) {
-        script->onUpdate(deltaTime);
+    auto behaviourScripts = BehaviourScriptStore::getInstance().getAllBehaviourScripts();
+    for (auto script: behaviourScripts) {
+        script.onUpdate(deltaTime);
     }
 }
 

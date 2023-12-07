@@ -11,11 +11,10 @@
 #include <vector>
 #include <memory>
 #include <random>
-#include <Components/ObjectInfoComponent.hpp>
-#include <Components/ParentComponent.hpp>
-#include "Components/IComponent.hpp"
+#include <Components/BehaviourScript.hpp>
 #include "../Logger.hpp"
 #include "EntityManager.hpp"
+
 
 class BehaviourScriptStore {
 public:
@@ -34,15 +33,15 @@ public:
     template<typename T, typename...Args>
     typename std::enable_if<std::is_base_of<IComponent, T>::value>::type
     addBehaviourScript(Args &&...args) {
-        T component(std::forward<Args>(args)...);
-        auto entityId = component.entityID;
+        T script(std::forward<Args>(args)...);
+        auto entityId = script.entityID;
 
         if (entityId == 0)
             throw std::runtime_error(
                     "Entity ID cannot be 0, please make sure to implement a copy constructor for your component of type " +
                     std::string(typeid(T).name()));
 
-        behaviourScripts[typeid(T)][entityId] = std::make_unique<T>(component);
+        behaviourScripts[entityId] = std::make_unique<T>(script);
     }
 
     template<typename T, typename...Args>
@@ -53,21 +52,21 @@ public:
                     "Entity ID cannot be 0, please make sure to implement a copy constructor for your component of type " +
                     std::string(typeid(T).name()));
 
-        T component(std::forward<Args>(args)...);
-        component.entityID = entityId;
+        T script(std::forward<Args>(args)...);
+        script.entityID = entityId;
 
-        behaviourScripts[typeid(T)][entityId] = std::make_unique<T>(component);
+        behaviourScripts[entityId] = std::make_unique<T>(script);
     }
 
-    void addBehaviourScript(entity entityId, std::unique_ptr<IComponent> component) {
+    void addBehaviourScript(entity entityId, std::unique_ptr<BehaviourScript> script) {
         if (entityId == 0)
             throw std::runtime_error("Entity ID cannot be 0.");
 
-        component->entityID = entityId;
+        script->entityID = entityId;
 
-        IComponent &componentRef = *component;
+        BehaviourScript &componentRef = *script;
 
-        behaviourScripts[typeid(componentRef)][entityId] = std::move(component);
+        behaviourScripts[entityId].emplace_back(std::move(script));
     }
 
 
@@ -75,23 +74,22 @@ public:
         behaviourScripts.clear();
     }
 
-    template<typename T>
+/*    template<typename T>
     typename std::enable_if<std::is_base_of<IComponent, T>::value, T &>::type
     tryGetBehaviourScript(entity entityId) {
-        auto itType = behaviourScripts.find(typeid(T));
+        auto itType = behaviourScripts.find(entityId);
         if (itType != behaviourScripts.end()) {
-            auto itEntity = itType->second.find(entityId);
-            if (itEntity != itType->second.end()) {
-                // Cast and return a reference to the managed object
-                return *static_cast<T *>(itEntity->second.get());
-            }
+            // Cast and return a reference to the managed object
+            return *static_cast<T *>(itEntity->second.get());
+
         }
         throw std::runtime_error("Component not found");
-    }
+    }*/
 
 
-    std::unordered_map<std::type_index, std::unordered_map<entity, std::unique_ptr<IComponent>>> getBehaviourScript() {
-        std::unordered_map<std::type_index, std::unordered_map<entity, std::unique_ptr<IComponent>>> deepCopy;
+/*    std::unordered_map<std::type_index, std::unordered_map<entity, std::unique_ptr<BehaviourScript>>>
+    getBehaviourScript() {
+        std::unordered_map<std::type_index, std::unordered_map<entity, std::unique_ptr<BehaviourScript>>> deepCopy;
 
         for (auto &[type, entityMap]: behaviourScripts) {
             for (auto &[entityId, component]: entityMap) {
@@ -101,18 +99,32 @@ public:
         }
 
         return deepCopy;
-    }
+    }*/
 
     template<typename T>
-    typename std::enable_if<std::is_base_of<IComponent, T>::value>::type
+    typename std::enable_if<std::is_base_of<BehaviourScript, T>::value>::type
     removeBehaviourScript(entity entityId) {
-        auto itType = behaviourScripts.find(typeid(T));
+
+        auto itType = behaviourScripts.find(entityId);
         if (itType != behaviourScripts.end()) {
-            itType->second.erase(entityId);
+            auto itScript = static_cast<T *>(itType->second);
+            if (itScript != nullptr) {
+                itScript.erase();
+            }
         }
     }
 
-    template<typename T>
+    std::vector<BehaviourScript> getAllBehaviourScripts() {
+        std::vector<BehaviourScript> result;
+        for (auto &[id, vector]: behaviourScripts) {
+            for (auto &ptr: vector) {
+                result.emplace_back(ptr.get());
+            }
+        }
+        return result;
+    }
+
+/*    template<typename T>
     typename std::enable_if<std::is_base_of<IComponent, T>::value, std::vector<entity>>::type
     getEntitiesWithBehaviourScript() {
         std::vector<entity> entities;
@@ -142,7 +154,7 @@ public:
             }
         }
         return entities;
-    }
+    }*/
 
 
 private:
@@ -150,7 +162,7 @@ private:
 
     BehaviourScriptStore() = default;
 
-    std::map<std::type_index, std::map<entity, std::unique_ptr<IComponent>>> behaviourScripts;
+    std::map<entity, std::vector<std::unique_ptr<BehaviourScript>>> behaviourScripts;
 };
 
 
