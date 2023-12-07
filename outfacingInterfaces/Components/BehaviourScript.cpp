@@ -28,3 +28,5 @@ std::vector<GameObject> BehaviourScript::getChildren() {
 std::optional<GameObject> BehaviourScript::getParent() {
     return GameObjectConverter::getParent(entityID);
 }
+
+

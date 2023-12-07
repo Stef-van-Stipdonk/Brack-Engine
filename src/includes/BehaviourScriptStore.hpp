@@ -114,11 +114,16 @@ public:
         }
     }
 
-    std::vector<BehaviourScript> getAllBehaviourScripts() {
-        std::vector<BehaviourScript> result;
-        for (auto &[id, vector]: behaviourScripts) {
-            for (auto &ptr: vector) {
-                result.emplace_back(ptr.get());
+    std::vector<std::reference_wrapper<BehaviourScript>> getAllBehaviourScripts() {
+        std::vector<std::reference_wrapper<BehaviourScript>> result;
+
+        // Iterate through the map
+        for (const auto &entry: behaviourScripts) {
+            const std::vector<std::unique_ptr<BehaviourScript>> &scriptVector = entry.second;
+
+            // Iterate through the vector and add references to the result
+            for (const auto &scriptPtr: scriptVector) {
+                result.push_back(std::ref(*scriptPtr));
             }
         }
         return result;

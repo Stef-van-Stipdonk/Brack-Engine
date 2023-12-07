@@ -23,7 +23,7 @@ public:
         isActive = type->isActive;
     }
 
-    ~BehaviourScript() = default;
+    virtual ~BehaviourScript() = default;
 
     BehaviourScript(const BehaviourScript &other) {
         entityID = other.entityID;
@@ -50,13 +50,13 @@ public:
 
     [[nodiscard]] virtual int getPriority() const {};
 
-    std::optional<GameObject> getGameObjectByName(const std::string &name);
+    static std::optional<GameObject> getGameObjectByName(const std::string &name);
 
-    std::vector<GameObject> getGameObjectsByName(const std::string &name);
+    static std::vector<GameObject> getGameObjectsByName(const std::string &name);
 
-    std::optional<GameObject> getGameObjectByTag(const std::string &tag);
+    static std::optional<GameObject> getGameObjectByTag(const std::string &tag);
 
-    std::vector<GameObject> getGameObjectsByTag(const std::string &tag);
+    static std::vector<GameObject> getGameObjectsByTag(const std::string &tag);
 
     std::vector<GameObject> getChildren();
 

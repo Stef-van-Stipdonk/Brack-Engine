@@ -19,7 +19,7 @@ BehaviourScriptSystem::~BehaviourScriptSystem() {
 void BehaviourScriptSystem::update(milliseconds deltaTime) {
     auto behaviourScripts = BehaviourScriptStore::getInstance().getAllBehaviourScripts();
     for (auto script: behaviourScripts) {
-        script.onUpdate(deltaTime);
+        script.get().onUpdate(deltaTime);
     }
 }
 
