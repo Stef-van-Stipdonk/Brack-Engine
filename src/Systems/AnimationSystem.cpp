@@ -67,3 +67,6 @@ const std::string AnimationSystem::getName() const {
 void AnimationSystem::cleanUp() {
 }
 
+void AnimationSystem::clearCache() {
+
+}

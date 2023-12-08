@@ -32,6 +32,7 @@ public:
 
     std::unique_ptr<IBehaviourScript> clone() const = 0;
 
+    virtual void onUpdate(milliseconds deltaTime) {};
 
     template<typename T>
     typename std::enable_if<std::is_base_of<IComponent, T>::value, T &>::type
@@ -45,13 +46,13 @@ public:
         tryGetComponent<ObjectInfoComponent>().isActive = active;
     }
 
-    static std::optional<GameObject> getGameObjectByName(const std::string &name);
+    static std::optional<GameObject*> getGameObjectByName(const std::string &name);
 
     static std::vector<GameObject> getGameObjectsByName(const std::string &name);
 
     static std::optional<GameObject> getGameObjectByTag(const std::string &tag);
 
-    static std::vector<GameObject> getGameObjectsByTag(const std::string &tag);
+    static std::vector<GameObject*> getGameObjectsByTag(const std::string &tag);
 
     std::vector<GameObject> getChildren();
 

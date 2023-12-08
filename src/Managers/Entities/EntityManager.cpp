@@ -4,7 +4,9 @@
 
 #include <string>
 #include <algorithm>
+#include <Components/PersistenceTag.hpp>
 #include "../../includes/EntityManager.hpp"
+#include "../../includes/ComponentStore.hpp"
 
 EntityManager EntityManager::instance;
 
@@ -15,7 +17,14 @@ entity EntityManager::createEntity() {
 }
 
 void EntityManager::destroyEntity(entity entityId) {
+    auto name = entityToName.find(entityId);
+    nameToEntity.erase(name->second);
+    auto tag = entityToTag.find(entityId);
+    tagToEntity.erase(name->second);
+    entityToTag.erase(entityId);
+    entityToName.erase(entityId);
     entities.erase(entityId);
+    reserveEntities.push_back(entityId);
 }
 
 void EntityManager::addEntitiesByTags(std::map<std::string, std::vector<entity>> entitiesByTag) {
@@ -39,7 +48,16 @@ const std::unordered_set<entity> &EntityManager::getAllEntities() const {
 }
 
 void EntityManager::clearAllEntities() {
-    entities.clear();
+    auto persistanceEntities = ComponentStore::GetInstance().getEntitiesWithComponent<PersistenceTag>();
+
+    std::unordered_set<entity> copyEnt(entities);
+    for(auto entity : copyEnt) {
+        auto found = std::find(persistanceEntities.begin(), persistanceEntities.end(), entity);
+        if(found == persistanceEntities.end()) {
+            ComponentStore::GetInstance().removeAllComponents(entity);
+            entities.erase(entity);
+        }
+    }
 }
 
 
@@ -50,20 +68,24 @@ EntityManager &EntityManager::getInstance() {
 void EntityManager::addEntityWithName(entity entityId, const std::string &name) {
     if (name.empty())
         return;
-    if (entitiesByName.find(name) == entitiesByName.end())
-        entitiesByName[name] = {entityId};
-    else if (std::find(entitiesByName[name].begin(), entitiesByName[name].end(), entityId) ==
-             entitiesByName[name].end())
-        entitiesByName[name].push_back(entityId);
+    if (nameToEntity.find(name) == nameToEntity.end())
+        nameToEntity[name] = {entityId};
+    else if (std::find(nameToEntity[name].begin(), nameToEntity[name].end(), entityId) ==
+             nameToEntity[name].end())
+        nameToEntity[name].push_back(entityId);
+
+    entityToName[entityId] = name;
 }
 
 void EntityManager::addEntityWithTag(entity entityId, const std::string &tag) {
     if (tag.empty())
         return;
-    if (entitiesByTag.find(tag) == entitiesByTag.end())
-        entitiesByTag[tag] = {entityId};
-    else if (std::find(entitiesByTag[tag].begin(), entitiesByTag[tag].end(), entityId) == entitiesByTag[tag].end())
-        entitiesByTag[tag].push_back(entityId);
+    if (tagToEntity.find(tag) == tagToEntity.end())
+        tagToEntity[tag] = {entityId};
+    else if (std::find(tagToEntity[tag].begin(), tagToEntity[tag].end(), entityId) == tagToEntity[tag].end())
+        tagToEntity[tag].push_back(entityId);
+
+    entityToTag[entityId] = tag;
 }
 
 void EntityManager::addEntity(entity entity) {
@@ -72,43 +94,43 @@ void EntityManager::addEntity(entity entity) {
 
 
 std::vector<entity> EntityManager::getEntitiesByName(const std::string &name) const {
-    if (entitiesByName.find(name) != entitiesByName.end())
-        return entitiesByName.at(name);
+    if (nameToEntity.find(name) != nameToEntity.end())
+        return nameToEntity.at(name);
     return {};
 }
 
 entity EntityManager::getEntityByName(const std::string &name) const {
-    if (entitiesByName.find(name) != entitiesByName.end())
-        return entitiesByName.at(name)[0];
+    if (nameToEntity.find(name) != nameToEntity.end())
+        return nameToEntity.at(name)[0];
     return 0;
 }
 
 std::vector<entity> EntityManager::getEntitiesByTag(const std::string &tag) const {
-    if (entitiesByTag.find(tag) != entitiesByTag.end())
-        return entitiesByTag.at(tag);
+    if (tagToEntity.find(tag) != tagToEntity.end())
+        return tagToEntity.at(tag);
     return {};
 }
 
 entity EntityManager::getEntityByTag(const std::string &tag) const {
-    if (entitiesByTag.find(tag) != entitiesByTag.end())
-        return entitiesByTag.at(tag)[0];
+    if (tagToEntity.find(tag) != tagToEntity.end())
+        return tagToEntity.at(tag)[0];
     return 0;
 }
 
 std::map<std::string, std::vector<entity>> EntityManager::getEntitiesByNameMap() const {
-    return entitiesByName;
+    return nameToEntity;
 }
 
 std::map<std::string, std::vector<entity>> EntityManager::getEntitiesByTagMap() const {
-    return entitiesByTag;
+    return tagToEntity;
 }
 
 void EntityManager::setEntitiesByNameMap(const std::map<std::string, std::vector<entity>> &entitiesByName) {
-    EntityManager::entitiesByName = entitiesByName;
+    EntityManager::nameToEntity = entitiesByName;
 }
 
 void EntityManager::setEntitiesByTagMap(const std::map<std::string, std::vector<entity>> &entitiesByTag) {
-    EntityManager::entitiesByTag = entitiesByTag;
+    EntityManager::tagToEntity = entitiesByTag;
 }
 
 bool EntityManager::isEntityActive(entity entityID) const {

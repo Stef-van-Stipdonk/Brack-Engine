@@ -128,3 +128,6 @@ void ParticleSystem::cleanUp() {
 
 }
 
+void ParticleSystem::clearCache() {
+
+}

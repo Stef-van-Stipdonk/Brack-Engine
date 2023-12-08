@@ -136,6 +136,19 @@ b2BodyType PhysicsWrapper::getBodyType(CollisionType collisionType) {
     }
 }
 
+void PhysicsWrapper::cleanCache() {
+    auto worldBodies = world->GetBodyList();
+    for(int i = 0; i < world->GetBodyCount(); i++)
+    {
+        world->DestroyBody(worldBodies);
+        ++worldBodies;
+    }
+
+    bodies.clear();
+    boxBodies.clear();
+    circleBodies.clear();
+}
+
 
 void ContactListener::BeginContact(b2Contact *contact) {
     std::unordered_map<uint32_t, b2Body *> bodies = PhysicsWrapper::getInstance().bodies;

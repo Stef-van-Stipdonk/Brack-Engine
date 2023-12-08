@@ -24,3 +24,6 @@ void SaveSystem::cleanUp() {
 
 }
 
+void SaveSystem::clearCache() {
+
+}

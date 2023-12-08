@@ -24,3 +24,6 @@ void CollisionSystem::cleanUp() {
 
 }
 
+void CollisionSystem::clearCache() {
+
+}

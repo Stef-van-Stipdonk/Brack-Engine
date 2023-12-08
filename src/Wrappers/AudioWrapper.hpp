@@ -34,7 +34,9 @@ public:
 
     int findAvailableSoundEffectsChannel();
 
-    void clearUnusedChannels() ;
+    void clearUnusedChannels();
+
+    void clearChannels();
 
 private:
     void playSoundOnChannel(FMOD_CHANNEL *&channel, int channelID, AudioArchetype &audioComponent);

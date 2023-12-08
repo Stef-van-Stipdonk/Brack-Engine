@@ -12,14 +12,14 @@ ReplayManager &ReplayManager::getInstance() {
 }
 
 void ReplayManager::startRecording(milliseconds replayStorageDuration, milliseconds snapshotIntervalDuration) {
-    SystemManager::GetInstance().GetSystem<ReplaySystem>().lock()->startRecording(replayStorageDuration,
+    SystemManager::getInstance().GetSystem<ReplaySystem>().lock()->startRecording(replayStorageDuration,
                                                                                   snapshotIntervalDuration);
 }
 
 void ReplayManager::stopRecording() {
-    SystemManager::GetInstance().GetSystem<ReplaySystem>().lock()->stopRecording();
+    SystemManager::getInstance().GetSystem<ReplaySystem>().lock()->stopRecording();
 }
 
 void ReplayManager::toggleReplay() {
-    SystemManager::GetInstance().GetSystem<ReplaySystem>().lock()->toggleReplay();
+    SystemManager::getInstance().GetSystem<ReplaySystem>().lock()->toggleReplay();
 }

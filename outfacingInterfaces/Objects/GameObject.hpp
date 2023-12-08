@@ -126,7 +126,7 @@ public:
             return ComponentStore::GetInstance().tryGetComponent<T>(entityID);
         }
 
-        throw std::runtime_error("Component not found"); // throw an exception if not found
+        throw std::runtime_error("Component not found");
     }
 
 //    template<typename T>

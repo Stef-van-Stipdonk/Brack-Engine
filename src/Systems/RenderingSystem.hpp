@@ -25,6 +25,7 @@ public:
     ~RenderingSystem() override;
 
     void cleanUp() override;
+    void clearCache() override;
 
     const std::string getName() const override;
 

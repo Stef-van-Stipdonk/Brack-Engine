@@ -26,6 +26,10 @@ void InputSystem::cleanUp() {
 
 }
 
+void InputSystem::clearCache() {
+
+}
+
 InputSystem::InputSystem(const InputSystem &other) {
     inputWrapper = std::make_unique<InputWrapper>(*other.inputWrapper);
 }
