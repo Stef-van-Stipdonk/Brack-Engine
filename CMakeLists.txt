@@ -106,6 +106,7 @@ add_library(${PROJECT_NAME} SHARED
         outfacingInterfaces/EngineManagers/ReplayManager.hpp
         outfacingInterfaces/Milliseconds.hpp
         outfacingInterfaces/Components/Archetypes/CollisionArchetype.hpp
+        outfacingInterfaces/Components/TileMapComponent.hpp
 )
 
 if (WIN32 OR WIN64)

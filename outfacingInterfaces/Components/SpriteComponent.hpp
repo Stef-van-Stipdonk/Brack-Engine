@@ -6,8 +6,8 @@
 #define BRACK_ENGINE_SPRITECOMPONENT_HPP
 
 
-#include "TransformComponent.hpp"
 #include "Helpers/Color.hpp"
+#include "Helpers/Vector2.hpp"
 #include <string>
 #include <memory>
 #include <Components/Archetypes/RenderArchetype.hpp>
@@ -42,8 +42,6 @@ struct SpriteComponent : public RenderArchetype {
         if (other.color != nullptr)
             color = std::make_unique<Color>(*other.color);
 
-        sortingLayer = other.sortingLayer;
-        orderInLayer = other.orderInLayer;
         margin = other.margin;
     }
 

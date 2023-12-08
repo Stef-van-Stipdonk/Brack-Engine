@@ -15,6 +15,26 @@ RenderingSystem::~RenderingSystem() {
 }
 
 void RenderingSystem::update(milliseconds deltaTime) {
+    auto cams = ComponentStore::GetInstance().getEntitiesWithComponent<CameraComponent>();
+    for (auto cameraId: cams) {
+        auto &cameraComponent = ComponentStore::GetInstance().tryGetComponent<CameraComponent>(cameraId);
+        if (!cameraComponent.isActive)
+            continue;
+        sdl2Wrapper->RenderCamera(cameraComponent);
+        auto &cameraTransformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(cameraId);
+
+        auto tileMapComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<TileMapComponent>();
+        for (auto entityId: tileMapComponentIds) {
+            auto &tileMapComponent = ComponentStore::GetInstance().tryGetComponent<TileMapComponent>(entityId);
+            if (!tileMapComponent.isActive)
+                continue;
+            auto &transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(entityId);
+            sdl2Wrapper->RenderTileMap(cameraComponent, cameraTransformComponent, tileMapComponent, transformComponent);
+        }
+    }
+    sdl2Wrapper->RenderToMainTexture();
+    sdl2Wrapper->RenderFrame();
+    return;
     SortRenderComponents();
 #if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
     auto boxCollisionComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<BoxCollisionComponent>();

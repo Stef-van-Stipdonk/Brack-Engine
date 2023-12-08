@@ -135,7 +135,7 @@ void RenderWrapper::RenderCamera(const CameraComponent &cameraComponent) {
     auto &backgroundColor = cameraComponent.backgroundColor;
     SDL_SetRenderDrawColor(renderer.get(), backgroundColor->r, backgroundColor->g, backgroundColor->b,
                            backgroundColor->a); // RGBA format
-                           
+
     auto &texturePair = GetCameraTexturePair(cameraComponent);
 
     SDL_SetRenderTarget(renderer.get(), texturePair.second.get());
@@ -614,4 +614,78 @@ void RenderWrapper::render(SDL_Texture *texture, SDL_Rect *srcrect, SDL_Rect *ds
 void RenderWrapper::cleanCache() {
     cameraTextures.clear();
     textures.clear();
+}
+
+void
+RenderWrapper::RenderTileMap(const CameraComponent &cameraComponent, const TransformComponent &cameraTransformComponent,
+                             const TileMapComponent &tileMapComponent, const TransformComponent &transformComponent) {
+    auto &cameraPosition = cameraTransformComponent.position;
+    auto &cameraSize = cameraComponent.size;
+    auto tileMapPosition = SceneManager::getWorldPosition(transformComponent);
+    auto tileMapScale = SceneManager::getWorldScale(transformComponent);
+    auto tileMapRotation = SceneManager::getWorldRotation(transformComponent);
+
+    auto &tileMap = tileMapComponent.tileMap;
+    size_t maxWidth = 0;
+    for (auto &row: tileMap) {
+        maxWidth = std::max(maxWidth, row.size());
+    }
+
+    auto tileMapSize = Vector2(maxWidth * tileMapComponent.tileSize->getX(),
+                               tileMap.size() * tileMapComponent.tileSize->getY());
+
+    auto sizeX = tileMapSize.getX() * tileMapScale.getX();
+    auto sizeY = tileMapSize.getY() * tileMapScale.getY();
+
+    if (tileMapPosition.getX() + sizeX / 2 < cameraPosition->getX() - cameraSize->getX() / 2 ||
+        tileMapPosition.getX() - sizeX / 2 > cameraPosition->getX() + cameraSize->getX() / 2 ||
+        tileMapPosition.getY() + sizeY / 2 < cameraPosition->getY() - cameraSize->getY() / 2 ||
+        tileMapPosition.getY() - sizeY / 2 > cameraPosition->getY() + cameraSize->getY() / 2)
+        return;
+
+    SDL_Texture *tileMapTexture = SDL_CreateTexture(renderer.get(), SDL_PIXELFORMAT_RGBA8888,
+                                                    SDL_TEXTUREACCESS_TARGET,
+                                                    tileMapSize.getX(),
+                                                    tileMapSize.getY());
+
+//    SDL_SetRenderTarget(renderer.get(), tileMapTexture);
+    if (textures.find(tileMapComponent.tileMapPath) == textures.end())
+        textures.insert(std::make_pair(tileMapComponent.tileMapPath, GetSpriteTexture(tileMapComponent.tileMapPath)));
+    auto texture = textures.find(tileMapComponent.tileMapPath);
+    for (size_t y = 0; y < tileMap.size(); y++) {
+        for (size_t x = 0; x < maxWidth; ++x) {
+            auto &tile = tileMap[y][x];
+            if (!tile)
+                continue;
+            SDL_Rect srcRect;
+            int spriteWidth = tileMapComponent.tileSize->getX();
+            int spriteHeight = tileMapComponent.tileSize->getY();
+            srcRect.x = (tileMap[y][x]->getX() * spriteWidth) +
+                        (tileMapComponent.margin * tileMap[y][x]->getX());
+            srcRect.y = (tileMap[y][x]->getY() * spriteHeight) + (tileMapComponent.margin * tileMap[y][x]->getY());
+            srcRect.w = spriteWidth;
+            srcRect.h = spriteHeight;
+
+            auto width = tileMapComponent.tileSize->getX() * tileMapScale.getX();
+            auto height = tileMapComponent.tileSize->getY() * tileMapScale.getY();
+
+            SDL_Rect destRect = {
+                    static_cast<int>(tileMapPosition.getX() - cameraTransformComponent.position->getX() +
+                                     cameraComponent.size->getX() / 2 - sizeX / 2 + x * width),
+                    static_cast<int>(tileMapPosition.getY() - cameraTransformComponent.position->getY() +
+                                     cameraComponent.size->getY() / 2 - sizeY / 2 + y * height),
+                    static_cast<int>(width),
+                    static_cast<int>(height)};
+
+            SDL_RenderCopy(renderer.get(),
+                           texture->second.get(),
+                           &srcRect,
+                           &destRect);
+        }
+    }
+}
+
+void
+RenderWrapper::RenderUiTileMap(const TileMapComponent &tileMapComponent, const TransformComponent &transformComponent) {
+
 }
