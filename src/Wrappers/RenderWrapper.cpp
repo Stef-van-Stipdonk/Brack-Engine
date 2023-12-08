@@ -643,17 +643,31 @@ RenderWrapper::RenderTileMap(const CameraComponent &cameraComponent, const Trans
         tileMapPosition.getY() - sizeY / 2 > cameraPosition->getY() + cameraSize->getY() / 2)
         return;
 
-    SDL_Texture *tileMapTexture = SDL_CreateTexture(renderer.get(), SDL_PIXELFORMAT_RGBA8888,
-                                                    SDL_TEXTUREACCESS_TARGET,
-                                                    tileMapSize.getX(),
-                                                    tileMapSize.getY());
+    size_t xTileAmount = ceil(cameraSize->getX() / (tileMapComponent.tileSize->getX() * tileMapScale.getX())) + 1;
+    size_t yTileAmount = ceil(cameraSize->getY() / (tileMapComponent.tileSize->getY() * tileMapScale.getY())) + 1;
 
-//    SDL_SetRenderTarget(renderer.get(), tileMapTexture);
+    auto leftMostCameraPosition = cameraPosition->getX() - cameraSize->getX() / 2;
+    auto topMostCameraPosition = cameraPosition->getY() - cameraSize->getY() / 2;
+    auto leftMostTileMapPosition = tileMapPosition.getX() - sizeX / 2;
+    auto topMostTileMapPosition = tileMapPosition.getY() - sizeY / 2;
+
+    auto xDifference = leftMostCameraPosition - leftMostTileMapPosition;
+    auto yDifference = topMostCameraPosition - topMostTileMapPosition;
+
+    size_t xStartIndex = xDifference > 0 ? floor(
+            (xDifference) / (tileMapComponent.tileSize->getX() * tileMapScale.getX())) : 0;
+    size_t yStartIndex = yDifference > 0 ? floor(
+            (yDifference) / (tileMapComponent.tileSize->getY() * tileMapScale.getY())) : 0;
+
+    size_t yEndIndex = std::min(yStartIndex + yTileAmount, tileMap.size());
+
+
     if (textures.find(tileMapComponent.tileMapPath) == textures.end())
         textures.insert(std::make_pair(tileMapComponent.tileMapPath, GetSpriteTexture(tileMapComponent.tileMapPath)));
     auto texture = textures.find(tileMapComponent.tileMapPath);
-    for (size_t y = 0; y < tileMap.size(); y++) {
-        for (size_t x = 0; x < maxWidth; ++x) {
+    for (size_t y = yStartIndex; y < yEndIndex; ++y) {
+        size_t xEndIndex = std::min(xStartIndex + xTileAmount, tileMap[y].size());
+        for (size_t x = xStartIndex; x < xEndIndex; ++x) {
             auto &tile = tileMap[y][x];
             if (!tile)
                 continue;
