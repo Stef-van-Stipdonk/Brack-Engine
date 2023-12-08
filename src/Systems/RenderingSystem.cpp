@@ -15,26 +15,6 @@ RenderingSystem::~RenderingSystem() {
 }
 
 void RenderingSystem::update(milliseconds deltaTime) {
-    auto cams = ComponentStore::GetInstance().getEntitiesWithComponent<CameraComponent>();
-    for (auto cameraId: cams) {
-        auto &cameraComponent = ComponentStore::GetInstance().tryGetComponent<CameraComponent>(cameraId);
-        if (!cameraComponent.isActive)
-            continue;
-        sdl2Wrapper->RenderCamera(cameraComponent);
-        auto &cameraTransformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(cameraId);
-
-        auto tileMapComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<TileMapComponent>();
-        for (auto entityId: tileMapComponentIds) {
-            auto &tileMapComponent = ComponentStore::GetInstance().tryGetComponent<TileMapComponent>(entityId);
-            if (!tileMapComponent.isActive)
-                continue;
-            auto &transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(entityId);
-            sdl2Wrapper->RenderTileMap(cameraComponent, cameraTransformComponent, tileMapComponent, transformComponent);
-        }
-    }
-    sdl2Wrapper->RenderToMainTexture();
-    sdl2Wrapper->RenderFrame();
-    return;
     SortRenderComponents();
 #if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
     auto boxCollisionComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<BoxCollisionComponent>();
@@ -50,7 +30,10 @@ void RenderingSystem::update(milliseconds deltaTime) {
         for (auto component: components) {
             auto &transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(
                     component->entityID);
-            if (auto *spriteComponent = dynamic_cast<const SpriteComponent *>(component))
+            if (auto *tileMapComponent = dynamic_cast<const TileMapComponent *>(component))
+                sdl2Wrapper->RenderTileMap(cameraComponent, cameraTransformComponent, *tileMapComponent,
+                                           transformComponent);
+            else if (auto *spriteComponent = dynamic_cast<const SpriteComponent *>(component))
                 sdl2Wrapper->RenderSprite(cameraComponent, cameraTransformComponent, *spriteComponent,
                                           transformComponent);
             else if (auto *textComponent = dynamic_cast<const TextComponent *>(component))
@@ -78,7 +61,9 @@ void RenderingSystem::update(milliseconds deltaTime) {
     for (auto component: uiComponents) {
         auto &transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(
                 component->entityID);
-        if (auto *spriteComponent = dynamic_cast<const SpriteComponent *>(component))
+        if (auto *tileMapComponent = dynamic_cast<const TileMapComponent *>(component))
+            sdl2Wrapper->RenderUiTileMap(*tileMapComponent, transformComponent);
+        else if (auto *spriteComponent = dynamic_cast<const SpriteComponent *>(component))
             sdl2Wrapper->RenderUiSprite(*spriteComponent, transformComponent);
         else if (auto *textComponent = dynamic_cast<const TextComponent *>(component))
             sdl2Wrapper->RenderUiText(*textComponent, transformComponent);
@@ -116,6 +101,14 @@ void RenderingSystem::SortRenderComponents() {
     collisionComponents.clear();
     uiCollisionComponents.clear();
 #endif
+
+    auto tileMapComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<TileMapComponent>();
+    for (auto entityId: tileMapComponentIds) {
+        auto &tileMapComponent = ComponentStore::GetInstance().tryGetComponent<TileMapComponent>(entityId);
+        if (!tileMapComponent.isActive)
+            continue;
+        components.insert(&tileMapComponent);
+    }
 
     auto spriteComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<SpriteComponent>();
     for (auto entityId: spriteComponentIds) {
