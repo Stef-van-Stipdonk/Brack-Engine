@@ -49,9 +49,6 @@ void RenderingSystem::update(milliseconds deltaTime) {
             if (auto *boxCollisionComponent = dynamic_cast<const BoxCollisionComponent *>(component))
                 sdl2Wrapper->RenderBoxCollision(cameraComponent, cameraTransformComponent, *boxCollisionComponent,
                                                 transformComponent);
-            else if (auto *circleCollisionComponent = dynamic_cast<const CircleCollisionComponent *>(component))
-                sdl2Wrapper->RenderCircleCollision(cameraComponent, cameraTransformComponent, *circleCollisionComponent,
-                                                   transformComponent);
         }
 #endif
     }
@@ -77,8 +74,6 @@ void RenderingSystem::update(milliseconds deltaTime) {
                 component->entityID);
         if (auto *boxCollisionComponent = dynamic_cast<const BoxCollisionComponent *>(component))
             sdl2Wrapper->RenderUiBoxCollision(*boxCollisionComponent, transformComponent);
-        else if (auto *circleCollisionComponent = dynamic_cast<const CircleCollisionComponent *>(component))
-            sdl2Wrapper->RenderUiCircleCollision(*circleCollisionComponent, transformComponent);
     }
 #endif
 

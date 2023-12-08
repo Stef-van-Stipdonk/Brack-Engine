@@ -62,7 +62,7 @@ Vector2 SceneManager::getWorldScale(const TransformComponent &transformComponent
         auto parentId = ComponentStore::GetInstance().tryGetComponent<ParentComponent>(
                 transformComponent.entityID).parentId;
         auto &parentTransform = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(parentId);
-        scale += getWorldScale(parentTransform);
+        scale *= getWorldScale(parentTransform);
         return scale;
     }
     catch (std::runtime_error &e) {

@@ -53,7 +53,11 @@ public:
 
     void operator*=(const float &other);
 
+    void operator*=(const Vector2 &other);
+    
     void operator/=(const float &other);
+
+    void operator/=(const Vector2 &other);
 
 private:
     float x, y;
