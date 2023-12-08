@@ -447,21 +447,22 @@ void RenderWrapper::RenderBoxCollision(const CameraComponent &cameraComponent,
 #if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
     auto &cameraPosition = cameraTransformComponent.position;
     auto &cameraSize = cameraComponent.size;
-    auto &boxPosition = transformComponent.position;
+    auto boxPosition = SceneManager::getWorldPosition(transformComponent);
+    auto boxScale = SceneManager::getWorldScale(transformComponent);
     auto &size = boxCollisionComponent.size;
-    auto sizeX = size->getX() * transformComponent.scale->getX();
-    auto sizeY = size->getY() * transformComponent.scale->getY();
+    auto sizeX = size->getX() * boxScale.getX();
+    auto sizeY = size->getY() * boxScale.getY();
 
-    if (boxPosition->getX() + sizeX / 2 < cameraPosition->getX() - cameraSize->getX() / 2 ||
-        boxPosition->getX() - sizeX / 2 > cameraPosition->getX() + cameraSize->getX() / 2 ||
-        boxPosition->getY() + sizeY / 2 < cameraPosition->getY() - cameraSize->getY() / 2 ||
-        boxPosition->getY() - sizeY / 2 > cameraPosition->getY() + cameraSize->getY() / 2)
+    if (boxPosition.getX() + sizeX / 2 < cameraPosition->getX() - cameraSize->getX() / 2 ||
+        boxPosition.getX() - sizeX / 2 > cameraPosition->getX() + cameraSize->getX() / 2 ||
+        boxPosition.getY() + sizeY / 2 < cameraPosition->getY() - cameraSize->getY() / 2 ||
+        boxPosition.getY() - sizeY / 2 > cameraPosition->getY() + cameraSize->getY() / 2)
         return;
 
     SDL_Rect squareRect = {
-            static_cast<int>(transformComponent.position->getX() - cameraTransformComponent.position->getX() +
+            static_cast<int>(boxPosition.getX() - cameraTransformComponent.position->getX() +
                              cameraComponent.size->getX() / 2 - sizeX / 2),
-            static_cast<int>(transformComponent.position->getY() - cameraTransformComponent.position->getY() +
+            static_cast<int>(boxPosition.getY() - cameraTransformComponent.position->getY() +
                              cameraComponent.size->getY() / 2 - sizeY / 2),
             static_cast<int>(sizeX),
             static_cast<int>(sizeY)};
