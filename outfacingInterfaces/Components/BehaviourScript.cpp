@@ -6,7 +6,7 @@
 #include "../../src/GameObjectConverter.hpp"
 
 
-std::optional<GameObject> BehaviourScript::getGameObjectByName(const std::string &name) {
+std::optional<GameObject *> BehaviourScript::getGameObjectByName(const std::string &name) {
     return GameObjectConverter::getGameObjectByName(name);
 }
 
@@ -15,7 +15,7 @@ std::vector<GameObject> BehaviourScript::getGameObjectsByName(const std::string 
 }
 
 
-std::vector<GameObject> BehaviourScript::getGameObjectsByTag(const std::string &tag) {
+std::vector<GameObject *> BehaviourScript::getGameObjectsByTag(const std::string &tag) {
     return GameObjectConverter::getGameObjectsByTag(tag);
 }
 
