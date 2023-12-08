@@ -5,14 +5,14 @@
 #ifndef BRACK_ENGINE_BEHAVIOURSCRIPT_HPP
 #define BRACK_ENGINE_BEHAVIOURSCRIPT_HPP
 
-#include "../outfacingInterfaces/Milliseconds.hpp"
 #include "../../src/includes/ComponentStore.hpp"
+#include "IBehaviourScript.hpp"
 #include <functional>
 #include <optional>
+#include <Objects/GameObject.hpp>
 
-class GameObject;
 
-class BehaviourScript {
+class BehaviourScript : public IBehaviourScript {
 public:
 
     explicit BehaviourScript() = default;
@@ -30,11 +30,8 @@ public:
         isActive = other.isActive;
     }
 
-    virtual std::unique_ptr<BehaviourScript> clone() const = 0;
+    std::unique_ptr<IBehaviourScript> clone() const = 0;
 
-    virtual void onStart() {};
-
-    virtual void onUpdate(milliseconds deltaTime) {};
 
     template<typename T>
     typename std::enable_if<std::is_base_of<IComponent, T>::value, T &>::type
@@ -48,8 +45,6 @@ public:
         tryGetComponent<ObjectInfoComponent>().isActive = active;
     }
 
-    [[nodiscard]] virtual int getPriority() const {};
-
     static std::optional<GameObject> getGameObjectByName(const std::string &name);
 
     static std::vector<GameObject> getGameObjectsByName(const std::string &name);
@@ -62,9 +57,6 @@ public:
 
     std::optional<GameObject> getParent();
 
-    bool isActive = true;
-
-    entity entityID;
 };
 
 

@@ -49,7 +49,6 @@ add_library(${PROJECT_NAME} SHARED
         outfacingInterfaces/Components/AnimationComponent.hpp
         outfacingInterfaces/Components/ParticleComponent.hpp
         outfacingInterfaces/Components/ParticleEmitterComponent.hpp
-        outfacingInterfaces/Components/BehaviourScript.hpp
         outfacingInterfaces/Components/InputTag.hpp
         outfacingInterfaces/Components/PersistenceTag.hpp
         src/Systems/RenderingSystem.cpp
@@ -106,6 +105,7 @@ add_library(${PROJECT_NAME} SHARED
         outfacingInterfaces/Milliseconds.hpp
         src/Managers/Entities/BehaviourScriptStore.cpp
         outfacingInterfaces/Components/BehaviourScript.cpp
+        outfacingInterfaces/Components/IBehaviourScript.hpp
 )
 
 if (WIN32 OR WIN64)

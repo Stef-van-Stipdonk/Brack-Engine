@@ -64,13 +64,13 @@ public:
     }
 
     template<typename T>
-    typename std::enable_if<std::is_base_of<IComponent, T>::value>::type
+    typename std::enable_if<std::is_base_of<IBehaviourScript, T>::value>::type
     addBehaviourScript(T component) {
         addBehaviourScript(std::make_unique<T>(component));
     }
 
     template<typename T>
-    typename std::enable_if<std::is_base_of<IComponent, T>::value>::type
+    typename std::enable_if<std::is_base_of<IBehaviourScript, T>::value>::type
     addBehaviourScript(std::unique_ptr<T> component) {
 
         if (entityID == 0)
@@ -82,7 +82,7 @@ public:
     GameObject(const GameObject &other) {
         entityID = other.entityID;
         components = std::vector<std::unique_ptr<IComponent>>();
-        behaviourScripts = std::vector<std::unique_ptr<BehaviourScript>>();
+        behaviourScripts = std::vector<std::unique_ptr<IBehaviourScript>>();
         for (auto &comp: other.components) {
             components.push_back(comp->clone());
         }
@@ -103,7 +103,7 @@ public:
     }
 
     template<typename T>
-    typename std::enable_if<std::is_base_of<IComponent, T>::value, bool>::type
+    typename std::enable_if<std::is_base_of<IBehaviourScript, T>::value, bool>::type
     hasBehaviourScript() const {
         for (const auto &comp: behaviourScripts) {
             if (dynamic_cast<const T *>(comp.get()) != nullptr) {
@@ -163,7 +163,7 @@ public:
     }
 
     template<typename T>
-    typename std::enable_if<std::is_base_of<IComponent, T>::value>::type
+    typename std::enable_if<std::is_base_of<IBehaviourScript, T>::value>::type
     removeBehaviourScript() {
         if (entityID == 0) {
             for (auto it = behaviourScripts.begin(); it != behaviourScripts.end();) {
@@ -209,13 +209,13 @@ public:
 
     std::vector<std::unique_ptr<IComponent>> &&getAllComponents();
 
-    std::vector<std::unique_ptr<BehaviourScript>> &&getAllBehaviourScripts();
+    std::vector<std::unique_ptr<IBehaviourScript>> &&getAllBehaviourScripts();
 
 
 protected:
     entity entityID = 0;
     std::vector<std::unique_ptr<IComponent>> components;
-    std::vector<std::unique_ptr<BehaviourScript>> behaviourScripts;
+    std::vector<std::unique_ptr<IBehaviourScript>> behaviourScripts;
 
     GameObject *parent = nullptr;
     std::vector<std::unique_ptr<GameObject>> children;
