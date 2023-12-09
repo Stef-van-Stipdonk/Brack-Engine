@@ -212,6 +212,15 @@ void RenderingSystem::SortRenderComponents() {
 #endif
         }
     }
+#if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
+    auto boxCollisionComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<BoxCollisionComponent>();
+    for (auto entityId: boxCollisionComponentIds) {
+        auto &boxCollisionComponent = ComponentStore::GetInstance().tryGetComponent<BoxCollisionComponent>(entityId);
+        if (!boxCollisionComponent.isActive)
+            continue;
+        collisionComponents.insert(&boxCollisionComponent);
+    }
+#endif
 }
 
 void RenderingSystem::clearCache() {
