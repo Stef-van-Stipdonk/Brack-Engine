@@ -74,33 +74,6 @@ public:
         behaviourScripts.clear();
     }
 
-/*    template<typename T>
-    typename std::enable_if<std::is_base_of<IComponent, T>::value, T &>::type
-    tryGetBehaviourScript(entity entityId) {
-        auto itType = behaviourScripts.find(entityId);
-        if (itType != behaviourScripts.end()) {
-            // Cast and return a reference to the managed object
-            return *static_cast<T *>(itEntity->second.get());
-
-        }
-        throw std::runtime_error("Component not found");
-    }*/
-
-
-/*    std::unordered_map<std::type_index, std::unordered_map<entity, std::unique_ptr<BehaviourScript>>>
-    getBehaviourScript() {
-        std::unordered_map<std::type_index, std::unordered_map<entity, std::unique_ptr<BehaviourScript>>> deepCopy;
-
-        for (auto &[type, entityMap]: behaviourScripts) {
-            for (auto &[entityId, component]: entityMap) {
-                // Using the clone method to create a deep copy of each component
-                deepCopy[type][entityId] = component->clone();
-            }
-        }
-
-        return deepCopy;
-    }*/
-
     template<typename T>
     typename std::enable_if<std::is_base_of<IBehaviourScript, T>::value>::type
     removeBehaviourScript(entity entityId) {
@@ -128,38 +101,6 @@ public:
         }
         return result;
     }
-
-/*    template<typename T>
-    typename std::enable_if<std::is_base_of<IComponent, T>::value, std::vector<entity>>::type
-    getEntitiesWithBehaviourScript() {
-        std::vector<entity> entities;
-        auto itType = behaviourScripts.find(typeid(T));
-        if (itType != behaviourScripts.end()) {
-            for (auto &pair: itType->second) {
-                auto &objectInfoComponent = tryGetBehaviourScript<ObjectInfoComponent>(pair.first);
-                if (EntityManager::getInstance().isEntityActive(pair.first) && objectInfoComponent.isActive) {
-                    entities.push_back(pair.first);
-                }
-            }
-        }
-        return entities;
-    }
-
-    template<typename T>
-    typename std::enable_if<std::is_base_of<IComponent, T>::value, std::vector<entity>>::type
-    getInactiveEntitiesWithComponent() {
-        std::vector<entity> entities;
-        auto itType = behaviourScripts.find(typeid(T));
-        if (itType != behaviourScripts.end()) {
-            for (auto &pair: itType->second) {
-                auto &objectInfoComponent = tryGetBehaviourScript<ObjectInfoComponent>(pair.first);
-                if (!EntityManager::getInstance().isEntityActive(pair.first) || !objectInfoComponent.isActive) {
-                    entities.push_back(pair.first);
-                }
-            }
-        }
-        return entities;
-    }*/
 
 
 private:
