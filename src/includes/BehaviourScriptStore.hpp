@@ -13,7 +13,7 @@
 #include <random>
 #include "../Logger.hpp"
 #include "EntityManager.hpp"
-#include "../outfacingInterfaces/Components/IBehaviourScript.hpp"
+#include "BehaviourScripts/IBehaviourScript.hpp"
 
 
 class BehaviourScriptStore {

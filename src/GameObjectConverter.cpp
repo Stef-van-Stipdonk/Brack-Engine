@@ -4,7 +4,7 @@
 
 #include <Components/ChildComponent.hpp>
 #include <Components/ParentComponent.hpp>
-#include <Components/BehaviourScript.hpp>
+#include <BehaviourScripts/BehaviourScript.hpp>
 #include "GameObjectConverter.hpp"
 #include "includes/EntityManager.hpp"
 

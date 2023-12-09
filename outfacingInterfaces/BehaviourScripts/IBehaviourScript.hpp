@@ -7,7 +7,7 @@
 
 #include <functional>
 #include <optional>
-#include "../outfacingInterfaces/Milliseconds.hpp"
+#include "Milliseconds.hpp"
 
 
 class IBehaviourScript {

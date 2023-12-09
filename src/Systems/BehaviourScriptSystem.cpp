@@ -2,7 +2,7 @@
 // Created by jesse on 31/10/2023.
 //
 
-#include <Components/BehaviourScript.hpp>
+#include <BehaviourScripts/BehaviourScript.hpp>
 #include <Components/Archetypes/AudioArchetype.hpp>
 #include "BehaviourScriptSystem.hpp"
 #include "../includes/BehaviourScriptStore.hpp"

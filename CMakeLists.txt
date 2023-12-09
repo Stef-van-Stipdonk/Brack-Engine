@@ -104,8 +104,8 @@ add_library(${PROJECT_NAME} SHARED
         outfacingInterfaces/EngineManagers/ReplayManager.hpp
         outfacingInterfaces/Milliseconds.hpp
         src/Managers/Entities/BehaviourScriptStore.cpp
-        outfacingInterfaces/Components/BehaviourScript.cpp
-        outfacingInterfaces/Components/IBehaviourScript.hpp
+        outfacingInterfaces/BehaviourScripts/BehaviourScript.cpp
+        outfacingInterfaces/BehaviourScripts/IBehaviourScript.hpp
 )
 
 if (WIN32 OR WIN64)

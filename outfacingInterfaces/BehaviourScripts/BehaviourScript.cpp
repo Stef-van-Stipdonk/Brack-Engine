@@ -1,7 +1,7 @@
 //
 // Created by Olaf van den Berg on 7-12-2023.
 //
-#include <Components/BehaviourScript.hpp>
+#include <BehaviourScripts/BehaviourScript.hpp>
 #include <Objects/GameObject.hpp>
 #include "../../src/GameObjectConverter.hpp"
 
