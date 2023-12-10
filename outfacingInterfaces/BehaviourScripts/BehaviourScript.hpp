@@ -40,6 +40,11 @@ public:
         return ComponentStore::GetInstance().tryGetComponent<T>(entityID);
     }
 
+    template<typename T>
+    typename std::enable_if<std::is_base_of<IBehaviourScript, T>::value, T &>::type
+    tryGetBehaviourScript() const {
+        return BehaviourScriptStore::getInstance().tryGetBehaviourScript<T>(entityID);
+    }
 
     void setActive(bool active) {
         EntityManager::getInstance().setEntityActive(entityID, active);
