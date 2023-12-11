@@ -87,6 +87,10 @@ public:
         }
     }
 
+    void removeAllBehaviourScripts() {
+        behaviourScripts.clear();
+    }
+
     std::vector<std::reference_wrapper<IBehaviourScript>> getAllBehaviourScripts() {
         std::vector<std::reference_wrapper<IBehaviourScript>> result;
 

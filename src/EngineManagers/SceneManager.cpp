@@ -12,6 +12,7 @@
 SceneManager SceneManager::instance;
 
 void SceneManager::setActiveScene(Scene &scene) {
+    switchingScene = true;
     EntityManager::getInstance().clearAllEntities();
     SystemManager::getInstance().clearSystemsCache();
 
@@ -23,6 +24,7 @@ void SceneManager::setActiveScene(Scene &scene) {
     }
 
     activeSceneSignature = scene.getSignature();
+    switchingScene = false;
 }
 
 SceneManager &SceneManager::getInstance() {

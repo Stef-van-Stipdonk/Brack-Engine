@@ -4,6 +4,7 @@
 
 #include <BehaviourScripts/BehaviourScript.hpp>
 #include <Components/Archetypes/AudioArchetype.hpp>
+#include <EngineManagers/SceneManager.hpp>
 #include "BehaviourScriptSystem.hpp"
 #include "../includes/BehaviourScriptStore.hpp"
 
@@ -19,6 +20,9 @@ BehaviourScriptSystem::~BehaviourScriptSystem() {
 void BehaviourScriptSystem::update(milliseconds deltaTime) {
     auto behaviourScripts = BehaviourScriptStore::getInstance().getAllBehaviourScripts();
     for (auto script: behaviourScripts) {
+        if(SceneManager::getInstance().isSwitchingScene())
+            break;
+
         script.get().onUpdate(deltaTime);
     }
 }

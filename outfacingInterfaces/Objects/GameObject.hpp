@@ -72,7 +72,6 @@ public:
     template<typename T>
     typename std::enable_if<std::is_base_of<IBehaviourScript, T>::value>::type
     addBehaviourScript(std::unique_ptr<T> component) {
-
         if (entityID == 0)
             behaviourScripts.push_back(std::move(component));
         else

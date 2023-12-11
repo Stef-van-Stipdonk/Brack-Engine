@@ -41,11 +41,14 @@ public:
 
     std::string getActiveSceneSignature();
 
+    bool isSwitchingScene() const {return switchingScene;}
+
 private:
     SceneManager() = default;
 
     static SceneManager instance;
     bool hasChanged = false;
+    bool switchingScene = false;
 
     std::string activeSceneSignature;
 

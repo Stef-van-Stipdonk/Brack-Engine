@@ -137,12 +137,12 @@ b2BodyType PhysicsWrapper::getBodyType(CollisionType collisionType) {
 }
 
 void PhysicsWrapper::cleanCache() {
-    auto worldBodies = world->GetBodyList();
-    for(int i = 0; i < world->GetBodyCount(); i++)
-    {
-        world->DestroyBody(worldBodies);
-        ++worldBodies;
-    }
+//    auto worldBodies = world->GetBodyList();
+//    for(int i = 0; i < world->GetBodyCount(); i++)
+//    {
+////        world->DestroyBody(worldBodies);
+//        ++worldBodies;
+//    }
 
     bodies.clear();
     boxBodies.clear();
