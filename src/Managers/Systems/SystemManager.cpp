@@ -32,9 +32,6 @@ void SystemManager::AddSystem(std::shared_ptr<ISystem> system, bool printGraph) 
 
 void SystemManager::UpdateSystems(milliseconds deltaTime) {
     for (auto &system: systems) {
-        if(SceneManager::getInstance().isSwitchingScene())
-            break;
-
         system->update(deltaTime);
     }
 }

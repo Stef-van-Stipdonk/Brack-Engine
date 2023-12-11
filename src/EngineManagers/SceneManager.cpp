@@ -11,20 +11,23 @@
 
 SceneManager SceneManager::instance;
 
-void SceneManager::setActiveScene(Scene &scene) {
-    switchingScene = true;
+void SceneManager::setActiveScene() {
+    if(switchingScene == nullptr)
+        return;
+
     EntityManager::getInstance().clearAllEntities();
     SystemManager::getInstance().clearSystemsCache();
 
-    for (auto camera: scene.getAllCameras())
+    for (auto camera: switchingScene->getAllCameras())
         GameObjectConverter::addGameObject(camera);
 
-    for (auto gameObject: scene.getAllGameObjects()) {
+    for (auto gameObject: switchingScene->getAllGameObjects()) {
         GameObjectConverter::addGameObject(gameObject);
     }
 
-    activeSceneSignature = scene.getSignature();
-    switchingScene = false;
+    activeSceneSignature = switchingScene->getSignature();
+    delete switchingScene;
+    switchingScene = nullptr;
 }
 
 SceneManager &SceneManager::getInstance() {
@@ -55,4 +58,8 @@ Vector2 SceneManager::getWorldPosition(const TransformComponent &transformCompon
     catch (std::runtime_error &e) {
         return position;
     }
+}
+
+void SceneManager::goToNewScene(Scene* scene) {
+    switchingScene = scene;
 }

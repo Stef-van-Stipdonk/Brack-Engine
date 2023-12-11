@@ -44,15 +44,14 @@ BrackEngine::BrackEngine(Config &&config) {
 void BrackEngine::Run() {
     Logger::Debug("Updating systems");
     while (ConfigSingleton::GetInstance().IsRunning()) {
-        if(SceneManager::getInstance().isSwitchingScene())
-            continue;
-
         FPSSingleton::GetInstance().Start();
         auto deltaTime = GetDeltaTime();
         SystemManager::getInstance().UpdateSystems(deltaTime);
         FPSSingleton::GetInstance().End();
         if (ConfigSingleton::GetInstance().ShowFPS())
             UpdateFPS(deltaTime);
+
+        SceneManager::getInstance().setActiveScene();
     }
 
     SystemManager::getInstance().CleanUp();

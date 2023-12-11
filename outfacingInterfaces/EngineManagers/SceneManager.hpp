@@ -27,7 +27,9 @@ public:
 
     SceneManager &operator=(SceneManager &&) = delete;
 
-    void setActiveScene(Scene &scene);
+    void setActiveScene();
+
+    void goToNewScene(Scene* scene);
 
     static std::optional<GameObject> getGameObjectByName(const std::string &name);
 
@@ -41,14 +43,12 @@ public:
 
     std::string getActiveSceneSignature();
 
-    bool isSwitchingScene() const {return switchingScene;}
-
 private:
     SceneManager() = default;
 
     static SceneManager instance;
     bool hasChanged = false;
-    bool switchingScene = false;
+    Scene* switchingScene = nullptr;
 
     std::string activeSceneSignature;
 

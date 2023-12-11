@@ -20,9 +20,6 @@ BehaviourScriptSystem::~BehaviourScriptSystem() {
 void BehaviourScriptSystem::update(milliseconds deltaTime) {
     auto behaviourScripts = BehaviourScriptStore::getInstance().getAllBehaviourScripts();
     for (auto script: behaviourScripts) {
-        if(SceneManager::getInstance().isSwitchingScene())
-            break;
-
         script.get().onUpdate(deltaTime);
     }
 }
