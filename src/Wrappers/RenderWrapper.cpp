@@ -326,7 +326,7 @@ void RenderWrapper::RenderRectangle(const CameraComponent &cameraComponent,
 
 void
 RenderWrapper::RenderUiTileMap(const TileMapComponent &tileMapComponent, const TransformComponent &transformComponent) {
-
+    Logger::GetInstance().Error("Tilemap cannot be rendered in UI");
 }
 
 void
