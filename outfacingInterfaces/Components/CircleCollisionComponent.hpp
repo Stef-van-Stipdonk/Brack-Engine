@@ -8,13 +8,13 @@
 #include <memory>
 #include <vector>
 #include <Helpers/Vector2.hpp>
-#include "IComponent.hpp"
+#include <Helpers/CollisionType.hpp>
+#include "Archetypes/CollisionArchetype.hpp"
 
-
-struct CircleCollisionComponent : public IComponent {
+struct CircleCollisionComponent : public CollisionArchetype {
 
     explicit CircleCollisionComponent(float xRadius, float yRadius)
-            : IComponent(), radius(new Vector2(xRadius, yRadius)) {}
+            : CollisionArchetype(), radius(new Vector2(xRadius, yRadius)) {}
 
     explicit CircleCollisionComponent(float radius) : CircleCollisionComponent(radius, radius) {}
 
@@ -27,7 +27,7 @@ struct CircleCollisionComponent : public IComponent {
             radius = nullptr;
     };
 
-    CircleCollisionComponent(const CircleCollisionComponent &other) : IComponent(other) {
+    CircleCollisionComponent(const CircleCollisionComponent &other) : CollisionArchetype(other) {
         if (other.radius != nullptr)
             radius = std::make_unique<Vector2>(*other.radius);
         collidedWith = other.collidedWith;
