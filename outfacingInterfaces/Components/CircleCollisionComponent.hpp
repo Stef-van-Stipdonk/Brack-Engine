@@ -11,7 +11,6 @@
 #include <Helpers/CollisionType.hpp>
 #include "Archetypes/CollisionArchetype.hpp"
 
-
 struct CircleCollisionComponent : public CollisionArchetype {
 
     explicit CircleCollisionComponent(float xRadius, float yRadius)
@@ -31,13 +30,11 @@ struct CircleCollisionComponent : public CollisionArchetype {
     CircleCollisionComponent(const CircleCollisionComponent &other) : CollisionArchetype(other) {
         if (other.radius != nullptr)
             radius = std::make_unique<Vector2>(*other.radius);
-        collisionType = other.collisionType;
         collidedWith = other.collidedWith;
 
     }
 
     std::unique_ptr<Vector2> radius;
-    CollisionType collisionType;
     std::vector<uint32_t> collidedWith;
 
 };

@@ -24,14 +24,16 @@ struct BoxCollisionComponent : public CollisionArchetype {
         size = nullptr;
     };
 
-    BoxCollisionComponent(const BoxCollisionComponent &other) : CollisionArchetype(other) {
-        size = std::make_unique<Vector2>(*other.size);
-        collisionType = other.collisionType;
+    BoxCollisionComponent(const BoxCollisionComponent &other) : IComponent(other) {
+        if (other.size != nullptr)
+            size = std::make_unique<Vector2>(*other.size);
+        collidedWith = other.collidedWith;
     }
 
 
-    std::unique_ptr<Vector2> size = std::make_unique<Vector2>(Vector2(0, 0));
-    CollisionType collisionType;
+    std::unique_ptr<Vector2> size;
+    std::vector<uint32_t> collidedWith;
+    
 };
 
 #endif //BRACK_ENGINE_BOXCOLLISIONCOMPONENT_HPP
