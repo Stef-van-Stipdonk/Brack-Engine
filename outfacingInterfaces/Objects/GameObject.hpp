@@ -129,22 +129,6 @@ public:
         throw std::runtime_error("Component not found");
     }
 
-//    template<typename T>
-//    typename std::enable_if<std::is_base_of<IComponent, T>::value, T &>::type
-//    tryGetBehaviourScript() const {
-//        if (entityID == 0) {
-//            for (const auto &comp: behaviourScripts) {
-//                if (auto castedComp = dynamic_cast<T *>(comp.get())) {
-//                    return *castedComp; // dereference the pointer to return a reference
-//                }
-//            }
-//        } else {
-//            return BehaviourScriptStore::getInstance().tryGetBehaviourScript<T>(entityID);
-//        }
-//
-//        throw std::runtime_error("BehaviourScript not found"); // throw an exception if not found
-//    }
-
     template<typename T>
     typename std::enable_if<std::is_base_of<IComponent, T>::value>::type
     removeComponent() {
