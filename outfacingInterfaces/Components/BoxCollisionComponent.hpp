@@ -7,7 +7,6 @@
 
 #include <memory>
 #include <vector>
-#include <Helpers/CollisionType.hpp>
 #include "IComponent.hpp"
 #include "Helpers/Vector2.hpp"
 
@@ -28,13 +27,11 @@ struct BoxCollisionComponent : public IComponent {
     BoxCollisionComponent(const BoxCollisionComponent &other) : IComponent(other) {
         if (other.size != nullptr)
             size = std::make_unique<Vector2>(*other.size);
-        collisionType = other.collisionType;
         collidedWith = other.collidedWith;
     }
 
 
     std::unique_ptr<Vector2> size;
-    CollisionType collisionType;
     std::vector<uint32_t> collidedWith;
 
 };
