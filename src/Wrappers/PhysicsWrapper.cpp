@@ -59,11 +59,12 @@ void PhysicsWrapper::addCircles(std::vector<uint32_t> componentIds) {
             b2Body *body = world->CreateBody(&componentBodyDef);
 
             b2CircleShape shape;
-            shape.m_radius = circleCollisionComp.radius->getX() / 2;
+            shape.m_radius = circleCollisionComp.radius->getX() * transformComp.scale->getX();
             b2FixtureDef fixtureDef;
             fixtureDef.isSensor = true;
             fixtureDef.shape = &shape;
             fixtureDef.density = 1.0f;
+
 
 
             body->CreateFixture(&fixtureDef);
@@ -98,7 +99,7 @@ void PhysicsWrapper::addBoxes(std::vector<uint32_t> componentIds) {
             b2Body *body = world->CreateBody(&componentBodyDef);
 
             b2PolygonShape shape;
-            shape.SetAsBox(boxCollisionComponent.size->getX() / 2, boxCollisionComponent.size->getY() / 2);
+            shape.SetAsBox(boxCollisionComponent.size->getX() * transformComp.scale->getX() /2, boxCollisionComponent.size->getY()* transformComp.scale->getY()/2);
 
             b2FixtureDef fixtureDef;
             fixtureDef.isSensor = true;
