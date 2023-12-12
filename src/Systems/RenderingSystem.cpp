@@ -29,7 +29,7 @@ void RenderingSystem::update(milliseconds deltaTime) {
         sdl2Wrapper->RenderCamera(cameraComponent);
         for (auto component: components) {
             auto &transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(
-                    component->entityID);
+                    component->entityId);
             if (auto *spriteComponent = dynamic_cast<const SpriteComponent *>(component))
                 sdl2Wrapper->RenderSprite(cameraComponent, cameraTransformComponent, *spriteComponent,
                                           transformComponent);
@@ -62,7 +62,7 @@ void RenderingSystem::update(milliseconds deltaTime) {
 
     for (auto component: uiComponents) {
         auto &transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(
-                component->entityID);
+                component->entityId);
         if (auto *spriteComponent = dynamic_cast<const SpriteComponent *>(component))
             sdl2Wrapper->RenderUiSprite(*spriteComponent, transformComponent);
         else if (auto *textComponent = dynamic_cast<const TextComponent *>(component))

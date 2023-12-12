@@ -45,7 +45,7 @@ Vector2 SceneManager::getWorldPosition(const TransformComponent &transformCompon
     auto position = *transformComponent.position;
     try {
         auto parentId = ComponentStore::GetInstance().tryGetComponent<ParentComponent>(
-                transformComponent.entityID).parentId;
+                transformComponent.entityId).parentId;
         auto &parentTransform = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(parentId);
         position += getWorldPosition(parentTransform);
         return position;

@@ -74,12 +74,12 @@ void BrackEngine::CreateFPS() {
 
     objectInfoComponent.name = "FPS";
     objectInfoComponent.tag = "FPS";
-    objectInfoComponent.entityID = entityId;
+    objectInfoComponent.entityId = entityId;
 
     textComponent.text = "0";
     textComponent.fontSize = 32;
     textComponent.color = std::make_unique<Color>(255, 0, 0, 255);
-    textComponent.entityID = entityId;
+    textComponent.entityId = entityId;
     textComponent.sortingLayer = 0;
     textComponent.orderInLayer = 0;
 

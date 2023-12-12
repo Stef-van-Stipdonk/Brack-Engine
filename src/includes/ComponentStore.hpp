@@ -71,7 +71,7 @@ public:
         if (entityId == 0)
             throw std::runtime_error("Entity ID cannot be 0.");
 
-        component->entityID = entityId;
+        component->entityId = entityId;
 
         IComponent &componentRef = *component;
 

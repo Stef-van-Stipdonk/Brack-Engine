@@ -149,7 +149,7 @@ void RenderWrapper::RenderCamera(const CameraComponent &cameraComponent) {
 
 std::pair<SDL_Rect, std::unique_ptr<SDL_Texture, void (*)(SDL_Texture *)>> &
 RenderWrapper::GetCameraTexturePair(const CameraComponent &cameraComponent) {
-    auto cameraTexture = cameraTextures.find(cameraComponent.entityID);
+    auto cameraTexture = cameraTextures.find(cameraComponent.entityId);
     if (cameraTexture == cameraTextures.end()) {
         auto width = cameraComponent.size->getX();
         auto height = cameraComponent.size->getY();
@@ -159,7 +159,7 @@ RenderWrapper::GetCameraTexturePair(const CameraComponent &cameraComponent) {
         SDL_Rect rect = {static_cast<int>(xPosition), static_cast<int>(yPosition), static_cast<int>(width),
                          static_cast<int>(height)};
         cameraTextures.insert(
-                std::make_pair(cameraComponent.entityID,
+                std::make_pair(cameraComponent.entityId,
                                std::make_pair(rect, std::unique_ptr<SDL_Texture, void (*)(SDL_Texture *)>(
                                        SDL_CreateTexture(renderer.get(), SDL_PIXELFORMAT_RGBA8888,
                                                          SDL_TEXTUREACCESS_TARGET,
@@ -167,7 +167,7 @@ RenderWrapper::GetCameraTexturePair(const CameraComponent &cameraComponent) {
                                                          height),
                                        [](SDL_Texture *t) { SDL_DestroyTexture(t); }))));
     }
-    cameraTexture = cameraTextures.find(cameraComponent.entityID);
+    cameraTexture = cameraTextures.find(cameraComponent.entityId);
     return cameraTexture->second;
 }
 
@@ -346,7 +346,7 @@ RenderWrapper::RenderSprite(const CameraComponent &cameraComponent, const Transf
     float parentRotation = 0;
     try {
         auto &parentComponent = ComponentStore::GetInstance().tryGetComponent<ParentComponent>(
-                spriteComponent.entityID);
+                spriteComponent.entityId);
         auto &parentTransformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(
                 parentComponent.parentId);
         parentPosition = *parentTransformComponent.position;
@@ -435,7 +435,7 @@ RenderWrapper::RenderText(const CameraComponent &cameraComponent, const Transfor
     float parentRotation = 0;
     try {
         auto &parentComponent = ComponentStore::GetInstance().tryGetComponent<ParentComponent>(
-                textComponent.entityID);
+                textComponent.entityId);
         auto &parentTransformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(
                 parentComponent.parentId);
         parentPosition = *parentTransformComponent.position;
@@ -484,7 +484,7 @@ void RenderWrapper::RenderRectangle(const CameraComponent &cameraComponent,
     float parentRotation = 0;
     try {
         auto &parentComponent = ComponentStore::GetInstance().tryGetComponent<ParentComponent>(
-                rectangleComponent.entityID);
+                rectangleComponent.entityId);
         auto &parentTransformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(
                 parentComponent.parentId);
         parentPosition = *parentTransformComponent.position;
@@ -536,7 +536,7 @@ void RenderWrapper::RenderUiRectangle(const RectangleComponent &rectangleCompone
     float parentRotation = 0;
     try {
         auto &parentComponent = ComponentStore::GetInstance().tryGetComponent<ParentComponent>(
-                rectangleComponent.entityID);
+                rectangleComponent.entityId);
         auto &parentTransformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(
                 parentComponent.parentId);
         parentPosition = *parentTransformComponent.position;

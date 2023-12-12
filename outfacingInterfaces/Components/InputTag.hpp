@@ -6,22 +6,18 @@
 #define BRACK_ENGINE_INPUTTAG_HPP
 
 #include "IComponent.hpp"
-#include "../../src/Components/ComponentVisitor.hpp"
 
 struct InputTag : public IComponent {
     explicit InputTag() : IComponent() {}
 
     ~InputTag() override = default;
 
-    virtual std::unique_ptr<IComponent> clone() const override{
+    virtual std::unique_ptr<IComponent> clone() const override {
         return std::make_unique<InputTag>(*this);
     }
 
-    void accept(ComponentVisitor &visitor) override {
-        visitor.visit(*this);
-    }
 
-    InputTag(const InputTag& other) : IComponent(other) {}
+    InputTag(const InputTag &other) : IComponent(other) {}
 };
 
 #endif //BRACK_ENGINE_INPUTTAG_HPP
