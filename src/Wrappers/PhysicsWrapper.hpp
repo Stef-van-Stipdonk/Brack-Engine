@@ -10,6 +10,7 @@
 #include <Components/RigidBodyComponent.hpp>
 #include "box2d/box2d.h"
 #include <unordered_map>
+#include <Milliseconds.hpp>
 
 class ContactListener;
 
@@ -29,17 +30,21 @@ public:
 
     void operator=(PhysicsWrapper &&) = delete;
 
-    void update(float deltaTime);
+    void update(milliseconds deltaTime);
 
-    void addCircles(std::vector<uint32_t> componentIds);
+    void updatePositions();
 
-    void addBoxes(std::vector<uint32_t> componentIds);
+    void updateVelocities();
+
+    void addCircles(std::vector<entity> componentIds);
+
+    void addBoxes(const std::vector<entity> &componentIds);
 
     void cleanCache();
 
-    std::unordered_map<uint32_t, b2Body *> bodies;
-    std::vector<uint32_t> boxBodies;
-    std::vector<uint32_t> circleBodies;
+    std::unordered_map<entity, b2Body *> bodies;
+//    std::vector<entity> boxBodies;
+    std::vector<entity> circleBodies;
 private:
     PhysicsWrapper();
 

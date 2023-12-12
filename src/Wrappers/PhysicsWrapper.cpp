@@ -10,6 +10,7 @@
 #include <Components/BoxCollisionComponent.hpp>
 #include <Components/TransformComponent.hpp>
 #include <Components/SpriteComponent.hpp>
+#include <Components/VelocityComponent.hpp>
 
 PhysicsWrapper PhysicsWrapper::instance;
 
@@ -29,23 +30,20 @@ PhysicsWrapper &PhysicsWrapper::getInstance() {
 PhysicsWrapper::PhysicsWrapper(const PhysicsWrapper &other) {
     b2Vec2 gravity(0.0f, -9.8f);
     world = std::make_unique<b2World>(gravity);
-//    addBoxes(other.boxBodies);
-//    addCircles(other.circleBodies);
-//    bodies = other.bodies;
     contactListener = std::make_unique<ContactListener>();
 }
 
 
-void PhysicsWrapper::update(float deltaTime) {
-    deltaTime = deltaTime / 1000.0f;
+void PhysicsWrapper::update(milliseconds deltaTime) {
+    updateVelocities();
     const int32 velocityIterations{6};
     const int32 positionIterations{2};
-
     world->Step(deltaTime, velocityIterations, positionIterations);
+    updatePositions();
 }
 
 
-void PhysicsWrapper::addCircles(std::vector<uint32_t> componentIds) {
+void PhysicsWrapper::addCircles(std::vector<entity> componentIds) {
     circleBodies.insert(circleBodies.end(), componentIds.begin(), componentIds.end());
 
     if (bodies.find(componentIds.front()) == bodies.end()) {
@@ -64,7 +62,7 @@ void PhysicsWrapper::addCircles(std::vector<uint32_t> componentIds) {
             b2CircleShape shape;
             shape.m_radius = circleCollisionComp.radius->getX() * transformComp.scale->getX();
             b2FixtureDef fixtureDef;
-            fixtureDef.isSensor = true;
+            fixtureDef.isSensor = false;
             fixtureDef.shape = &shape;
             fixtureDef.density = 1.0f;
 
@@ -84,44 +82,34 @@ void PhysicsWrapper::addCircles(std::vector<uint32_t> componentIds) {
     }
 }
 
-void PhysicsWrapper::addBoxes(std::vector<uint32_t> componentIds) {
-    boxBodies.insert(boxBodies.end(), componentIds.begin(), componentIds.end());
-
-
-//    Check if Entity is already in bodies
-    if (bodies.find(componentIds.front()) == bodies.end()) {
-        for (auto componentId: componentIds) {
+void PhysicsWrapper::addBoxes(const std::vector<entity> &componentIds) {
+    for (entity id: componentIds) {
+        auto &bodyPtr = bodies[id];
+        if (bodyPtr == nullptr) {
             auto &boxCollisionComponent = ComponentStore::GetInstance().tryGetComponent<BoxCollisionComponent>(
-                    componentId);
-            auto &transformComp = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(componentId);
-            auto &rigidBodyComp = ComponentStore::GetInstance().tryGetComponent<RigidBodyComponent>(componentId);
+                    id);
+            auto &transformComp = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(id);
+            auto &rigidBodyComp = ComponentStore::GetInstance().tryGetComponent<RigidBodyComponent>(id);
             b2BodyDef componentBodyDef;
             componentBodyDef.position.Set(transformComp.position->getX(), transformComp.position->getY());
             componentBodyDef.type = getBodyType(rigidBodyComp.collisionType);
 
-            b2Body *body = world->CreateBody(&componentBodyDef);
+            bodyPtr = world->CreateBody(&componentBodyDef);
 
             b2PolygonShape shape;
             shape.SetAsBox(boxCollisionComponent.size->getX() * transformComp.scale->getX() / 2,
                            boxCollisionComponent.size->getY() * transformComp.scale->getY() / 2);
 
             b2FixtureDef fixtureDef;
-            fixtureDef.isSensor = true;
+            fixtureDef.isSensor = false;
             fixtureDef.shape = &shape;
             fixtureDef.density = 1.0f;
 
-
-            body->CreateFixture(&fixtureDef);
-
-            bodies.insert({componentId, body});
-
-        }
-    } else {
-        for (auto componentId: componentIds) {
-            auto &transformComp = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(componentId);
-            bodies[componentId]->SetTransform(
+            bodyPtr->CreateFixture(&fixtureDef);
+        } else {
+            auto &transformComp = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(id);
+            bodyPtr->SetTransform(
                     b2Vec2(transformComp.position->getX(), transformComp.position->getY()), 0);
-
         }
     }
 }
@@ -148,8 +136,27 @@ void PhysicsWrapper::cleanCache() {
     }
 
     bodies.clear();
-    boxBodies.clear();
     circleBodies.clear();
+}
+
+void PhysicsWrapper::updatePositions() {
+    for (auto &body: bodies) {
+        auto &transformComp = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(body.first);
+        auto position = body.second->GetPosition();
+        transformComp.position->setX(position.x);
+        transformComp.position->setY(position.y);
+    }
+}
+
+void PhysicsWrapper::updateVelocities() {
+    for (auto &body: bodies) {
+        try {
+            auto &transformComp = ComponentStore::GetInstance().tryGetComponent<VelocityComponent>(body.first);
+            body.second->SetLinearVelocity(b2Vec2(transformComp.velocity.getX(), transformComp.velocity.getY()));
+        } catch (std::exception &e) {
+            continue;
+        }
+    }
 }
 
 
@@ -196,15 +203,15 @@ void ContactListener::BeginContact(b2Contact *contact) {
 
 
 void ContactListener::EndContact(b2Contact *contact) {
-    std::unordered_map<uint32_t, b2Body *> bodies = PhysicsWrapper::getInstance().bodies;
+    std::unordered_map<entity, b2Body *> bodies = PhysicsWrapper::getInstance().bodies;
     auto &compStore = ComponentStore::GetInstance();
     auto contactA = contact->GetFixtureA()->GetBody();
     auto contactB = contact->GetFixtureB()->GetBody();
     auto circleEntities = compStore.getEntitiesWithComponent<CircleCollisionComponent>();
     auto boxEntities = compStore.getEntitiesWithComponent<BoxCollisionComponent>();
 
-    uint32_t contactAComponent;
-    uint32_t contactBComponent;
+    entity contactAComponent;
+    entity contactBComponent;
 
     for (auto body: bodies) {
         if (body.second == contactA) {
