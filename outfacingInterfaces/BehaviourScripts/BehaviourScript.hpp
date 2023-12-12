@@ -19,14 +19,14 @@ public:
 
 
     BehaviourScript(std::remove_reference<struct std::unique_ptr<struct BehaviourScript> &>::type type) {
-        entityID = type->entityID;
+        entityId = type->entityId;
         isActive = type->isActive;
     }
 
     virtual ~BehaviourScript() = default;
 
     BehaviourScript(const BehaviourScript &other) {
-        entityID = other.entityID;
+        entityId = other.entityId;
         isActive = other.isActive;
     }
 
@@ -37,22 +37,22 @@ public:
     template<typename T>
     typename std::enable_if<std::is_base_of<IComponent, T>::value, T &>::type
     tryGetComponent() {
-        return ComponentStore::GetInstance().tryGetComponent<T>(entityID);
+        return ComponentStore::GetInstance().tryGetComponent<T>(entityId);
     }
 
 
     void setActive(bool active) {
-        EntityManager::getInstance().setEntityActive(entityID, active);
+        EntityManager::getInstance().setEntityActive(entityId, active);
         tryGetComponent<ObjectInfoComponent>().isActive = active;
     }
 
-    static std::optional<GameObject*> getGameObjectByName(const std::string &name);
+    static std::optional<GameObject *> getGameObjectByName(const std::string &name);
 
     static std::vector<GameObject> getGameObjectsByName(const std::string &name);
 
     static std::optional<GameObject> getGameObjectByTag(const std::string &tag);
 
-    static std::vector<GameObject*> getGameObjectsByTag(const std::string &tag);
+    static std::vector<GameObject *> getGameObjectsByTag(const std::string &tag);
 
     std::vector<GameObject> getChildren();
 

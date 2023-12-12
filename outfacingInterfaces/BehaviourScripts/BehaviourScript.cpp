@@ -20,11 +20,11 @@ std::vector<GameObject *> BehaviourScript::getGameObjectsByTag(const std::string
 }
 
 std::vector<GameObject> BehaviourScript::getChildren() {
-    return GameObjectConverter::getChildren(entityID);
+    return GameObjectConverter::getChildren(entityId);
 }
 
 std::optional<GameObject> BehaviourScript::getParent() {
-    return GameObjectConverter::getParent(entityID);
+    return GameObjectConverter::getParent(entityId);
 }
 
 std::optional<GameObject> BehaviourScript::getGameObjectByTag(const std::string &tag) {
