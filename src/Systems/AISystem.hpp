@@ -14,7 +14,9 @@ public:
 
     ~AISystem() override;
 
-    Vector2 getNextLocation(const Vector2& target, const Vector2& source);
+    Vector2 getNextLocation(const std::unique_ptr<Vector2>& target, const std::unique_ptr<Vector2>& source);
+
+    Vector2 calculateVelocity(const std::unique_ptr<Vector2>& target, const std::unique_ptr<Vector2>& source, float speed);
 
     const std::string getName() const override;
 
