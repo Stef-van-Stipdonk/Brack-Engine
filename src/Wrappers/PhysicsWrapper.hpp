@@ -11,6 +11,7 @@
 #include "box2d/box2d.h"
 #include <unordered_map>
 #include <Milliseconds.hpp>
+#include <Helpers/Vector2.hpp>
 
 class ContactListener;
 
@@ -42,9 +43,7 @@ public:
 
     void cleanCache();
 
-    std::unordered_map<entity, b2Body *> bodies;
-//    std::vector<entity> boxBodies;
-    std::vector<entity> circleBodies;
+    std::unordered_map<entity, std::pair<b2Body *, Vector2>> bodies;
 private:
     PhysicsWrapper();
 
@@ -54,7 +53,7 @@ private:
 
     std::unique_ptr<b2World> world;
 
-    b2BodyType getBodyType(CollisionType collisionType);
+    static b2BodyType getBodyType(CollisionType collisionType);
 };
 
 class ContactListener : public b2ContactListener {

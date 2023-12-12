@@ -447,7 +447,7 @@ void RenderWrapper::RenderBoxCollision(const CameraComponent &cameraComponent,
 #if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
     auto &cameraPosition = cameraTransformComponent.position;
     auto &cameraSize = cameraComponent.size;
-    auto boxPosition = SceneManager::getWorldPosition(transformComponent);
+    auto boxPosition = SceneManager::getWorldPosition(transformComponent) + *boxCollisionComponent.offset;
     auto boxScale = SceneManager::getWorldScale(transformComponent);
     auto &size = boxCollisionComponent.size;
     auto sizeX = size->getX() * boxScale.getX();

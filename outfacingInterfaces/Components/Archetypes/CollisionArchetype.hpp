@@ -6,6 +6,7 @@
 #define BRACKOCALYPSE_COLLISIONARCHETYPE_HPP
 
 #include <Components/IComponent.hpp>
+#include <Helpers/Vector2.hpp>
 #include <vector>
 
 struct CollisionArchetype : public IComponent {
@@ -22,6 +23,7 @@ public:
         collidedWith = other.collidedWith;
     }
 
+    std::unique_ptr<Vector2> offset = std::make_unique<Vector2>(0, 0);
     std::vector<entity> collidedWith;
 };
 
