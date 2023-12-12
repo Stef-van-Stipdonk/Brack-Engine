@@ -96,7 +96,8 @@ public:
 
             // Iterate through the vector and add references to the result
             for (const auto &scriptPtr: scriptVector) {
-                result.push_back(std::ref(*scriptPtr));
+                if (EntityManager::getInstance().isEntityActive(scriptPtr.get()->entityId))
+                    result.push_back(std::ref(*scriptPtr));
             }
         }
         return result;
