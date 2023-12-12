@@ -32,9 +32,9 @@ void ClickSystem::CheckBoxCollision(const ClickableComponent &clickableComponent
                                     const Vector2 &mousePosition) {
     try {
         auto boxColliderComponent = ComponentStore::GetInstance().tryGetComponent<BoxCollisionComponent>(
-                clickableComponent.entityID);
+                clickableComponent.entityId);
         auto transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(
-                clickableComponent.entityID);
+                clickableComponent.entityId);
         if (
                 mousePosition.getX() >= transformComponent.position->getX() &&
                 mousePosition.getX() <= transformComponent.position->getX() + boxColliderComponent.size->getX() &&
@@ -51,9 +51,9 @@ void ClickSystem::CheckBoxCollision(const ClickableComponent &clickableComponent
 void ClickSystem::CheckCircleCollision(const ClickableComponent &clickableComponent, const Vector2 &mousePosition) {
     try {
         auto circleCollisionComponent = ComponentStore::GetInstance().tryGetComponent<CircleCollisionComponent>(
-                clickableComponent.entityID);
+                clickableComponent.entityId);
         auto transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(
-                clickableComponent.entityID);
+                clickableComponent.entityId);
         auto x = mousePosition.getX();
         auto y = mousePosition.getY();
         auto a = circleCollisionComponent.radius->getX();
