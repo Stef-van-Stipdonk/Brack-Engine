@@ -590,7 +590,7 @@ std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)> RenderWrapper::GetSp
 
 std::pair<SDL_Rect, std::unique_ptr<SDL_Texture, void (*)(SDL_Texture *)>> &
 RenderWrapper::GetCameraTexturePair(const CameraComponent &cameraComponent) {
-    auto cameraTexture = cameraTextures.find(cameraComponent.entityID);
+    auto cameraTexture = cameraTextures.find(cameraComponent.entityId);
     if (cameraTexture == cameraTextures.end()) {
         auto width = cameraComponent.size->getX();
         auto height = cameraComponent.size->getY();
@@ -600,13 +600,13 @@ RenderWrapper::GetCameraTexturePair(const CameraComponent &cameraComponent) {
         SDL_Rect rect = {static_cast<int>(xPosition), static_cast<int>(yPosition), static_cast<int>(width),
                          static_cast<int>(height)};
         cameraTextures.insert(
-                std::make_pair(cameraComponent.entityID,
+                std::make_pair(cameraComponent.entityId,
                                std::make_pair(rect, std::unique_ptr<SDL_Texture, void (*)(SDL_Texture *)>(
                                        SDL_CreateTexture(renderer.get(), SDL_PIXELFORMAT_RGBA8888,
                                                          SDL_TEXTUREACCESS_TARGET, width, height),
                                        [](SDL_Texture *t) { SDL_DestroyTexture(t); }))));
     }
-    cameraTexture = cameraTextures.find(cameraComponent.entityID);
+    cameraTexture = cameraTextures.find(cameraComponent.entityId);
     return cameraTexture->second;
 }
 

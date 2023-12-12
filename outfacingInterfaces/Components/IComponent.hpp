@@ -9,25 +9,21 @@
 #include <memory>
 #include <Entity.hpp>
 
-class ComponentVisitor;
-
 struct IComponent {
     virtual ~IComponent() {};
 
     explicit IComponent() {};
 
     IComponent(const IComponent &other) {
-        entityID = other.entityID;
+        entityId = other.entityId;
         isActive = other.isActive;
     };
 
-    virtual std::unique_ptr<IComponent> clone() const = 0;
-
-    virtual void accept(ComponentVisitor &visitor) {};
+    [[nodiscard]] virtual std::unique_ptr<IComponent> clone() const = 0;
 
 
     // Als we nog achter andere overeenkomende dingen komen bij ieder component kunnen we die hier toevoegens
-    entity entityID{0};
+    entity entityId{0};
     bool isActive = true;
 };
 

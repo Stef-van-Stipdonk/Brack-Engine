@@ -34,7 +34,7 @@ public:
     typename std::enable_if<std::is_base_of<IBehaviourScript, T>::value>::type
     addBehaviourScript(Args &&...args) {
         T script(std::forward<Args>(args)...);
-        auto entityId = script.entityID;
+        auto entityId = script.entityId;
 
         if (entityId == 0)
             throw std::runtime_error(
@@ -53,7 +53,7 @@ public:
                     std::string(typeid(T).name()));
 
         T script(std::forward<Args>(args)...);
-        script.entityID = entityId;
+        script.entityId = entityId;
 
         behaviourScripts[entityId].emplace_back(std::make_unique<T>(script));
     }
@@ -62,7 +62,7 @@ public:
         if (entityId == 0)
             throw std::runtime_error("Entity ID cannot be 0.");
 
-        script->entityID = entityId;
+        script->entityId = entityId;
 
         IBehaviourScript &componentRef = *script;
 
@@ -96,7 +96,8 @@ public:
 
             // Iterate through the vector and add references to the result
             for (const auto &scriptPtr: scriptVector) {
-                result.push_back(std::ref(*scriptPtr));
+                if (EntityManager::getInstance().isEntityActive(scriptPtr.get()->entityId) && scriptPtr.get()->isActive)
+                    result.push_back(std::ref(*scriptPtr));
             }
         }
         return result;
