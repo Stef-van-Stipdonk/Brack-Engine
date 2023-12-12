@@ -111,7 +111,7 @@ void PhysicsWrapper::addBoxes(const std::vector<entity> &componentIds) {
             fixtureDef.isSensor = boxCollisionComponent.isTrigger;
             fixtureDef.shape = &shape;
             fixtureDef.density = 1.0f;
-            fixtureDef.friction = 0.2f;
+            fixtureDef.friction = rigidBodyComp.friction;
             fixtureDef.restitution = rigidBodyComp.restitution;
 
             bodyPtr.first->CreateFixture(&fixtureDef);
