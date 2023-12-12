@@ -7,12 +7,13 @@
 
 #include <memory>
 #include <vector>
-#include "IComponent.hpp"
+#include <Helpers/CollisionType.hpp>
+#include "Archetypes/CollisionArchetype.hpp"
 #include "Helpers/Vector2.hpp"
 
 
-struct BoxCollisionComponent : public IComponent {
-    explicit BoxCollisionComponent(Vector2 size) : IComponent(), size(std::make_unique<Vector2>(size)) {}
+struct BoxCollisionComponent : public CollisionArchetype {
+    explicit BoxCollisionComponent(Vector2 size) : CollisionArchetype(), size(std::make_unique<Vector2>(size)) {}
 
 
     virtual std::unique_ptr<IComponent> clone() const override {
@@ -20,11 +21,10 @@ struct BoxCollisionComponent : public IComponent {
     }
 
     ~BoxCollisionComponent() override {
-        if (size != nullptr)
-            size = nullptr;
+        size = nullptr;
     };
 
-    BoxCollisionComponent(const BoxCollisionComponent &other) : IComponent(other) {
+    BoxCollisionComponent(const BoxCollisionComponent &other) : CollisionArchetype(other) {
         if (other.size != nullptr)
             size = std::make_unique<Vector2>(*other.size);
         collidedWith = other.collidedWith;
