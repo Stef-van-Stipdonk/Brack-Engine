@@ -1,0 +1,14 @@
+//
+// Created by SKIKK on 11/12/2023.
+//
+
+#ifndef BRACKOCALYPSE_GRAPHNODEWRAPPER_HPP
+#define BRACKOCALYPSE_GRAPHNODEWRAPPER_HPP
+
+
+class GraphNodeWrapper {
+
+};
+
+
+#endif //BRACKOCALYPSE_GRAPHNODEWRAPPER_HPP

@@ -14,6 +14,8 @@ public:
 
     ~AISystem() override;
 
+    Vector2 getNextLocation(const Vector2& target, const Vector2& source);
+
     const std::string getName() const override;
 
     void cleanUp() override;

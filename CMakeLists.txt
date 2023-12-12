@@ -108,6 +108,13 @@ add_library(${PROJECT_NAME} SHARED
         src/Managers/Entities/BehaviourScriptStore.cpp
         outfacingInterfaces/BehaviourScripts/BehaviourScript.cpp
         outfacingInterfaces/BehaviourScripts/IBehaviourScript.hpp
+        outfacingInterfaces/Components/GraphComponent.hpp
+        src/Helpers/GraphNodeWrapper.cpp
+        src/Helpers/GraphNodeWrapper.hpp
+        outfacingInterfaces/Graph/GraphNode.hpp
+        outfacingInterfaces/Graph/GraphEdge.hpp
+        outfacingInterfaces/Objects/Graph.hpp
+        src/Objects/Graph.cpp
 )
 
 if (WIN32 OR WIN64)
