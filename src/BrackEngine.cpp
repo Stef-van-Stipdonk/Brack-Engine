@@ -29,7 +29,7 @@ BrackEngine::BrackEngine(Config &&config) {
     SystemManager::getInstance().AddSystem(std::make_shared<ClickSystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<AudioSystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<BehaviourScriptSystem>());
-    SystemManager::getInstance().AddSystem(std::make_shared<MovementSystem>());
+//    SystemManager::getInstance().AddSystem(std::make_shared<MovementSystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<PhysicsSystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<AnimationSystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<RenderingSystem>());

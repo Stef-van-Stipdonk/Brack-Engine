@@ -23,10 +23,12 @@ struct RigidBodyComponent : public IComponent {
         mass = other.mass;
         gravityScale = other.gravityScale;
         collisionType = other.collisionType;
+        restitution = other.restitution;
+        friction = other.friction;
     }
 
 
-    float mass, gravityScale;
+    float mass = 1.0f, gravityScale = 1.0f, restitution = 0.0f, friction = 0.0f;
     CollisionType collisionType;
 };
 
