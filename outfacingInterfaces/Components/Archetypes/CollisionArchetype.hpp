@@ -21,10 +21,13 @@ public:
 
     CollisionArchetype(const CollisionArchetype &other) : IComponent(other) {
         collidedWith = other.collidedWith;
+        isTrigger = other.isTrigger;
+        offset = std::make_unique<Vector2>(other.offset->getX(), other.offset->getY());
     }
 
     std::unique_ptr<Vector2> offset = std::make_unique<Vector2>(0, 0);
     std::vector<entity> collidedWith;
+    bool isTrigger = false;
 };
 
 #endif //BRACKOCALYPSE_COLLISIONARCHETYPE_HPP

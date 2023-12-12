@@ -108,7 +108,7 @@ void PhysicsWrapper::addBoxes(const std::vector<entity> &componentIds) {
                            boxCollisionComponent.size->getY() * transformComp.scale->getY() / 2);
 
             b2FixtureDef fixtureDef;
-            fixtureDef.isSensor = false;
+            fixtureDef.isSensor = boxCollisionComponent.isTrigger;
             fixtureDef.shape = &shape;
             fixtureDef.density = 1.0f;
             fixtureDef.friction = 0.2f;
