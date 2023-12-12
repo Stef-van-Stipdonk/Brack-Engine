@@ -23,11 +23,11 @@
 #include "Systems/ParticleSystem.hpp"
 
 
-BrackEngine::BrackEngine(Config &&config) {
+BrackEngine::BrackEngine(Config &&config) : deltaTimeMultiplier(ConfigSingleton::GetInstance().deltaTimeMultiplier) {
     ConfigSingleton::GetInstance().SetConfig(config);
     SystemManager::getInstance().AddSystem(std::make_shared<InputSystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<ClickSystem>());
-    SystemManager::getInstance().AddSystem(std::make_shared<AudioSystem>());
+//    SystemManager::getInstance().AddSystem(std::make_shared<AudioSystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<BehaviourScriptSystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<MovementSystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<PhysicsSystem>());
@@ -63,7 +63,7 @@ milliseconds BrackEngine::GetDeltaTime() {
 
     float deltaTimeInSeconds = deltaTime.count();
     milliseconds deltaTimeInMilliSeconds = deltaTimeInSeconds * 1000.0f;
-    return deltaTimeInMilliSeconds;
+    return deltaTimeInMilliSeconds * deltaTimeMultiplier;
 }
 
 

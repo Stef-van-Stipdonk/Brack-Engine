@@ -63,7 +63,7 @@ bool GameObject::isActive() const {
     return EntityManager::getInstance().isEntityActive(entityID) && tryGetComponent<ObjectInfoComponent>().isActive;
 }
 
-void GameObject::setActive(bool active) const {
+void GameObject::setActive(bool active) {
     tryGetComponent<ObjectInfoComponent>().isActive = active;
     EntityManager::getInstance().setEntityActive(entityID, active);
     for (auto &child: children) {
@@ -103,10 +103,13 @@ std::vector<std::unique_ptr<IBehaviourScript>> &&GameObject::getAllBehaviourScri
 void GameObject::addChild(std::unique_ptr<GameObject> child) {
     try {
         auto &childComponent = tryGetComponent<ChildComponent>();
+        EntityManager::getInstance().setEntityActive(child->getEntityId(), isActive());
+
         if (entityID != 0)
             childComponent.children.push_back(child->getEntityId());
     } catch (std::runtime_error &e) {
         addComponent(std::make_unique<ChildComponent>());
+        EntityManager::getInstance().setEntityActive(child->getEntityId(), isActive());
         if (entityID != 0) {
             auto &childComponent = tryGetComponent<ChildComponent>();
             childComponent.children.push_back(child->getEntityId());

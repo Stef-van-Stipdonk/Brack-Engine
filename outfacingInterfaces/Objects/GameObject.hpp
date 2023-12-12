@@ -57,6 +57,13 @@ public:
             ComponentStore::GetInstance().addComponent<T>(entityID, *component.get());
     }
 
+    GameObject *getChildGameObjectByName(const std::string name) {
+        for (auto &gameObject: children) {
+            if (gameObject->getName() == name)
+                return gameObject.get();
+        }
+    }
+
     template<typename T>
     typename std::enable_if<std::is_base_of<IComponent, T>::value>::type
     addComponent(T component) {
@@ -179,7 +186,7 @@ public:
 
     bool isActive() const;
 
-    virtual void setActive(bool active) const;
+    virtual void setActive(bool active);
 
     int getLayer() const;
 

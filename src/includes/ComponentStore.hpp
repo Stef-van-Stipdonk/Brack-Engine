@@ -72,7 +72,7 @@ public:
             throw std::runtime_error("Entity ID cannot be 0.");
 
         component->entityID = entityId;
-        
+
         IComponent &componentRef = *component;
 
         components[typeid(componentRef)][entityId] = std::move(component);
@@ -147,7 +147,7 @@ public:
     }
 
     void removeAllComponents(const entity entityId) {
-        for(auto& component : components) {
+        for (auto &component: components) {
             component.second.erase(entityId);
         }
     }
@@ -160,6 +160,7 @@ public:
         if (itType != components.end()) {
             for (auto &pair: itType->second) {
                 auto &objectInfoComponent = tryGetComponent<ObjectInfoComponent>(pair.first);
+
                 if (EntityManager::getInstance().isEntityActive(pair.first) && objectInfoComponent.isActive) {
                     entities.push_back(pair.first);
                 }
