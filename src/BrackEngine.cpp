@@ -29,7 +29,7 @@ BrackEngine::BrackEngine(Config &&config) : deltaTimeMultiplier(ConfigSingleton:
     SystemManager::getInstance().AddSystem(std::make_shared<ClickSystem>());
 //    SystemManager::getInstance().AddSystem(std::make_shared<AudioSystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<BehaviourScriptSystem>());
-    SystemManager::getInstance().AddSystem(std::make_shared<MovementSystem>());
+//    SystemManager::getInstance().AddSystem(std::make_shared<MovementSystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<PhysicsSystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<AnimationSystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<RenderingSystem>());
@@ -74,12 +74,12 @@ void BrackEngine::CreateFPS() {
 
     objectInfoComponent.name = "FPS";
     objectInfoComponent.tag = "FPS";
-    objectInfoComponent.entityID = entityId;
+    objectInfoComponent.entityId = entityId;
 
     textComponent.text = "0";
     textComponent.fontSize = 32;
     textComponent.color = std::make_unique<Color>(255, 0, 0, 255);
-    textComponent.entityID = entityId;
+    textComponent.entityId = entityId;
     textComponent.sortingLayer = 0;
     textComponent.orderInLayer = 0;
 
