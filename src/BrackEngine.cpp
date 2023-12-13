@@ -36,7 +36,8 @@ BrackEngine::BrackEngine(Config &&config) : deltaTimeMultiplier(ConfigSingleton:
     SystemManager::getInstance().AddSystem(std::make_shared<ParticleSystem>());
 
     lastTime = std::chrono::high_resolution_clock::now();
-
+    SystemManager::getInstance().AddSystem(std::make_shared<ReplaySystem>(lastTime));
+    
     if (ConfigSingleton::GetInstance().ShowFPS())
         CreateFPS();
 }
