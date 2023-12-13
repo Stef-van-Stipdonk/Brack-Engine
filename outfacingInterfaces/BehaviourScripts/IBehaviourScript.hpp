@@ -21,19 +21,19 @@ public:
     virtual void onUpdate(milliseconds deltaTime) {};
 
     IBehaviourScript(const IBehaviourScript &other) {
-        entityID = other.entityID;
+        entityId = other.entityId;
         isActive = other.isActive;
     }
 
     IBehaviourScript(std::remove_reference<struct std::unique_ptr<struct IBehaviourScript> &>::type type) {
-        entityID = type->entityID;
+        entityId = type->entityId;
         isActive = type->isActive;
     }
 
     [[nodiscard]] virtual std::unique_ptr<IBehaviourScript> clone() const = 0;
 
 
-    entity entityID = 0;
+    entity entityId = 0;
     bool isActive = true;
 };
 

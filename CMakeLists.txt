@@ -103,6 +103,8 @@ add_library(${PROJECT_NAME} SHARED
         src/Managers/ReplayManager.cpp
         outfacingInterfaces/EngineManagers/ReplayManager.hpp
         outfacingInterfaces/Milliseconds.hpp
+        outfacingInterfaces/Components/Archetypes/CollisionArchetype.hpp
+        outfacingInterfaces/Components/TileMapComponent.hpp
         src/Managers/Entities/BehaviourScriptStore.cpp
         outfacingInterfaces/BehaviourScripts/BehaviourScript.cpp
         outfacingInterfaces/BehaviourScripts/IBehaviourScript.hpp

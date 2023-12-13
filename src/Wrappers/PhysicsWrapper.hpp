@@ -7,9 +7,11 @@
 
 #include <memory>
 #include <vector>
-#include <Components/CircleCollisionComponent.hpp>
+#include <Components/RigidBodyComponent.hpp>
 #include "box2d/box2d.h"
 #include <unordered_map>
+#include <Milliseconds.hpp>
+#include <Helpers/Vector2.hpp>
 
 class ContactListener;
 
@@ -29,17 +31,19 @@ public:
 
     void operator=(PhysicsWrapper &&) = delete;
 
-    void update(float deltaTime);
+    void update(milliseconds deltaTime);
 
-    void addCircles(std::vector<uint32_t> componentIds);
+    void updatePositions();
 
-    void addBoxes(std::vector<uint32_t> componentIds);
+    void updateVelocities();
+
+    void addCircles(std::vector<entity> componentIds);
+
+    void addBoxes(const std::vector<entity> &componentIds);
 
     void cleanCache();
 
-    std::unordered_map<uint32_t, b2Body *> bodies;
-    std::vector<uint32_t> boxBodies;
-    std::vector<uint32_t> circleBodies;
+    std::unordered_map<entity, std::pair<b2Body *, Vector2>> bodies;
 private:
     PhysicsWrapper();
 
@@ -49,7 +53,7 @@ private:
 
     std::unique_ptr<b2World> world;
 
-    b2BodyType getBodyType(CollisionType collisionType);
+    static b2BodyType getBodyType(CollisionType collisionType);
 };
 
 class ContactListener : public b2ContactListener {
