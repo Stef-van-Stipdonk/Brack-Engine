@@ -43,12 +43,16 @@ public:
     template<typename T>
     typename std::enable_if<std::is_base_of<IBehaviourScript, T>::value, T &>::type
     tryGetBehaviourScript() const {
-        return BehaviourScriptStore::getInstance().tryGetBehaviourScript<T>(entityID);
+        return BehaviourScriptStore::getInstance().tryGetBehaviourScript<T>(entityId);
     }
 
     void setActive(bool active) {
         EntityManager::getInstance().setEntityActive(entityId, active);
         tryGetComponent<ObjectInfoComponent>().isActive = active;
+    }
+
+    bool getActive() {
+        return EntityManager::getInstance().isEntityActive(entityId) && tryGetComponent<ObjectInfoComponent>().isActive;
     }
 
     static std::optional<GameObject *> getGameObjectByName(const std::string &name);
