@@ -75,9 +75,22 @@ public:
     }
 
     template<typename T>
+    std::vector<std::reference_wrapper<T>> getBehaviourScripts(entity entityId) {
+        std::vector<std::reference_wrapper<T>> result;
+
+        auto itType = behaviourScripts.find(entityId);
+        if (itType != behaviourScripts.end()) {
+            for (auto &script: itType->second) {
+                if (EntityManager::getInstance().isEntityActive(script.get()->entityId) && script.get()->isActive)
+                    result.push_back(std::ref(static_cast<T &>(*script)));
+            }
+        }
+        return result;
+    }
+
+    template<typename T>
     typename std::enable_if<std::is_base_of<IBehaviourScript, T>::value>::type
     removeBehaviourScript(entity entityId) {
-
         auto itType = behaviourScripts.find(entityId);
         if (itType != behaviourScripts.end()) {
             auto itScript = static_cast<T *>(itType->second);
