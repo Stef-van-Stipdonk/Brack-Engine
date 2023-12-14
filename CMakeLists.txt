@@ -108,6 +108,7 @@ add_library(${PROJECT_NAME} SHARED
         src/Managers/Entities/BehaviourScriptStore.cpp
         outfacingInterfaces/BehaviourScripts/BehaviourScript.cpp
         outfacingInterfaces/BehaviourScripts/IBehaviourScript.hpp
+        outfacingInterfaces/RandomGenerator.hpp
 )
 
 if (WIN32 OR WIN64)
