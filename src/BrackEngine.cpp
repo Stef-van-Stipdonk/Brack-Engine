@@ -51,6 +51,8 @@ void BrackEngine::Run() {
         FPSSingleton::GetInstance().End();
         if (ConfigSingleton::GetInstance().ShowFPS())
             UpdateFPS(deltaTime);
+
+        SceneManager::getInstance().setActiveScene();
     }
 
     SystemManager::getInstance().CleanUp();

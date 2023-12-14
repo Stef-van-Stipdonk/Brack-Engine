@@ -115,6 +115,10 @@ public:
         }
     }
 
+    void removeAllBehaviourScripts() {
+        behaviourScripts.clear();
+    }
+
     std::vector<std::reference_wrapper<IBehaviourScript>> getAllBehaviourScripts() {
         std::vector<std::reference_wrapper<IBehaviourScript>> result;
 
@@ -131,6 +135,19 @@ public:
         return result;
     }
 
+    template<typename T>
+    typename std::enable_if<std::is_base_of<IBehaviourScript, T>::value, T &>::type
+    tryGetBehaviourScript(entity entityId) {
+        auto itType = behaviourScripts.find(entityId);
+        if (itType != behaviourScripts.end()) {
+            for(auto& script : itType->second) {
+                if (auto castedScript = static_cast<T*>(script.get())) {
+                    return *castedScript;
+                }
+            }
+        }
+        throw std::runtime_error("Component not found");
+    }
 
 private:
     static BehaviourScriptStore instance;
