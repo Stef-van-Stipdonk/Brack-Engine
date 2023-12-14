@@ -4,6 +4,8 @@
 
 #include "ReplaySystem.hpp"
 #include "RenderingSystem.hpp"
+#include "../includes/BehaviourScriptStore.hpp"
+#include "../ConfigSingleton.hpp"
 
 ReplaySystem::ReplaySystem(std::chrono::time_point<std::chrono::high_resolution_clock> &lastTime) : lastTime(lastTime) {
 
@@ -33,12 +35,12 @@ void ReplaySystem::stopRecording() {
 }
 
 void ReplaySystem::update(milliseconds deltaTime) {
-    if (!recording)
-        return;
-    
     if (replayStart) {
         replay();
     } else {
+        if (!recording)
+            return;
+
         if (timeElapsedSinceLastSnapshot < snapshotInterval) {
             timeElapsedSinceLastSnapshot += deltaTime;
             return;
@@ -67,7 +69,7 @@ void ReplaySystem::replay() {
         replayStart = false;
         return;
     }
-
+    
     while (!snapshots.empty()) {
         if (!replayStart)
             break;
@@ -92,7 +94,6 @@ void ReplaySystem::replay() {
         currentSnapshot.reset();
 
     lastTime = std::chrono::high_resolution_clock::now();
-
 }
 
 const std::string ReplaySystem::getName() const {
@@ -127,6 +128,16 @@ std::unique_ptr<ReplaySystem::ECSSnapshot> ReplaySystem::createEcsDeepSnapshot()
         }
     }
 
+    auto &behaviorScriptStore = BehaviourScriptStore::getInstance();
+    auto scripts = behaviorScriptStore.getAllBehaviourScripts();
+    auto clones = std::vector<std::unique_ptr<IBehaviourScript>>();
+    for (auto script: scripts) {
+        auto clone = script.get().clone();
+        clones.push_back(std::move(clone));
+    }
+
+    snapshot->behaviorScripts = std::move(clones);
+
     return snapshot;
 }
 
@@ -146,6 +157,12 @@ void ReplaySystem::restore_ecs_snapshot(const ReplaySystem::ECSSnapshot &snapsho
         for (auto &[entityId, component]: entityComponents) {
             componentStore.addComponent(entityId, std::move(component->clone()));
         }
+    }
+
+    BehaviourScriptStore &behaviorScriptStore = BehaviourScriptStore::getInstance();
+    behaviorScriptStore.clearBehaviourScripts();
+    for (auto &script: snapshot.behaviorScripts) {
+        behaviorScriptStore.addBehaviourScript(script->entityId, std::move(script->clone()));
     }
 }
 

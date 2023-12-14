@@ -29,7 +29,7 @@ public:
 
     void setActiveScene(Scene &scene);
 
-    static std::optional<GameObject> getGameObjectByName(const std::string &name);
+    static std::optional<GameObject *> getGameObjectByName(const std::string &name);
 
     static std::vector<GameObject> getGameObjectsByName(const std::string &name);
 
