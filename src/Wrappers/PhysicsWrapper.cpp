@@ -96,13 +96,11 @@ void PhysicsWrapper::addBoxes(const std::vector<entity> &componentIds) {
             componentBodyDef.position.Set(worldPosition.getX() + boxCollisionComponent.offset->getX(),
                                           worldPosition.getY() + boxCollisionComponent.offset->getY());
             componentBodyDef.type = getBodyType(rigidBodyComp.collisionType);
-            componentBodyDef.rot
 
             bodyPtr.first = world->CreateBody(&componentBodyDef);
             bodyPtr.second = Vector2(boxCollisionComponent.offset->getX(),
                                      boxCollisionComponent.offset->getY());
             bodyPtr.first->SetGravityScale(rigidBodyComp.gravityScale);
-
 
             b2PolygonShape shape;
             shape.SetAsBox(boxCollisionComponent.size->getX() * transformComp.scale->getX() / 2,

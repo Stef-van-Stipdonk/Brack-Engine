@@ -4,8 +4,6 @@
 
 #include <Components/ObjectInfoComponent.hpp>
 #include <Components/PersistenceTag.hpp>
-#include <Components/AIComponent.hpp>
-#include <Helpers/KeyMap.hpp>
 #include "BrackEngine.hpp"
 #include "Systems/RenderingSystem.hpp"
 #include "Logger.hpp"
@@ -13,7 +11,6 @@
 #include "Systems/InputSystem.hpp"
 #include "FPSSingleton.hpp"
 #include "Systems/AudioSystem.hpp"
-#include "Systems/MovementSystem.hpp"
 #include "Systems/BehaviourScriptSystem.hpp"
 #include "Systems/ClickSystem.hpp"
 #include "Systems/AudioSystem.hpp"
@@ -29,7 +26,6 @@ BrackEngine::BrackEngine(Config &&config) {
     SystemManager::getInstance().AddSystem(std::make_shared<ClickSystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<AudioSystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<BehaviourScriptSystem>());
-//    SystemManager::getInstance().AddSystem(std::make_shared<MovementSystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<PhysicsSystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<AnimationSystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<RenderingSystem>());
