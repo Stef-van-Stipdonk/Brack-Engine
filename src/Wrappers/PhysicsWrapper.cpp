@@ -117,9 +117,10 @@ void PhysicsWrapper::addBoxes(const std::vector<entity> &componentIds) {
             bodyPtr.first->CreateFixture(&fixtureDef);
         } else {
             auto &transformComp = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(id);
+            auto worldPosition = SceneManager::getWorldPosition(transformComp);
             bodyPtr.first->SetTransform(
-                    b2Vec2(transformComp.position->getX() + bodyPtr.second.getX(),
-                           transformComp.position->getY() + bodyPtr.second.getY()), 0);
+                    b2Vec2(worldPosition.getX() + bodyPtr.second.getX(),
+                           worldPosition.getY() + bodyPtr.second.getY()), 0);
             try {
                 auto &velocityComponent = ComponentStore::GetInstance().tryGetComponent<VelocityComponent>(id);
                 bodyPtr.first->SetLinearVelocity(
@@ -157,10 +158,15 @@ void PhysicsWrapper::cleanCache() {
 
 void PhysicsWrapper::updatePositions() {
     for (auto &body: bodies) {
+        if (body.first == 145)
+            std::cout << "";
         auto &transformComp = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(body.first);
         auto position = body.second.first->GetPosition();
-        transformComp.position->setX(position.x - body.second.second.getX());
-        transformComp.position->setY(position.y - body.second.second.getY());
+        auto localPosition = SceneManager::getLocalPosition(Vector2(position.x - body.second.second.getX(),
+                                                                    position.y - body.second.second.getY()),
+                                                            transformComp.entityId);
+        transformComp.position->setX(localPosition.getX());
+        transformComp.position->setY(localPosition.getY());
     }
 }
 
