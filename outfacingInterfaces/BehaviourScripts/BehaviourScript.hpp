@@ -51,10 +51,6 @@ public:
         tryGetComponent<ObjectInfoComponent>().isActive = active;
     }
 
-    bool getActive() {
-        return EntityManager::getInstance().isEntityActive(entityId) && tryGetComponent<ObjectInfoComponent>().isActive;
-    }
-
     static std::optional<GameObject *> getGameObjectByName(const std::string &name);
 
     static std::vector<GameObject> getGameObjectsByName(const std::string &name);
