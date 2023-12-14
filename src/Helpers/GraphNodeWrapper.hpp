@@ -6,8 +6,16 @@
 #define BRACKOCALYPSE_GRAPHNODEWRAPPER_HPP
 
 
-class GraphNodeWrapper {
+#include <Graph/GraphNode.hpp>
 
+class GraphNodeWrapper {
+public:
+    GraphNodeWrapper(GraphNodeWrapper* previousWrapper, GraphNode& currentNode, float totalWeight, float heuristic);
+    GraphNodeWrapper* previousWrapper;
+    GraphNode& currentNode;
+    float totalWeight;
+    float heuristic;
+    bool operator<(const GraphNodeWrapper& other) const;
 };
 
 

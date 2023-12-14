@@ -14,10 +14,10 @@ public:
 
     ~AISystem() override;
 
-    Vector2 getNextLocation(const std::unique_ptr<Vector2>& target, const std::unique_ptr<Vector2>& source);
+    Vector2 getNextLocation(Vector2 target, Vector2 source, GraphComponent& graphComponent, TransformComponent& transformGraphComponent);
 
     Vector2 calculateVelocity(const std::unique_ptr<Vector2>& target, const std::unique_ptr<Vector2>& source, float speed);
-
+    void resetGraph(GraphComponent& graphComponent);
     const std::string getName() const override;
 
     void cleanUp() override;
@@ -25,6 +25,10 @@ public:
     void update(milliseconds deltaTime) override;
 
     void clearCache() override;
+
+    float euclideanDistance(Vector2 a, Vector2 b);
+
+    GraphNode* findClosestNode(Vector2 targetVector, GraphComponent &graphComponent, TransformComponent& transformGraphComponent);
 };
 
 

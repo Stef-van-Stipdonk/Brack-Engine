@@ -19,11 +19,14 @@ public:
             edges_.push_back(std::move(edgePtr));
         }
     }
-
-    const Vector2& getPosition () const { return position_; }
+    const bool isVisited() { return visited_; }
+    void setVisited(bool visited) { visited_ = visited; };
+    Vector2 getPosition () { return position_; }
     void addEdge(std::unique_ptr<GraphEdge> edge) { edges_.push_back(std::move(edge)); }
+    const std::vector<std::unique_ptr<GraphEdge>>& getEdges() { return edges_; };
 private:
     std::vector<std::unique_ptr<GraphEdge>> edges_;
     Vector2 position_;
+    bool visited_ = false;
 };
 #endif //BRACKOCALYPSE_GRAPHNODE_HPP

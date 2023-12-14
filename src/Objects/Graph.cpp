@@ -7,8 +7,10 @@
 #include "Objects/Graph.hpp"
 
 Graph::Graph(Vector2 size, Vector2 nodeCount, Vector2 scale) {
-    std::vector<std::vector<std::unique_ptr<GraphNode>>> twoDGrid;
+    std::vector<std::vector<GraphNode*>> twoDGrid;
     auto nodeSize = Vector2(size.getX() / nodeCount.getX(),size.getY() / nodeCount.getY());
+
+    std::vector<std::unique_ptr<GraphNode>> graph;
     for (int y = 0; y < nodeCount.getY(); ++y) {
         twoDGrid.push_back({});
         for (int x = 0; x < nodeCount.getX(); ++x) {
@@ -16,11 +18,10 @@ Graph::Graph(Vector2 size, Vector2 nodeCount, Vector2 scale) {
             auto nodeYSize = (nodeSize.getY() * scale.getY());
             float posX = ((x * nodeXSize) + (nodeXSize / 2)) - (size.getX() / 2);
             float posY = ((y * nodeYSize) + (nodeYSize / 2)) - (size.getY() / 2);
-            twoDGrid.back().push_back(std::make_unique<GraphNode>(Vector2(posX,posY)));
+            graph.push_back(std::make_unique<GraphNode>(Vector2(posX,posY)));
+            twoDGrid.back().push_back(graph.back().get());
         }
     }
-
-    std::vector<std::unique_ptr<GraphNode>> graph;
 
     for (int y = 0; y < nodeCount.getY(); ++y) {
         for (int x = 0; x < nodeCount.getX(); ++x) {
@@ -44,8 +45,6 @@ Graph::Graph(Vector2 size, Vector2 nodeCount, Vector2 scale) {
                 auto edge = std::make_unique<GraphEdge>(twoDGrid[y][x-1], node, 1);
                 node->addEdge(std::move(edge));
             }
-
-            graph.push_back(std::move(node));
         }
     }
 

@@ -21,6 +21,7 @@
 #include "Systems/ReplaySystem.hpp"
 #include "Systems/AnimationSystem.hpp"
 #include "Systems/ParticleSystem.hpp"
+#include "Systems/AISystem.hpp"
 
 
 BrackEngine::BrackEngine(Config &&config) {
@@ -30,6 +31,7 @@ BrackEngine::BrackEngine(Config &&config) {
     SystemManager::getInstance().AddSystem(std::make_shared<AudioSystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<BehaviourScriptSystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<MovementSystem>());
+    SystemManager::getInstance().AddSystem(std::make_shared<AISystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<PhysicsSystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<AnimationSystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<RenderingSystem>());

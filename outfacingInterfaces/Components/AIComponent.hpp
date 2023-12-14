@@ -17,16 +17,18 @@ struct AIComponent : public IComponent {
     ~AIComponent() override = default;
 
     AIComponent(const AIComponent &other) : IComponent(other) {
-        destination = std::make_unique<Vector2>(*other.destination);
+        nextDestination = std::make_unique<Vector2>(*other.nextDestination);
+        target = std::make_unique<Vector2>(*other.target);
         calculatePathInterval = other.calculatePathInterval;
         lastCalculated = other.lastCalculated;
+        speed = other.speed;
     }
 
     virtual std::unique_ptr<IComponent> clone() const override {
         return std::make_unique<AIComponent>(*this);
     }
 
-    std::unique_ptr<Vector2> destination = nullptr;
+    std::unique_ptr<Vector2> nextDestination = nullptr;
     std::unique_ptr<Vector2> target = nullptr;
     milliseconds calculatePathInterval = 500;
     milliseconds lastCalculated = 0;

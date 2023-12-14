@@ -12,14 +12,16 @@ class GraphNode;
 
 class GraphEdge {
 public:
-    GraphEdge(const std::unique_ptr<GraphNode>& to, const std::unique_ptr<GraphNode>& from, float weight) : to_(to), from_(from), weight_(weight) {}
+    GraphEdge(GraphNode* to, GraphNode* from, float weight) : to_(to), from_(from), weight_(weight) {}
     ~GraphEdge() = default;
     GraphEdge(const GraphEdge& other) : to_(other.to_), from_(other.from_){
         weight_ = other.weight_;
     }
+    GraphNode& getTo() { return *to_; }
+    float getWeight() { return weight_; }
 private:
-    const std::unique_ptr<GraphNode>& to_;
-    const std::unique_ptr<GraphNode>& from_;
+    GraphNode* to_;
+    GraphNode* from_;
     float weight_;
 };
 
