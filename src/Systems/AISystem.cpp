@@ -37,7 +37,7 @@ void AISystem::update(milliseconds deltaTime) {
             aiComponent.lastCalculated -= deltaTime;
         }
 
-        if(aiComponent.target != nullptr && (aiComponent.nextDestination == aiTransformComponent.position || aiComponent.lastCalculated <= 0)){
+        if(aiComponent.target != nullptr && (aiComponent.target != aiTransformComponent.position || aiComponent.lastCalculated <= 0)){
             auto graphComponentId = ComponentStore::GetInstance().getEntitiesWithComponent<GraphComponent>()[0];
             auto& graphComponent = ComponentStore::GetInstance().tryGetComponent<GraphComponent>(graphComponentId);
             auto& transformGraphComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(graphComponentId);
@@ -65,6 +65,9 @@ Vector2 AISystem::calculateVelocity(const std::unique_ptr<Vector2> &target, cons
     float dx = target->getX() - source->getX();
     float dy = target->getY() - source->getY();
 
+    if(dx == 0 && dy == 0){
+        return {0,0};
+    }
     // Calculate the length of the direction vector
     float length = std::sqrt(dx * dx + dy * dy);
 
@@ -89,7 +92,8 @@ GraphNode* AISystem::findClosestNode(Vector2 targetVector, GraphComponent& graph
     GraphNode* closestNode = nullptr;
 
     for (auto& node : graphComponent.graph_) {
-        float distance = euclideanDistance(targetVector, node->getPosition() + *transformGraphComponent.position);
+        auto worldNodePosition = node->getPosition() + *transformGraphComponent.position;
+        float distance = euclideanDistance(targetVector, worldNodePosition);
         if (distance < minDistance) {
             // Update the minimum distance and set the closest node
             minDistance = distance;
@@ -102,7 +106,6 @@ GraphNode* AISystem::findClosestNode(Vector2 targetVector, GraphComponent& graph
 
 Vector2 AISystem::getNextLocation(Vector2 targetPosition, Vector2 sourcePosition, GraphComponent& graphComponent, TransformComponent& transformGraphComponent) {
     std::priority_queue<GraphNodeWrapper*,std::vector<GraphNodeWrapper*>, GraphNodePtrCompare> toBeVisited{};
-    targetPosition += *transformGraphComponent.position;
     auto closestToTarget = findClosestNode(targetPosition, graphComponent, transformGraphComponent);
     auto closestToSource = findClosestNode(sourcePosition, graphComponent, transformGraphComponent);
     float heuristic = sqrt(pow(closestToTarget->getPosition().getX() - closestToSource->getPosition().getX() , 2) + pow(closestToTarget->getPosition().getY() - closestToSource->getPosition().getY(), 2));
