@@ -9,6 +9,7 @@
 #include "../includes/ComponentStore.hpp"
 #include "../includes/SystemManager.hpp"
 #include <queue>
+#include <BehaviourScripts/IBehaviourScript.hpp>
 #include "../outfacingInterfaces/Milliseconds.hpp"
 
 
@@ -20,6 +21,7 @@ public:
         std::map<std::string, std::vector<entity>> entitiesByTag;
 
         std::unordered_map<std::type_index, std::unordered_map<entity, std::unique_ptr<IComponent>>> componentStates;
+        std::vector<std::unique_ptr<IBehaviourScript>> behaviorScripts;
     };
 
     ReplaySystem(std::chrono::time_point<std::chrono::high_resolution_clock> &lastTime);
@@ -39,6 +41,7 @@ public:
     const std::string getName() const override;
 
     void cleanUp() override;
+
     void clearCache() override;
 
 private:

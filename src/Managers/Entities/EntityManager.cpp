@@ -53,9 +53,9 @@ void EntityManager::clearAllEntities() {
     auto persistanceEntities = ComponentStore::GetInstance().getEntitiesWithComponent<PersistenceTag>();
 
     std::unordered_set<entity> copyEnt(entities);
-    for(auto entity : copyEnt) {
+    for (auto entity: copyEnt) {
         auto found = std::find(persistanceEntities.begin(), persistanceEntities.end(), entity);
-        if(found == persistanceEntities.end()) {
+        if (found == persistanceEntities.end()) {
             ComponentStore::GetInstance().removeAllComponents(entity);
             entities.erase(entity);
         }

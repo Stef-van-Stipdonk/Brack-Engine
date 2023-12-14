@@ -13,7 +13,7 @@
 class Button : public GameObject {
 public:
     Button(const Vector2 &size, const std::string &text);
-
+    
     ~Button() = default;
 
     void setText(const std::string &string);

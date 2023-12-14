@@ -9,7 +9,7 @@
 
 class ReplayManager {
 public:
-    ReplayManager &getInstance();
+    static ReplayManager &getInstance();
 
     void startRecording(milliseconds replayStorageDuration, milliseconds snapshotIntervalDuration);
 
