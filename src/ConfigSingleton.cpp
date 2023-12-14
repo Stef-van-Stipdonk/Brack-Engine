@@ -62,8 +62,15 @@ void ConfigSingleton::SetConfig(Config config) {
     particleLimit = config.particleLimit;
 }
 
-bool ConfigSingleton::ShowFPS() const {
+bool ConfigSingleton::IsShowFPSTrue() const {
     return showFPS;
+}
+
+void ConfigSingleton::toggleShowFps() {
+    showFPS = !showFPS;
+    if (EntityManager::getInstance().entityExistsByTag("FPS")) {
+        SceneManager::getInstance().getGameObjectByName("FPS").value()->setActive(showFPS);
+    }
 }
 
 void ConfigSingleton::SetWindowSize(Vector2 size) const {
