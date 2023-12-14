@@ -96,6 +96,7 @@ void PhysicsWrapper::addBoxes(const std::vector<entity> &componentIds) {
             componentBodyDef.position.Set(worldPosition.getX() + boxCollisionComponent.offset->getX(),
                                           worldPosition.getY() + boxCollisionComponent.offset->getY());
             componentBodyDef.type = getBodyType(rigidBodyComp.collisionType);
+            componentBodyDef.rot
 
             bodyPtr.first = world->CreateBody(&componentBodyDef);
             bodyPtr.second = Vector2(boxCollisionComponent.offset->getX(),
@@ -158,15 +159,18 @@ void PhysicsWrapper::cleanCache() {
 
 void PhysicsWrapper::updatePositions() {
     for (auto &body: bodies) {
-        if (body.first == 145)
-            std::cout << "";
-        auto &transformComp = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(body.first);
-        auto position = body.second.first->GetPosition();
-        auto localPosition = SceneManager::getLocalPosition(Vector2(position.x - body.second.second.getX(),
-                                                                    position.y - body.second.second.getY()),
-                                                            transformComp.entityId);
-        transformComp.position->setX(localPosition.getX());
-        transformComp.position->setY(localPosition.getY());
+        try {
+            auto &velocityComp = ComponentStore::GetInstance().tryGetComponent<VelocityComponent>(body.first);
+            auto &transformComp = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(body.first);
+            auto position = body.second.first->GetPosition();
+            auto localPosition = SceneManager::getLocalPosition(Vector2(position.x - body.second.second.getX(),
+                                                                        position.y - body.second.second.getY()),
+                                                                transformComp.entityId);
+            transformComp.position->setX(localPosition.getX());
+            transformComp.position->setY(localPosition.getY());
+        } catch (std::exception &e) {
+            continue;
+        }
     }
 }
 
