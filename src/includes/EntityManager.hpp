@@ -65,6 +65,8 @@ public:
 
     void setEntityActive(entity entityID, bool active);
 
+    bool entityExistsByTag(const std::string string);
+
 private:
     static EntityManager instance;
 

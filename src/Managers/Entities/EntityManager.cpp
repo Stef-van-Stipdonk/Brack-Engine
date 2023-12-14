@@ -145,3 +145,7 @@ bool EntityManager::isEntityActive(entity entityID) const {
 void EntityManager::setEntityActive(entity entityID, bool active) {
     activeEntities[entityID] = active;
 }
+
+bool EntityManager::entityExistsByTag(const std::string string) {
+    return tagToEntity.find(string) != tagToEntity.end();
+}
