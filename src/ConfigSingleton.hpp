@@ -28,7 +28,9 @@ public:
 
     bool IsRunning() const;
 
-    bool ShowFPS() const;
+    bool IsShowFPSTrue() const;
+
+    void toggleShowFps();
 
     std::string GetWindowTitle() const;
 
@@ -45,6 +47,8 @@ public:
     int getAmountOfSoundEffectsChannels() const;
 
     uint32_t GetFPSLimit() const;
+
+    void setFPSLimit(uint32_t fpsLimit);
 
     void ToggleIsRunning();
 

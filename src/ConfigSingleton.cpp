@@ -2,7 +2,9 @@
 // Created by jesse on 06/11/2023.
 //
 
+#include <EngineManagers/SceneManager.hpp>
 #include "ConfigSingleton.hpp"
+#include "includes/EntityManager.hpp"
 
 ConfigSingleton ConfigSingleton::instance;
 
@@ -79,4 +81,8 @@ void ConfigSingleton::SetWindowSize(Vector2 size) const {
 
 uint32_t ConfigSingleton::GetFPSLimit() const {
     return fpsLimit;
+}
+
+void ConfigSingleton::setFPSLimit(uint32_t fpsLimit) {
+    ConfigSingleton::fpsLimit = fpsLimit;
 }
