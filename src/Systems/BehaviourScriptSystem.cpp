@@ -4,9 +4,7 @@
 
 #include <BehaviourScripts/BehaviourScript.hpp>
 #include <Components/Archetypes/AudioArchetype.hpp>
-#include <EngineManagers/SceneManager.hpp>
 #include "BehaviourScriptSystem.hpp"
-#include "../includes/BehaviourScriptStore.hpp"
 
 BehaviourScriptSystem::BehaviourScriptSystem() {
 
