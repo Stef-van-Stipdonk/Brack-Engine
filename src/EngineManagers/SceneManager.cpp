@@ -37,6 +37,10 @@ std::vector<GameObject> SceneManager::getGameObjectsByName(const std::string &na
     return GameObjectConverter::getGameObjectsByName(name);
 }
 
+std::optional<GameObject *> SceneManager::getGameObjectByName(const std::string &name) {
+    return GameObjectConverter::getGameObjectByName(name);
+}
+
 std::vector<GameObject *> SceneManager::getGameObjectsByTag(const std::string &tag) {
     return GameObjectConverter::getGameObjectsByTag(tag);
 }

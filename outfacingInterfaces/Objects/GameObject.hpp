@@ -210,6 +210,8 @@ protected:
 
     GameObject *parent = nullptr;
     std::vector<std::unique_ptr<GameObject>> children;
+
+    void childrenSetActive(entity entityId, bool active);
 };
 
 
