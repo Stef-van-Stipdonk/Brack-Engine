@@ -17,7 +17,7 @@ public:
 
     Scene();
 
-    ~Scene() = default;
+    ~Scene() {};
 
     void addGameObject(std::unique_ptr<GameObject> gameObject);
 

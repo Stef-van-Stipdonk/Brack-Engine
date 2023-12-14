@@ -7,6 +7,7 @@
 #include <Components/PersistenceTag.hpp>
 #include "../../includes/EntityManager.hpp"
 #include "../../includes/ComponentStore.hpp"
+#include "../../includes/BehaviourScriptStore.hpp"
 
 EntityManager EntityManager::instance;
 
@@ -48,6 +49,7 @@ const std::unordered_set<entity> &EntityManager::getAllEntities() const {
 }
 
 void EntityManager::clearAllEntities() {
+    BehaviourScriptStore::getInstance().removeAllBehaviourScripts();
     auto persistanceEntities = ComponentStore::GetInstance().getEntitiesWithComponent<PersistenceTag>();
 
     std::unordered_set<entity> copyEnt(entities);
