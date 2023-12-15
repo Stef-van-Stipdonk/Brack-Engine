@@ -34,7 +34,7 @@ public:
     typename std::enable_if<std::is_base_of<IBehaviourScript, T>::value>::type
     addBehaviourScript(Args &&...args) {
         T script(std::forward<Args>(args)...);
-        auto entityId = script.entityID;
+        auto entityId = script.entityId;
 
         if (entityId == 0)
             throw std::runtime_error(
@@ -53,7 +53,7 @@ public:
                     std::string(typeid(T).name()));
 
         T script(std::forward<Args>(args)...);
-        script.entityID = entityId;
+        script.entityId = entityId;
 
         behaviourScripts[entityId].emplace_back(std::make_unique<T>(script));
     }
@@ -62,7 +62,7 @@ public:
         if (entityId == 0)
             throw std::runtime_error("Entity ID cannot be 0.");
 
-        script->entityID = entityId;
+        script->entityId = entityId;
 
         IBehaviourScript &componentRef = *script;
 
@@ -75,9 +75,37 @@ public:
     }
 
     template<typename T>
+    std::vector<std::reference_wrapper<T>> getBehaviourScripts(entity entityId) {
+        std::vector<std::reference_wrapper<T>> result;
+
+        auto itType = behaviourScripts.find(entityId);
+        if (itType != behaviourScripts.end()) {
+            for (auto &script: itType->second) {
+                if (EntityManager::getInstance().isEntityActive(script.get()->entityId) && script.get()->isActive)
+                    result.push_back(std::ref(static_cast<T &>(*script)));
+            }
+        }
+        return result;
+    }
+
+    template<typename T>
+    std::vector<std::reference_wrapper<T>> getBehaviourScripts() {
+        std::vector<std::reference_wrapper<T>> result;
+
+        for (const auto &entry: behaviourScripts) {
+            const std::vector<std::unique_ptr<IBehaviourScript>> &scriptVector = entry.second;
+
+            for (const auto &scriptPtr: scriptVector) {
+                if (EntityManager::getInstance().isEntityActive(scriptPtr.get()->entityId) && scriptPtr.get()->isActive)
+                    result.push_back(std::ref(static_cast<T &>(*scriptPtr)));
+            }
+        }
+        return result;
+    }
+
+    template<typename T>
     typename std::enable_if<std::is_base_of<IBehaviourScript, T>::value>::type
     removeBehaviourScript(entity entityId) {
-
         auto itType = behaviourScripts.find(entityId);
         if (itType != behaviourScripts.end()) {
             auto itScript = static_cast<T *>(itType->second);
@@ -85,6 +113,10 @@ public:
                 itScript.erase();
             }
         }
+    }
+
+    void removeAllBehaviourScripts() {
+        behaviourScripts.clear();
     }
 
     std::vector<std::reference_wrapper<IBehaviourScript>> getAllBehaviourScripts() {
@@ -96,12 +128,26 @@ public:
 
             // Iterate through the vector and add references to the result
             for (const auto &scriptPtr: scriptVector) {
-                result.push_back(std::ref(*scriptPtr));
+                if (EntityManager::getInstance().isEntityActive(scriptPtr.get()->entityId) && scriptPtr.get()->isActive)
+                    result.push_back(std::ref(*scriptPtr));
             }
         }
         return result;
     }
 
+    template<typename T>
+    typename std::enable_if<std::is_base_of<IBehaviourScript, T>::value, T &>::type
+    tryGetBehaviourScript(entity entityId) {
+        auto itType = behaviourScripts.find(entityId);
+        if (itType != behaviourScripts.end()) {
+            for(auto& script : itType->second) {
+                if (auto castedScript = static_cast<T*>(script.get())) {
+                    return *castedScript;
+                }
+            }
+        }
+        throw std::runtime_error("Component not found");
+    }
 
 private:
     static BehaviourScriptStore instance;

@@ -31,7 +31,7 @@ public:
     typename std::enable_if<std::is_base_of<IComponent, T>::value>::type
     addComponent(Args &&...args) {
         T component(std::forward<Args>(args)...);
-        auto entityId = component.entityID;
+        auto entityId = component.entityId;
 
         if (entityId == 0)
             throw std::runtime_error(
@@ -56,7 +56,7 @@ public:
                     std::string(typeid(T).name()));
 
         T component(std::forward<Args>(args)...);
-        component.entityID = entityId;
+        component.entityId = entityId;
 
         components[typeid(T)][entityId] = std::make_unique<T>(component);
 
@@ -71,8 +71,8 @@ public:
         if (entityId == 0)
             throw std::runtime_error("Entity ID cannot be 0.");
 
-        component->entityID = entityId;
-        
+        component->entityId = entityId;
+
         IComponent &componentRef = *component;
 
         components[typeid(componentRef)][entityId] = std::move(component);
@@ -147,7 +147,7 @@ public:
     }
 
     void removeAllComponents(const entity entityId) {
-        for(auto& component : components) {
+        for (auto &component: components) {
             component.second.erase(entityId);
         }
     }
@@ -160,6 +160,7 @@ public:
         if (itType != components.end()) {
             for (auto &pair: itType->second) {
                 auto &objectInfoComponent = tryGetComponent<ObjectInfoComponent>(pair.first);
+
                 if (EntityManager::getInstance().isEntityActive(pair.first) && objectInfoComponent.isActive) {
                     entities.push_back(pair.first);
                 }

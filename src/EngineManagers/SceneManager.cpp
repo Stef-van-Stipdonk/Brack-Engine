@@ -11,18 +11,23 @@
 
 SceneManager SceneManager::instance;
 
-void SceneManager::setActiveScene(Scene &scene) {
+void SceneManager::setActiveScene() {
+    if(switchingScene == nullptr)
+        return;
+
     EntityManager::getInstance().clearAllEntities();
     SystemManager::getInstance().clearSystemsCache();
 
-    for (auto camera: scene.getAllCameras())
+    for (auto camera: switchingScene->getAllCameras())
         GameObjectConverter::addGameObject(camera);
 
-    for (auto gameObject: scene.getAllGameObjects()) {
+    for (auto gameObject: switchingScene->getAllGameObjects()) {
         GameObjectConverter::addGameObject(gameObject);
     }
 
-    activeSceneSignature = scene.getSignature();
+    activeSceneSignature = switchingScene->getSignature();
+    delete switchingScene;
+    switchingScene = nullptr;
 }
 
 SceneManager &SceneManager::getInstance() {
@@ -37,6 +42,10 @@ std::vector<GameObject> SceneManager::getGameObjectsByName(const std::string &na
     return GameObjectConverter::getGameObjectsByName(name);
 }
 
+std::optional<GameObject *> SceneManager::getGameObjectByName(const std::string &name) {
+    return GameObjectConverter::getGameObjectByName(name);
+}
+
 std::vector<GameObject *> SceneManager::getGameObjectsByTag(const std::string &tag) {
     return GameObjectConverter::getGameObjectsByTag(tag);
 }
@@ -45,7 +54,7 @@ Vector2 SceneManager::getWorldPosition(const TransformComponent &transformCompon
     auto position = *transformComponent.position;
     try {
         auto parentId = ComponentStore::GetInstance().tryGetComponent<ParentComponent>(
-                transformComponent.entityID).parentId;
+                transformComponent.entityId).parentId;
         auto &parentTransform = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(parentId);
         position += getWorldPosition(parentTransform);
         return position;
@@ -60,7 +69,7 @@ Vector2 SceneManager::getWorldScale(const TransformComponent &transformComponent
 
     try {
         auto parentId = ComponentStore::GetInstance().tryGetComponent<ParentComponent>(
-                transformComponent.entityID).parentId;
+                transformComponent.entityId).parentId;
         auto &parentTransform = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(parentId);
         scale *= getWorldScale(parentTransform);
         return scale;
@@ -75,7 +84,7 @@ float SceneManager::getWorldRotation(const TransformComponent &transformComponen
 
     try {
         auto parentId = ComponentStore::GetInstance().tryGetComponent<ParentComponent>(
-                transformComponent.entityID).parentId;
+                transformComponent.entityId).parentId;
         auto &parentTransform = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(parentId);
         rotation += getWorldRotation(parentTransform);
         return rotation;
@@ -86,3 +95,7 @@ float SceneManager::getWorldRotation(const TransformComponent &transformComponen
 }
 
 
+
+void SceneManager::goToNewScene(Scene* scene) {
+    switchingScene = scene;
+}

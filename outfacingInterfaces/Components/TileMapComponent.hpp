@@ -24,6 +24,20 @@ struct TileMapComponent : public RenderArchetype {
 
     TileMapComponent(const TileMapComponent &other) : RenderArchetype(other) {
         tileMapPath = other.tileMapPath;
+        tileSize = std::make_unique<Vector2>(*other.tileSize);
+        tileMap = std::vector<std::vector<std::unique_ptr<Vector2>>>();
+        for (const auto &row: other.tileMap) {
+            auto newRow = std::vector<std::unique_ptr<Vector2>>();
+            for (const auto &tile: row) {
+                if (tile == nullptr) {
+                    newRow.emplace_back(nullptr);
+                    continue;
+                }
+                newRow.emplace_back(std::make_unique<Vector2>(*tile));
+            }
+            tileMap.emplace_back(std::move(newRow));
+        }
+        margin = other.margin;
     }
 
     std::string tileMapPath = "";

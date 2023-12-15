@@ -24,20 +24,21 @@
 #include "Systems/AISystem.hpp"
 
 
-BrackEngine::BrackEngine(Config &&config) {
+BrackEngine::BrackEngine(Config &&config) : deltaTimeMultiplier(ConfigSingleton::GetInstance().deltaTimeMultiplier) {
     ConfigSingleton::GetInstance().SetConfig(config);
     SystemManager::getInstance().AddSystem(std::make_shared<InputSystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<ClickSystem>());
-    SystemManager::getInstance().AddSystem(std::make_shared<AudioSystem>());
+//    SystemManager::getInstance().AddSystem(std::make_shared<AudioSystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<BehaviourScriptSystem>());
-    SystemManager::getInstance().AddSystem(std::make_shared<MovementSystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<AISystem>());
+//    SystemManager::getInstance().AddSystem(std::make_shared<MovementSystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<PhysicsSystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<AnimationSystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<RenderingSystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<ParticleSystem>());
 
     lastTime = std::chrono::high_resolution_clock::now();
+    SystemManager::getInstance().AddSystem(std::make_shared<ReplaySystem>(lastTime));
 
     if (ConfigSingleton::GetInstance().ShowFPS())
         CreateFPS();
@@ -48,10 +49,12 @@ void BrackEngine::Run() {
     while (ConfigSingleton::GetInstance().IsRunning()) {
         FPSSingleton::GetInstance().Start();
         auto deltaTime = GetDeltaTime();
-        SystemManager::getInstance().UpdateSystems(deltaTime);
+        SystemManager::getInstance().UpdateSystems(deltaTime * deltaTimeMultiplier);
         FPSSingleton::GetInstance().End();
         if (ConfigSingleton::GetInstance().ShowFPS())
             UpdateFPS(deltaTime);
+
+        SceneManager::getInstance().setActiveScene();
     }
 
     SystemManager::getInstance().CleanUp();
@@ -76,12 +79,12 @@ void BrackEngine::CreateFPS() {
 
     objectInfoComponent.name = "FPS";
     objectInfoComponent.tag = "FPS";
-    objectInfoComponent.entityID = entityId;
+    objectInfoComponent.entityId = entityId;
 
     textComponent.text = "0";
     textComponent.fontSize = 32;
     textComponent.color = std::make_unique<Color>(255, 0, 0, 255);
-    textComponent.entityID = entityId;
+    textComponent.entityId = entityId;
     textComponent.sortingLayer = 0;
     textComponent.orderInLayer = 0;
 

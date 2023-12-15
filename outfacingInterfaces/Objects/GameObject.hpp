@@ -57,6 +57,13 @@ public:
             ComponentStore::GetInstance().addComponent<T>(entityID, *component.get());
     }
 
+    GameObject *getChildGameObjectByName(const std::string name) {
+        for (auto &gameObject: children) {
+            if (gameObject->getName() == name)
+                return gameObject.get();
+        }
+    }
+
     template<typename T>
     typename std::enable_if<std::is_base_of<IComponent, T>::value>::type
     addComponent(T component) {
@@ -72,7 +79,6 @@ public:
     template<typename T>
     typename std::enable_if<std::is_base_of<IBehaviourScript, T>::value>::type
     addBehaviourScript(std::unique_ptr<T> component) {
-
         if (entityID == 0)
             behaviourScripts.push_back(std::move(component));
         else
@@ -130,6 +136,22 @@ public:
     }
 
     template<typename T>
+    typename std::enable_if<std::is_base_of<IBehaviourScript, T>::value, T &>::type
+    tryGetBehaviourScript() const {
+        if (entityID == 0) {
+            for (const auto &comp: behaviourScripts) {
+                if (auto castedComp = dynamic_cast<T *>(comp.get())) {
+                    return *castedComp; // dereference the pointer to return a reference
+                }
+            }
+        } else {
+            return BehaviourScriptStore::getInstance().tryGetBehaviourScript<T>(entityID);
+        }
+
+        throw std::runtime_error("BehaviourScript not found"); // throw an exception if not found
+    }
+
+    template<typename T>
     typename std::enable_if<std::is_base_of<IComponent, T>::value>::type
     removeComponent() {
         if (entityID == 0) {
@@ -179,7 +201,7 @@ public:
 
     bool isActive() const;
 
-    virtual void setActive(bool active) const;
+    virtual void setActive(bool active);
 
     int getLayer() const;
 
@@ -203,6 +225,8 @@ protected:
 
     GameObject *parent = nullptr;
     std::vector<std::unique_ptr<GameObject>> children;
+
+    void childrenSetActive(entity entityId, bool active);
 };
 
 

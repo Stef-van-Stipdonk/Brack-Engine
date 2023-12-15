@@ -36,6 +36,7 @@ private:
 
     std::chrono::time_point<std::chrono::high_resolution_clock> lastTime;
     float totalTime = 0;
+    float &deltaTimeMultiplier;
 };
 
 

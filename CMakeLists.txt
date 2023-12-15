@@ -115,6 +115,7 @@ add_library(${PROJECT_NAME} SHARED
         outfacingInterfaces/Graph/GraphEdge.hpp
         outfacingInterfaces/Objects/Graph.hpp
         src/Objects/Graph.cpp
+        outfacingInterfaces/RandomGenerator.hpp
 )
 
 if (WIN32 OR WIN64)
