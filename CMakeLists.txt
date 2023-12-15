@@ -53,7 +53,6 @@ add_library(${PROJECT_NAME} SHARED
         outfacingInterfaces/Components/PersistenceTag.hpp
         src/Systems/RenderingSystem.cpp
         src/Systems/AnimationSystem.cpp
-        src/Systems/MovementSystem.cpp
         src/Systems/BehaviourScriptSystem.cpp
         src/Systems/ParticleSystem.cpp
         src/Systems/AISystem.cpp
