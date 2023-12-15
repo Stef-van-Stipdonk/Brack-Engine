@@ -46,7 +46,7 @@ void PhysicsSystem::handleBoxes() {
     auto boxCollisionComponents = compStore.getAllComponentsOfType<BoxCollisionComponent>();
 
     if (boxCollisionComponentIds.empty()) return;
-    PhysicsWrapper::getInstance().addBoxes(boxCollisionComponentIds);
+    PhysicsWrapper::getInstance().addBoxes(boxCollisionComponents);
 }
 
 void PhysicsSystem::clearCache() {

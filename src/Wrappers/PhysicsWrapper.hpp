@@ -12,6 +12,7 @@
 #include <unordered_map>
 #include <Milliseconds.hpp>
 #include <Helpers/Vector2.hpp>
+#include <Components/BoxCollisionComponent.hpp>
 
 class ContactListener;
 
@@ -39,7 +40,7 @@ public:
 
     void addCircles(std::vector<entity> componentIds);
 
-    void addBoxes(const std::vector<entity> &componentIds);
+    void addBoxes(const std::vector<BoxCollisionComponent *> &boxCollisionComponents);
 
     void cleanCache();
 
