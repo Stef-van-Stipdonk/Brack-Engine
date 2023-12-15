@@ -22,11 +22,6 @@ public:
     ~BrackEngine() = default;
 
     void Run();
-
-    void save(const std::string &filePath, const std::string &content) const;
-
-    std::string load(const std::string &filePath) const;
-
 private:
     milliseconds GetDeltaTime();
 
