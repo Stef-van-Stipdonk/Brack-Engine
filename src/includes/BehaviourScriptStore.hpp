@@ -115,8 +115,8 @@ public:
         }
     }
 
-    void removeAllBehaviourScripts() {
-        behaviourScripts.clear();
+    void removeAllBehaviourScripts(entity entityId) {
+        behaviourScripts.erase(entityId);
     }
 
     std::vector<std::reference_wrapper<IBehaviourScript>> getAllBehaviourScripts() {
@@ -140,8 +140,8 @@ public:
     tryGetBehaviourScript(entity entityId) {
         auto itType = behaviourScripts.find(entityId);
         if (itType != behaviourScripts.end()) {
-            for(auto& script : itType->second) {
-                if (auto castedScript = static_cast<T*>(script.get())) {
+            for (auto &script: itType->second) {
+                if (auto castedScript = static_cast<T *>(script.get())) {
                     return *castedScript;
                 }
             }
