@@ -42,10 +42,9 @@ void PhysicsSystem::handleCircles() {
 void PhysicsSystem::handleBoxes() {
     auto &compStore = ComponentStore::GetInstance();
 
-    auto boxCollisionComponentIds = compStore.getEntitiesWithComponent<BoxCollisionComponent>();
     auto boxCollisionComponents = compStore.getAllComponentsOfType<BoxCollisionComponent>();
 
-    if (boxCollisionComponentIds.empty()) return;
+    if (boxCollisionComponents.empty()) return;
     PhysicsWrapper::getInstance().addBoxes(boxCollisionComponents);
 }
 
