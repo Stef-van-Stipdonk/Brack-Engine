@@ -96,7 +96,6 @@ void PhysicsWrapper::addBoxes(const std::vector<entity> &componentIds) {
             componentBodyDef.position.Set(worldPosition.getX() + boxCollisionComponent.offset->getX(),
                                           worldPosition.getY() + boxCollisionComponent.offset->getY());
             componentBodyDef.type = getBodyType(rigidBodyComp.collisionType);
-
             bodyPtr.first = world->CreateBody(&componentBodyDef);
             bodyPtr.second = Vector2(boxCollisionComponent.offset->getX(),
                                      boxCollisionComponent.offset->getY());
@@ -115,6 +114,7 @@ void PhysicsWrapper::addBoxes(const std::vector<entity> &componentIds) {
 
             bodyPtr.first->CreateFixture(&fixtureDef);
         } else {
+            bodyPtr.first->SetEnabled(true);
             auto &transformComp = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(id);
             auto worldPosition = SceneManager::getWorldPosition(transformComp);
             bodyPtr.first->SetTransform(
@@ -146,10 +146,9 @@ b2BodyType PhysicsWrapper::getBodyType(CollisionType collisionType) {
 }
 
 void PhysicsWrapper::cleanCache() {
-    b2Body* currentBody = world->GetBodyList();
-    while (currentBody != nullptr)
-    {
-        b2Body* nextBody = currentBody->GetNext();
+    b2Body *currentBody = world->GetBodyList();
+    while (currentBody != nullptr) {
+        b2Body *nextBody = currentBody->GetNext();
         world->DestroyBody(currentBody);
         currentBody = nextBody;
     }
@@ -159,6 +158,7 @@ void PhysicsWrapper::cleanCache() {
 
 void PhysicsWrapper::updatePositions() {
     for (auto &body: bodies) {
+        body.second.first->SetEnabled(false);
         try {
             auto &velocityComp = ComponentStore::GetInstance().tryGetComponent<VelocityComponent>(body.first);
             auto &transformComp = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(body.first);

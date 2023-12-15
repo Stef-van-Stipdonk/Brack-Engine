@@ -43,7 +43,7 @@ void PhysicsSystem::handleBoxes() {
     auto &compStore = ComponentStore::GetInstance();
 
     auto boxCollisionComponentIds = compStore.getEntitiesWithComponent<BoxCollisionComponent>();
-
+    auto boxCollisionComponents = compStore.getAllComponentsOfType<BoxCollisionComponent>();
 
     if (boxCollisionComponentIds.empty()) return;
     PhysicsWrapper::getInstance().addBoxes(boxCollisionComponentIds);
