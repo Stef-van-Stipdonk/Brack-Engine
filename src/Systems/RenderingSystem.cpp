@@ -57,12 +57,6 @@ void RenderingSystem::update(milliseconds deltaTime) {
             sdl2Wrapper->RenderGraph(cameraComponent,cameraTransformComponent, graphComponent, graphTransformComponent);
         }
 #endif
-        auto graphComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<GraphComponent>();
-        for (auto graphComponentId: graphComponentIds) {
-            auto& graphComponent = ComponentStore::GetInstance().tryGetComponent<GraphComponent>(graphComponentId);
-            auto& graphTransformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(graphComponentId);
-            sdl2Wrapper->RenderGraph(cameraComponent,cameraTransformComponent, graphComponent, graphTransformComponent);
-        }
     }
 
     sdl2Wrapper->RenderToMainTexture();

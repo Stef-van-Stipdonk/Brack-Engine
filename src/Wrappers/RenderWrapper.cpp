@@ -477,7 +477,7 @@ void RenderWrapper::RenderGraph(const CameraComponent &cameraComponent,
                                 const TransformComponent &cameraTransformComponent,
                                 const GraphComponent &graphComponent,
                                 const TransformComponent &graphTransformComponent) {
-//#if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
+#if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
     for (auto& graphNode: graphComponent.graph_) {
         auto &cameraPosition = cameraTransformComponent.position;
         auto &cameraSize = cameraComponent.size;
@@ -498,11 +498,14 @@ void RenderWrapper::RenderGraph(const CameraComponent &cameraComponent,
                                  cameraComponent.size->getY() / 2 - sizeY / 2),
                 static_cast<int>(sizeX),
                 static_cast<int>(sizeY)};
-
-        SDL_SetRenderDrawColor(renderer.get(), 255, 0, 0, 255);
+        if(graphNode->isVisited()){
+            SDL_SetRenderDrawColor(renderer.get(), 255, 0, 0, 255);
+        }else{
+            SDL_SetRenderDrawColor(renderer.get(), 0, 255, 0, 255);
+        }
         SDL_RenderDrawRect(renderer.get(), &squareRect);
     }
-//#endif
+#endif
 }
 
 void RenderWrapper::RenderUiBoxCollision(const BoxCollisionComponent &boxCollisionComponent,

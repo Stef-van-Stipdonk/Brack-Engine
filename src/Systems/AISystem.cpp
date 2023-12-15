@@ -125,14 +125,15 @@ Vector2 AISystem::getNextLocation(Vector2 targetPosition, Vector2 sourcePosition
         // When target node is found, is always shortest path as well because the smallest is being taken from toBeVisited
         if(currentWrapper->currentNode.getPosition() == closestToSource->getPosition()){
             if(currentWrapper->previousWrapper){
-                return currentWrapper->previousWrapper->currentNode.getPosition();
+                return currentWrapper->previousWrapper->currentNode.getPosition() + *transformGraphComponent.position;
             }else{
-                return currentWrapper->currentNode.getPosition();
+                return currentWrapper->currentNode.getPosition() + *transformGraphComponent.position;
             }
         }
 
         // Visit node, look at edges and add them to toBeVisited
         for (auto& edge: currentWrapper->currentNode.getEdges()) {
+
             if(!edge->getTo().isVisited()){
                 float heuristic = sqrt(pow(closestToSource->getPosition().getX() - edge->getTo().getPosition().getX() , 2) + pow(closestToSource->getPosition().getY() - edge->getTo().getPosition().getY(), 2));
                 float toTotalWeight =  edge->getWeight() + currentWrapper->totalWeight;
