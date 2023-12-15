@@ -29,7 +29,7 @@ public:
 
     void setActiveScene();
 
-    void goToNewScene(Scene* scene);
+    void goToNewScene(Scene *scene);
 
     static std::optional<GameObject *> getGameObjectByName(const std::string &name);
 
@@ -47,12 +47,14 @@ public:
 
     std::string getActiveSceneSignature();
 
+    void toggleFPS();
+
 private:
     SceneManager() = default;
 
     static SceneManager instance;
     bool hasChanged = false;
-    Scene* switchingScene = nullptr;
+    Scene *switchingScene = nullptr;
 
     std::string activeSceneSignature;
 

@@ -8,11 +8,13 @@
 #include "Objects/Scene.hpp"
 #include "../GameObjectConverter.hpp"
 #include "../../src/includes/SystemManager.hpp"
+#include "../FPSSingleton.hpp"
+#include "../ConfigSingleton.hpp"
 
 SceneManager SceneManager::instance;
 
 void SceneManager::setActiveScene() {
-    if(switchingScene == nullptr)
+    if (switchingScene == nullptr)
         return;
 
     EntityManager::getInstance().clearAllEntities();
@@ -95,7 +97,10 @@ float SceneManager::getWorldRotation(const TransformComponent &transformComponen
 }
 
 
-
-void SceneManager::goToNewScene(Scene* scene) {
+void SceneManager::goToNewScene(Scene *scene) {
     switchingScene = scene;
+}
+
+void SceneManager::toggleFPS() {
+    ConfigSingleton::GetInstance().toggleShowFps();
 }
