@@ -62,6 +62,8 @@ public:
             if (gameObject->getName() == name)
                 return gameObject.get();
         }
+
+        return nullptr;
     }
 
     template<typename T>

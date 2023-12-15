@@ -14,8 +14,9 @@ struct RigidBodyComponent : public IComponent {
     explicit RigidBodyComponent() : IComponent(), collisionType(CollisionType::STATIC) {}
 
     ~RigidBodyComponent() override = default;
+    
 
-    virtual std::unique_ptr<IComponent> clone() const {
+    virtual std::unique_ptr<IComponent> clone() const override {
         return std::make_unique<RigidBodyComponent>(*this);
     }
 
