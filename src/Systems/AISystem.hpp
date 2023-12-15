@@ -16,7 +16,7 @@ public:
 
     Vector2 getNextLocation(Vector2 target, Vector2 source, GraphComponent& graphComponent, TransformComponent& transformGraphComponent);
 
-    Vector2 calculateVelocity(const std::unique_ptr<Vector2>& target, const std::unique_ptr<Vector2>& source, float speed);
+    Vector2 calculateVelocity(Vector2 target,Vector2 source, float speed);
     void resetGraph(GraphComponent& graphComponent);
     const std::string getName() const override;
 

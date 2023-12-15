@@ -33,11 +33,15 @@ void AISystem::update(milliseconds deltaTime) {
         auto& aiTransformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(aiComponentId);
         auto& velocityComponent = ComponentStore::GetInstance().tryGetComponent<VelocityComponent>(aiComponentId);
 
+        if(aiComponent.target == nullptr || *aiComponent.target == *aiTransformComponent.position) {
+            continue;
+        }
+
         if(aiComponent.nextDestination != nullptr && aiComponent.lastCalculated > 0){
             aiComponent.lastCalculated -= deltaTime;
         }
 
-        if(aiComponent.target != nullptr && (aiComponent.target != aiTransformComponent.position || aiComponent.lastCalculated <= 0)){
+        if(aiComponent.nextDestination == aiTransformComponent.position || aiComponent.lastCalculated <= 0){
             auto graphComponentId = ComponentStore::GetInstance().getEntitiesWithComponent<GraphComponent>()[0];
             auto& graphComponent = ComponentStore::GetInstance().tryGetComponent<GraphComponent>(graphComponentId);
             auto& transformGraphComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(graphComponentId);
@@ -46,7 +50,7 @@ void AISystem::update(milliseconds deltaTime) {
             aiComponent.nextDestination = std::make_unique<Vector2>(getNextLocation(*aiComponent.target, *aiTransformComponent.position, graphComponent, transformGraphComponent));
         }
 
-        auto newVelocity = calculateVelocity(aiComponent.nextDestination, aiTransformComponent.position, aiComponent.speed);
+        auto newVelocity = calculateVelocity(*aiComponent.nextDestination, *aiTransformComponent.position, aiComponent.speed);
         if(velocityComponent.velocity != newVelocity){
             velocityComponent.velocity = newVelocity;
         }
@@ -59,11 +63,11 @@ void AISystem::resetGraph(GraphComponent &graphComponent) {
     }
 }
 
-Vector2 AISystem::calculateVelocity(const std::unique_ptr<Vector2> &target, const std::unique_ptr<Vector2> &source,
+Vector2 AISystem::calculateVelocity(Vector2 target, Vector2 source,
                                     float speed) {
     // Calculate the direction vector
-    float dx = target->getX() - source->getX();
-    float dy = target->getY() - source->getY();
+    float dx = target.getX() - source.getX();
+    float dy = target.getY() - source.getY();
 
     if(dx == 0 && dy == 0){
         return {0,0};
