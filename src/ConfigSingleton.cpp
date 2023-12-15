@@ -62,6 +62,7 @@ void ConfigSingleton::SetConfig(Config config) {
     amountOfSoundEffectsChannels = config.amountOfSoundEffectsChannels;
     fpsLimit = config.fpsLimit;
     particleLimit = config.particleLimit;
+    deltaTimeMultiplier = config.deltaTimeMultiplier;
 }
 
 bool ConfigSingleton::IsShowFPSTrue() const {
