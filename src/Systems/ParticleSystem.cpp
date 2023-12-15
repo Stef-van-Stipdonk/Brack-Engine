@@ -7,6 +7,7 @@
 #include <Components/RectangleComponent.hpp>
 #include <Components/VelocityComponent.hpp>
 #include <Components/TransformComponent.hpp>
+#include <Components/PersistenceTag.hpp>
 #include "ParticleSystem.hpp"
 #include "../includes/ComponentStore.hpp"
 #include "../ConfigSingleton.hpp"
@@ -27,6 +28,7 @@ ParticleSystem::ParticleSystem() {
         ComponentStore::GetInstance().addComponent(particleEntity, std::move(rectangleComponent));
         ComponentStore::GetInstance().addComponent(particleEntity, std::move(particleComponent));
         ComponentStore::GetInstance().addComponent(particleEntity, std::move(objectInfoComponent));
+        ComponentStore::GetInstance().addComponent(particleEntity, std::make_unique<PersistenceTag>());
     }
 }
 
