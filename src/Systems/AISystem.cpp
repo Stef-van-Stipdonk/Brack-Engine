@@ -8,6 +8,7 @@
 #include <Components/VelocityComponent.hpp>
 #include <Components/GraphComponent.hpp>
 #include <queue>
+#include <Components/BoxCollisionComponent.hpp>
 #include "AISystem.hpp"
 #include "../includes/ComponentStore.hpp"
 #include "../Helpers/GraphNodeWrapper.hpp"
@@ -31,9 +32,11 @@ void AISystem::update(milliseconds deltaTime) {
     for (auto& aiComponentId: aiComponentIds) {
         auto& aiComponent = ComponentStore::GetInstance().tryGetComponent<AIComponent>(aiComponentId);
         auto& aiTransformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(aiComponentId);
-        auto& velocityComponent = ComponentStore::GetInstance().tryGetComponent<VelocityComponent>(aiComponentId);
+        auto& aiVelocityComponent = ComponentStore::GetInstance().tryGetComponent<VelocityComponent>(aiComponentId);
+        auto& aiBoxColliderComponent = ComponentStore::GetInstance().tryGetComponent<BoxCollisionComponent>(aiComponentId);
+        auto aiColliderPosition = *aiTransformComponent.position + *aiBoxColliderComponent.offset;
 
-        if(aiComponent.target == nullptr || *aiComponent.target == *aiTransformComponent.position) {
+        if(aiComponent.target == nullptr || *aiComponent.target == aiColliderPosition || aiComponent.graphId == 0) {
             continue;
         }
 
@@ -41,18 +44,17 @@ void AISystem::update(milliseconds deltaTime) {
             aiComponent.lastCalculated -= deltaTime;
         }
 
-        if(aiComponent.nextDestination == aiTransformComponent.position || aiComponent.lastCalculated <= 0){
-            auto graphComponentId = ComponentStore::GetInstance().getEntitiesWithComponent<GraphComponent>()[0];
-            auto& graphComponent = ComponentStore::GetInstance().tryGetComponent<GraphComponent>(graphComponentId);
-            auto& transformGraphComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(graphComponentId);
+        if(aiComponent.nextDestination == nullptr || *aiComponent.nextDestination == aiColliderPosition || aiComponent.lastCalculated <= 0){
+            auto& graphComponent = ComponentStore::GetInstance().tryGetComponent<GraphComponent>(aiComponent.graphId);
+            auto& transformGraphComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(graphComponent.entityId);
             resetGraph(graphComponent);
             aiComponent.lastCalculated = aiComponent.calculatePathInterval;
-            aiComponent.nextDestination = std::make_unique<Vector2>(getNextLocation(*aiComponent.target, *aiTransformComponent.position, graphComponent, transformGraphComponent));
+            aiComponent.nextDestination = std::make_unique<Vector2>(getNextLocation(*aiComponent.target, aiColliderPosition, graphComponent, transformGraphComponent));
         }
 
-        auto newVelocity = calculateVelocity(*aiComponent.nextDestination, *aiTransformComponent.position, aiComponent.speed);
-        if(velocityComponent.velocity != newVelocity){
-            velocityComponent.velocity = newVelocity;
+        auto newVelocity = calculateVelocity(*aiComponent.nextDestination, aiColliderPosition, aiComponent.speed);
+        if(aiVelocityComponent.velocity != newVelocity){
+            aiVelocityComponent.velocity = newVelocity;
         }
     }
 }
