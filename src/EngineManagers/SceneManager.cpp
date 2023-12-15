@@ -11,18 +11,23 @@
 
 SceneManager SceneManager::instance;
 
-void SceneManager::setActiveScene(Scene &scene) {
+void SceneManager::setActiveScene() {
+    if(switchingScene == nullptr)
+        return;
+
     EntityManager::getInstance().clearAllEntities();
     SystemManager::getInstance().clearSystemsCache();
 
-    for (auto camera: scene.getAllCameras())
+    for (auto camera: switchingScene->getAllCameras())
         GameObjectConverter::addGameObject(camera);
 
-    for (auto gameObject: scene.getAllGameObjects()) {
+    for (auto gameObject: switchingScene->getAllGameObjects()) {
         GameObjectConverter::addGameObject(gameObject);
     }
 
-    activeSceneSignature = scene.getSignature();
+    activeSceneSignature = switchingScene->getSignature();
+    delete switchingScene;
+    switchingScene = nullptr;
 }
 
 SceneManager &SceneManager::getInstance() {
@@ -35,6 +40,10 @@ std::string SceneManager::getActiveSceneSignature() {
 
 std::vector<GameObject> SceneManager::getGameObjectsByName(const std::string &name) {
     return GameObjectConverter::getGameObjectsByName(name);
+}
+
+std::optional<GameObject *> SceneManager::getGameObjectByName(const std::string &name) {
+    return GameObjectConverter::getGameObjectByName(name);
 }
 
 std::vector<GameObject *> SceneManager::getGameObjectsByTag(const std::string &tag) {
@@ -98,3 +107,7 @@ Vector2 SceneManager::getLocalPosition(const Vector2 worldPosition, entity entit
 }
 
 
+
+void SceneManager::goToNewScene(Scene* scene) {
+    switchingScene = scene;
+}

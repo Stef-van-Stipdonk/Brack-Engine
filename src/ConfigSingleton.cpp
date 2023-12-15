@@ -18,6 +18,10 @@ void ConfigSingleton::ToggleIsRunning() {
     isRunning = !isRunning;
 }
 
+void ConfigSingleton::setDeltaTimeMultiplier(float deltaTimeMultiplier) {
+    ConfigSingleton::instance.deltaTimeMultiplier = deltaTimeMultiplier;
+}
+
 void ConfigSingleton::SetIsRunning(bool isRunning) {
     ConfigSingleton::isRunning = isRunning;
 }

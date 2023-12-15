@@ -39,7 +39,11 @@ void GameObjectConverter::addGameObject(GameObject *gameObject) {
             if (!objectInfoComponent->tag.empty()) {
                 EntityManager::getInstance().addEntityWithTag(entityId, objectInfoComponent->tag);
             }
-            EntityManager::getInstance().setEntityActive(entityId, objectInfoComponent->isActive);
+
+            auto outcome = objectInfoComponent->isActive && gameObject->getParent().has_value()
+                           ? gameObject->getParent()->isActive() : true;
+
+            EntityManager::getInstance().setEntityActive(entityId, outcome);
         }
         ComponentStore::GetInstance().addComponent(entityId, std::move(component));
     }

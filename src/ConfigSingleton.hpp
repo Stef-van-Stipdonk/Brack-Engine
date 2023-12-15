@@ -48,6 +48,9 @@ public:
 
     void ToggleIsRunning();
 
+    void setDeltaTimeMultiplier(float deltaTimeMultiplier);
+
+    float deltaTimeMultiplier = 1;
 private:
     static ConfigSingleton instance;
 

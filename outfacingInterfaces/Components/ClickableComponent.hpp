@@ -22,6 +22,7 @@ struct ClickableComponent : public IComponent {
 
     ClickableComponent(const ClickableComponent &other) : IComponent(other) {
         OnClick = other.OnClick;
+        disabled = other.disabled;
     }
 
     bool disabled = false;

@@ -1,5 +1,8 @@
 # Checklist
 
+## Documentatie
+- [ ] Documentatie voor feature is bijgewerkt in [document](https://docs.google.com/document/d/1lBgruKLXVuBiaJia-d43p1PgDuNicKqFpAAotZxdAxg/edit?usp=sharing)
+
 ## Code kwaliteit
 - [ ] Functies, variablen en classes gebruiken de juiste casing
 - [ ] Code is duidelijk en begrijplijk (eventueel comentaar voor meer duidelijkheid)

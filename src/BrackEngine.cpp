@@ -20,11 +20,11 @@
 #include "Systems/ParticleSystem.hpp"
 
 
-BrackEngine::BrackEngine(Config &&config) {
+BrackEngine::BrackEngine(Config &&config) : deltaTimeMultiplier(ConfigSingleton::GetInstance().deltaTimeMultiplier) {
     ConfigSingleton::GetInstance().SetConfig(config);
     SystemManager::getInstance().AddSystem(std::make_shared<InputSystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<ClickSystem>());
-    SystemManager::getInstance().AddSystem(std::make_shared<AudioSystem>());
+//    SystemManager::getInstance().AddSystem(std::make_shared<AudioSystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<BehaviourScriptSystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<PhysicsSystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<AnimationSystem>());
@@ -32,7 +32,8 @@ BrackEngine::BrackEngine(Config &&config) {
     SystemManager::getInstance().AddSystem(std::make_shared<ParticleSystem>());
 
     lastTime = std::chrono::high_resolution_clock::now();
-
+    SystemManager::getInstance().AddSystem(std::make_shared<ReplaySystem>(lastTime));
+    
     if (ConfigSingleton::GetInstance().ShowFPS())
         CreateFPS();
 }
@@ -46,6 +47,8 @@ void BrackEngine::Run() {
         FPSSingleton::GetInstance().End();
         if (ConfigSingleton::GetInstance().ShowFPS())
             UpdateFPS(deltaTime);
+
+        SceneManager::getInstance().setActiveScene();
     }
 
     SystemManager::getInstance().CleanUp();
@@ -59,7 +62,7 @@ milliseconds BrackEngine::GetDeltaTime() {
 
     float deltaTimeInSeconds = deltaTime.count();
     milliseconds deltaTimeInMilliSeconds = deltaTimeInSeconds * 1000.0f;
-    return deltaTimeInMilliSeconds;
+    return deltaTimeInMilliSeconds * deltaTimeMultiplier;
 }
 
 
