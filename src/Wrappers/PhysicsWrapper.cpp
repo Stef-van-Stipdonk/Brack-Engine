@@ -7,9 +7,7 @@
 #include <vector>
 #include <algorithm>
 #include <Components/CircleCollisionComponent.hpp>
-#include <Components/BoxCollisionComponent.hpp>
 #include <Components/TransformComponent.hpp>
-#include <Components/SpriteComponent.hpp>
 #include <Components/VelocityComponent.hpp>
 #include <EngineManagers/SceneManager.hpp>
 
@@ -83,32 +81,32 @@ void PhysicsWrapper::addCircles(std::vector<entity> componentIds) {
 //    }
 }
 
-void PhysicsWrapper::addBoxes(const std::vector<entity> &componentIds) {
-    for (entity id: componentIds) {
-        auto &bodyPtr = bodies[id];
+void PhysicsWrapper::addBoxes(const std::vector<BoxCollisionComponent *> &boxCollisionComponents) {
+    for (auto box: boxCollisionComponents) {
+        auto &bodyPtr = bodies[box->entityId];
+        auto enabled = ComponentStore::GetInstance().tryGetComponent<ObjectInfoComponent>(box->entityId).isActive &&
+                       EntityManager::getInstance().isEntityActive(box->entityId);
         if (bodyPtr.first == nullptr) {
-            auto &boxCollisionComponent = ComponentStore::GetInstance().tryGetComponent<BoxCollisionComponent>(
-                    id);
-            auto &transformComp = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(id);
-            auto &rigidBodyComp = ComponentStore::GetInstance().tryGetComponent<RigidBodyComponent>(id);
+            auto &transformComp = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(box->entityId);
+            auto &rigidBodyComp = ComponentStore::GetInstance().tryGetComponent<RigidBodyComponent>(box->entityId);
             b2BodyDef componentBodyDef;
             auto worldPosition = SceneManager::getWorldPosition(transformComp);
-            componentBodyDef.position.Set(worldPosition.getX() + boxCollisionComponent.offset->getX(),
-                                          worldPosition.getY() + boxCollisionComponent.offset->getY());
+            componentBodyDef.position.Set(worldPosition.getX() + box->offset->getX(),
+                                          worldPosition.getY() + box->offset->getY());
+            componentBodyDef.angle = SceneManager::getWorldRotation(transformComp);
             componentBodyDef.type = getBodyType(rigidBodyComp.collisionType);
-
+            componentBodyDef.enabled = enabled;
             bodyPtr.first = world->CreateBody(&componentBodyDef);
-            bodyPtr.second = Vector2(boxCollisionComponent.offset->getX(),
-                                     boxCollisionComponent.offset->getY());
+            bodyPtr.second = Vector2(box->offset->getX(),
+                                     box->offset->getY());
             bodyPtr.first->SetGravityScale(rigidBodyComp.gravityScale);
 
-
             b2PolygonShape shape;
-            shape.SetAsBox(boxCollisionComponent.size->getX() * transformComp.scale->getX() / 2,
-                           boxCollisionComponent.size->getY() * transformComp.scale->getY() / 2);
+            shape.SetAsBox(box->size->getX() * transformComp.scale->getX() / 2,
+                           box->size->getY() * transformComp.scale->getY() / 2);
 
             b2FixtureDef fixtureDef;
-            fixtureDef.isSensor = boxCollisionComponent.isTrigger;
+            fixtureDef.isSensor = box->isTrigger;
             fixtureDef.shape = &shape;
             fixtureDef.density = 1.0f;
             fixtureDef.friction = rigidBodyComp.friction;
@@ -116,12 +114,15 @@ void PhysicsWrapper::addBoxes(const std::vector<entity> &componentIds) {
 
             bodyPtr.first->CreateFixture(&fixtureDef);
         } else {
-            auto &transformComp = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(id);
+            auto &transformComp = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(box->entityId);
+            auto worldPosition = SceneManager::getWorldPosition(transformComp);
+            bodyPtr.first->SetEnabled(enabled);
             bodyPtr.first->SetTransform(
-                    b2Vec2(transformComp.position->getX() + bodyPtr.second.getX(),
-                           transformComp.position->getY() + bodyPtr.second.getY()), 0);
+                    b2Vec2(worldPosition.getX() + bodyPtr.second.getX(),
+                           worldPosition.getY() + bodyPtr.second.getY()), 0);
             try {
-                auto &velocityComponent = ComponentStore::GetInstance().tryGetComponent<VelocityComponent>(id);
+                auto &velocityComponent = ComponentStore::GetInstance().tryGetComponent<VelocityComponent>(
+                        box->entityId);
                 bodyPtr.first->SetLinearVelocity(
                         b2Vec2(velocityComponent.velocity.getX(), velocityComponent.velocity.getY()));
             } catch (std::exception &e) {
@@ -146,10 +147,9 @@ b2BodyType PhysicsWrapper::getBodyType(CollisionType collisionType) {
 }
 
 void PhysicsWrapper::cleanCache() {
-    b2Body* currentBody = world->GetBodyList();
-    while (currentBody != nullptr)
-    {
-        b2Body* nextBody = currentBody->GetNext();
+    b2Body *currentBody = world->GetBodyList();
+    while (currentBody != nullptr) {
+        b2Body *nextBody = currentBody->GetNext();
         world->DestroyBody(currentBody);
         currentBody = nextBody;
     }
@@ -159,10 +159,18 @@ void PhysicsWrapper::cleanCache() {
 
 void PhysicsWrapper::updatePositions() {
     for (auto &body: bodies) {
-        auto &transformComp = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(body.first);
-        auto position = body.second.first->GetPosition();
-        transformComp.position->setX(position.x - body.second.second.getX());
-        transformComp.position->setY(position.y - body.second.second.getY());
+        try {
+            auto &velocityComp = ComponentStore::GetInstance().tryGetComponent<VelocityComponent>(body.first);
+            auto &transformComp = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(body.first);
+            auto position = body.second.first->GetPosition();
+            auto localPosition = SceneManager::getLocalPosition(Vector2(position.x - body.second.second.getX(),
+                                                                        position.y - body.second.second.getY()),
+                                                                transformComp.entityId);
+            transformComp.position->setX(localPosition.getX());
+            transformComp.position->setY(localPosition.getY());
+        } catch (std::exception &e) {
+            continue;
+        }
     }
 }
 

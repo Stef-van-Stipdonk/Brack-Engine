@@ -37,9 +37,17 @@ std::vector<std::unique_ptr<GameObject>> &&GameObject::getChildren() {
 }
 
 std::optional<GameObject> GameObject::getParent() {
-    if (parent == nullptr)
-        return std::nullopt;
+    if (parent == nullptr) {
+        try {
+            auto &parentComponent = tryGetComponent<ParentComponent>();
+            return GameObject(parentComponent.parentId);
+        } catch (std::runtime_error &e) {
+            return std::nullopt;
+        }
+    }
     return *parent;
+
+
 }
 
 std::string GameObject::getName() const {

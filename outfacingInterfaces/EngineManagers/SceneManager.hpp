@@ -45,6 +45,8 @@ public:
 
     static float getWorldRotation(const TransformComponent &transformComponent);
 
+    static Vector2 getLocalPosition(const Vector2 worldPosition, entity entityId);
+
     std::string getActiveSceneSignature();
 
 private:
