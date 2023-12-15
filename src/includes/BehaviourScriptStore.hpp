@@ -41,7 +41,8 @@ public:
                     "Entity ID cannot be 0, please make sure to implement a copy constructor for your component of type " +
                     std::string(typeid(T).name()));
 
-        behaviourScripts[entityId].emplace_back(std::make_unique<T>(script));
+        notStartedBehaviourScripts[entityId].emplace_back(std::make_unique<T>(script));
+
     }
 
     template<typename T, typename...Args>
@@ -55,7 +56,8 @@ public:
         T script(std::forward<Args>(args)...);
         script.entityId = entityId;
 
-        behaviourScripts[entityId].emplace_back(std::make_unique<T>(script));
+        notStartedBehaviourScripts[entityId].emplace_back(std::make_unique<T>(script));
+
     }
 
     void addBehaviourScript(entity entityId, std::unique_ptr<IBehaviourScript> script) {
@@ -66,7 +68,7 @@ public:
 
         IBehaviourScript &componentRef = *script;
 
-        behaviourScripts[entityId].emplace_back(std::move(script));
+        notStartedBehaviourScripts[entityId].emplace_back(std::move(script));
     }
 
 
@@ -135,13 +137,29 @@ public:
         return result;
     }
 
+    std::vector<std::reference_wrapper<IBehaviourScript>> getAllNotStartedBehaviourScripts() {
+        std::vector<std::reference_wrapper<IBehaviourScript>> result;
+
+        // Iterate through the map
+        for (const auto &entry: notStartedBehaviourScripts) {
+            const std::vector<std::unique_ptr<IBehaviourScript>> &scriptVector = entry.second;
+
+            // Iterate through the vector and add references to the result
+            for (const auto &scriptPtr: scriptVector) {
+                if (EntityManager::getInstance().isEntityActive(scriptPtr.get()->entityId) && scriptPtr.get()->isActive)
+                    result.push_back(std::ref(*scriptPtr));
+            }
+        }
+        return result;
+    }
+
     template<typename T>
     typename std::enable_if<std::is_base_of<IBehaviourScript, T>::value, T &>::type
     tryGetBehaviourScript(entity entityId) {
         auto itType = behaviourScripts.find(entityId);
         if (itType != behaviourScripts.end()) {
-            for(auto& script : itType->second) {
-                if (auto castedScript = static_cast<T*>(script.get())) {
+            for (auto &script: itType->second) {
+                if (auto castedScript = static_cast<T *>(script.get())) {
                     return *castedScript;
                 }
             }
@@ -149,10 +167,27 @@ public:
         throw std::runtime_error("Component not found");
     }
 
+    void moveToStartedScripts(std::reference_wrapper<IBehaviourScript> wrapper) {
+        auto entityId = wrapper.get().entityId;
+        auto it = notStartedBehaviourScripts.find(entityId);
+        if (it != notStartedBehaviourScripts.end()) {
+            auto &scripts = it->second;
+            auto itScript = std::find_if(scripts.begin(), scripts.end(), [&wrapper](const auto &script) {
+                return script.get() == &wrapper.get();
+            });
+            if (itScript != scripts.end()) {
+                behaviourScripts[entityId].emplace_back(std::move(*itScript));
+                scripts.erase(itScript);
+            }
+        }
+    }
+
 private:
     static BehaviourScriptStore instance;
 
     BehaviourScriptStore() = default;
+
+    std::map<entity, std::vector<std::unique_ptr<IBehaviourScript>>> notStartedBehaviourScripts;
 
     std::map<entity, std::vector<std::unique_ptr<IBehaviourScript>>> behaviourScripts;
 };
