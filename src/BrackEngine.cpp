@@ -47,7 +47,7 @@ void BrackEngine::Run() {
     while (ConfigSingleton::GetInstance().IsRunning()) {
         FPSSingleton::GetInstance().Start();
         auto deltaTime = GetDeltaTime();
-        SystemManager::getInstance().UpdateSystems(deltaTime);
+        SystemManager::getInstance().UpdateSystems(deltaTime * deltaTimeMultiplier);
         FPSSingleton::GetInstance().End();
         if (ConfigSingleton::GetInstance().IsShowFPSTrue())
             UpdateFPS(deltaTime);
@@ -66,7 +66,7 @@ milliseconds BrackEngine::GetDeltaTime() {
 
     float deltaTimeInSeconds = deltaTime.count();
     milliseconds deltaTimeInMilliSeconds = deltaTimeInSeconds * 1000.0f;
-    return deltaTimeInMilliSeconds * deltaTimeMultiplier;
+    return deltaTimeInMilliSeconds;
 }
 
 
