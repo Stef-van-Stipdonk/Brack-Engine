@@ -473,6 +473,41 @@ void RenderWrapper::RenderBoxCollision(const CameraComponent &cameraComponent,
 #endif
 }
 
+void RenderWrapper::RenderGraph(const CameraComponent &cameraComponent,
+                                const TransformComponent &cameraTransformComponent,
+                                const GraphComponent &graphComponent,
+                                const TransformComponent &graphTransformComponent) {
+#if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
+    for (auto& graphNode: graphComponent.graph_) {
+        auto &cameraPosition = cameraTransformComponent.position;
+        auto &cameraSize = cameraComponent.size;
+        auto boxPosition = graphNode->getPosition() + *graphTransformComponent.position;
+        auto sizeX = 5.0;
+        auto sizeY = 5.0;
+
+        if (boxPosition.getX() + sizeX / 2 < cameraPosition->getX() - cameraSize->getX() / 2 ||
+            boxPosition.getX() - sizeX / 2 > cameraPosition->getX() + cameraSize->getX() / 2 ||
+            boxPosition.getY() + sizeY / 2 < cameraPosition->getY() - cameraSize->getY() / 2 ||
+            boxPosition.getY() - sizeY / 2 > cameraPosition->getY() + cameraSize->getY() / 2)
+            continue;
+
+        SDL_Rect squareRect = {
+                static_cast<int>(boxPosition.getX() - cameraTransformComponent.position->getX() +
+                                 cameraComponent.size->getX() / 2 - sizeX / 2),
+                static_cast<int>(boxPosition.getY() - cameraTransformComponent.position->getY() +
+                                 cameraComponent.size->getY() / 2 - sizeY / 2),
+                static_cast<int>(sizeX),
+                static_cast<int>(sizeY)};
+        if(graphNode->isVisited()){
+            SDL_SetRenderDrawColor(renderer.get(), 255, 0, 0, 255);
+        }else{
+            SDL_SetRenderDrawColor(renderer.get(), 0, 255, 0, 255);
+        }
+        SDL_RenderDrawRect(renderer.get(), &squareRect);
+    }
+#endif
+}
+
 void RenderWrapper::RenderUiBoxCollision(const BoxCollisionComponent &boxCollisionComponent,
                                          const TransformComponent &transformComponent) {
 #if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG

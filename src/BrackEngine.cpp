@@ -4,8 +4,6 @@
 
 #include <Components/ObjectInfoComponent.hpp>
 #include <Components/PersistenceTag.hpp>
-#include <Components/AIComponent.hpp>
-#include <Helpers/KeyMap.hpp>
 #include "BrackEngine.hpp"
 #include "Systems/RenderingSystem.hpp"
 #include "Logger.hpp"
@@ -13,7 +11,6 @@
 #include "Systems/InputSystem.hpp"
 #include "FPSSingleton.hpp"
 #include "Systems/AudioSystem.hpp"
-#include "Systems/MovementSystem.hpp"
 #include "Systems/BehaviourScriptSystem.hpp"
 #include "Systems/ClickSystem.hpp"
 #include "Systems/AudioSystem.hpp"
@@ -21,15 +18,16 @@
 #include "Systems/ReplaySystem.hpp"
 #include "Systems/AnimationSystem.hpp"
 #include "Systems/ParticleSystem.hpp"
+#include "Systems/AISystem.hpp"
 
 
 BrackEngine::BrackEngine(Config &&config) : deltaTimeMultiplier(ConfigSingleton::GetInstance().deltaTimeMultiplier) {
     ConfigSingleton::GetInstance().SetConfig(config);
     SystemManager::getInstance().AddSystem(std::make_shared<InputSystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<ClickSystem>());
-//    SystemManager::getInstance().AddSystem(std::make_shared<AudioSystem>());
+    SystemManager::getInstance().AddSystem(std::make_shared<AudioSystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<BehaviourScriptSystem>());
-//    SystemManager::getInstance().AddSystem(std::make_shared<MovementSystem>());
+    SystemManager::getInstance().AddSystem(std::make_shared<AISystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<PhysicsSystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<AnimationSystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<RenderingSystem>());
@@ -37,7 +35,7 @@ BrackEngine::BrackEngine(Config &&config) : deltaTimeMultiplier(ConfigSingleton:
 
     lastTime = std::chrono::high_resolution_clock::now();
     SystemManager::getInstance().AddSystem(std::make_shared<ReplaySystem>(lastTime));
-    
+
     if (ConfigSingleton::GetInstance().ShowFPS())
         CreateFPS();
 }
@@ -47,7 +45,7 @@ void BrackEngine::Run() {
     while (ConfigSingleton::GetInstance().IsRunning()) {
         FPSSingleton::GetInstance().Start();
         auto deltaTime = GetDeltaTime();
-        SystemManager::getInstance().UpdateSystems(deltaTime);
+        SystemManager::getInstance().UpdateSystems(deltaTime * deltaTimeMultiplier);
         FPSSingleton::GetInstance().End();
         if (ConfigSingleton::GetInstance().ShowFPS())
             UpdateFPS(deltaTime);
@@ -66,7 +64,7 @@ milliseconds BrackEngine::GetDeltaTime() {
 
     float deltaTimeInSeconds = deltaTime.count();
     milliseconds deltaTimeInMilliSeconds = deltaTimeInSeconds * 1000.0f;
-    return deltaTimeInMilliSeconds * deltaTimeMultiplier;
+    return deltaTimeInMilliSeconds;
 }
 
 
