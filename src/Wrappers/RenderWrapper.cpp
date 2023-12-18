@@ -352,8 +352,8 @@ RenderWrapper::RenderUiSprite(const SpriteComponent &spriteComponent, const Tran
 
     //Create a rectangle were the sprite needs to be rendered on to
     SDL_Rect destRect = {static_cast<int>(spritePosition.getX()), static_cast<int>(spritePosition.getY()),
-                         static_cast<int>(spritePosition.getX() * spriteScale.getX()),
-                         static_cast<int>(spritePosition.getY() * spriteScale.getY())};
+                         static_cast<int>(spriteWidth * spriteScale.getX()),
+                         static_cast<int>(spriteHeight * spriteScale.getY())};
 
     render(texture->second.get(), &srcRect, &destRect, spriteRotation, spriteComponent.flipX, spriteComponent.flipY);
 }
@@ -478,7 +478,7 @@ void RenderWrapper::RenderGraph(const CameraComponent &cameraComponent,
                                 const GraphComponent &graphComponent,
                                 const TransformComponent &graphTransformComponent) {
 #if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
-    for (auto& graphNode: graphComponent.graph_) {
+    for (auto &graphNode: graphComponent.graph_) {
         auto &cameraPosition = cameraTransformComponent.position;
         auto &cameraSize = cameraComponent.size;
         auto boxPosition = graphNode->getPosition() + *graphTransformComponent.position;
@@ -498,9 +498,9 @@ void RenderWrapper::RenderGraph(const CameraComponent &cameraComponent,
                                  cameraComponent.size->getY() / 2 - sizeY / 2),
                 static_cast<int>(sizeX),
                 static_cast<int>(sizeY)};
-        if(graphNode->isVisited()){
+        if (graphNode->isVisited()) {
             SDL_SetRenderDrawColor(renderer.get(), 255, 0, 0, 255);
-        }else{
+        } else {
             SDL_SetRenderDrawColor(renderer.get(), 0, 255, 0, 255);
         }
         SDL_RenderDrawRect(renderer.get(), &squareRect);
