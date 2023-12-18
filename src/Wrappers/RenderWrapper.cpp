@@ -680,4 +680,28 @@ void RenderWrapper::RenderCircleCollision(const CameraComponent &cameraComponent
 
 }
 
+void RenderWrapper::RenderUiCircleCollision(const CircleCollisionComponent &circleCollisionComponent,
+                                            const TransformComponent &transformComponent) {
+#if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
+
+    auto worldPosition = SceneManager::getWorldPosition(transformComponent);
+    auto worldScale = SceneManager::getWorldScale(transformComponent);
+    auto circleRadius = circleCollisionComponent.radius * worldScale.getX();
+
+    if (textures.find("Resources/Circle.png") == textures.end())
+        textures.insert(std::make_pair("Resources/Circle.png", GetSpriteTexture("Resources/Circle.png")));
+    auto texture = textures.find("Resources/Circle.png");
+
+    SDL_Rect srcRect{0, 0, 512, 512};
+    SDL_Rect destRect = {
+            static_cast<int>(worldPosition.getX() - circleRadius),
+            static_cast<int>(worldPosition.getY() - circleRadius),
+            static_cast<int>(circleRadius * 2),
+            static_cast<int>(circleRadius * 2)};
+
+    render(texture->second.get(), &srcRect, &destRect, 0, false, false);
+
+#endif
+}
+
 #pragma endregion
