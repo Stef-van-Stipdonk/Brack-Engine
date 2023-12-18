@@ -10,6 +10,7 @@
 #include <functional>
 #include <optional>
 #include <Objects/GameObject.hpp>
+#include <Components/ChildComponent.hpp>
 
 
 class BehaviourScript : public IBehaviourScript {
@@ -49,6 +50,19 @@ public:
     void setActive(bool active) {
         EntityManager::getInstance().setEntityActive(entityId, active);
         tryGetComponent<ObjectInfoComponent>().isActive = active;
+        childrenSetActive(entityId, active);
+    }
+
+    void childrenSetActive(entity entityId, bool active) {
+        try {
+            EntityManager::getInstance().setEntityActive(entityId, active);
+            auto &childComponent = ComponentStore::GetInstance().tryGetComponent<ChildComponent>(entityId);
+            for (auto &childId: childComponent.children) {
+                childrenSetActive(childId, active);
+            }
+        } catch (std::runtime_error &e) {
+            return;
+        }
     }
 
     static std::optional<GameObject *> getGameObjectByName(const std::string &name);

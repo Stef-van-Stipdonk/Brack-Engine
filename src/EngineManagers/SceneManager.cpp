@@ -96,6 +96,18 @@ float SceneManager::getWorldRotation(const TransformComponent &transformComponen
     }
 }
 
+Vector2 SceneManager::getLocalPosition(const Vector2 worldPosition, entity entityId) {
+    auto position = worldPosition;
+    try {
+        auto parentId = ComponentStore::GetInstance().tryGetComponent<ParentComponent>(entityId).parentId;
+        auto &parentTransform = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(parentId);
+        position -= getWorldPosition(parentTransform);
+        return position;
+    } catch (std::runtime_error &e) {
+        return position;
+    }
+}
+
 
 void SceneManager::goToNewScene(Scene *scene) {
     switchingScene = scene;

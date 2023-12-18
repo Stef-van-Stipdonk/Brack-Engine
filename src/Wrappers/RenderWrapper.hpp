@@ -19,6 +19,7 @@
 #include <unordered_map>
 #include <Components/TransformComponent.hpp>
 #include <Components/TileMapComponent.hpp>
+#include <Components/GraphComponent.hpp>
 
 struct SDLWindowDeleter {
     void operator()(SDL_Window *window) const {
@@ -61,6 +62,9 @@ public:
 
     void RenderUiRectangle(const RectangleComponent &rectangleComponent, const TransformComponent &transformComponent);
 
+    void RenderGraph(const CameraComponent &cameraComponent, const TransformComponent &cameraTransformComponent,
+                     const GraphComponent &graphComponent,
+                     const TransformComponent &graphTransformComponent);
 
     void RenderToMainTexture();
 

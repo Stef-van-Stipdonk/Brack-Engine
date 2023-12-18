@@ -16,7 +16,13 @@ BehaviourScriptSystem::~BehaviourScriptSystem() {
 
 
 void BehaviourScriptSystem::update(milliseconds deltaTime) {
+    auto notStartedBehaviourScripts = BehaviourScriptStore::getInstance().getAllNotStartedBehaviourScripts();
+    for (auto script: notStartedBehaviourScripts) {
+        script.get().onStart();
+        BehaviourScriptStore::getInstance().moveToStartedScripts(script);
+    }
     auto behaviourScripts = BehaviourScriptStore::getInstance().getAllBehaviourScripts();
+
     for (auto script: behaviourScripts) {
         script.get().onUpdate(deltaTime);
     }
