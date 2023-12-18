@@ -34,7 +34,7 @@ PhysicsWrapper::PhysicsWrapper(const PhysicsWrapper &other) {
 
 
 void PhysicsWrapper::update(milliseconds deltaTime) {
-    updateVelocities();
+//    updateVelocities();
     const int32 velocityIterations{6};
     const int32 positionIterations{2};
     world->Step(deltaTime, velocityIterations, positionIterations);
@@ -43,43 +43,6 @@ void PhysicsWrapper::update(milliseconds deltaTime) {
 
 
 void PhysicsWrapper::addCircles(const std::vector<CircleCollisionComponent *> &circleCollisionComponents) {
-//    circleBodies.insert(circleBodies.end(), componentIds.begin(), componentIds.end());
-//
-//    if (bodies.find(componentIds.front()) == bodies.end()) {
-//        for (auto componentId: componentIds) {
-//            auto &circleCollisionComp = ComponentStore::GetInstance().tryGetComponent<CircleCollisionComponent>(
-//                    componentId);
-//            auto &transformComp = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(componentId);
-//            auto &rigidBodyComp = ComponentStore::GetInstance().tryGetComponent<RigidBodyComponent>(componentId);
-//            b2BodyDef componentBodyDef;
-//            componentBodyDef.position.Set(transformComp.position->getX(), transformComp.position->getY());
-//
-//            componentBodyDef.type = getBodyType(rigidBodyComp.collisionType);
-//
-//            b2Body *body = world->CreateBody(&componentBodyDef);
-//
-//            b2CircleShape shape;
-//            shape.m_radius = circleCollisionComp.radius->getX() * transformComp.scale->getX();
-//            b2FixtureDef fixtureDef;
-//            fixtureDef.isSensor = false;
-//            fixtureDef.shape = &shape;
-//            fixtureDef.density = 1.0f;
-//
-//
-//            body->CreateFixture(&fixtureDef);
-//
-//            bodies[componentId] = body;
-//
-//        }
-//    } else {
-//        for (auto componentId: componentIds) {
-//            auto &transformComp = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(componentId);
-//            bodies[componentId]->SetTransform(
-//                    b2Vec2(transformComp.position->getX(), transformComp.position->getY()), 0);
-//
-//        }
-//    }
-
     for (auto circle: circleCollisionComponents) {
         auto &bodyPtr = bodies[circle->entityId];
         auto enabled = ComponentStore::GetInstance().tryGetComponent<ObjectInfoComponent>(circle->entityId).isActive &&
@@ -122,7 +85,7 @@ void PhysicsWrapper::addCircles(const std::vector<CircleCollisionComponent *> &c
                 auto &velocityComponent = ComponentStore::GetInstance().tryGetComponent<VelocityComponent>(
                         circle->entityId);
                 bodyPtr.first->SetLinearVelocity(
-                        b2Vec2(velocityComponent.velocity.getX(), velocityComponent.velocity.getY()));
+                        b2Vec2(velocityComponent.velocity.getX() * 100.0f, velocityComponent.velocity.getY() * 100.0f));
             } catch (std::exception &e) {
                 continue;
             }
@@ -173,7 +136,8 @@ void PhysicsWrapper::addBoxes(const std::vector<BoxCollisionComponent *> &boxCol
                 auto &velocityComponent = ComponentStore::GetInstance().tryGetComponent<VelocityComponent>(
                         box->entityId);
                 bodyPtr.first->SetLinearVelocity(
-                        b2Vec2(velocityComponent.velocity.getX(), velocityComponent.velocity.getY()));
+                        b2Vec2(velocityComponent.velocity.getX() * 10.0f,
+                               velocityComponent.velocity.getY() * 10.0f));
             } catch (std::exception &e) {
                 continue;
             }
@@ -227,7 +191,11 @@ void PhysicsWrapper::updateVelocities() {
     for (auto &body: bodies) {
         try {
             auto &transformComp = ComponentStore::GetInstance().tryGetComponent<VelocityComponent>(body.first);
-            body.second.first->SetLinearVelocity(b2Vec2(transformComp.velocity.getX(), transformComp.velocity.getY()));
+            if (transformComp.velocity != Vector2(0, 0)) {
+                body.second.first->SetLinearVelocity(
+                        b2Vec2(transformComp.velocity.getX(), transformComp.velocity.getY()));
+                transformComp.velocity = Vector2(0, 0);
+            }
         } catch (std::exception &e) {
             continue;
         }

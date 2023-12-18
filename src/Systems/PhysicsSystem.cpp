@@ -15,11 +15,14 @@ PhysicsSystem::~PhysicsSystem() {
 }
 
 void PhysicsSystem::update(milliseconds deltaTime) {
-    handleCircles();
-    handleBoxes();
+    accumulator += deltaTime;
+    if (accumulator >= timeStep) {
+        handleCircles();
+        handleBoxes();
 
-    PhysicsWrapper::getInstance().update(deltaTime);
-
+        PhysicsWrapper::getInstance().update(timeStep / 1000.0f);
+        accumulator = 0;
+    }
 }
 
 void PhysicsSystem::cleanUp() {
