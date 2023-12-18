@@ -131,12 +131,12 @@ void GameObject::addChild(std::unique_ptr<GameObject> child) {
         auto &childComponent = tryGetComponent<ChildComponent>();
         EntityManager::getInstance().setEntityActive(child->getEntityId(), isActive());
 
-        if (entityID != 0)
+        if (entityID != 0 && child->getEntityId() != 0)
             childComponent.children.push_back(child->getEntityId());
     } catch (std::runtime_error &e) {
         addComponent(std::make_unique<ChildComponent>());
         EntityManager::getInstance().setEntityActive(child->getEntityId(), isActive());
-        if (entityID != 0) {
+        if (entityID != 0 && child->getEntityId() != 0) {
             auto &childComponent = tryGetComponent<ChildComponent>();
             childComponent.children.push_back(child->getEntityId());
         }
