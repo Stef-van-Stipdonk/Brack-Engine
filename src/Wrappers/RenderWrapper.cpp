@@ -645,4 +645,39 @@ RenderWrapper::GetCameraTexturePair(const CameraComponent &cameraComponent) {
     return cameraTexture->second;
 }
 
+void RenderWrapper::RenderCircleCollision(const CameraComponent &cameraComponent,
+                                          const TransformComponent &cameraTransformComponent,
+                                          const CircleCollisionComponent &circleCollisionComponent,
+                                          const TransformComponent &transformComponent) {
+#if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
+    auto &cameraPosition = cameraTransformComponent.position;
+    auto &cameraSize = cameraComponent.size;
+    auto circlePosition = SceneManager::getWorldPosition(transformComponent) + *circleCollisionComponent.offset;
+    auto circleScale = SceneManager::getWorldScale(transformComponent);
+    auto circleRadius = circleCollisionComponent.radius * circleScale.getX();
+
+    if (circlePosition.getX() + circleRadius < cameraPosition->getX() - cameraSize->getX() / 2 ||
+        circlePosition.getX() - circleRadius > cameraPosition->getX() + cameraSize->getX() / 2 ||
+        circlePosition.getY() + circleRadius < cameraPosition->getY() - cameraSize->getY() / 2 ||
+        circlePosition.getY() - circleRadius > cameraPosition->getY() + cameraSize->getY() / 2)
+        return;
+
+    if (textures.find("Resources/Circle.png") == textures.end())
+        textures.insert(std::make_pair("Resources/Circle.png", GetSpriteTexture("Resources/Circle.png")));
+    auto texture = textures.find("Resources/Circle.png");
+
+    SDL_Rect srcRect{0, 0, 512, 512};
+    SDL_Rect destRect = {
+            static_cast<int>(circlePosition.getX() - cameraTransformComponent.position->getX() +
+                             cameraComponent.size->getX() / 2 - circleRadius),
+            static_cast<int>(circlePosition.getY() - cameraTransformComponent.position->getY() +
+                             cameraComponent.size->getY() / 2 - circleRadius),
+            static_cast<int>(circleRadius * 2),
+            static_cast<int>(circleRadius * 2)};
+
+    render(texture->second.get(), &srcRect, &destRect, 0, false, false);
+#endif
+
+}
+
 #pragma endregion
