@@ -47,10 +47,10 @@ void PhysicsWrapper::addCircles(const std::vector<CircleCollisionComponent *> &c
 //
 //    if (bodies.find(componentIds.front()) == bodies.end()) {
 //        for (auto componentId: componentIds) {
-//            auto &circleCollisionComp = ComponentStore::GetInstance().tryGetComponent<CircleCollisionComponent>(
+//            auto &circleCollisionComp = ComponentStore::getInstance().tryGetComponent<CircleCollisionComponent>(
 //                    componentId);
-//            auto &transformComp = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(componentId);
-//            auto &rigidBodyComp = ComponentStore::GetInstance().tryGetComponent<RigidBodyComponent>(componentId);
+//            auto &transformComp = ComponentStore::getInstance().tryGetComponent<TransformComponent>(componentId);
+//            auto &rigidBodyComp = ComponentStore::getInstance().tryGetComponent<RigidBodyComponent>(componentId);
 //            b2BodyDef componentBodyDef;
 //            componentBodyDef.position.Set(transformComp.position->getX(), transformComp.position->getY());
 //
@@ -73,7 +73,7 @@ void PhysicsWrapper::addCircles(const std::vector<CircleCollisionComponent *> &c
 //        }
 //    } else {
 //        for (auto componentId: componentIds) {
-//            auto &transformComp = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(componentId);
+//            auto &transformComp = ComponentStore::getInstance().tryGetComponent<TransformComponent>(componentId);
 //            bodies[componentId]->SetTransform(
 //                    b2Vec2(transformComp.position->getX(), transformComp.position->getY()), 0);
 //

@@ -10,7 +10,7 @@ void FPSWrapper::Start() {
 }
 
 void FPSWrapper::End() {
-    auto fpsLimit = ConfigSingleton::GetInstance().GetFPSLimit();
+    auto fpsLimit = ConfigSingleton::getInstance().getFPSLimit();
     auto frameDelay = 1000.0f / fpsLimit;
     end = SDL_GetPerformanceCounter();
     float elapsed = (end - start) / (float) SDL_GetPerformanceFrequency();
