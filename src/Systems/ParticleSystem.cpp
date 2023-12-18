@@ -13,11 +13,11 @@
 #include "../ConfigSingleton.hpp"
 
 ParticleSystem::ParticleSystem() {
-    for (int i = 0; i < ConfigSingleton::GetInstance().getParticleLimit(); ++i) {
+    for (int i = 0; i < ConfigSingleton::getInstance().getParticleLimit(); ++i) {
         auto particleEntity = EntityManager::getInstance().createEntity();
 
         auto particleComponent = std::make_unique<ParticleComponent>();
-        auto rectangleComponent = std::make_unique<RectangleComponent>(Vector2(0,0));
+        auto rectangleComponent = std::make_unique<RectangleComponent>(Vector2(0, 0));
         auto velocityComponent = std::make_unique<VelocityComponent>();
         auto transformComponent = std::make_unique<TransformComponent>();
         auto objectInfoComponent = std::make_unique<ObjectInfoComponent>();
@@ -44,12 +44,12 @@ void ParticleSystem::update(milliseconds deltaTime) {
 void ParticleSystem::updateParticles(milliseconds deltaTime) {
     auto particleIds = ComponentStore::GetInstance().getEntitiesWithComponent<ParticleComponent>();
     for (auto id: particleIds) {
-        auto& particleComponent = ComponentStore::GetInstance().tryGetComponent<ParticleComponent>(id);
-        if(particleComponent.lifeTime <= 0){
-            auto& objectInfoComponent = ComponentStore::GetInstance().tryGetComponent<ObjectInfoComponent>(id);
+        auto &particleComponent = ComponentStore::GetInstance().tryGetComponent<ParticleComponent>(id);
+        if (particleComponent.lifeTime <= 0) {
+            auto &objectInfoComponent = ComponentStore::GetInstance().tryGetComponent<ObjectInfoComponent>(id);
             objectInfoComponent.isActive = false;
             EntityManager::getInstance().setEntityActive(id, false);
-        }else{
+        } else {
             particleComponent.lifeTime -= deltaTime;
         }
     }
@@ -59,30 +59,36 @@ void ParticleSystem::updateParticleEmitters(milliseconds deltaTime) {
     auto particleEmitterEntityIds = ComponentStore::GetInstance().getEntitiesWithComponent<ParticleEmitterComponent>();
     for (auto id: particleEmitterEntityIds) {
         auto inactiveParticleIds = ComponentStore::GetInstance().getInactiveEntitiesWithComponent<ParticleComponent>();
-        if(inactiveParticleIds.empty()) return;
+        if (inactiveParticleIds.empty()) return;
 
-        auto& particleEmitterComponent = ComponentStore::GetInstance().tryGetComponent<ParticleEmitterComponent>(id);
-        auto& particleEmitterTransformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(id);
+        auto &particleEmitterComponent = ComponentStore::GetInstance().tryGetComponent<ParticleEmitterComponent>(id);
+        auto &particleEmitterTransformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(id);
 
         size_t availablePosition = 0;
         for (size_t i = 0; i < particleEmitterComponent.activeParticles.size(); ++i) {
             if (particleEmitterComponent.activeParticles[i] <= 0) {
                 availablePosition = i;
                 break;
-            }else{
+            } else {
                 particleEmitterComponent.activeParticles[i] -= deltaTime;
             }
         }
 
-        if(particleEmitterComponent.activeParticles[availablePosition] <= 0 && particleEmitterComponent.untilNextEmit <= 0){
+        if (particleEmitterComponent.activeParticles[availablePosition] <= 0 &&
+            particleEmitterComponent.untilNextEmit <= 0) {
             particleEmitterComponent.untilNextEmit = particleEmitterComponent.emitInterval;
             entity inactiveParticleId = inactiveParticleIds[0];
 
-            auto& particleComponent = ComponentStore::GetInstance().tryGetComponent<ParticleComponent>(inactiveParticleId);
-            auto& rectangleComponent = ComponentStore::GetInstance().tryGetComponent<RectangleComponent>(inactiveParticleId);
-            auto& velocityComponent = ComponentStore::GetInstance().tryGetComponent<VelocityComponent>(inactiveParticleId);
-            auto& transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(inactiveParticleId);
-            auto& objectInfoComponent = ComponentStore::GetInstance().tryGetComponent<ObjectInfoComponent>(inactiveParticleId);
+            auto &particleComponent = ComponentStore::GetInstance().tryGetComponent<ParticleComponent>(
+                    inactiveParticleId);
+            auto &rectangleComponent = ComponentStore::GetInstance().tryGetComponent<RectangleComponent>(
+                    inactiveParticleId);
+            auto &velocityComponent = ComponentStore::GetInstance().tryGetComponent<VelocityComponent>(
+                    inactiveParticleId);
+            auto &transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(
+                    inactiveParticleId);
+            auto &objectInfoComponent = ComponentStore::GetInstance().tryGetComponent<ObjectInfoComponent>(
+                    inactiveParticleId);
 
             particleComponent.lifeTime = particleEmitterComponent.lifeTime;
 

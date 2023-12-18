@@ -55,7 +55,6 @@ void GameObjectConverter::addGameObject(GameObject *gameObject) {
     for (auto &behaviourScript: gameObject->getAllBehaviourScripts()) {
         BehaviourScriptStore::getInstance().addBehaviourScript(entityId, std::move(behaviourScript));
     }
-
 }
 
 std::optional<GameObject *> GameObjectConverter::getGameObjectByName(const std::string &name) {
