@@ -56,10 +56,10 @@ void ClickSystem::CheckCircleCollision(const ClickableComponent &clickableCompon
                 clickableComponent.entityId);
         auto x = mousePosition.getX();
         auto y = mousePosition.getY();
-        auto a = circleCollisionComponent.radius->getX();
-        auto b = circleCollisionComponent.radius->getY();
-        auto h = transformComponent.position->getX() + circleCollisionComponent.radius->getX();
-        auto k = transformComponent.position->getY() + circleCollisionComponent.radius->getY();
+        auto a = circleCollisionComponent.radius;
+        auto b = circleCollisionComponent.radius;
+        auto h = transformComponent.position->getX() + circleCollisionComponent.radius;
+        auto k = transformComponent.position->getY() + circleCollisionComponent.radius;
         // Calculate the left-hand side of the ellipse equation
         double lhs = ((x - h) * (x - h)) / (a * a) + ((y - k) * (y - k)) / (b * b);
 

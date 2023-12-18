@@ -42,7 +42,7 @@ void PhysicsWrapper::update(milliseconds deltaTime) {
 }
 
 
-void PhysicsWrapper::addCircles(std::vector<entity> componentIds) {
+void PhysicsWrapper::addCircles(const std::vector<CircleCollisionComponent *> &circleCollisionComponents) {
 //    circleBodies.insert(circleBodies.end(), componentIds.begin(), componentIds.end());
 //
 //    if (bodies.find(componentIds.front()) == bodies.end()) {
@@ -79,6 +79,55 @@ void PhysicsWrapper::addCircles(std::vector<entity> componentIds) {
 //
 //        }
 //    }
+
+    for (auto circle: circleCollisionComponents) {
+        auto &bodyPtr = bodies[circle->entityId];
+        auto enabled = ComponentStore::GetInstance().tryGetComponent<ObjectInfoComponent>(circle->entityId).isActive &&
+                       EntityManager::getInstance().isEntityActive(circle->entityId);
+
+        if (bodyPtr.first == nullptr) {
+            auto &transformComp = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(circle->entityId);
+            auto &rigidBodyComp = ComponentStore::GetInstance().tryGetComponent<RigidBodyComponent>(circle->entityId);
+            b2BodyDef componentBodyDef;
+            auto worldPosition = SceneManager::getWorldPosition(transformComp);
+            componentBodyDef.position.Set(worldPosition.getX() + circle->offset->getX(),
+                                          worldPosition.getY() + circle->offset->getY());
+            componentBodyDef.angle = SceneManager::getWorldRotation(transformComp);
+            componentBodyDef.type = getBodyType(rigidBodyComp.collisionType);
+            componentBodyDef.enabled = enabled;
+            bodyPtr.first = world->CreateBody(&componentBodyDef);
+            bodyPtr.second = Vector2(circle->offset->getX(),
+                                     circle->offset->getY());
+            bodyPtr.first->SetGravityScale(rigidBodyComp.gravityScale);
+
+            b2CircleShape shape;
+            shape.m_radius = circle->radius * transformComp.scale->getX();
+
+            b2FixtureDef fixtureDef;
+            fixtureDef.isSensor = circle->isTrigger;
+            fixtureDef.shape = &shape;
+            fixtureDef.density = 1.0f;
+            fixtureDef.friction = rigidBodyComp.friction;
+            fixtureDef.restitution = rigidBodyComp.restitution;
+
+            bodyPtr.first->CreateFixture(&fixtureDef);
+        } else {
+            auto &transformComp = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(circle->entityId);
+            auto worldPosition = SceneManager::getWorldPosition(transformComp);
+            bodyPtr.first->SetEnabled(enabled);
+            bodyPtr.first->SetTransform(
+                    b2Vec2(worldPosition.getX() + bodyPtr.second.getX(),
+                           worldPosition.getY() + bodyPtr.second.getY()), 0);
+            try {
+                auto &velocityComponent = ComponentStore::GetInstance().tryGetComponent<VelocityComponent>(
+                        circle->entityId);
+                bodyPtr.first->SetLinearVelocity(
+                        b2Vec2(velocityComponent.velocity.getX(), velocityComponent.velocity.getY()));
+            } catch (std::exception &e) {
+                continue;
+            }
+        }
+    }
 }
 
 void PhysicsWrapper::addBoxes(const std::vector<BoxCollisionComponent *> &boxCollisionComponents) {

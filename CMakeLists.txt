@@ -214,6 +214,14 @@ else ()
     target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_IMAGE_LIBRARIES})
 endif ()
 
+set(CMAKE_AIX_EXPORT_ALL_SYMBOLS ON)
+add_custom_command(
+        TARGET ${PROJECT_NAME}
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_CURRENT_SOURCE_DIR}/Resources
+        ${CMAKE_BINARY_DIR}/Resources)
+
 target_link_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/FMod)
 
 if (WIN32 OR WIN64)
