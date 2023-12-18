@@ -125,8 +125,12 @@ void PhysicsWrapper::addBoxes(const std::vector<BoxCollisionComponent *> &boxCol
             fixtureDef.restitution = rigidBodyComp.restitution;
 
             bodyPtr.first->CreateFixture(&fixtureDef);
+            bodyPtr.first->ApplyForce(b2Vec2(rigidBodyComp.force->getX() * 10.0f, rigidBodyComp.force->getY() * 10.0f),
+                                      bodyPtr.first->GetWorldCenter(), true);
+            rigidBodyComp.force = std::make_unique<Vector2>(0, 0);
         } else {
             auto &transformComp = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(box->entityId);
+            auto &rigidBodyComp = ComponentStore::GetInstance().tryGetComponent<RigidBodyComponent>(box->entityId);
             auto worldPosition = SceneManager::getWorldPosition(transformComp);
             bodyPtr.first->SetEnabled(enabled);
             bodyPtr.first->SetTransform(
@@ -138,6 +142,10 @@ void PhysicsWrapper::addBoxes(const std::vector<BoxCollisionComponent *> &boxCol
                 bodyPtr.first->SetLinearVelocity(
                         b2Vec2(velocityComponent.velocity.getX() * 10.0f,
                                velocityComponent.velocity.getY() * 10.0f));
+                bodyPtr.first->ApplyLinearImpulse(
+                        b2Vec2(rigidBodyComp.force->getX() * 10.0f, rigidBodyComp.force->getY() * 10.0f),
+                        bodyPtr.first->GetWorldCenter(), true);
+                rigidBodyComp.force = std::make_unique<Vector2>(0, 0);
             } catch (std::exception &e) {
                 continue;
             }

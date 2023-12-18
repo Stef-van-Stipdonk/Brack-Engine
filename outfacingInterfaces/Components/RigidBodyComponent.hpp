@@ -7,6 +7,7 @@
 
 #include "IComponent.hpp"
 #include <Helpers/CollisionType.hpp>
+#include <Helpers/Vector2.hpp>
 
 struct RigidBodyComponent : public IComponent {
     explicit RigidBodyComponent(CollisionType type) : IComponent(), collisionType(type) {}
@@ -30,6 +31,7 @@ struct RigidBodyComponent : public IComponent {
 
     float mass = 1.0f, gravityScale = 1.0f, restitution = 0.0f, friction = 0.0f;
     CollisionType collisionType;
+    std::unique_ptr<Vector2> force = std::make_unique<Vector2>(0, 0);
 };
 
 #endif //BRACK_ENGINE_RIGIDBODYCOMPONENT_HPP
