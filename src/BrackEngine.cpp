@@ -21,8 +21,8 @@
 #include "Systems/AISystem.hpp"
 
 
-BrackEngine::BrackEngine(Config &&config) : deltaTimeMultiplier(ConfigSingleton::GetInstance().deltaTimeMultiplier) {
-    ConfigSingleton::GetInstance().SetConfig(config);
+BrackEngine::BrackEngine(Config &&config) : deltaTimeMultiplier(ConfigSingleton::getInstance().deltaTimeMultiplier) {
+    ConfigSingleton::getInstance().setConfig(config);
     SystemManager::getInstance().AddSystem(std::make_shared<InputSystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<ClickSystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<AudioSystem>());
@@ -36,18 +36,18 @@ BrackEngine::BrackEngine(Config &&config) : deltaTimeMultiplier(ConfigSingleton:
     lastTime = std::chrono::high_resolution_clock::now();
     SystemManager::getInstance().AddSystem(std::make_shared<ReplaySystem>(lastTime));
 
-    if (ConfigSingleton::GetInstance().ShowFPS())
+    if (ConfigSingleton::getInstance().showFPS())
         CreateFPS();
 }
 
 void BrackEngine::Run() {
     Logger::Debug("Updating systems");
-    while (ConfigSingleton::GetInstance().IsRunning()) {
+    while (ConfigSingleton::getInstance().isRunning()) {
         FPSSingleton::GetInstance().Start();
         auto deltaTime = GetDeltaTime();
         SystemManager::getInstance().UpdateSystems(deltaTime * deltaTimeMultiplier);
         FPSSingleton::GetInstance().End();
-        if (ConfigSingleton::GetInstance().ShowFPS())
+        if (ConfigSingleton::getInstance().showFPS())
             UpdateFPS(deltaTime);
 
         SceneManager::getInstance().setActiveScene();

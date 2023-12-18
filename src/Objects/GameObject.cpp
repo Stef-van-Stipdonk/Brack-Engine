@@ -7,6 +7,7 @@
 #include <Components/ParentComponent.hpp>
 #include <Components/ChildComponent.hpp>
 #include "Objects/GameObject.hpp"
+#include "../GameObjectConverter.hpp"
 #include <algorithm>
 #include <utility>
 #include <optional>
@@ -151,7 +152,11 @@ void GameObject::addChild(std::unique_ptr<GameObject> child) {
     }
 
     child->parent = this;
-    children.emplace_back(std::move(child));
+    if (entityID == 0) {
+        children.push_back(std::move(child));
+        return;
+    }
+    GameObjectConverter::addGameObject(child.get());
 }
 
 void GameObject::setRotation(float rotation) const {
