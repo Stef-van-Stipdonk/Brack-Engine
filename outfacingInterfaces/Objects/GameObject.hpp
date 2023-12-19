@@ -12,6 +12,7 @@
 #include <typeinfo>
 #include <stdexcept>
 #include <optional>
+#include <Components/ChildComponent.hpp>
 #include "../src/includes/ComponentStore.hpp"
 #include "../Entity.hpp"
 #include "../src/includes/BehaviourScriptStore.hpp"
@@ -57,11 +58,21 @@ public:
             ComponentStore::GetInstance().addComponent<T>(entityID, *component.get());
     }
 
-    GameObject *getChildGameObjectByName(const std::string name) {
+    std::optional<GameObject *> getChildGameObjectByName(const std::string name) {
         for (auto &gameObject: children) {
             if (gameObject->getName() == name)
-                return gameObject.get();
+                return new GameObject(gameObject->entityID);
         }
+        auto childComponent = ComponentStore::GetInstance().tryGetComponent<ChildComponent>(entityID);
+        EntityManager::getInstance().getEntityByName(name);
+        auto it = std::find(childComponent.children.begin(), childComponent.children.end(),
+                            EntityManager::getInstance().getEntityByName(name));
+        if (it != childComponent.children.end()) {
+
+
+        }
+        return std::nullopt;
+
     }
 
     template<typename T>
