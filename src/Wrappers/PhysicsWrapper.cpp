@@ -58,6 +58,7 @@ void PhysicsWrapper::addCircles(const std::vector<CircleCollisionComponent *> &c
             componentBodyDef.angle = SceneManager::getWorldRotation(transformComp);
             componentBodyDef.type = getBodyType(rigidBodyComp.collisionType);
             componentBodyDef.enabled = enabled;
+            componentBodyDef.allowSleep = false;
             bodyPtr.first = world->CreateBody(&componentBodyDef);
             bodyPtr.second = Vector2(circle->offset->getX(),
                                      circle->offset->getY());
@@ -111,6 +112,7 @@ void PhysicsWrapper::addBoxes(const std::vector<BoxCollisionComponent *> &boxCol
             componentBodyDef.angle = SceneManager::getWorldRotation(transformComp);
             componentBodyDef.type = getBodyType(rigidBodyComp.collisionType);
             componentBodyDef.enabled = enabled;
+            componentBodyDef.allowSleep = false;
             bodyPtr.first = world->CreateBody(&componentBodyDef);
             bodyPtr.second = Vector2(box->offset->getX(),
                                      box->offset->getY());
