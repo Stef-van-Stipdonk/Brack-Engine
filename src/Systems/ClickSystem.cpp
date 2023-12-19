@@ -19,7 +19,7 @@ void ClickSystem::update(milliseconds deltaTime) {
 
     auto &componentStore = ComponentStore::GetInstance();
     auto &mousePosition = InputManager::GetInstance().getScreenMousePosition();
-    auto clickableComponentIds = componentStore.getEntitiesWithComponent<ClickableComponent>();
+    auto clickableComponentIds = componentStore.getActiveEntitiesWithComponent<ClickableComponent>();
     for (int entityId: clickableComponentIds) {
         auto clickableComponent = componentStore.tryGetComponent<ClickableComponent>(entityId);
         if (clickableComponent.disabled) continue;

@@ -20,7 +20,7 @@ void RenderingSystem::update(milliseconds deltaTime) {
     auto boxCollisionComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<BoxCollisionComponent>();
     auto circleCollisionComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<CircleCollisionComponent>();
 #endif
-    auto cameras = ComponentStore::GetInstance().getEntitiesWithComponent<CameraComponent>();
+    auto cameras = ComponentStore::GetInstance().getActiveEntitiesWithComponent<CameraComponent>();
     for (auto cameraId: cameras) {
         auto &cameraComponent = ComponentStore::GetInstance().tryGetComponent<CameraComponent>(cameraId);
         if (!cameraComponent.isActive)
@@ -109,7 +109,7 @@ void RenderingSystem::SortRenderComponents() {
     uiCollisionComponents.clear();
 #endif
 
-    auto tileMapComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<TileMapComponent>();
+    auto tileMapComponentIds = ComponentStore::GetInstance().getActiveEntitiesWithComponent<TileMapComponent>();
     for (auto entityId: tileMapComponentIds) {
         auto &tileMapComponent = ComponentStore::GetInstance().tryGetComponent<TileMapComponent>(entityId);
         if (!tileMapComponent.isActive)
@@ -117,7 +117,7 @@ void RenderingSystem::SortRenderComponents() {
         components.insert(&tileMapComponent);
     }
 
-    auto spriteComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<SpriteComponent>();
+    auto spriteComponentIds = ComponentStore::GetInstance().getActiveEntitiesWithComponent<SpriteComponent>();
     for (auto entityId: spriteComponentIds) {
         auto &spriteComponent = ComponentStore::GetInstance().tryGetComponent<SpriteComponent>(entityId);
         if (!spriteComponent.isActive)
@@ -154,7 +154,7 @@ void RenderingSystem::SortRenderComponents() {
 #endif
         }
     }
-    auto textComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<TextComponent>();
+    auto textComponentIds = ComponentStore::GetInstance().getActiveEntitiesWithComponent<TextComponent>();
     for (auto entityId: textComponentIds) {
         auto &textComponent = ComponentStore::GetInstance().tryGetComponent<TextComponent>(entityId);
         if (!textComponent.isActive)
@@ -189,7 +189,7 @@ void RenderingSystem::SortRenderComponents() {
 #endif
         }
     }
-    auto RectangleComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<RectangleComponent>();
+    auto RectangleComponentIds = ComponentStore::GetInstance().getActiveEntitiesWithComponent<RectangleComponent>();
     for (auto entityId: RectangleComponentIds) {
         auto &rectangleComponent = ComponentStore::GetInstance().tryGetComponent<RectangleComponent>(entityId);
         if (!rectangleComponent.isActive)

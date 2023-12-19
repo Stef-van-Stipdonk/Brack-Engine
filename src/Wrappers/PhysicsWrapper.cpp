@@ -240,8 +240,8 @@ void ContactListener::BeginContact(b2Contact *contact) {
     auto &compStore = ComponentStore::GetInstance();
     auto contactA = contact->GetFixtureA()->GetBody();
     auto contactB = contact->GetFixtureB()->GetBody();
-    auto circleEntities = compStore.getEntitiesWithComponent<CircleCollisionComponent>();
-    auto boxEntities = compStore.getEntitiesWithComponent<BoxCollisionComponent>();
+    auto circleEntities = compStore.getActiveEntitiesWithComponent<CircleCollisionComponent>();
+    auto boxEntities = compStore.getActiveEntitiesWithComponent<BoxCollisionComponent>();
 
     entity contactAComponent;
     entity contactBComponent;
@@ -282,8 +282,8 @@ void ContactListener::EndContact(b2Contact *contact) {
     auto &compStore = ComponentStore::GetInstance();
     auto contactA = contact->GetFixtureA()->GetBody();
     auto contactB = contact->GetFixtureB()->GetBody();
-    auto circleEntities = compStore.getEntitiesWithComponent<CircleCollisionComponent>();
-    auto boxEntities = compStore.getEntitiesWithComponent<BoxCollisionComponent>();
+    auto circleEntities = compStore.getActiveEntitiesWithComponent<CircleCollisionComponent>();
+    auto boxEntities = compStore.getActiveEntitiesWithComponent<BoxCollisionComponent>();
 
     entity contactAComponent;
     entity contactBComponent;

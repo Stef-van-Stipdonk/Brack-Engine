@@ -34,7 +34,7 @@ const std::string AudioSystem::getName() const {
 }
 
 void AudioSystem::cleanUp() {
-    auto entities = ComponentStore::GetInstance().getEntitiesWithComponent<AudioArchetype>();
+    auto entities = ComponentStore::GetInstance().getActiveEntitiesWithComponent<AudioArchetype>();
     for (auto entity: entities) {
         auto audioComponent = ComponentStore::GetInstance().tryGetComponent<AudioArchetype>(entity);
         audioComponent.startPlaying = false;

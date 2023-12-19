@@ -28,7 +28,7 @@ AISystem::~AISystem() {
 }
 
 void AISystem::update(milliseconds deltaTime) {
-    auto aiComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<AIComponent>();
+    auto aiComponentIds = ComponentStore::GetInstance().getActiveEntitiesWithComponent<AIComponent>();
     for (auto& aiComponentId: aiComponentIds) {
         auto& aiComponent = ComponentStore::GetInstance().tryGetComponent<AIComponent>(aiComponentId);
         auto& aiTransformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(aiComponentId);
