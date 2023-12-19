@@ -61,15 +61,13 @@ public:
     std::optional<GameObject *> getChildGameObjectByName(const std::string name) {
         for (auto &gameObject: children) {
             if (gameObject->getName() == name)
-                return new GameObject(gameObject->entityID);
+                return gameObject.get();
         }
         auto childComponent = ComponentStore::GetInstance().tryGetComponent<ChildComponent>(entityID);
-        EntityManager::getInstance().getEntityByName(name);
         auto it = std::find(childComponent.children.begin(), childComponent.children.end(),
                             EntityManager::getInstance().getEntityByName(name));
         if (it != childComponent.children.end()) {
-
-
+            return new GameObject(it.operator*());
         }
         return std::nullopt;
 
