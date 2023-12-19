@@ -58,6 +58,26 @@ void EntityManager::clearAllEntities() {
             ComponentStore::GetInstance().removeAllComponents(entity);
             BehaviourScriptStore::getInstance().removeAllBehaviourScripts();
             entities.erase(entity);
+            entityToName.erase(entity);
+            entityToTag.erase(entity);
+
+            auto tagToEntityCopy = tagToEntity;
+            for (auto& pair : tagToEntityCopy) {
+                auto& idVector = tagToEntity[pair.first];
+                idVector.erase(std::remove(idVector.begin(), idVector.end(), entity), idVector.end());
+                if(idVector.empty()){
+                    tagToEntity.erase(pair.first);
+                }
+            }
+
+            auto nameToEntityCopy = nameToEntity;
+            for (auto& pair : nameToEntityCopy) {
+                auto& idVector = nameToEntity[pair.first];
+                idVector.erase(std::remove(idVector.begin(), idVector.end(), entity), idVector.end());
+                if(idVector.empty()){
+                    nameToEntity.erase(pair.first);
+                }
+            }
         }
     }
 }
