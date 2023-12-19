@@ -49,14 +49,14 @@ const std::unordered_set<entity> &EntityManager::getAllEntities() const {
 }
 
 void EntityManager::clearAllEntities() {
-    auto persistanceEntities = ComponentStore::GetInstance().getEntitiesWithComponent<PersistenceTag>();
+    auto persistanceEntities = ComponentStore::GetInstance().getAllEntitiesWithComponent<PersistenceTag>();
 
     std::unordered_set<entity> copyEnt(entities);
     for (auto entity: copyEnt) {
         auto found = std::find(persistanceEntities.begin(), persistanceEntities.end(), entity);
         if (found == persistanceEntities.end()) {
             ComponentStore::GetInstance().removeAllComponents(entity);
-            BehaviourScriptStore::getInstance().removeAllBehaviourScripts(entity);
+            BehaviourScriptStore::getInstance().removeAllBehaviourScripts();
             entities.erase(entity);
         }
     }

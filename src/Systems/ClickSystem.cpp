@@ -19,7 +19,7 @@ void ClickSystem::update(milliseconds deltaTime) {
 
     auto &componentStore = ComponentStore::GetInstance();
     auto &mousePosition = InputManager::GetInstance().getScreenMousePosition();
-    auto clickableComponentIds = componentStore.getEntitiesWithComponent<ClickableComponent>();
+    auto clickableComponentIds = componentStore.getActiveEntitiesWithComponent<ClickableComponent>();
     for (int entityId: clickableComponentIds) {
         auto clickableComponent = componentStore.tryGetComponent<ClickableComponent>(entityId);
         if (clickableComponent.disabled) continue;
@@ -56,10 +56,10 @@ void ClickSystem::CheckCircleCollision(const ClickableComponent &clickableCompon
                 clickableComponent.entityId);
         auto x = mousePosition.getX();
         auto y = mousePosition.getY();
-        auto a = circleCollisionComponent.radius->getX();
-        auto b = circleCollisionComponent.radius->getY();
-        auto h = transformComponent.position->getX() + circleCollisionComponent.radius->getX();
-        auto k = transformComponent.position->getY() + circleCollisionComponent.radius->getY();
+        auto a = circleCollisionComponent.radius;
+        auto b = circleCollisionComponent.radius;
+        auto h = transformComponent.position->getX() + circleCollisionComponent.radius;
+        auto k = transformComponent.position->getY() + circleCollisionComponent.radius;
         // Calculate the left-hand side of the ellipse equation
         double lhs = ((x - h) * (x - h)) / (a * a) + ((y - k) * (y - k)) / (b * b);
 

@@ -32,10 +32,10 @@ bool RenderWrapper::Initialize() {
     }
 
     std::unique_ptr<SDL_Window, SDLWindowDeleter> tempWindow(
-            SDL_CreateWindow(ConfigSingleton::GetInstance().GetWindowTitle().c_str(),
+            SDL_CreateWindow(ConfigSingleton::getInstance().getWindowTitle().c_str(),
                              SDL_WINDOWPOS_CENTERED,
-                             SDL_WINDOWPOS_CENTERED, ConfigSingleton::GetInstance().GetWindowSize().getX(),
-                             ConfigSingleton::GetInstance().GetWindowSize().getY(), SDL_WINDOW_SHOWN));
+                             SDL_WINDOWPOS_CENTERED, ConfigSingleton::getInstance().getWindowSize().getX(),
+                             ConfigSingleton::getInstance().getWindowSize().getY(), SDL_WINDOW_SHOWN));
     window = std::move(tempWindow);
 
     if (window == nullptr) {
@@ -59,8 +59,8 @@ bool RenderWrapper::Initialize() {
     SDL_SetRenderDrawBlendMode(renderer.get(), SDL_BLENDMODE_BLEND);
     renderTexture = std::unique_ptr<SDL_Texture, void (*)(SDL_Texture *)>(
             SDL_CreateTexture(renderer.get(), SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,
-                              ConfigSingleton::GetInstance().GetWindowSize().getX(),
-                              ConfigSingleton::GetInstance().GetWindowSize().getY()),
+                              ConfigSingleton::getInstance().getWindowSize().getX(),
+                              ConfigSingleton::getInstance().getWindowSize().getY()),
             [](SDL_Texture *t) { SDL_DestroyTexture(t); });
 
     SDL_SetRenderTarget(renderer.get(), renderTexture.get());
@@ -235,7 +235,7 @@ RenderWrapper::RenderText(const CameraComponent &cameraComponent, const Transfor
     } else {
         font = TTF_OpenFont(fontPath.c_str(), fontSize);
         if (!font) {
-            std::string baseFontPath = ConfigSingleton::GetInstance().GetBaseAssetPath() + "Fonts/Arial.ttf";
+            std::string baseFontPath = ConfigSingleton::getInstance().getBaseAssetPath() + "Fonts/Arial.ttf";
             font = TTF_OpenFont(baseFontPath.c_str(), fontSize);
         }
         sizeMap[fontSize] = font;
@@ -331,6 +331,7 @@ RenderWrapper::RenderUiTileMap(const TileMapComponent &tileMapComponent, const T
 
 void
 RenderWrapper::RenderUiSprite(const SpriteComponent &spriteComponent, const TransformComponent &transformComponent) {
+
     if (textures.find(spriteComponent.spritePath) == textures.end())
         textures.insert(std::make_pair(spriteComponent.spritePath, GetSpriteTexture(spriteComponent.spritePath)));
     auto texture = textures.find(spriteComponent.spritePath);
@@ -379,7 +380,7 @@ void RenderWrapper::RenderUiText(const TextComponent &textComponent, const Trans
     } else {
         font = TTF_OpenFont(fontPath.c_str(), fontSize);
         if (!font) {
-            std::string baseFontPath = ConfigSingleton::GetInstance().GetBaseAssetPath() + "Fonts/Arial.ttf";
+            std::string baseFontPath = ConfigSingleton::getInstance().getBaseAssetPath() + "Fonts/Arial.ttf";
             font = TTF_OpenFont(baseFontPath.c_str(), fontSize);
         }
         sizeMap[fontSize] = font;
@@ -588,7 +589,7 @@ void RenderWrapper::RenderToMainTexture() {
 
 std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)> RenderWrapper::GetSpriteTexture(std::string filePath) {
     // Get the file extension
-    auto newPath = ConfigSingleton::GetInstance().GetBaseAssetPath() + filePath;
+    auto newPath = ConfigSingleton::getInstance().getBaseAssetPath() + filePath;
 
     size_t dotPos = newPath.find_last_of('.');
     if (dotPos == std::string::npos) {
@@ -643,6 +644,65 @@ RenderWrapper::GetCameraTexturePair(const CameraComponent &cameraComponent) {
     }
     cameraTexture = cameraTextures.find(cameraComponent.entityId);
     return cameraTexture->second;
+}
+
+void RenderWrapper::RenderCircleCollision(const CameraComponent &cameraComponent,
+                                          const TransformComponent &cameraTransformComponent,
+                                          const CircleCollisionComponent &circleCollisionComponent,
+                                          const TransformComponent &transformComponent) {
+#if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
+    auto &cameraPosition = cameraTransformComponent.position;
+    auto &cameraSize = cameraComponent.size;
+    auto circlePosition = SceneManager::getWorldPosition(transformComponent) + *circleCollisionComponent.offset;
+    auto circleScale = SceneManager::getWorldScale(transformComponent);
+    auto circleRadius = circleCollisionComponent.radius * circleScale.getX();
+
+    if (circlePosition.getX() + circleRadius < cameraPosition->getX() - cameraSize->getX() / 2 ||
+        circlePosition.getX() - circleRadius > cameraPosition->getX() + cameraSize->getX() / 2 ||
+        circlePosition.getY() + circleRadius < cameraPosition->getY() - cameraSize->getY() / 2 ||
+        circlePosition.getY() - circleRadius > cameraPosition->getY() + cameraSize->getY() / 2)
+        return;
+
+    if (textures.find("Resources/Circle.png") == textures.end())
+        textures.insert(std::make_pair("Resources/Circle.png", GetSpriteTexture("Resources/Circle.png")));
+    auto texture = textures.find("Resources/Circle.png");
+
+    SDL_Rect srcRect{0, 0, 512, 512};
+    SDL_Rect destRect = {
+            static_cast<int>(circlePosition.getX() - cameraTransformComponent.position->getX() +
+                             cameraComponent.size->getX() / 2 - circleRadius),
+            static_cast<int>(circlePosition.getY() - cameraTransformComponent.position->getY() +
+                             cameraComponent.size->getY() / 2 - circleRadius),
+            static_cast<int>(circleRadius * 2),
+            static_cast<int>(circleRadius * 2)};
+
+    render(texture->second.get(), &srcRect, &destRect, 0, false, false);
+#endif
+
+}
+
+void RenderWrapper::RenderUiCircleCollision(const CircleCollisionComponent &circleCollisionComponent,
+                                            const TransformComponent &transformComponent) {
+#if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
+
+    auto worldPosition = SceneManager::getWorldPosition(transformComponent);
+    auto worldScale = SceneManager::getWorldScale(transformComponent);
+    auto circleRadius = circleCollisionComponent.radius * worldScale.getX();
+
+    if (textures.find("Resources/Circle.png") == textures.end())
+        textures.insert(std::make_pair("Resources/Circle.png", GetSpriteTexture("Resources/Circle.png")));
+    auto texture = textures.find("Resources/Circle.png");
+
+    SDL_Rect srcRect{0, 0, 512, 512};
+    SDL_Rect destRect = {
+            static_cast<int>(worldPosition.getX() - circleRadius),
+            static_cast<int>(worldPosition.getY() - circleRadius),
+            static_cast<int>(circleRadius * 2),
+            static_cast<int>(circleRadius * 2)};
+
+    render(texture->second.get(), &srcRect, &destRect, 0, false, false);
+
+#endif
 }
 
 #pragma endregion

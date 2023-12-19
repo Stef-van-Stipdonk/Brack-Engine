@@ -15,11 +15,14 @@ PhysicsSystem::~PhysicsSystem() {
 }
 
 void PhysicsSystem::update(milliseconds deltaTime) {
-    handleCircles();
-    handleBoxes();
+    accumulator += deltaTime;
+    if (accumulator >= timeStep) {
+        handleCircles();
+        handleBoxes();
 
-    PhysicsWrapper::getInstance().update(deltaTime);
-
+        PhysicsWrapper::getInstance().update(timeStep / 1000.0f);
+        accumulator = 0;
+    }
 }
 
 void PhysicsSystem::cleanUp() {
@@ -33,10 +36,10 @@ const std::string PhysicsSystem::getName() const {
 void PhysicsSystem::handleCircles() {
     auto &compStore = ComponentStore::GetInstance();
 
-    auto circleCollisionComponentIds = compStore.getEntitiesWithComponent<CircleCollisionComponent>();
+    auto circleCollisionComponents = compStore.getAllComponentsOfType<CircleCollisionComponent>();
 
-    if (circleCollisionComponentIds.empty()) return;
-    PhysicsWrapper::getInstance().addCircles(circleCollisionComponentIds);
+    if (circleCollisionComponents.empty()) return;
+    PhysicsWrapper::getInstance().addCircles(circleCollisionComponents);
 }
 
 void PhysicsSystem::handleBoxes() {

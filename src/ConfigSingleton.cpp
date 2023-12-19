@@ -8,35 +8,35 @@
 
 ConfigSingleton ConfigSingleton::instance;
 
-ConfigSingleton &ConfigSingleton::GetInstance() {
+ConfigSingleton &ConfigSingleton::getInstance() {
     return instance;
 }
 
-bool ConfigSingleton::IsRunning() const {
-    return isRunning;
+bool ConfigSingleton::isRunning() const {
+    return isRunning_;
 }
 
-void ConfigSingleton::ToggleIsRunning() {
-    isRunning = !isRunning;
+void ConfigSingleton::toggleIsRunning() {
+    isRunning_ = !isRunning_;
 }
 
 void ConfigSingleton::setDeltaTimeMultiplier(float deltaTimeMultiplier) {
     ConfigSingleton::instance.deltaTimeMultiplier = deltaTimeMultiplier;
 }
 
-void ConfigSingleton::SetIsRunning(bool isRunning) {
-    ConfigSingleton::isRunning = isRunning;
+void ConfigSingleton::setIsRunning(bool isRunning) {
+    ConfigSingleton::isRunning_ = isRunning;
 }
 
-std::string ConfigSingleton::GetWindowTitle() const {
+std::string ConfigSingleton::getWindowTitle() const {
     return windowTitle;
 }
 
-Vector2 ConfigSingleton::GetWindowSize() const {
+Vector2 ConfigSingleton::getWindowSize() const {
     return windowSize;
 }
 
-bool ConfigSingleton::IsFullscreen() const {
+bool ConfigSingleton::isFullscreen() const {
     return fullscreen;
 }
 
@@ -44,7 +44,7 @@ int ConfigSingleton::getParticleLimit() const {
     return particleLimit;
 }
 
-std::string ConfigSingleton::GetBaseAssetPath() const {
+std::string ConfigSingleton::getBaseAssetPath() const {
     return BaseAssetPath;
 }
 
@@ -52,13 +52,13 @@ int ConfigSingleton::getAmountOfSoundEffectsChannels() const {
     return amountOfSoundEffectsChannels;
 }
 
-void ConfigSingleton::SetConfig(Config config) {
-    isRunning = config.isRunning;
+void ConfigSingleton::setConfig(Config config) {
+    isRunning_ = config.isRunning;
     windowTitle = config.windowTitle;
     windowSize = config.windowSize;
     fullscreen = config.fullscreen;
     BaseAssetPath = config.BaseAssetPath;
-    showFPS = config.showFPS;
+    showFPS_ = config.showFPS;
     amountOfSoundEffectsChannels = config.amountOfSoundEffectsChannels;
     fpsLimit = config.fpsLimit;
     particleLimit = config.particleLimit;
@@ -80,7 +80,7 @@ void ConfigSingleton::SetWindowSize(Vector2 size) const {
     size = size;
 }
 
-uint32_t ConfigSingleton::GetFPSLimit() const {
+uint32_t ConfigSingleton::getFPSLimit() const {
     return fpsLimit;
 }
 

@@ -12,7 +12,7 @@
 
 class ConfigSingleton {
 public:
-    static ConfigSingleton &GetInstance();
+    static ConfigSingleton &getInstance();
 
     ConfigSingleton(ConfigSingleton &other) = delete;
 
@@ -22,31 +22,31 @@ public:
 
     void operator=(ConfigSingleton &&) = delete;
 
-    void SetConfig(Config config);
+    void setConfig(Config config);
 
-    void SetIsRunning(bool isRunning);
+    void setIsRunning(bool isRunning);
 
-    bool IsRunning() const;
+    bool isRunning() const;
 
     bool IsShowFPSTrue() const;
 
     void toggleShowFps();
 
-    std::string GetWindowTitle() const;
+    std::string getWindowTitle() const;
 
-    Vector2 GetWindowSize() const;
+    Vector2 getWindowSize() const;
 
-    void SetWindowSize(Vector2 size) const;
+    void setWindowSize(Vector2 size) const;
 
-    bool IsFullscreen() const;
+    bool isFullscreen() const;
 
     int getParticleLimit() const;
 
-    std::string GetBaseAssetPath() const;
+    std::string getBaseAssetPath() const;
 
     int getAmountOfSoundEffectsChannels() const;
 
-    uint32_t GetFPSLimit() const;
+    uint32_t getFPSLimit() const;
 
     void setFPSLimit(uint32_t fpsLimit);
 
@@ -60,13 +60,13 @@ private:
 
     ConfigSingleton() = default;
 
-    bool isRunning = true;
+    bool isRunning_ = true;
     std::string windowTitle = "Brack-Engine";
     Vector2 windowSize = Vector2(800, 600);
     bool fullscreen = false;
     std::string BaseAssetPath = "./Assets/";
-    bool showFPS = true;
-    int amountOfSoundEffectsChannels = 5;
+    bool showFPS_ = true;
+    int amountOfSoundEffectsChannels = 7;
     uint32_t fpsLimit = 60;
     int particleLimit = 100;
 };

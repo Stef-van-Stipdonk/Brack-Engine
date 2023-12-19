@@ -137,7 +137,7 @@ void InputManager::UpdateEvents() {
 }
 
 Vector2 InputManager::getWorldMousePosition() const {
-    auto cameraIds = ComponentStore::GetInstance().getEntitiesWithComponent<CameraComponent>();
+    auto cameraIds = ComponentStore::GetInstance().getActiveEntitiesWithComponent<CameraComponent>();
     for (auto id: cameraIds) {
         auto &camera = ComponentStore::GetInstance().tryGetComponent<CameraComponent>(id);
         auto &cameraPosition = camera.onScreenPosition;

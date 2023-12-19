@@ -27,7 +27,7 @@ void InputWrapper::HandleEvents() {
     // Close the window if the user presses the "X" button.
     while (SDL_PollEvent(&event)) {
         if (event.type == SDL_QUIT) {
-            ConfigSingleton::GetInstance().ToggleIsRunning();
+            ConfigSingleton::getInstance().toggleIsRunning();
         }
         if (event.type == SDL_MOUSEMOTION) {
             lastMouseMotionEvent = event;
