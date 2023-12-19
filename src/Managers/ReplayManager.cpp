@@ -20,6 +20,12 @@ void ReplayManager::stopRecording() {
     SystemManager::getInstance().GetSystem<ReplaySystem>().lock()->stopRecording();
 }
 
+void ReplayManager::clear() {
+    SystemManager::getInstance().GetSystem<ReplaySystem>().lock()->cleanUp();
+    SystemManager::getInstance().GetSystem<ReplaySystem>().lock()->clearCache();
+
+}
+
 void ReplayManager::toggleReplay() {
     SystemManager::getInstance().GetSystem<ReplaySystem>().lock()->toggleReplay();
 }

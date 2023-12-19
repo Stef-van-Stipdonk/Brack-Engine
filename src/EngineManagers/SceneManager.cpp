@@ -4,6 +4,7 @@
 
 #include <Components/ChildComponent.hpp>
 #include <Components/ParentComponent.hpp>
+#include <EngineManagers/ReplayManager.hpp>
 #include "EngineManagers/SceneManager.hpp"
 #include "Objects/Scene.hpp"
 #include "../GameObjectConverter.hpp"

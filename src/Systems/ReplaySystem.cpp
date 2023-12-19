@@ -27,11 +27,6 @@ void ReplaySystem::startRecording(milliseconds replayStorageDuration, millisecon
 
 void ReplaySystem::stopRecording() {
     recording = false;
-    replayStart = false;
-    snapshots = std::queue<std::pair<float, std::unique_ptr<ECSSnapshot>>>();
-    currentSnapshot = nullptr;
-    totalTimeOfSnapshots = 0;
-    timeElapsedSinceLastSnapshot = 0;
 }
 
 void ReplaySystem::update(milliseconds deltaTime) {
@@ -69,7 +64,7 @@ void ReplaySystem::replay() {
         replayStart = false;
         return;
     }
-    
+
     while (!snapshots.empty()) {
         if (!replayStart)
             break;
@@ -167,5 +162,9 @@ void ReplaySystem::restore_ecs_snapshot(const ReplaySystem::ECSSnapshot &snapsho
 }
 
 void ReplaySystem::clearCache() {
-
+    replayStart = false;
+    snapshots = std::queue<std::pair<float, std::unique_ptr<ECSSnapshot>>>();
+    currentSnapshot = nullptr;
+    totalTimeOfSnapshots = 0;
+    timeElapsedSinceLastSnapshot = 0;
 }
