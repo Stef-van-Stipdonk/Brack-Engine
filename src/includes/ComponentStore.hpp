@@ -154,7 +154,20 @@ public:
 
     template<typename T>
     typename std::enable_if<std::is_base_of<IComponent, T>::value, std::vector<entity>>::type
-    getEntitiesWithComponent() {
+    getAllEntitiesWithComponent() {
+        std::vector<entity> entities;
+        auto itType = components.find(typeid(T));
+        if (itType != components.end()) {
+            for (auto &pair: itType->second) {
+                entities.push_back(pair.first);
+            }
+        }
+        return entities;
+    }
+
+    template<typename T>
+    typename std::enable_if<std::is_base_of<IComponent, T>::value, std::vector<entity>>::type
+    getActiveEntitiesWithComponent() {
         std::vector<entity> entities;
         auto itType = components.find(typeid(T));
         if (itType != components.end()) {

@@ -8,6 +8,8 @@
 #include <Components/VelocityComponent.hpp>
 #include <Components/TransformComponent.hpp>
 #include <Components/PersistenceTag.hpp>
+#include <Components/RigidBodyComponent.hpp>
+#include <Components/BoxCollisionComponent.hpp>
 #include "ParticleSystem.hpp"
 #include "../includes/ComponentStore.hpp"
 #include "../ConfigSingleton.hpp"
@@ -22,12 +24,18 @@ ParticleSystem::ParticleSystem() {
         auto transformComponent = std::make_unique<TransformComponent>();
         auto objectInfoComponent = std::make_unique<ObjectInfoComponent>();
         objectInfoComponent->isActive = false;
+        auto boxCollider = std::make_unique<BoxCollisionComponent>(Vector2(1,1));
+        boxCollider->isTrigger = true;
+        auto rigidBody = std::make_unique<RigidBodyComponent>(CollisionType::DYNAMIC);
+        rigidBody->gravityScale = 0.0f;
 
+        ComponentStore::GetInstance().addComponent(particleEntity, std::move(rigidBody));
         ComponentStore::GetInstance().addComponent(particleEntity, std::move(transformComponent));
         ComponentStore::GetInstance().addComponent(particleEntity, std::move(velocityComponent));
         ComponentStore::GetInstance().addComponent(particleEntity, std::move(rectangleComponent));
         ComponentStore::GetInstance().addComponent(particleEntity, std::move(particleComponent));
         ComponentStore::GetInstance().addComponent(particleEntity, std::move(objectInfoComponent));
+        ComponentStore::GetInstance().addComponent(particleEntity, std::move(boxCollider));
         ComponentStore::GetInstance().addComponent(particleEntity, std::make_unique<PersistenceTag>());
     }
 }
@@ -42,7 +50,7 @@ void ParticleSystem::update(milliseconds deltaTime) {
 }
 
 void ParticleSystem::updateParticles(milliseconds deltaTime) {
-    auto particleIds = ComponentStore::GetInstance().getEntitiesWithComponent<ParticleComponent>();
+    auto particleIds = ComponentStore::GetInstance().getActiveEntitiesWithComponent<ParticleComponent>();
     for (auto id: particleIds) {
         auto &particleComponent = ComponentStore::GetInstance().tryGetComponent<ParticleComponent>(id);
         if (particleComponent.lifeTime <= 0) {
@@ -56,7 +64,7 @@ void ParticleSystem::updateParticles(milliseconds deltaTime) {
 }
 
 void ParticleSystem::updateParticleEmitters(milliseconds deltaTime) {
-    auto particleEmitterEntityIds = ComponentStore::GetInstance().getEntitiesWithComponent<ParticleEmitterComponent>();
+    auto particleEmitterEntityIds = ComponentStore::GetInstance().getActiveEntitiesWithComponent<ParticleEmitterComponent>();
     for (auto id: particleEmitterEntityIds) {
         auto inactiveParticleIds = ComponentStore::GetInstance().getInactiveEntitiesWithComponent<ParticleComponent>();
         if (inactiveParticleIds.empty()) return;
@@ -89,6 +97,7 @@ void ParticleSystem::updateParticleEmitters(milliseconds deltaTime) {
                     inactiveParticleId);
             auto &objectInfoComponent = ComponentStore::GetInstance().tryGetComponent<ObjectInfoComponent>(
                     inactiveParticleId);
+            auto &boxCollisionComponent = ComponentStore::GetInstance().tryGetComponent<BoxCollisionComponent>(inactiveParticleId);
 
             particleComponent.lifeTime = particleEmitterComponent.lifeTime;
 
@@ -96,6 +105,8 @@ void ParticleSystem::updateParticleEmitters(milliseconds deltaTime) {
             rectangleComponent.sortingLayer = particleEmitterComponent.sortingLayer;
             rectangleComponent.orderInLayer = particleEmitterComponent.orderInLayer;
             rectangleComponent.size = std::make_unique<Vector2>(particleEmitterComponent.particleSize);
+
+            boxCollisionComponent.size = std::make_unique<Vector2>(particleEmitterComponent.particleSize);
 
             velocityComponent.velocity = generateRandomDirection(particleEmitterComponent.speed);
 
