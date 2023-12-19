@@ -115,5 +115,5 @@ void SceneManager::goToNewScene(Scene *scene) {
 }
 
 void SceneManager::toggleFPS() {
-    ConfigSingleton::GetInstance().toggleShowFps();
+    ConfigSingleton::getInstance().toggleShowFps();
 }

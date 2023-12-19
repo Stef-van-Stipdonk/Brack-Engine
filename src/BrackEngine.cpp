@@ -36,7 +36,7 @@ BrackEngine::BrackEngine(Config &&config) : deltaTimeMultiplier(ConfigSingleton:
     lastTime = std::chrono::high_resolution_clock::now();
     SystemManager::getInstance().AddSystem(std::make_shared<ReplaySystem>(lastTime));
 
-    if (ConfigSingleton::GetInstance().IsShowFPSTrue())
+    if (ConfigSingleton::getInstance().IsShowFPSTrue())
         CreateFPS();
 }
 
@@ -47,7 +47,7 @@ void BrackEngine::Run() {
         auto deltaTime = GetDeltaTime();
         SystemManager::getInstance().UpdateSystems(deltaTime * deltaTimeMultiplier);
         FPSSingleton::GetInstance().End();
-        if (ConfigSingleton::GetInstance().IsShowFPSTrue())
+        if (ConfigSingleton::getInstance().IsShowFPSTrue())
             UpdateFPS(deltaTime);
 
         SceneManager::getInstance().setActiveScene();

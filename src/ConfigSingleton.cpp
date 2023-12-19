@@ -16,7 +16,7 @@ bool ConfigSingleton::isRunning() const {
     return isRunning_;
 }
 
-void ConfigSingleton::toggleIsRunning() {
+void ConfigSingleton::ToggleIsRunning() {
     isRunning_ = !isRunning_;
 }
 
@@ -66,17 +66,17 @@ void ConfigSingleton::setConfig(Config config) {
 }
 
 bool ConfigSingleton::IsShowFPSTrue() const {
-    return showFPS;
+    return showFPS_;
 }
 
 void ConfigSingleton::toggleShowFps() {
-    showFPS = !showFPS;
+    showFPS_ = !showFPS_;
     if (EntityManager::getInstance().entityExistsByTag("FPS")) {
-        SceneManager::getInstance().getGameObjectByName("FPS").value()->setActive(showFPS);
+        SceneManager::getInstance().getGameObjectByName("FPS").value()->setActive(showFPS_);
     }
 }
 
-void ConfigSingleton::SetWindowSize(Vector2 size) const {
+void ConfigSingleton::setWindowSize(Vector2 size) const {
     size = size;
 }
 

@@ -56,7 +56,7 @@ void EntityManager::clearAllEntities() {
         auto found = std::find(persistanceEntities.begin(), persistanceEntities.end(), entity);
         if (found == persistanceEntities.end()) {
             ComponentStore::GetInstance().removeAllComponents(entity);
-            BehaviourScriptStore::getInstance().removeAllBehaviourScripts();
+            BehaviourScriptStore::getInstance().removeAllBehaviourScripts(entity);
             entities.erase(entity);
         }
     }
