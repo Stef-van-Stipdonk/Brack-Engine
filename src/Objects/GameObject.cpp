@@ -21,6 +21,20 @@ GameObject::GameObject(entity id) {
     entityID = id;
 }
 
+std::optional<GameObject *> GameObject::getChildGameObjectByName(const std::string name) {
+    for (auto &gameObject: children) {
+        if (gameObject->getName() == name)
+            return gameObject.get();
+    }
+    auto childComponent = ComponentStore::GetInstance().tryGetComponent<ChildComponent>(entityID);
+    auto it = std::find(childComponent.children.begin(), childComponent.children.end(),
+                        EntityManager::getInstance().getEntityByName(name));
+    if (it != childComponent.children.end()) {
+        return new GameObject(*it);
+    }
+    return std::nullopt;
+}
+
 std::vector<std::unique_ptr<GameObject>> &&GameObject::getChildren() {
     if (entityID == 0) {
         return std::move(children);

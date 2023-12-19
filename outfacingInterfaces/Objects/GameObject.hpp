@@ -58,20 +58,6 @@ public:
             ComponentStore::GetInstance().addComponent<T>(entityID, *component.get());
     }
 
-    std::optional<GameObject *> getChildGameObjectByName(const std::string name) {
-        for (auto &gameObject: children) {
-            if (gameObject->getName() == name)
-                return gameObject.get();
-        }
-        auto childComponent = ComponentStore::GetInstance().tryGetComponent<ChildComponent>(entityID);
-        auto it = std::find(childComponent.children.begin(), childComponent.children.end(),
-                            EntityManager::getInstance().getEntityByName(name));
-        if (it != childComponent.children.end()) {
-            return new GameObject(it.operator*());
-        }
-        return std::nullopt;
-
-    }
 
     template<typename T>
     typename std::enable_if<std::is_base_of<IComponent, T>::value>::type
@@ -227,6 +213,8 @@ public:
     std::vector<std::unique_ptr<IBehaviourScript>> &&getAllBehaviourScripts();
 
 
+    std::optional<GameObject *> getChildGameObjectByName(const std::string name);
+
 protected:
     entity entityID = 0;
     std::vector<std::unique_ptr<IComponent>> components;
@@ -236,6 +224,7 @@ protected:
     std::vector<std::unique_ptr<GameObject>> children;
 
     void childrenSetActive(entity entityId, bool active);
+
 };
 
 
