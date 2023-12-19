@@ -17,8 +17,8 @@ RenderingSystem::~RenderingSystem() {
 void RenderingSystem::update(milliseconds deltaTime) {
     SortRenderComponents();
 #if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
-    auto boxCollisionComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<BoxCollisionComponent>();
-    auto circleCollisionComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<CircleCollisionComponent>();
+    auto boxCollisionComponentIds = ComponentStore::GetInstance().getActiveEntitiesWithComponent<BoxCollisionComponent>();
+    auto circleCollisionComponentIds = ComponentStore::GetInstance().getActiveEntitiesWithComponent<CircleCollisionComponent>();
 #endif
     auto cameras = ComponentStore::GetInstance().getActiveEntitiesWithComponent<CameraComponent>();
     for (auto cameraId: cameras) {
@@ -53,7 +53,7 @@ void RenderingSystem::update(milliseconds deltaTime) {
                 sdl2Wrapper->RenderCircleCollision(cameraComponent, cameraTransformComponent, *circleCollisionComponent,
                                                    transformComponent);
         }
-        auto graphComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<GraphComponent>();
+        auto graphComponentIds = ComponentStore::GetInstance().getActiveEntitiesWithComponent<GraphComponent>();
         for (auto graphComponentId: graphComponentIds) {
             auto &graphComponent = ComponentStore::GetInstance().tryGetComponent<GraphComponent>(graphComponentId);
             auto &graphTransformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(
@@ -225,7 +225,7 @@ void RenderingSystem::SortRenderComponents() {
         }
     }
 #if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
-    auto boxCollisionComponentIds = ComponentStore::GetInstance().getEntitiesWithComponent<BoxCollisionComponent>();
+    auto boxCollisionComponentIds = ComponentStore::GetInstance().getActiveEntitiesWithComponent<BoxCollisionComponent>();
     for (auto entityId: boxCollisionComponentIds) {
         auto &boxCollisionComponent = ComponentStore::GetInstance().tryGetComponent<BoxCollisionComponent>(entityId);
         if (!boxCollisionComponent.isActive)
