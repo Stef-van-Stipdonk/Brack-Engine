@@ -62,7 +62,7 @@ private:
     bool fullscreen = false;
     std::string BaseAssetPath = "./Assets/";
     bool showFPS_ = true;
-    int amountOfSoundEffectsChannels = 5;
+    int amountOfSoundEffectsChannels = 7;
     uint32_t fpsLimit = 60;
     int particleLimit = 100;
 };
