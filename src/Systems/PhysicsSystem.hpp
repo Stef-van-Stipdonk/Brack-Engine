@@ -21,6 +21,7 @@ public:
     const std::string getName() const override;
 
     void cleanUp() override;
+
     void clearCache() override;
 
     PhysicsSystem(const PhysicsSystem &other);
@@ -31,6 +32,9 @@ private:
     void handleCircles();
 
     void handleBoxes();
+
+    const milliseconds timeStep = milliseconds(1000.0f / 60.0f);
+    milliseconds accumulator = milliseconds(0);
 };
 
 

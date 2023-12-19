@@ -31,7 +31,7 @@ public:
     bool pauseSound = false;
     bool startPlaying = false;
     float volume;
-    const std::string audioPath;
+    std::string audioPath;
     bool isSoundTrack;
 
     bool getIsSoundTrack() const {
