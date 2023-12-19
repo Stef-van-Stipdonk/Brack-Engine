@@ -85,7 +85,10 @@ void PhysicsWrapper::addCircles(const std::vector<CircleCollisionComponent *> &c
                 auto &velocityComponent = ComponentStore::GetInstance().tryGetComponent<VelocityComponent>(
                         circle->entityId);
                 bodyPtr.first->SetLinearVelocity(
-                        b2Vec2(velocityComponent.velocity.getX() * 100.0f, velocityComponent.velocity.getY() * 100.0f));
+                        b2Vec2(velocityComponent.velocity.getX() * 10.0f,
+                               velocityComponent.velocity.getY() * 10.0f));
+                bodyPtr.first->SetLinearVelocity(
+                        b2Vec2(velocityComponent.velocity.getX() * 10.0f, velocityComponent.velocity.getY() * 10.0f));
             } catch (std::exception &e) {
                 continue;
             }
@@ -123,6 +126,13 @@ void PhysicsWrapper::addBoxes(const std::vector<BoxCollisionComponent *> &boxCol
             fixtureDef.density = 1.0f;
             fixtureDef.friction = rigidBodyComp.friction;
             fixtureDef.restitution = rigidBodyComp.restitution;
+
+            if (box->entityId == 110) {
+                int i = 0;
+            }
+
+            fixtureDef.filter.categoryBits = rigidBodyComp.collisionCategory;
+            fixtureDef.filter.maskBits = rigidBodyComp.collisionMask;
 
             bodyPtr.first->CreateFixture(&fixtureDef);
             bodyPtr.first->ApplyForce(b2Vec2(rigidBodyComp.force->getX() * 10.0f, rigidBodyComp.force->getY() * 10.0f),

@@ -115,6 +115,10 @@ add_library(${PROJECT_NAME} SHARED
         outfacingInterfaces/Objects/Graph.hpp
         src/Objects/Graph.cpp
         outfacingInterfaces/RandomGenerator.hpp
+        outfacingInterfaces/CollisionMask.hpp
+        outfacingInterfaces/CollisionCategory.hpp
+        src/EngineManagers/CollisionLayerManager.cpp
+        src/EngineManagers/CollisionLayerManager.cpp
 )
 
 if (WIN32 OR WIN64)
