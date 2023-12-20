@@ -29,7 +29,7 @@ public:
 
     void setActiveScene();
 
-    void goToNewScene(Scene* scene, bool goDirectly = false);
+    void goToNewScene(Scene* scene);
 
     static std::optional<GameObject *> getGameObjectByName(const std::string &name);
 

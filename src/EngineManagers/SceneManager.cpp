@@ -106,9 +106,6 @@ Vector2 SceneManager::getLocalPosition(const Vector2 worldPosition, entity entit
     }
 }
 
-void SceneManager::goToNewScene(Scene* scene, bool goDirectly) {
+void SceneManager::goToNewScene(Scene* scene) {
     switchingScene = scene;
-
-    if(goDirectly)
-        setActiveScene();
 }

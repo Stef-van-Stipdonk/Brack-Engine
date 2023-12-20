@@ -40,8 +40,11 @@ void GameObjectConverter::addGameObject(GameObject *gameObject) {
                 EntityManager::getInstance().addEntityWithTag(entityId, objectInfoComponent->tag);
             }
 
-            auto outcome = objectInfoComponent->isActive && gameObject->getParent().has_value()
-                           ? gameObject->getParent()->isActive() : true;
+            bool outcome = objectInfoComponent->isActive;
+
+            if (objectInfoComponent->isActive)
+                if (gameObject->getParent().has_value())
+                    outcome = gameObject->getParent()->isActive();
 
             EntityManager::getInstance().setEntityActive(entityId, outcome);
         }
