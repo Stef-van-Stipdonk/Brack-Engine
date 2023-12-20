@@ -149,10 +149,6 @@ void ReplaySystem::restore_ecs_snapshot(const ECSSnapshot &snapshot) {
     componentStore.clearComponents();
     for (auto &[type, entityComponents]: snapshot.componentStates) {
         for (auto &[entityId, component]: entityComponents) {
-            GraphComponent *graphComponent = dynamic_cast<GraphComponent *>(component.get());
-            if (graphComponent) {
-                std::cout << "TransformComponent" << std::endl;
-            }
             componentStore.addComponent(entityId, std::move(component->clone()));
         }
     }
