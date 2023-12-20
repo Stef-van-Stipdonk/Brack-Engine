@@ -8,7 +8,6 @@
 #include "../ConfigSingleton.hpp"
 
 ReplaySystem::ReplaySystem(std::chrono::time_point<std::chrono::high_resolution_clock> &lastTime) : lastTime(lastTime) {
-
 }
 
 ReplaySystem::~ReplaySystem() {
@@ -125,7 +124,7 @@ std::unique_ptr<ReplaySystem::ECSSnapshot> ReplaySystem::createEcsDeepSnapshot()
 
     auto &behaviorScriptStore = BehaviourScriptStore::getInstance();
     auto scripts = behaviorScriptStore.getAllBehaviourScripts();
-    auto clones = std::vector<std::unique_ptr<IBehaviourScript>>();
+    auto clones = std::vector<std::unique_ptr<IBehaviourScript> >();
     for (auto script: scripts) {
         auto clone = script.get().clone();
         clones.push_back(std::move(clone));
@@ -136,7 +135,7 @@ std::unique_ptr<ReplaySystem::ECSSnapshot> ReplaySystem::createEcsDeepSnapshot()
     return snapshot;
 }
 
-void ReplaySystem::restore_ecs_snapshot(const ReplaySystem::ECSSnapshot &snapshot) {
+void ReplaySystem::restore_ecs_snapshot(const ECSSnapshot &snapshot) {
     EntityManager &entityManager = EntityManager::getInstance();
     entityManager.clearAllEntities();
     for (auto &entity: snapshot.entities) {
@@ -150,6 +149,10 @@ void ReplaySystem::restore_ecs_snapshot(const ReplaySystem::ECSSnapshot &snapsho
     componentStore.clearComponents();
     for (auto &[type, entityComponents]: snapshot.componentStates) {
         for (auto &[entityId, component]: entityComponents) {
+            GraphComponent *graphComponent = dynamic_cast<GraphComponent *>(component.get());
+            if (graphComponent) {
+                std::cout << "TransformComponent" << std::endl;
+            }
             componentStore.addComponent(entityId, std::move(component->clone()));
         }
     }
@@ -163,7 +166,7 @@ void ReplaySystem::restore_ecs_snapshot(const ReplaySystem::ECSSnapshot &snapsho
 
 void ReplaySystem::clearCache() {
     replayStart = false;
-    snapshots = std::queue<std::pair<float, std::unique_ptr<ECSSnapshot>>>();
+    snapshots = std::queue<std::pair<float, std::unique_ptr<ECSSnapshot> > >();
     currentSnapshot = nullptr;
     totalTimeOfSnapshots = 0;
     timeElapsedSinceLastSnapshot = 0;

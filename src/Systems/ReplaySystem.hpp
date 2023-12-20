@@ -57,6 +57,6 @@ private:
 
     std::unique_ptr<ECSSnapshot> createEcsDeepSnapshot();
 
-    void restore_ecs_snapshot(const ECSSnapshot &snapshot);
+    static void restore_ecs_snapshot(const ECSSnapshot &snapshot);
 
 };
