@@ -50,15 +50,35 @@ const std::unordered_set<entity> &EntityManager::getAllEntities() const {
 }
 
 void EntityManager::clearAllEntities() {
-    BehaviourScriptStore::getInstance().removeAllBehaviourScripts();
-    auto persistanceEntities = ComponentStore::GetInstance().getEntitiesWithComponent<PersistenceTag>();
+    auto persistanceEntities = ComponentStore::GetInstance().getAllEntitiesWithComponent<PersistenceTag>();
 
     std::unordered_set<entity> copyEnt(entities);
     for (auto entity: copyEnt) {
         auto found = std::find(persistanceEntities.begin(), persistanceEntities.end(), entity);
         if (found == persistanceEntities.end()) {
             ComponentStore::GetInstance().removeAllComponents(entity);
+            BehaviourScriptStore::getInstance().removeAllBehaviourScripts(entity);
             entities.erase(entity);
+            entityToName.erase(entity);
+            entityToTag.erase(entity);
+
+            auto tagToEntityCopy = tagToEntity;
+            for (auto& pair : tagToEntityCopy) {
+                auto& idVector = tagToEntity[pair.first];
+                idVector.erase(std::remove(idVector.begin(), idVector.end(), entity), idVector.end());
+                if(idVector.empty()){
+                    tagToEntity.erase(pair.first);
+                }
+            }
+
+            auto nameToEntityCopy = nameToEntity;
+            for (auto& pair : nameToEntityCopy) {
+                auto& idVector = nameToEntity[pair.first];
+                idVector.erase(std::remove(idVector.begin(), idVector.end(), entity), idVector.end());
+                if(idVector.empty()){
+                    nameToEntity.erase(pair.first);
+                }
+            }
         }
     }
 }

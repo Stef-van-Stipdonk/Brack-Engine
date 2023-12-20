@@ -115,6 +115,10 @@ add_library(${PROJECT_NAME} SHARED
         outfacingInterfaces/Objects/Graph.hpp
         src/Objects/Graph.cpp
         outfacingInterfaces/RandomGenerator.hpp
+        outfacingInterfaces/CollisionMask.hpp
+        outfacingInterfaces/CollisionCategory.hpp
+        src/EngineManagers/CollisionLayerManager.cpp
+        src/EngineManagers/CollisionLayerManager.cpp
         src/SaveLoad.cpp
 )
 
@@ -214,6 +218,14 @@ else ()
     target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARIES})
     target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_IMAGE_LIBRARIES})
 endif ()
+
+set(CMAKE_AIX_EXPORT_ALL_SYMBOLS ON)
+add_custom_command(
+        TARGET ${PROJECT_NAME}
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_CURRENT_SOURCE_DIR}/Resources
+        ${CMAKE_BINARY_DIR}/Resources)
 
 target_link_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/FMod)
 

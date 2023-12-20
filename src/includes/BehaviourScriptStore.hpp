@@ -117,8 +117,8 @@ public:
         }
     }
 
-    void removeAllBehaviourScripts() {
-        behaviourScripts.clear();
+    void removeAllBehaviourScripts(entity entityId) {
+        behaviourScripts.erase(entityId);
     }
 
     std::vector<std::reference_wrapper<IBehaviourScript>> getAllBehaviourScripts() {

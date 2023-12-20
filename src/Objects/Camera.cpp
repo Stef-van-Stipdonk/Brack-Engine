@@ -11,7 +11,7 @@
 Camera::Camera() : GameObject() {
     addComponent(std::make_unique<CameraComponent>());
     SetBackgroundColor(Color(0, 0, 0, 255));
-    auto size = ConfigSingleton::GetInstance().GetWindowSize();
+    auto size = ConfigSingleton::getInstance().getWindowSize();
     auto halfSize = size / 2;
     SetOnScreenPosition(halfSize);
     SetSize(size);

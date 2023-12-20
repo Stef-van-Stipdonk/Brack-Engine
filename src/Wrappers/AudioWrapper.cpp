@@ -30,7 +30,7 @@ AudioWrapper::~AudioWrapper() {
 
 void AudioWrapper::cleanUp() {
     if (system) {
-        FMOD_RESULT result = FMOD_System_Release(system);;
+        FMOD_RESULT result = FMOD_System_Release(system);
         if (result != FMOD_OK) {
             Logger::Error("Failed to release FMOD system: " + std::string(FMOD_ErrorString(result)));
         }
@@ -41,7 +41,7 @@ void AudioWrapper::cleanUp() {
 int AudioWrapper::findAvailableSoundEffectsChannel() {
     clearUnusedChannels();
 
-    int availableSFXChannels = ConfigSingleton::GetInstance().getAmountOfSoundEffectsChannels();
+    int availableSFXChannels = ConfigSingleton::getInstance().getAmountOfSoundEffectsChannels();
 
     if (availableSFXChannels <= 0) {
         Logger::Error("Invalid SFX channel count.");
@@ -104,7 +104,7 @@ void AudioWrapper::playSound(AudioArchetype &audioComponent) {
 
         playSoundOnChannel(soundTrackChannelPair.second, soundTrackChannel, audioComponent);
     } else {
-        int availableSFXChannels = ConfigSingleton::GetInstance().getAmountOfSoundEffectsChannels();
+        int availableSFXChannels = ConfigSingleton::getInstance().getAmountOfSoundEffectsChannels();
 
         if (availableSFXChannels <= 0) {
             Logger::Error("No available SFX channels.");
@@ -125,7 +125,7 @@ void AudioWrapper::playSound(AudioArchetype &audioComponent) {
 void AudioWrapper::playSoundOnChannel(FMOD_CHANNEL *&channel, int channelID, AudioArchetype &audioComponent) {
     FMOD_SOUND *sound = nullptr;
     FMOD_MODE mode = audioComponent.isSoundTrack ? FMOD_LOOP_NORMAL : FMOD_DEFAULT;
-    auto audioPath = ConfigSingleton::GetInstance().GetBaseAssetPath() + audioComponent.getAudioPath();
+    auto audioPath = ConfigSingleton::getInstance().getBaseAssetPath() + audioComponent.getAudioPath();
     FMOD_RESULT result = FMOD_System_CreateSound(system, audioPath.c_str(), mode, 0, &sound);
 
     if (result != FMOD_OK) {
@@ -261,7 +261,7 @@ void AudioWrapper::resumeSound(AudioArchetype &audioComponent) {
 }
 
 bool AudioWrapper::isValidAudioPath(const AudioArchetype &audioComponent) {
-    std::ifstream file(ConfigSingleton::GetInstance().GetBaseAssetPath() + audioComponent.getAudioPath());
+    std::ifstream file(ConfigSingleton::getInstance().getBaseAssetPath() + audioComponent.getAudioPath());
 
     if (!file.good()) {
         Logger::Error("Audio file not found at path: " + audioComponent.getAudioPath());
@@ -300,7 +300,5 @@ std::string AudioWrapper::getFileName(const std::string &audioPath) {
 void AudioWrapper::clearChannels() {
     FMOD_Channel_Stop(soundTrackChannelPair.second);
 
-    for(auto sound : soundEffectsChannelMap) {
-        FMOD_Channel_Stop(sound.second);
-    }
+    soundEffectsChannelMap.clear();
 }
