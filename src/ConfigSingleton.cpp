@@ -16,7 +16,7 @@ bool ConfigSingleton::isRunning() const {
     return isRunning_;
 }
 
-void ConfigSingleton::ToggleIsRunning() {
+void ConfigSingleton::toggleIsRunning() {
     isRunning_ = !isRunning_;
 }
 
