@@ -32,15 +32,12 @@ PhysicsWrapper::PhysicsWrapper(const PhysicsWrapper &other) {
     contactListener = std::make_unique<ContactListener>();
 }
 
-
 void PhysicsWrapper::update(milliseconds deltaTime) {
-//    updateVelocities();
     const int32 velocityIterations{6};
     const int32 positionIterations{2};
     world->Step(deltaTime, velocityIterations, positionIterations);
     updatePositions();
 }
-
 
 void PhysicsWrapper::addCircles(const std::vector<CircleCollisionComponent *> &circleCollisionComponents) {
     for (auto circle: circleCollisionComponents) {
@@ -206,22 +203,6 @@ void PhysicsWrapper::updatePositions() {
         }
     }
 }
-
-void PhysicsWrapper::updateVelocities() {
-    for (auto &body: bodies) {
-        try {
-            auto &transformComp = ComponentStore::GetInstance().tryGetComponent<VelocityComponent>(body.first);
-            if (transformComp.velocity != Vector2(0, 0)) {
-                body.second.first->SetLinearVelocity(
-                        b2Vec2(transformComp.velocity.getX(), transformComp.velocity.getY()));
-                transformComp.velocity = Vector2(0, 0);
-            }
-        } catch (std::exception &e) {
-            continue;
-        }
-    }
-}
-
 
 void ContactListener::BeginContact(b2Contact *contact) {
     std::unordered_map<entity, std::pair<b2Body *, Vector2>> bodies = PhysicsWrapper::getInstance().bodies;

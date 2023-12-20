@@ -230,7 +230,9 @@ void RenderingSystem::SortRenderComponents() {
         auto &boxCollisionComponent = ComponentStore::GetInstance().tryGetComponent<BoxCollisionComponent>(entityId);
         if (!boxCollisionComponent.isActive)
             continue;
-        collisionComponents.insert(&boxCollisionComponent);
+        if (collisionComponents.find(&boxCollisionComponent) == collisionComponents.end() &&
+            uiCollisionComponents.find(&boxCollisionComponent) == uiCollisionComponents.end())
+            collisionComponents.insert(&boxCollisionComponent);
     }
 #endif
 }
