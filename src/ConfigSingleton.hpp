@@ -50,7 +50,7 @@ public:
 
     void setFPSLimit(uint32_t fpsLimit);
 
-    void ToggleIsRunning();
+    void toggleIsRunning();
 
     void setDeltaTimeMultiplier(float deltaTimeMultiplier);
 
