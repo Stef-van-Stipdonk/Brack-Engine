@@ -39,6 +39,8 @@ public:
 
     std::string getSignature();
 
+    virtual void build();
+
 private:
     std::vector<std::unique_ptr<GameObject>> gameObjects;
     std::vector<std::unique_ptr<Camera>> cameras;

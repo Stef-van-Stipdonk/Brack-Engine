@@ -12,6 +12,7 @@
 #include <typeinfo>
 #include <stdexcept>
 #include <optional>
+#include <Components/ChildComponent.hpp>
 #include "../src/includes/ComponentStore.hpp"
 #include "../Entity.hpp"
 #include "../src/includes/BehaviourScriptStore.hpp"
@@ -57,14 +58,6 @@ public:
             ComponentStore::GetInstance().addComponent<T>(entityID, *component.get());
     }
 
-    GameObject *getChildGameObjectByName(const std::string name) {
-        for (auto &gameObject: children) {
-            if (gameObject->getName() == name)
-                return gameObject.get();
-        }
-
-        return nullptr;
-    }
 
     template<typename T>
     typename std::enable_if<std::is_base_of<IComponent, T>::value>::type
@@ -220,6 +213,8 @@ public:
     std::vector<std::unique_ptr<IBehaviourScript>> &&getAllBehaviourScripts();
 
 
+    std::optional<GameObject *> getChildGameObjectByName(const std::string name);
+
 protected:
     entity entityID = 0;
     std::vector<std::unique_ptr<IComponent>> components;
@@ -229,6 +224,7 @@ protected:
     std::vector<std::unique_ptr<GameObject>> children;
 
     void childrenSetActive(entity entityId, bool active);
+
 };
 
 

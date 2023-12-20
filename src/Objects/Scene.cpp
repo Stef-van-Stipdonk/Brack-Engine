@@ -99,8 +99,7 @@ Scene::Scene(Camera &&mainCamera) {
 }
 
 Scene::Scene() {
-    addCamera(Camera());
-    signature = generateSignature();
+
 }
 
 std::vector<std::unique_ptr<Camera>> &Scene::getCameras() {
@@ -129,4 +128,9 @@ std::string Scene::generateSignature() {
     }
 
     return random_string;
+}
+
+void Scene::build() {
+    addCamera(Camera());
+    signature = generateSignature();
 }
