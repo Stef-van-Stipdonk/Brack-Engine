@@ -65,7 +65,7 @@ void ConfigSingleton::setConfig(Config config) {
     deltaTimeMultiplier = config.deltaTimeMultiplier;
 }
 
-bool ConfigSingleton::IsShowFPSTrue() const {
+bool ConfigSingleton::showFps() const {
     return showFPS_;
 }
 

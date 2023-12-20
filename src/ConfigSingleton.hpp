@@ -28,7 +28,7 @@ public:
 
     bool isRunning() const;
 
-    bool IsShowFPSTrue() const;
+    bool showFps() const;
 
     void toggleShowFps();
 
