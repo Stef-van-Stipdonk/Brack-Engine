@@ -20,7 +20,8 @@ void GameObjectConverter::addGameObject(GameObject *gameObject) {
         try {
             auto &parentComponent = child->tryGetComponent<ParentComponent>();
             parentComponent.parentId = entityId;
-        } catch (std::runtime_error &e) {}
+        } catch (std::runtime_error &e) {
+        }
     }
 
     auto parent = gameObject->getParent();
@@ -30,7 +31,7 @@ void GameObjectConverter::addGameObject(GameObject *gameObject) {
     }
 
     gameObject->setEntityId(entityId);
-    std::vector<std::unique_ptr<IComponent>> components = std::move(gameObject->getAllComponents());
+    std::vector<std::unique_ptr<IComponent> > components = std::move(gameObject->getAllComponents());
     for (auto &component: components) {
         if (auto *objectInfoComponent = dynamic_cast<ObjectInfoComponent *>(component.get())) {
             if (!objectInfoComponent->name.empty()) {
@@ -40,8 +41,11 @@ void GameObjectConverter::addGameObject(GameObject *gameObject) {
                 EntityManager::getInstance().addEntityWithTag(entityId, objectInfoComponent->tag);
             }
 
-            auto outcome = objectInfoComponent->isActive && gameObject->getParent().has_value()
-                           ? gameObject->getParent()->isActive() : true;
+            bool outcome = objectInfoComponent->isActive;
+
+            if (objectInfoComponent->isActive)
+                if (gameObject->getParent().has_value())
+                    outcome = gameObject->getParent()->isActive();
 
             EntityManager::getInstance().setEntityActive(entityId, outcome);
         }
@@ -124,9 +128,9 @@ void GameObjectConverter::removeGameObject(GameObject *gameObject) {
     if (parent.has_value()) {
         auto &parentComponent = parent.value().tryGetComponent<ChildComponent>();
         parentComponent.children.erase(
-                std::remove(parentComponent.children.begin(), parentComponent.children.end(),
-                            gameObject->getEntityId()),
-                parentComponent.children.end());
+            std::remove(parentComponent.children.begin(), parentComponent.children.end(),
+                        gameObject->getEntityId()),
+            parentComponent.children.end());
     }
 
     ComponentStore::GetInstance().removeComponentsOfEntity(gameObject->getEntityId());
@@ -143,8 +147,8 @@ void GameObjectConverter::removeGameObject(GameObject &gameObject) {
     if (parent.has_value()) {
         auto &parentComponent = parent.value().tryGetComponent<ChildComponent>();
         parentComponent.children.erase(
-                std::remove(parentComponent.children.begin(), parentComponent.children.end(), gameObject.getEntityId()),
-                parentComponent.children.end());
+            std::remove(parentComponent.children.begin(), parentComponent.children.end(), gameObject.getEntityId()),
+            parentComponent.children.end());
     }
 
     ComponentStore::GetInstance().removeComponentsOfEntity(gameObject.getEntityId());
