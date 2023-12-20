@@ -33,8 +33,7 @@ BrackEngine::BrackEngine(Config &&config) : deltaTimeMultiplier(ConfigSingleton:
     SystemManager::getInstance().AddSystem(std::make_shared<RenderingSystem>());
     SystemManager::getInstance().AddSystem(std::make_shared<ParticleSystem>());
 
-    lastTime = std::chrono::high_resolution_clock::now();
-    SystemManager::getInstance().AddSystem(std::make_shared<ReplaySystem>(lastTime));
+    SystemManager::getInstance().AddSystem(std::make_shared<ReplaySystem>(shouldResetLastTime));
 
     if (ConfigSingleton::getInstance().IsShowFPSTrue())
         CreateFPS();
@@ -58,9 +57,13 @@ void BrackEngine::Run() {
 
 milliseconds BrackEngine::GetDeltaTime() {
     auto currentTime = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<float> deltaTime = std::chrono::duration_cast<std::chrono::duration<float>>(
-            currentTime - lastTime);
-    lastTime = currentTime;
+
+    if(shouldResetLastTime)
+        lastTime = std::make_shared<std::chrono::time_point<std::chrono::high_resolution_clock> >(currentTime);
+
+    std::chrono::duration<float> deltaTime = std::chrono::duration_cast<std::chrono::duration<float> >(
+        currentTime - *lastTime);
+    *lastTime = currentTime;
 
     float deltaTimeInSeconds = deltaTime.count();
     milliseconds deltaTimeInMilliSeconds = deltaTimeInSeconds * 1000.0f;
@@ -108,7 +111,7 @@ void BrackEngine::UpdateFPS(float deltaTime) {
 
     entity fpsId = EntityManager::getInstance().getEntityByTag("FPS");
     auto &textComponent = ComponentStore::GetInstance().tryGetComponent<TextComponent>(
-            fpsId);
+        fpsId);
 
     textComponent.text = std::to_string(FPSSingleton::GetInstance().GetFPS());;
 }

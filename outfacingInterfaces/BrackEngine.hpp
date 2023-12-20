@@ -6,14 +6,9 @@
 #define BRACK_ENGINE_BRACKENGINE_HPP
 
 
-#include <memory>
 #include <chrono>
-#include "../src/includes/EntityManager.hpp"
-#include "../src/includes/SystemManager.hpp"
 #include "EngineManagers/SceneManager.hpp"
-#include "EngineManagers/InputManager.hpp"
 #include "Config.hpp"
-#include "../src/includes/ComponentStore.hpp"
 
 class BrackEngine {
 public:
@@ -34,7 +29,11 @@ private:
 
     void UpdateFPS(float deltaTime);
 
-    std::chrono::time_point<std::chrono::high_resolution_clock> lastTime;
+    std::shared_ptr<std::chrono::time_point<std::chrono::high_resolution_clock> > lastTime = std::make_shared<
+        std::chrono::time_point<std::chrono::high_resolution_clock> >();
+
+    bool shouldResetLastTime = false;
+
     float totalTime = 0;
     float &deltaTimeMultiplier;
 };

@@ -3,11 +3,13 @@
 //
 
 #include "ReplaySystem.hpp"
+
+#include "AudioSystem.hpp"
 #include "RenderingSystem.hpp"
 #include "../includes/BehaviourScriptStore.hpp"
 #include "../ConfigSingleton.hpp"
 
-ReplaySystem::ReplaySystem(std::chrono::time_point<std::chrono::high_resolution_clock> &lastTime) : lastTime(lastTime) {
+ReplaySystem::ReplaySystem(bool shouldResetLastTime) : shouldResetLastTime(shouldResetLastTime) {
 }
 
 ReplaySystem::~ReplaySystem() {
@@ -75,6 +77,8 @@ void ReplaySystem::replay() {
         restore_ecs_snapshot(*snapshot.second);
         auto renderingSystem = SystemManager::getInstance().GetSystem<RenderingSystem>();
         renderingSystem.lock()->update(snapshot.first);
+        auto audioSystem = SystemManager::getInstance().GetSystem<AudioSystem>();
+        audioSystem.lock()->update(snapshot.first);
         if (snapshot.second != nullptr)
             snapshot.second.reset();
 
@@ -87,7 +91,7 @@ void ReplaySystem::replay() {
     if (currentSnapshot != nullptr)
         currentSnapshot.reset();
 
-    lastTime = std::chrono::high_resolution_clock::now();
+    shouldResetLastTime = true;
 }
 
 const std::string ReplaySystem::getName() const {
@@ -113,6 +117,7 @@ std::unique_ptr<ReplaySystem::ECSSnapshot> ReplaySystem::createEcsDeepSnapshot()
     snapshot->entities = entityManager.getAllEntities();
     snapshot->entitiesByName = entityManager.getEntitiesByNameMap();
     snapshot->entitiesByTag = entityManager.getEntitiesByTagMap();
+    snapshot->entityStates = entityManager.getStatesForAllEntities();
 
     auto &componentStore = ComponentStore::GetInstance();
     auto allComponents = componentStore.getComponents();
@@ -123,11 +128,10 @@ std::unique_ptr<ReplaySystem::ECSSnapshot> ReplaySystem::createEcsDeepSnapshot()
     }
 
     auto &behaviorScriptStore = BehaviourScriptStore::getInstance();
-    auto scripts = behaviorScriptStore.getAllBehaviourScripts();
+    auto scripts = behaviorScriptStore.getAbsolutelyAllBehaviourScripts();
     auto clones = std::vector<std::unique_ptr<IBehaviourScript> >();
     for (auto script: scripts) {
-        auto clone = script.get().clone();
-        clones.push_back(std::move(clone));
+        clones.push_back(std::move(script.get().clone()));
     }
 
     snapshot->behaviorScripts = std::move(clones);
@@ -144,6 +148,7 @@ void ReplaySystem::restore_ecs_snapshot(const ECSSnapshot &snapshot) {
 
     entityManager.setEntitiesByNameMap(snapshot.entitiesByName);
     entityManager.setEntitiesByTagMap(snapshot.entitiesByTag);
+    entityManager.setActiveEntities(snapshot.entityStates);
 
     ComponentStore &componentStore = ComponentStore::GetInstance();
     componentStore.clearComponents();
@@ -156,7 +161,7 @@ void ReplaySystem::restore_ecs_snapshot(const ECSSnapshot &snapshot) {
     BehaviourScriptStore &behaviorScriptStore = BehaviourScriptStore::getInstance();
     behaviorScriptStore.clearBehaviourScripts();
     for (auto &script: snapshot.behaviorScripts) {
-        behaviorScriptStore.addBehaviourScript(script->entityId, std::move(script->clone()));
+        behaviorScriptStore.addActiveBehaviourScript(script->entityId, std::move(script->clone()));
     }
 }
 
