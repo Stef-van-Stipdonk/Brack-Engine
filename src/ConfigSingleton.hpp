@@ -28,7 +28,9 @@ public:
 
     bool isRunning() const;
 
-    bool showFPS() const;
+    bool showFps() const;
+
+    void toggleShowFps();
 
     std::string getWindowTitle() const;
 
@@ -46,7 +48,9 @@ public:
 
     uint32_t getFPSLimit() const;
 
-    void toggleIsRunning();
+    void setFPSLimit(uint32_t fpsLimit);
+
+    void ToggleIsRunning();
 
     void setDeltaTimeMultiplier(float deltaTimeMultiplier);
 

@@ -28,7 +28,7 @@ void EntityManager::destroyEntity(entity entityId) {
     reserveEntities.push_back(entityId);
 }
 
-void EntityManager::addEntitiesByTags(std::map<std::string, std::vector<entity>> entitiesByTag) {
+void EntityManager::addEntitiesByTags(std::map<std::string, std::vector<entity> > entitiesByTag) {
     for (auto &pair: entitiesByTag) {
         for (auto &entity: pair.second) {
             addEntityWithTag(entity, pair.first);
@@ -36,7 +36,7 @@ void EntityManager::addEntitiesByTags(std::map<std::string, std::vector<entity>>
     }
 }
 
-void EntityManager::addEntitiesByName(std::map<std::string, std::vector<entity>> entitiesByName) {
+void EntityManager::addEntitiesByName(std::map<std::string, std::vector<entity> > entitiesByName) {
     for (auto &pair: entitiesByName) {
         for (auto &entity: pair.second) {
             addEntityWithName(entity, pair.first);
@@ -46,6 +46,10 @@ void EntityManager::addEntitiesByName(std::map<std::string, std::vector<entity>>
 
 const std::unordered_set<entity> &EntityManager::getAllEntities() const {
     return entities;
+}
+
+const std::map<entity, bool> &EntityManager::getStatesForAllEntities() const {
+    return activeEntities;
 }
 
 void EntityManager::clearAllEntities() {
@@ -62,19 +66,19 @@ void EntityManager::clearAllEntities() {
             entityToTag.erase(entity);
 
             auto tagToEntityCopy = tagToEntity;
-            for (auto& pair : tagToEntityCopy) {
-                auto& idVector = tagToEntity[pair.first];
+            for (auto &pair: tagToEntityCopy) {
+                auto &idVector = tagToEntity[pair.first];
                 idVector.erase(std::remove(idVector.begin(), idVector.end(), entity), idVector.end());
-                if(idVector.empty()){
+                if (idVector.empty()) {
                     tagToEntity.erase(pair.first);
                 }
             }
 
             auto nameToEntityCopy = nameToEntity;
-            for (auto& pair : nameToEntityCopy) {
-                auto& idVector = nameToEntity[pair.first];
+            for (auto &pair: nameToEntityCopy) {
+                auto &idVector = nameToEntity[pair.first];
                 idVector.erase(std::remove(idVector.begin(), idVector.end(), entity), idVector.end());
-                if(idVector.empty()){
+                if (idVector.empty()) {
                     nameToEntity.erase(pair.first);
                 }
             }
@@ -139,21 +143,26 @@ entity EntityManager::getEntityByTag(const std::string &tag) const {
     return 0;
 }
 
-std::map<std::string, std::vector<entity>> EntityManager::getEntitiesByNameMap() const {
+std::map<std::string, std::vector<entity> > EntityManager::getEntitiesByNameMap() const {
     return nameToEntity;
 }
 
-std::map<std::string, std::vector<entity>> EntityManager::getEntitiesByTagMap() const {
+std::map<std::string, std::vector<entity> > EntityManager::getEntitiesByTagMap() const {
     return tagToEntity;
 }
 
-void EntityManager::setEntitiesByNameMap(const std::map<std::string, std::vector<entity>> &entitiesByName) {
-    EntityManager::nameToEntity = entitiesByName;
+void EntityManager::setEntitiesByNameMap(const std::map<std::string, std::vector<entity> > &entitiesByName) {
+    nameToEntity = entitiesByName;
 }
 
-void EntityManager::setEntitiesByTagMap(const std::map<std::string, std::vector<entity>> &entitiesByTag) {
-    EntityManager::tagToEntity = entitiesByTag;
+void EntityManager::setEntitiesByTagMap(const std::map<std::string, std::vector<entity> > &entitiesByTag) {
+    tagToEntity = entitiesByTag;
 }
+
+void EntityManager::setActiveEntities(const std::map<entity, bool> &activeEntities) {
+    EntityManager::activeEntities = activeEntities;
+}
+
 
 bool EntityManager::isEntityActive(entity entityID) const {
     auto it = activeEntities.find(entityID);
@@ -164,4 +173,8 @@ bool EntityManager::isEntityActive(entity entityID) const {
 
 void EntityManager::setEntityActive(entity entityID, bool active) {
     activeEntities[entityID] = active;
+}
+
+bool EntityManager::entityExistsByTag(const std::string string) {
+    return tagToEntity.find(string) != tagToEntity.end();
 }

@@ -17,6 +17,8 @@ public:
 
     void toggleReplay();
 
+    void clear();
+
 private:
     ReplayManager() = default;
 
@@ -29,6 +31,7 @@ private:
     ReplayManager(ReplayManager &&) = delete;
 
     ReplayManager &operator=(ReplayManager &&) = delete;
+
 };
 
 

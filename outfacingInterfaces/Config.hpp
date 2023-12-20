@@ -24,6 +24,7 @@ public:
     int amountOfSoundEffectsChannels = 7;
     uint16_t fpsLimit = 0;
     int particleLimit = 100;
+    float deltaTimeMultiplier = 1.0;
 };
 
 

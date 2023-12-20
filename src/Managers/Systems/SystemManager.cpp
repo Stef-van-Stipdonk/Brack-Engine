@@ -65,7 +65,7 @@ void SystemManager::SortSystems() {
         auto it = std::find_if(systems.begin(), systems.end(),
                                [node](const std::shared_ptr<ISystem> &system) { return system.get() == node; });
         if (it != systems.end()) {
-            sortedList.push_back(*it); // No need to std::move
+            sortedList.push_back(*it);
             systems.erase(it);
         }
 
@@ -136,7 +136,7 @@ void SystemManager::CleanUp() {
 }
 
 void SystemManager::clearSystemsCache() {
-    for(auto& system : systems) {
+    for (auto &system: systems) {
         system->clearCache();
     }
 }

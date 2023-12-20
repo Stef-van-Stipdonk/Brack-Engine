@@ -8,11 +8,9 @@
 #include "../includes/ComponentStore.hpp"
 
 AnimationSystem::AnimationSystem() {
-
 }
 
 AnimationSystem::~AnimationSystem() {
-
 }
 
 void AnimationSystem::update(milliseconds deltaTime) {
@@ -20,7 +18,6 @@ void AnimationSystem::update(milliseconds deltaTime) {
 
 
     for (auto entityId: animationComponentIds) {
-
         auto &animationComponent = ComponentStore::GetInstance().tryGetComponent<AnimationComponent>(entityId);
         if (animationComponent.imageSize->getX() == 0 && animationComponent.imageSize->getY() == 0) {
             Logger::GetInstance().Error("Image size is 0,0");
@@ -43,7 +40,6 @@ void AnimationSystem::update(milliseconds deltaTime) {
                     animationComponent.currentFrame = 0;
 
                     continue;
-
                 }
 
                 int spriteAmountX = round(animationComponent.imageSize->getX() / spriteComponent.spriteSize->getX());
@@ -69,5 +65,4 @@ void AnimationSystem::cleanUp() {
 }
 
 void AnimationSystem::clearCache() {
-
 }

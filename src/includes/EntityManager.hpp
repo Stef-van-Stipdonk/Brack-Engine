@@ -13,7 +13,6 @@
 #include "../../outfacingInterfaces/Entity.hpp"
 
 class EntityManager {
-
 public:
     static EntityManager &getInstance();
 
@@ -33,6 +32,8 @@ public:
 
     const std::unordered_set<entity> &getAllEntities() const;
 
+    const std::map<entity, bool> &getStatesForAllEntities() const;
+
     void clearAllEntities();
 
     void addEntityWithName(entity entityId, const std::string &name);
@@ -41,9 +42,9 @@ public:
 
     std::vector<entity> getEntitiesByName(const std::string &name) const;
 
-    void addEntitiesByTags(std::map<std::string, std::vector<entity>> entitiesByTag);
+    void addEntitiesByTags(std::map<std::string, std::vector<entity> > entitiesByTag);
 
-    void addEntitiesByName(std::map<std::string, std::vector<entity>> entitiesByName);
+    void addEntitiesByName(std::map<std::string, std::vector<entity> > entitiesByName);
 
     void addEntity(entity entity);
 
@@ -53,17 +54,21 @@ public:
 
     entity getEntityByTag(const std::string &tag) const;
 
-    std::map<std::string, std::vector<entity>> getEntitiesByNameMap() const;
+    std::map<std::string, std::vector<entity> > getEntitiesByNameMap() const;
 
-    std::map<std::string, std::vector<entity>> getEntitiesByTagMap() const;
+    std::map<std::string, std::vector<entity> > getEntitiesByTagMap() const;
 
-    void setEntitiesByNameMap(const std::map<std::string, std::vector<entity>> &entitiesByName);
+    void setEntitiesByNameMap(const std::map<std::string, std::vector<entity> > &entitiesByName);
 
-    void setEntitiesByTagMap(const std::map<std::string, std::vector<entity>> &entitiesByTag);
+    void setEntitiesByTagMap(const std::map<std::string, std::vector<entity> > &entitiesByTag);
+
+    void setActiveEntities(const std::map<entity, bool> &activeEntities);
 
     bool isEntityActive(entity entityID) const;
 
     void setEntityActive(entity entityID, bool active);
+
+    bool entityExistsByTag(const std::string string);
 
 private:
     static EntityManager instance;
@@ -75,8 +80,8 @@ private:
     std::vector<entity> reserveEntities;
     std::map<entity, std::string> entityToName;
     std::map<entity, std::string> entityToTag;
-    std::map<std::string, std::vector<entity>> nameToEntity;
-    std::map<std::string, std::vector<entity>> tagToEntity;
+    std::map<std::string, std::vector<entity> > nameToEntity;
+    std::map<std::string, std::vector<entity> > tagToEntity;
     std::map<entity, bool> activeEntities;
 };
 
