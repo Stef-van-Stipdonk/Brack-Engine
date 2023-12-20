@@ -10,3 +10,10 @@ BehaviourScriptStore BehaviourScriptStore::instance;
 BehaviourScriptStore &BehaviourScriptStore::getInstance() {
     return instance;
 }
+
+void BehaviourScriptStore::removeBehaviourOfEntity(entity entityId) {
+    if (behaviourScripts.size() <= entityId)
+        return;
+
+    behaviourScripts.erase(entityId);
+}

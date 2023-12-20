@@ -182,6 +182,8 @@ public:
         }
     }
 
+    void removeBehaviourOfEntity(entity entityId);
+
 private:
     static BehaviourScriptStore instance;
 
