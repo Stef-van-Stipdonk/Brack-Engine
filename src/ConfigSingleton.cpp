@@ -97,3 +97,7 @@ void ConfigSingleton::setFPSLimit(uint32_t fpsLimit) {
 Vector2 ConfigSingleton::getWindowChangeFactor() const {
     return windowSize / initialWindowSize;
 }
+
+float ConfigSingleton::getAspectRatio() const {
+    return initialWindowSize.getX() / initialWindowSize.getY();
+}

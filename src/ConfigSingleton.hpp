@@ -40,6 +40,8 @@ public:
 
     Vector2 getWindowChangeFactor() const;
 
+    float getAspectRatio() const;
+
     void setWindowSize(Vector2 size);
 
     bool isFullscreen() const;
