@@ -7,6 +7,8 @@
 #include <Components/CameraComponent.hpp>
 #include <Components/TransformComponent.hpp>
 #include "EngineManagers/InputManager.hpp"
+
+#include "../ConfigSingleton.hpp"
 #include "../Logger.hpp"
 #include "../includes/ComponentStore.hpp"
 
@@ -118,7 +120,6 @@ InputManager::InputManager() {
 }
 
 void InputManager::UpdateEvents() {
-
     for (auto &item: keyInputs) {
         if (item.second == Clicked) {
             item.second = Pressed;
@@ -142,9 +143,11 @@ Vector2 InputManager::getWorldMousePosition() const {
         auto &camera = ComponentStore::GetInstance().tryGetComponent<CameraComponent>(id);
         auto &cameraPosition = camera.onScreenPosition;
         auto &cameraSize = camera.size;
-        if (isPositionInsideSquare(*mousePosition, *cameraPosition, *cameraSize)) {
+        auto sizeFactor = ConfigSingleton::getInstance().getWindowChangeFactor();
+        
+        if (isPositionInsideSquare(*mousePosition, *cameraPosition * sizeFactor, *cameraSize * sizeFactor)) {
             auto &cameraTransform = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(id);
-            auto mouseDistance = *mousePosition - *cameraPosition;
+            auto mouseDistance = *mousePosition - *cameraPosition * sizeFactor;
             auto mouseWorldPosition = *cameraTransform.position + mouseDistance;
             return mouseWorldPosition;
         }
@@ -170,5 +173,4 @@ void InputManager::clearInputs() {
     for (auto &item: mouseInputs) {
         item.second = None;
     }
-
 }

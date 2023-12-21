@@ -36,6 +36,10 @@ Vector2 ConfigSingleton::getWindowSize() const {
     return windowSize;
 }
 
+Vector2 ConfigSingleton::getInitialWindowSize() const {
+    return initialWindowSize;
+}
+
 bool ConfigSingleton::isFullscreen() const {
     return fullscreen;
 }
@@ -55,7 +59,9 @@ int ConfigSingleton::getAmountOfSoundEffectsChannels() const {
 void ConfigSingleton::setConfig(Config config) {
     isRunning_ = config.isRunning;
     windowTitle = config.windowTitle;
-    windowSize = config.windowSize;
+    if (config.windowSize == Vector2(0, 0))
+        windowSize = config.initialWindowSize;
+    initialWindowSize = config.initialWindowSize;
     fullscreen = config.fullscreen;
     BaseAssetPath = config.BaseAssetPath;
     showFPS_ = config.showFPS;
@@ -76,8 +82,8 @@ void ConfigSingleton::toggleShowFps() {
     }
 }
 
-void ConfigSingleton::setWindowSize(Vector2 size) const {
-    size = size;
+void ConfigSingleton::setWindowSize(Vector2 size) {
+    windowSize = size;
 }
 
 uint32_t ConfigSingleton::getFPSLimit() const {
@@ -86,4 +92,16 @@ uint32_t ConfigSingleton::getFPSLimit() const {
 
 void ConfigSingleton::setFPSLimit(uint32_t fpsLimit) {
     ConfigSingleton::fpsLimit = fpsLimit;
+}
+
+Vector2 ConfigSingleton::getWindowChangeFactor() const {
+    return windowSize / initialWindowSize;
+}
+
+float ConfigSingleton::getAspectRatio() const {
+    return initialWindowSize.getX() / initialWindowSize.getY();
+}
+
+void ConfigSingleton::toggleFullScreen() {
+    fullscreen = !fullscreen;
 }

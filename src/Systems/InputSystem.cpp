@@ -15,7 +15,7 @@ InputSystem::~InputSystem() {
 
 void InputSystem::update(milliseconds deltaTime) {
     InputManager::GetInstance().UpdateEvents();
-    inputWrapper->HandleEvents();
+    // inputWrapper->HandleEvents();
 }
 
 const std::string InputSystem::getName() const {
@@ -23,11 +23,9 @@ const std::string InputSystem::getName() const {
 }
 
 void InputSystem::cleanUp() {
-
 }
 
 void InputSystem::clearCache() {
-
 }
 
 InputSystem::InputSystem(const InputSystem &other) {

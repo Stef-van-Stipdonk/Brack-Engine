@@ -33,6 +33,8 @@ public:
 
     ~RenderWrapper();
 
+    void handleEvents();
+
     void RenderCamera(const CameraComponent &cameraComponent);
 
     void RenderTileMap(const CameraComponent &cameraComponent, const TransformComponent &cameraTransformComponent,
@@ -92,15 +94,16 @@ private:
 
     std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)> GetSpriteTexture(std::string filePath);
 
-    std::pair<SDL_Rect, std::unique_ptr<SDL_Texture, void (*)(SDL_Texture *)>> &
+    std::pair<SDL_Rect, std::unique_ptr<SDL_Texture, void (*)(SDL_Texture *)> > &
     GetCameraTexturePair(const CameraComponent &cameraComponent);
 
-    std::map<entity, std::pair<SDL_Rect, std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)>>> cameraTextures;
+    std::map<entity, std::pair<SDL_Rect, std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)> > > cameraTextures;
     std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)> renderTexture;
-    std::unordered_map<std::string, std::map<int, TTF_Font *>> fontCache;
-    std::map<std::string, std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)>> textures;
+    std::unordered_map<std::string, std::map<int, TTF_Font *> > fontCache;
+    std::map<std::string, std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)> > textures;
     std::unique_ptr<SDL_Window, SDLWindowDeleter> window;
     std::unique_ptr<SDL_Renderer, void (*)(SDL_Renderer *)> renderer;
+    bool fullscreen = false;
 };
 
 

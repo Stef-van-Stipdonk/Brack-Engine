@@ -36,7 +36,13 @@ public:
 
     Vector2 getWindowSize() const;
 
-    void setWindowSize(Vector2 size) const;
+    Vector2 getInitialWindowSize() const;
+
+    Vector2 getWindowChangeFactor() const;
+
+    float getAspectRatio() const;
+
+    void setWindowSize(Vector2 size);
 
     bool isFullscreen() const;
 
@@ -52,9 +58,12 @@ public:
 
     void toggleIsRunning();
 
+    void toggleFullScreen();
+
     void setDeltaTimeMultiplier(float deltaTimeMultiplier);
 
     float deltaTimeMultiplier = 1;
+
 private:
     static ConfigSingleton instance;
 
@@ -62,7 +71,8 @@ private:
 
     bool isRunning_ = true;
     std::string windowTitle = "Brack-Engine";
-    Vector2 windowSize = Vector2(800, 600);
+    Vector2 windowSize = Vector2(0, 0);
+    Vector2 initialWindowSize = Vector2(1280, 720);
     bool fullscreen = false;
     std::string BaseAssetPath = "./Assets/";
     bool showFPS_ = true;
