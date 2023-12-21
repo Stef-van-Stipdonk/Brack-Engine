@@ -20,7 +20,6 @@ public:
 private:
     SaveLoad() = default;
     static SaveLoad instance;
-    static const std::string defaultPath;
 };
 
 #endif //BRACKOCALYPSE_SAVELOAD_HPP
