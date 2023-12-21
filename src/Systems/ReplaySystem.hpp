@@ -1,6 +1,6 @@
 #include <string>
 #include <vector>
-#include <memory>  // For smart pointers
+#include <memory>
 #include <fstream>
 #include <tuple>
 #include <Helpers/Vector2.hpp>
@@ -17,14 +17,15 @@ class ReplaySystem : public ISystem {
 public:
     struct ECSSnapshot {
         std::unordered_set<entity> entities;
-        std::map<std::string, std::vector<entity>> entitiesByName;
-        std::map<std::string, std::vector<entity>> entitiesByTag;
+        std::map<std::string, std::vector<entity> > entitiesByName;
+        std::map<std::string, std::vector<entity> > entitiesByTag;
 
-        std::unordered_map<std::type_index, std::unordered_map<entity, std::unique_ptr<IComponent>>> componentStates;
-        std::vector<std::unique_ptr<IBehaviourScript>> behaviorScripts;
+        std::unordered_map<std::type_index, std::unordered_map<entity, std::unique_ptr<IComponent> > > componentStates;
+        std::vector<std::unique_ptr<IBehaviourScript> > behaviorScripts;
+        std::map<entity, bool> entityStates;
     };
 
-    ReplaySystem(std::chrono::time_point<std::chrono::high_resolution_clock> &lastTime);
+    ReplaySystem(bool resetLastTime);
 
     ~ReplaySystem() override;
 
@@ -45,7 +46,7 @@ public:
     void clearCache() override;
 
 private:
-    std::queue<std::pair<float, std::unique_ptr<ECSSnapshot>>> snapshots;
+    std::queue<std::pair<float, std::unique_ptr<ECSSnapshot> > > snapshots;
     std::unique_ptr<ECSSnapshot> currentSnapshot = nullptr;
     milliseconds snapshotInterval;
     milliseconds totalTimeOfSnapshots = 0;
@@ -53,10 +54,9 @@ private:
     milliseconds replayStorageDuration;
     bool replayStart = false;
     bool recording;
-    std::chrono::time_point<std::chrono::high_resolution_clock> &lastTime;
+    bool shouldResetLastTime = false;
 
     std::unique_ptr<ECSSnapshot> createEcsDeepSnapshot();
 
-    void restore_ecs_snapshot(const ECSSnapshot &snapshot);
-
+    static void restore_ecs_snapshot(const ECSSnapshot &snapshot);
 };

@@ -4,15 +4,18 @@
 
 #include <Components/ChildComponent.hpp>
 #include <Components/ParentComponent.hpp>
+#include <EngineManagers/ReplayManager.hpp>
 #include "EngineManagers/SceneManager.hpp"
 #include "Objects/Scene.hpp"
 #include "../GameObjectConverter.hpp"
 #include "../../src/includes/SystemManager.hpp"
+#include "../FPSSingleton.hpp"
+#include "../ConfigSingleton.hpp"
 
 SceneManager SceneManager::instance;
 
 void SceneManager::setActiveScene() {
-    if(switchingScene == nullptr)
+    if (switchingScene == nullptr)
         return;
 
     EntityManager::getInstance().clearAllEntities();
@@ -106,6 +109,11 @@ Vector2 SceneManager::getLocalPosition(const Vector2 worldPosition, entity entit
     }
 }
 
-void SceneManager::goToNewScene(Scene* scene) {
+
+void SceneManager::goToNewScene(Scene *scene) {
     switchingScene = scene;
+}
+
+void SceneManager::toggleFPS() {
+    ConfigSingleton::getInstance().toggleShowFps();
 }

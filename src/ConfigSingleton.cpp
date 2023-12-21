@@ -2,7 +2,9 @@
 // Created by jesse on 06/11/2023.
 //
 
+#include <EngineManagers/SceneManager.hpp>
 #include "ConfigSingleton.hpp"
+#include "includes/EntityManager.hpp"
 
 ConfigSingleton ConfigSingleton::instance;
 
@@ -60,10 +62,18 @@ void ConfigSingleton::setConfig(Config config) {
     amountOfSoundEffectsChannels = config.amountOfSoundEffectsChannels;
     fpsLimit = config.fpsLimit;
     particleLimit = config.particleLimit;
+    deltaTimeMultiplier = config.deltaTimeMultiplier;
 }
 
-bool ConfigSingleton::showFPS() const {
+bool ConfigSingleton::showFps() const {
     return showFPS_;
+}
+
+void ConfigSingleton::toggleShowFps() {
+    showFPS_ = !showFPS_;
+    if (EntityManager::getInstance().entityExistsByTag("FPS")) {
+        SceneManager::getInstance().getGameObjectByName("FPS").value()->setActive(showFPS_);
+    }
 }
 
 void ConfigSingleton::setWindowSize(Vector2 size) const {
@@ -72,4 +82,8 @@ void ConfigSingleton::setWindowSize(Vector2 size) const {
 
 uint32_t ConfigSingleton::getFPSLimit() const {
     return fpsLimit;
+}
+
+void ConfigSingleton::setFPSLimit(uint32_t fpsLimit) {
+    ConfigSingleton::fpsLimit = fpsLimit;
 }
