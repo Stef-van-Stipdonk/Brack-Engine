@@ -18,6 +18,7 @@ entity EntityManager::createEntity() {
 }
 
 void EntityManager::destroyEntity(entity entityId) {
+    ComponentStore::GetInstance().removeComponentsOfEntity(entityId);
     auto name = entityToName.find(entityId);
     nameToEntity.erase(name->second);
     auto tag = entityToTag.find(entityId);

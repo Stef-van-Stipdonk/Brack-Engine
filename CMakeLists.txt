@@ -119,6 +119,7 @@ add_library(${PROJECT_NAME} SHARED
         outfacingInterfaces/CollisionCategory.hpp
         src/EngineManagers/CollisionLayerManager.cpp
         src/EngineManagers/CollisionLayerManager.cpp
+        src/SaveLoad.cpp
 )
 
 if (WIN32 OR WIN64)
