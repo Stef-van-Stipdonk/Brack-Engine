@@ -9,7 +9,8 @@
 #include <cstdint>
 #include "Helpers/Vector2.hpp"
 
-class Config {
+class Config
+{
 public:
     Config();
 
@@ -17,7 +18,8 @@ public:
 
     bool isRunning = true;
     std::string windowTitle = "Brack-Engine";
-    Vector2 windowSize = Vector2(800, 600);
+    Vector2 windowSize = Vector2(0, 0);
+    Vector2 initialWindowSize = Vector2(1280, 720);
     bool fullscreen = false;
     std::string BaseAssetPath = "./Assets/";
     bool showFPS = true;
