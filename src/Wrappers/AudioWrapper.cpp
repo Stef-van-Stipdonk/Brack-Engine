@@ -300,5 +300,9 @@ std::string AudioWrapper::getFileName(const std::string &audioPath) {
 void AudioWrapper::clearChannels() {
     FMOD_Channel_Stop(soundTrackChannelPair.second);
 
+    for (auto sound: soundEffectsChannelMap) {
+        FMOD_Channel_Stop(sound.second);
+    }
+    
     soundEffectsChannelMap.clear();
 }
