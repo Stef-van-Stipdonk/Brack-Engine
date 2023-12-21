@@ -58,6 +58,8 @@ public:
 
     void toggleIsRunning();
 
+    void toggleFullScreen();
+
     void setDeltaTimeMultiplier(float deltaTimeMultiplier);
 
     float deltaTimeMultiplier = 1;

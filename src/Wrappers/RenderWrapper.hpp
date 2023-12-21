@@ -103,6 +103,7 @@ private:
     std::map<std::string, std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)> > textures;
     std::unique_ptr<SDL_Window, SDLWindowDeleter> window;
     std::unique_ptr<SDL_Renderer, void (*)(SDL_Renderer *)> renderer;
+    bool fullscreen = false;
 };
 
 

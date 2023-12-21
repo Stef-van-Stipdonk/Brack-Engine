@@ -101,3 +101,7 @@ Vector2 ConfigSingleton::getWindowChangeFactor() const {
 float ConfigSingleton::getAspectRatio() const {
     return initialWindowSize.getX() / initialWindowSize.getY();
 }
+
+void ConfigSingleton::toggleFullScreen() {
+    fullscreen = !fullscreen;
+}

@@ -101,6 +101,15 @@ void RenderWrapper::handleEvents() {
     if (lastKeyUpEvent.type != 0) {
         InputManager::GetInstance().SetKeyReleased(lastKeyUpEvent.key.keysym.sym);
     }
+
+    auto configFullScreen = ConfigSingleton::getInstance().isFullscreen();
+    if (configFullScreen != fullscreen) {
+        fullscreen = configFullScreen;
+        if (fullscreen)
+            SDL_SetWindowFullscreen(window.get(), SDL_WINDOW_FULLSCREEN_DESKTOP);
+        else
+            SDL_SetWindowFullscreen(window.get(), 0);
+    }
 }
 
 bool RenderWrapper::Initialize() {
