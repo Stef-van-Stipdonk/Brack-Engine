@@ -303,6 +303,6 @@ void AudioWrapper::clearChannels() {
     for (auto sound: soundEffectsChannelMap) {
         FMOD_Channel_Stop(sound.second);
     }
-    
+
     soundEffectsChannelMap.clear();
 }

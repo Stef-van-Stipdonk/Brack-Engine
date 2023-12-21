@@ -28,6 +28,8 @@ public:
 
     float euclideanDistance(Vector2 a, Vector2 b);
 
+    CollisionArchetype& getCollisionComponent(entity id);
+
     GraphNode* findClosestNode(Vector2 targetVector, GraphComponent &graphComponent, TransformComponent& transformGraphComponent);
 };
 

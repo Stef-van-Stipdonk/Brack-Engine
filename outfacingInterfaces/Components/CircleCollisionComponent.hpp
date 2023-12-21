@@ -6,9 +6,6 @@
 #define BRACK_ENGINE_CIRCLECOLLISIONCOMPONENT_HPP
 
 #include <memory>
-#include <vector>
-#include <Helpers/Vector2.hpp>
-#include <Helpers/CollisionType.hpp>
 #include "Archetypes/CollisionArchetype.hpp"
 
 struct CircleCollisionComponent : public CollisionArchetype {
@@ -24,11 +21,9 @@ struct CircleCollisionComponent : public CollisionArchetype {
 
     CircleCollisionComponent(const CircleCollisionComponent &other) : CollisionArchetype(other) {
         radius = other.radius;
-        collidedWith = other.collidedWith;
     }
 
     float radius;
-    std::vector<uint32_t> collidedWith;
 };
 
 #endif //BRACK_ENGINE_CIRCLECOLLISIONCOMPONENT_HPP
