@@ -8,13 +8,20 @@
 #include <Components/BoxCollisionComponent.hpp>
 #include <utility>
 #include <Components/RigidBodyComponent.hpp>
+#include <Components/TransformComponent.hpp>
 #include "Objects/Button.hpp"
 
 Button::Button(const Vector2 &size, const std::string &text) : GameObject() {
+    auto textObject = std::make_unique<GameObject>();
+    textObject->setTag("ButtonText");
+    textObject->setName("ButtonText");
     auto textComponent = std::make_unique<TextComponent>();
     textComponent->text = std::move(text);
     textComponent->orderInLayer = 0;
     textComponent->sortingLayer = 0;
+    textComponent->alignment = Alignment::CENTERCENTER;
+    auto& textPosition = textObject->tryGetComponent<TransformComponent>();
+    textPosition.position = std::make_unique<Vector2>(size / 2);
 
     auto rectangleComponent = std::make_unique<RectangleComponent>(size);
     rectangleComponent->orderInLayer = 1;
@@ -28,7 +35,8 @@ Button::Button(const Vector2 &size, const std::string &text) : GameObject() {
     addComponent(std::make_unique<RigidBodyComponent>());
     addComponent(std::move(clickableComponent));
     addComponent(std::move(rectangleComponent));
-    addComponent(std::move(textComponent));
+    textObject->addComponent(std::move(textComponent));
+    addChild(std::move(textObject));
 }
 
 void Button::setTextColor(const Color &color) {
@@ -46,17 +54,15 @@ void Button::setFontPath(const std::string &path) {
 }
 
 void Button::setFontSize(int fontSize) {
-    if (entityID == 0) {
-        tryGetComponent<TextComponent>().fontSize = fontSize;
-    } else
-        ComponentStore::GetInstance().tryGetComponent<TextComponent>(entityID).fontSize = fontSize;
+    auto text = getChildGameObjectByName("ButtonText");
+    if (text.has_value())
+        text.value()->tryGetComponent<TextComponent>().fontSize = fontSize;
 }
 
 void Button::setText(const std::string &string) {
-    if (entityID == 0) {
-        tryGetComponent<TextComponent>().text = string;
-    } else
-        ComponentStore::GetInstance().tryGetComponent<TextComponent>(entityID).text = string;
+    auto text = getChildGameObjectByName("ButtonText");
+    if (text.has_value())
+        text.value()->tryGetComponent<TextComponent>().text = string;
 }
 
 void Button::setFill(const Color &color) {

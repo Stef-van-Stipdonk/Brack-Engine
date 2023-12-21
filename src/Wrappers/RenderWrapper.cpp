@@ -366,15 +366,89 @@ RenderWrapper::RenderText(const CameraComponent &cameraComponent, const Transfor
     if (!texture) {
         std::cerr << "SDL_CreateTextureFromSurface Error: " << SDL_GetError() << std::endl;
     }
-
-    SDL_Rect rect = {
-            static_cast<int>(textPosition.getX() - cameraTransformComponent.position->getX() +
-                             cameraComponent.size->getX() / 2 - sizeX / 2),
-            static_cast<int>(textPosition.getY() - cameraTransformComponent.position->getY() +
-                             cameraComponent.size->getY() / 2 - sizeY / 2),
-            static_cast<int>(sizeX),
-            static_cast<int>(sizeY)
-    };
+    
+    SDL_Rect rect;
+    switch (textComponent.alignment) {
+        case Alignment::LEFTTOP:
+            rect = {
+                    static_cast<int>(textPosition.getX() - cameraTransformComponent.position->getX() +
+                                     cameraComponent.size->getX() / 2),
+                    static_cast<int>(textPosition.getY() - cameraTransformComponent.position->getY() +
+                                     cameraComponent.size->getY() / 2),
+                    static_cast<int>(sizeX),
+                    static_cast<int>(sizeY)
+            };
+            break;
+        case Alignment::LEFTCENTER:
+            rect = {
+                    static_cast<int>(textPosition.getX() - cameraTransformComponent.position->getX() +
+                                     cameraComponent.size->getX() / 2),
+                    static_cast<int>(textPosition.getY() - cameraTransformComponent.position->getY() +
+                                     cameraComponent.size->getY() / 2 - sizeY / 2),
+                    static_cast<int>(sizeX),
+                    static_cast<int>(sizeY)
+            };
+            break;
+        case Alignment::LEFTBOTTOM:
+            rect = {
+                    static_cast<int>(textPosition.getX() - cameraTransformComponent.position->getX() +
+                                     cameraComponent.size->getX() / 2),
+                    static_cast<int>(textPosition.getY() - cameraTransformComponent.position->getY() +
+                                     cameraComponent.size->getY() / 2 - sizeY),
+                    static_cast<int>(sizeX),
+                    static_cast<int>(sizeY)
+            };
+            break;
+        case Alignment::CENTERTOP:
+            rect = {
+                    static_cast<int>(textPosition.getX() - cameraTransformComponent.position->getX() +
+                                     cameraComponent.size->getX() / 2 - sizeX / 2),
+                    static_cast<int>(textPosition.getY() - cameraTransformComponent.position->getY() +
+                                     cameraComponent.size->getY() / 2),
+                    static_cast<int>(sizeX),
+                    static_cast<int>(sizeY)
+            };
+        case Alignment::CENTERCENTER:
+            rect = {
+                    static_cast<int>(textPosition.getX() - cameraTransformComponent.position->getX() +
+                                     cameraComponent.size->getX() / 2 - sizeX / 2),
+                    static_cast<int>(textPosition.getY() - cameraTransformComponent.position->getY() +
+                                     cameraComponent.size->getY() / 2 - sizeY / 2),
+                    static_cast<int>(sizeX),
+                    static_cast<int>(sizeY)
+            };
+            break;
+        case Alignment::CENTERBOTTOM:
+            rect = {
+                    static_cast<int>(textPosition.getX() - cameraTransformComponent.position->getX() +
+                                     cameraComponent.size->getX() / 2 - sizeX / 2),
+                    static_cast<int>(textPosition.getY() - cameraTransformComponent.position->getY() +
+                                     cameraComponent.size->getY() / 2 - sizeY),
+                    static_cast<int>(sizeX),
+                    static_cast<int>(sizeY)
+            };
+            break;
+        case Alignment::RIGHTCENTER:
+            rect = {
+                    static_cast<int>(textPosition.getX() - cameraTransformComponent.position->getX() +
+                                     cameraComponent.size->getX() / 2 - sizeX),
+                    static_cast<int>(textPosition.getY() - cameraTransformComponent.position->getY() +
+                                     cameraComponent.size->getY() / 2 - sizeY / 2),
+                    static_cast<int>(sizeX),
+                    static_cast<int>(sizeY)
+            };
+            break;
+        case Alignment::RIGHTTOP:
+            rect = {
+                    static_cast<int>(textPosition.getX() - cameraTransformComponent.position->getX() +
+                                     cameraComponent.size->getX() / 2 - sizeX),
+                    static_cast<int>(textPosition.getY() - cameraTransformComponent.position->getY() +
+                                     cameraComponent.size->getY() / 2),
+                    static_cast<int>(sizeX),
+                    static_cast<int>(sizeY)
+            };
+            break;
+    }
 
     render(texture, nullptr, &rect, textRotation, textComponent.flipX, textComponent.flipY);
     SDL_FreeSurface(surface);
@@ -501,11 +575,85 @@ void RenderWrapper::RenderUiText(const TextComponent &textComponent, const Trans
     if (!texture) {
         std::cerr << "SDL_CreateTextureFromSurface Error: " << SDL_GetError() << std::endl;
     }
+    
+    auto sizeX = surface->w;
+    auto sizeY = surface->h;
 
-    SDL_Rect rect = {
-            static_cast<int>(textPosition.getX()), static_cast<int>(textPosition.getY()), surface->w,
-            surface->h
-    };
+    SDL_Rect rect;
+    switch (textComponent.alignment) {
+        case Alignment::LEFTTOP:
+            rect = {
+                    static_cast<int>(textPosition.getX()),
+                    static_cast<int>(textPosition.getY()),
+                    static_cast<int>(sizeX),
+                    static_cast<int>(sizeY)
+            };
+            break;
+        case Alignment::LEFTCENTER:
+            rect = {
+                    static_cast<int>(textPosition.getX()),
+                    static_cast<int>(textPosition.getY() - sizeY / 2),
+                    static_cast<int>(sizeX),
+                    static_cast<int>(sizeY)
+            };
+            break;
+        case Alignment::LEFTBOTTOM:
+            rect = {
+                    static_cast<int>(textPosition.getX()),
+                    static_cast<int>(textPosition.getY() - sizeY),
+                    static_cast<int>(sizeX),
+                    static_cast<int>(sizeY)
+            };
+            break;
+        case Alignment::CENTERTOP:
+            rect = {
+                    static_cast<int>(textPosition.getX() - sizeX / 2),
+                    static_cast<int>(textPosition.getY()),
+                    static_cast<int>(sizeX),
+                    static_cast<int>(sizeY)
+            };
+            break;
+        case Alignment::CENTERCENTER:
+            rect = {
+                    static_cast<int>(textPosition.getX() - sizeX / 2),
+                    static_cast<int>(textPosition.getY() - sizeY / 2),
+                    static_cast<int>(sizeX),
+                    static_cast<int>(sizeY)
+            };
+            break;
+        case Alignment::CENTERBOTTOM:
+            rect = {
+                    static_cast<int>(textPosition.getX() - sizeX / 2),
+                    static_cast<int>(textPosition.getY() - sizeY),
+                    static_cast<int>(sizeX),
+                    static_cast<int>(sizeY)
+            };
+            break;
+        case Alignment::RIGHTTOP:
+            rect = {
+                    static_cast<int>(textPosition.getX()- sizeX),
+                    static_cast<int>(textPosition.getY()),
+                    static_cast<int>(sizeX),
+                    static_cast<int>(sizeY)
+            };
+            break;
+        case Alignment::RIGHTCENTER:
+            rect = {
+                    static_cast<int>(textPosition.getX()- sizeX),
+                    static_cast<int>(textPosition.getY()- sizeY / 2),
+                    static_cast<int>(sizeX),
+                    static_cast<int>(sizeY)
+            };
+            break;
+        case Alignment::RIGHTBOTTOM:
+            rect = {
+                    static_cast<int>(textPosition.getX()- sizeX),
+                    static_cast<int>(textPosition.getY()- sizeY),
+                    static_cast<int>(sizeX),
+                    static_cast<int>(sizeY)
+            };
+            break;
+    }
 
     render(texture, nullptr, &rect, textRotation, textComponent.flipX, textComponent.flipY);
 

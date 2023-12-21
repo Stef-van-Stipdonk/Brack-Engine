@@ -86,8 +86,12 @@ void BrackEngine::CreateFPS() {
     textComponent.entityId = entityId;
     textComponent.sortingLayer = 0;
     textComponent.orderInLayer = 0;
+    textComponent.alignment = Alignment::LEFTTOP;
 
-    ComponentStore::GetInstance().addComponent<TransformComponent>(entityId);
+    auto transform = TransformComponent();
+    transform.position = std::make_unique<Vector2>(2, 2);
+    transform.entityId = entityId;
+    ComponentStore::GetInstance().addComponent<TransformComponent>(transform);
     ComponentStore::GetInstance().addComponent<ObjectInfoComponent>(objectInfoComponent);
     ComponentStore::GetInstance().addComponent<TextComponent>(textComponent);
     ComponentStore::GetInstance().addComponent<PersistenceTag>(entityId);
