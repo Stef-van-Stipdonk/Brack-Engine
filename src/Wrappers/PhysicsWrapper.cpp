@@ -74,6 +74,7 @@ void PhysicsWrapper::addCircles(const std::vector<CircleCollisionComponent *> &c
             bodyPtr.first->CreateFixture(&fixtureDef);
         } else {
             auto &transformComp = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(circle->entityId);
+            auto &rigidBodyComp = ComponentStore::GetInstance().tryGetComponent<RigidBodyComponent>(circle->entityId);
             auto worldPosition = SceneManager::getWorldPosition(transformComp);
             bodyPtr.first->SetEnabled(enabled);
             bodyPtr.first->SetTransform(
@@ -85,8 +86,10 @@ void PhysicsWrapper::addCircles(const std::vector<CircleCollisionComponent *> &c
                 bodyPtr.first->SetLinearVelocity(
                         b2Vec2(velocityComponent.velocity.getX() * 10.0f,
                                velocityComponent.velocity.getY() * 10.0f));
-                bodyPtr.first->SetLinearVelocity(
-                        b2Vec2(velocityComponent.velocity.getX() * 10.0f, velocityComponent.velocity.getY() * 10.0f));
+                bodyPtr.first->ApplyLinearImpulse(
+                        b2Vec2(rigidBodyComp.force->getX() * 10.0f, rigidBodyComp.force->getY() * 10.0f),
+                        bodyPtr.first->GetWorldCenter(), true);
+                rigidBodyComp.force = std::make_unique<Vector2>(0, 0);
             } catch (std::exception &e) {
                 continue;
             }
@@ -125,10 +128,7 @@ void PhysicsWrapper::addBoxes(const std::vector<BoxCollisionComponent *> &boxCol
             fixtureDef.density = 1.0f;
             fixtureDef.friction = rigidBodyComp.friction;
             fixtureDef.restitution = rigidBodyComp.restitution;
-
-            if (box->entityId == 110) {
-                int i = 0;
-            }
+            
 
             fixtureDef.filter.categoryBits = rigidBodyComp.collisionCategory;
             fixtureDef.filter.maskBits = rigidBodyComp.collisionMask;
@@ -222,7 +222,6 @@ void ContactListener::BeginContact(b2Contact *contact) {
         if (body.second.first == contactB) {
             contactBComponent = body.first;
         }
-
     }
     // Add ContactB to ContactA Circle
     if (std::find(circleEntities.begin(), circleEntities.end(), contactAComponent) != circleEntities.end()) {
@@ -242,7 +241,6 @@ void ContactListener::BeginContact(b2Contact *contact) {
     if (std::find(boxEntities.begin(), boxEntities.end(), contactBComponent) != boxEntities.end()) {
         compStore.tryGetComponent<BoxCollisionComponent>(contactBComponent).collidedWith.push_back(contactAComponent);
     }
-
 }
 
 
@@ -290,6 +288,4 @@ void ContactListener::EndContact(b2Contact *contact) {
                 std::remove(component.collidedWith.begin(), component.collidedWith.end(), contactAComponent),
                 component.collidedWith.end());
     }
-
-
 }
