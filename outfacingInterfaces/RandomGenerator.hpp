@@ -26,6 +26,15 @@ public:
         float randomFloat = distribution(generator);
         return randomFloat;
     }
+    
+    static bool randomBool() {
+        std::random_device rd;
+        std::mt19937 generator(rd());
+
+        std::uniform_int_distribution<int> distribution(0, 1);
+        int randomInt = distribution(generator);
+        return randomInt == 1;
+    }
 };
 
 

@@ -120,6 +120,7 @@ add_library(${PROJECT_NAME} SHARED
         src/EngineManagers/CollisionLayerManager.cpp
         src/EngineManagers/CollisionLayerManager.cpp
         src/SaveLoad.cpp
+        outfacingInterfaces/Helpers/Alignment.hpp
 )
 
 if (WIN32 OR WIN64)

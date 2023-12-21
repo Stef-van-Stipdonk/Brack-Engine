@@ -9,6 +9,7 @@
 #include <memory>
 #include "Helpers/Color.hpp"
 #include "Components/Archetypes/RenderArchetype.hpp"
+#include "Helpers/Alignment.hpp"
 
 
 struct TextComponent : public RenderArchetype {
@@ -22,6 +23,7 @@ struct TextComponent : public RenderArchetype {
         text = other.text;
         fontPath = other.fontPath;
         fontSize = other.fontSize;
+        alignment = other.alignment;
 
         if (other.color != nullptr)
             color = std::make_unique<Color>(*other.color);
@@ -31,6 +33,7 @@ struct TextComponent : public RenderArchetype {
     std::string fontPath = "";
     int fontSize = 10;
     std::unique_ptr<Color> color = std::make_unique<Color>(0, 0, 0, 255);
+    Alignment alignment = Alignment::LEFTCENTER;
 };
 
 #endif //BRACK_ENGINE_TEXTCOMPONENT_HPP
