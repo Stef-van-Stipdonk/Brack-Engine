@@ -6,8 +6,6 @@
 #define BRACK_ENGINE_BOXCOLLISIONCOMPONENT_HPP
 
 #include <memory>
-#include <vector>
-#include <Helpers/CollisionType.hpp>
 #include "Archetypes/CollisionArchetype.hpp"
 #include "Helpers/Vector2.hpp"
 
@@ -27,12 +25,10 @@ struct BoxCollisionComponent : public CollisionArchetype {
     BoxCollisionComponent(const BoxCollisionComponent &other) : CollisionArchetype(other) {
         if (other.size != nullptr)
             size = std::make_unique<Vector2>(*other.size);
-        collidedWith = other.collidedWith;
     }
 
 
     std::unique_ptr<Vector2> size;
-    std::vector<uint32_t> collidedWith;
 
 };
 

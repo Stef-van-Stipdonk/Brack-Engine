@@ -337,7 +337,7 @@ RenderWrapper::RenderText(const CameraComponent &cameraComponent, const Transfor
     } else {
         font = TTF_OpenFont(fontPath.c_str(), fontSize);
         if (!font) {
-            std::string baseFontPath = ConfigSingleton::getInstance().getBaseAssetPath() + "Fonts/Arial.ttf";
+            std::string baseFontPath = ConfigSingleton::getInstance().getBaseAssetPath() + "Fonts/Default.ttf";
             font = TTF_OpenFont(baseFontPath.c_str(), fontSize);
         }
         sizeMap[fontSize] = font;
@@ -485,7 +485,7 @@ void RenderWrapper::RenderUiText(const TextComponent &textComponent, const Trans
     } else {
         font = TTF_OpenFont(fontPath.c_str(), fontSize);
         if (!font) {
-            std::string baseFontPath = ConfigSingleton::getInstance().getBaseAssetPath() + "Fonts/Arial.ttf";
+            std::string baseFontPath = ConfigSingleton::getInstance().getBaseAssetPath() + "Fonts/Default.ttf";
             font = TTF_OpenFont(baseFontPath.c_str(), fontSize);
         }
         sizeMap[fontSize] = font;

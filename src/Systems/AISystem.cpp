@@ -12,6 +12,7 @@
 #include "AISystem.hpp"
 #include "../includes/ComponentStore.hpp"
 #include "../Helpers/GraphNodeWrapper.hpp"
+#include "Components/CircleCollisionComponent.hpp"
 
 struct GraphNodePtrCompare {
     bool operator()(const GraphNodeWrapper *a, const GraphNodeWrapper *b) const {
@@ -25,15 +26,27 @@ AISystem::AISystem() {
 AISystem::~AISystem() {
 }
 
+CollisionArchetype& AISystem::getCollisionComponent(entity id)
+{
+    try
+    {
+        return ComponentStore::GetInstance().tryGetComponent<BoxCollisionComponent>(id);;
+    }catch(...)
+    {
+        return ComponentStore::GetInstance().tryGetComponent<CircleCollisionComponent>(id);
+    }
+}
+
+
 void AISystem::update(milliseconds deltaTime) {
-    auto aiComponentIds = ComponentStore::GetInstance().getActiveEntitiesWithComponent<AIComponent>();
+    std::vector<entity> aiComponentIds = ComponentStore::GetInstance().getActiveEntitiesWithComponent<AIComponent>();
     for (auto &aiComponentId: aiComponentIds) {
         auto &aiComponent = ComponentStore::GetInstance().tryGetComponent<AIComponent>(aiComponentId);
         auto &aiTransformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(aiComponentId);
+        auto &aiColliderComponent = getCollisionComponent(aiComponentId);
         auto &aiVelocityComponent = ComponentStore::GetInstance().tryGetComponent<VelocityComponent>(aiComponentId);
-        auto &aiBoxColliderComponent = ComponentStore::GetInstance().tryGetComponent<BoxCollisionComponent>(
-            aiComponentId);
-        auto aiColliderPosition = *aiTransformComponent.position + *aiBoxColliderComponent.offset;
+
+        auto aiColliderPosition = *aiTransformComponent.position + *aiColliderComponent.offset;
 
         if (aiComponent.target == nullptr || *aiComponent.target == aiColliderPosition || aiComponent.graphId == 0) {
             continue;
