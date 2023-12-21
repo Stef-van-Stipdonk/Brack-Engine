@@ -11,14 +11,15 @@ RenderingSystem::RenderingSystem() : sdl2Wrapper(new RenderWrapper()) {
 }
 
 RenderingSystem::~RenderingSystem() {
-
 }
 
 void RenderingSystem::update(milliseconds deltaTime) {
     SortRenderComponents();
 #if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
-    auto boxCollisionComponentIds = ComponentStore::GetInstance().getActiveEntitiesWithComponent<BoxCollisionComponent>();
-    auto circleCollisionComponentIds = ComponentStore::GetInstance().getActiveEntitiesWithComponent<CircleCollisionComponent>();
+    auto boxCollisionComponentIds = ComponentStore::GetInstance().getActiveEntitiesWithComponent<
+        BoxCollisionComponent>();
+    auto circleCollisionComponentIds = ComponentStore::GetInstance().getActiveEntitiesWithComponent<
+        CircleCollisionComponent>();
 #endif
     auto cameras = ComponentStore::GetInstance().getActiveEntitiesWithComponent<CameraComponent>();
     for (auto cameraId: cameras) {
@@ -29,7 +30,7 @@ void RenderingSystem::update(milliseconds deltaTime) {
         sdl2Wrapper->RenderCamera(cameraComponent);
         for (auto component: components) {
             auto &transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(
-                    component->entityId);
+                component->entityId);
             if (auto *tileMapComponent = dynamic_cast<const TileMapComponent *>(component))
                 sdl2Wrapper->RenderTileMap(cameraComponent, cameraTransformComponent, *tileMapComponent,
                                            transformComponent);
@@ -45,7 +46,7 @@ void RenderingSystem::update(milliseconds deltaTime) {
 #if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
         for (auto component: collisionComponents) {
             auto &transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(
-                    component->entityId);
+                component->entityId);
             if (auto *boxCollisionComponent = dynamic_cast<const BoxCollisionComponent *>(component))
                 sdl2Wrapper->RenderBoxCollision(cameraComponent, cameraTransformComponent, *boxCollisionComponent,
                                                 transformComponent);
@@ -57,7 +58,7 @@ void RenderingSystem::update(milliseconds deltaTime) {
         for (auto graphComponentId: graphComponentIds) {
             auto &graphComponent = ComponentStore::GetInstance().tryGetComponent<GraphComponent>(graphComponentId);
             auto &graphTransformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(
-                    graphComponentId);
+                graphComponentId);
             sdl2Wrapper->RenderGraph(cameraComponent, cameraTransformComponent, graphComponent,
                                      graphTransformComponent);
         }
@@ -68,7 +69,7 @@ void RenderingSystem::update(milliseconds deltaTime) {
 
     for (auto component: uiComponents) {
         auto &transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(
-                component->entityId);
+            component->entityId);
         if (auto *tileMapComponent = dynamic_cast<const TileMapComponent *>(component))
             sdl2Wrapper->RenderUiTileMap(*tileMapComponent, transformComponent);
         else if (auto *spriteComponent = dynamic_cast<const SpriteComponent *>(component))
@@ -82,15 +83,14 @@ void RenderingSystem::update(milliseconds deltaTime) {
 #if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
     for (auto component: uiCollisionComponents) {
         auto &transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(
-                component->entityId);
+            component->entityId);
         if (auto *boxCollisionComponent = dynamic_cast<const BoxCollisionComponent *>(component))
             sdl2Wrapper->RenderUiBoxCollision(*boxCollisionComponent, transformComponent);
-
     }
 #endif
 
     sdl2Wrapper->RenderFrame();
-
+    sdl2Wrapper->handleEvents();
 }
 
 void RenderingSystem::cleanUp() {
@@ -128,29 +128,35 @@ void RenderingSystem::SortRenderComponents() {
 #if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
             try {
                 auto &boxCollisionComponent = ComponentStore::GetInstance().tryGetComponent<BoxCollisionComponent>(
-                        entityId);
+                    entityId);
                 uiCollisionComponents.insert(&boxCollisionComponent);
-            } catch (std::exception &e) {}
+            } catch (std::exception &e) {
+            }
             try {
-                auto &circleCollisionComponent = ComponentStore::GetInstance().tryGetComponent<CircleCollisionComponent>(
-                        entityId);
+                auto &circleCollisionComponent = ComponentStore::GetInstance().tryGetComponent<
+                    CircleCollisionComponent>(
+                    entityId);
                 uiCollisionComponents.insert(&circleCollisionComponent);
-            } catch (std::exception &e) {}
+            } catch (std::exception &e) {
+            }
 #endif
-        }// UI layer
+        } // UI layer
         else {
             components.insert(&spriteComponent);
 #if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
             try {
                 auto &boxCollisionComponent = ComponentStore::GetInstance().tryGetComponent<BoxCollisionComponent>(
-                        entityId);
+                    entityId);
                 collisionComponents.insert(&boxCollisionComponent);
-            } catch (std::exception &e) {}
+            } catch (std::exception &e) {
+            }
             try {
-                auto &circleCollisionComponent = ComponentStore::GetInstance().tryGetComponent<CircleCollisionComponent>(
-                        entityId);
+                auto &circleCollisionComponent = ComponentStore::GetInstance().tryGetComponent<
+                    CircleCollisionComponent>(
+                    entityId);
                 collisionComponents.insert(&circleCollisionComponent);
-            } catch (std::exception &e) {}
+            } catch (std::exception &e) {
+            }
 #endif
         }
     }
@@ -164,28 +170,34 @@ void RenderingSystem::SortRenderComponents() {
 #if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
             try {
                 auto &boxCollisionComponent = ComponentStore::GetInstance().tryGetComponent<BoxCollisionComponent>(
-                        entityId);
+                    entityId);
                 uiCollisionComponents.insert(&boxCollisionComponent);
-            } catch (std::exception &e) {}
+            } catch (std::exception &e) {
+            }
             try {
-                auto &circleCollisionComponent = ComponentStore::GetInstance().tryGetComponent<CircleCollisionComponent>(
-                        entityId);
+                auto &circleCollisionComponent = ComponentStore::GetInstance().tryGetComponent<
+                    CircleCollisionComponent>(
+                    entityId);
                 uiCollisionComponents.insert(&circleCollisionComponent);
-            } catch (std::exception &e) {}
+            } catch (std::exception &e) {
+            }
 #endif
         } else {
             components.insert(&textComponent);
 #if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
             try {
                 auto &boxCollisionComponent = ComponentStore::GetInstance().tryGetComponent<BoxCollisionComponent>(
-                        entityId);
+                    entityId);
                 collisionComponents.insert(&boxCollisionComponent);
-            } catch (std::exception &e) {}
+            } catch (std::exception &e) {
+            }
             try {
-                auto &circleCollisionComponent = ComponentStore::GetInstance().tryGetComponent<CircleCollisionComponent>(
-                        entityId);
+                auto &circleCollisionComponent = ComponentStore::GetInstance().tryGetComponent<
+                    CircleCollisionComponent>(
+                    entityId);
                 collisionComponents.insert(&circleCollisionComponent);
-            } catch (std::exception &e) {}
+            } catch (std::exception &e) {
+            }
 #endif
         }
     }
@@ -199,33 +211,40 @@ void RenderingSystem::SortRenderComponents() {
 #if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
             try {
                 auto &boxCollisionComponent = ComponentStore::GetInstance().tryGetComponent<BoxCollisionComponent>(
-                        entityId);
+                    entityId);
                 uiCollisionComponents.insert(&boxCollisionComponent);
-            } catch (std::exception &e) {}
+            } catch (std::exception &e) {
+            }
             try {
-                auto &circleCollisionComponent = ComponentStore::GetInstance().tryGetComponent<CircleCollisionComponent>(
-                        entityId);
+                auto &circleCollisionComponent = ComponentStore::GetInstance().tryGetComponent<
+                    CircleCollisionComponent>(
+                    entityId);
                 uiCollisionComponents.insert(&circleCollisionComponent);
-            } catch (std::exception &e) {}
+            } catch (std::exception &e) {
+            }
 #endif
         } else {
             components.insert(&rectangleComponent);
 #if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
             try {
                 auto &boxCollisionComponent = ComponentStore::GetInstance().tryGetComponent<BoxCollisionComponent>(
-                        entityId);
+                    entityId);
                 collisionComponents.insert(&boxCollisionComponent);
-            } catch (std::exception &e) {}
+            } catch (std::exception &e) {
+            }
             try {
-                auto &circleCollisionComponent = ComponentStore::GetInstance().tryGetComponent<CircleCollisionComponent>(
-                        entityId);
+                auto &circleCollisionComponent = ComponentStore::GetInstance().tryGetComponent<
+                    CircleCollisionComponent>(
+                    entityId);
                 collisionComponents.insert(&circleCollisionComponent);
-            } catch (std::exception &e) {}
+            } catch (std::exception &e) {
+            }
 #endif
         }
     }
 #if CURRENT_LOG_LEVEL >= LOG_LEVEL_DEBUG
-    auto boxCollisionComponentIds = ComponentStore::GetInstance().getActiveEntitiesWithComponent<BoxCollisionComponent>();
+    auto boxCollisionComponentIds = ComponentStore::GetInstance().getActiveEntitiesWithComponent<
+        BoxCollisionComponent>();
     for (auto entityId: boxCollisionComponentIds) {
         auto &boxCollisionComponent = ComponentStore::GetInstance().tryGetComponent<BoxCollisionComponent>(entityId);
         if (!boxCollisionComponent.isActive)

@@ -9,6 +9,7 @@
 #include <Components/TransformComponent.hpp>
 #include "ClickSystem.hpp"
 #include "../includes/ComponentStore.hpp"
+#include "../ConfigSingleton.hpp"
 
 ClickSystem::ClickSystem() {}
 
@@ -31,16 +32,19 @@ void ClickSystem::update(milliseconds deltaTime) {
 void ClickSystem::CheckBoxCollision(const ClickableComponent &clickableComponent,
                                     const Vector2 &mousePosition) {
     try {
-        auto boxColliderComponent = ComponentStore::GetInstance().tryGetComponent<BoxCollisionComponent>(
+        auto &boxColliderComponent = ComponentStore::GetInstance().tryGetComponent<BoxCollisionComponent>(
                 clickableComponent.entityId);
-        auto transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(
+        auto &transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(
                 clickableComponent.entityId);
-        if (
-                mousePosition.getX() >= transformComponent.position->getX() &&
-                mousePosition.getX() <= transformComponent.position->getX() + boxColliderComponent.size->getX() &&
-                mousePosition.getY() >= transformComponent.position->getY() &&
-                mousePosition.getY() <= transformComponent.position->getY() + boxColliderComponent.size->getY()
-                ) {
+        auto screenChangeFactor = ConfigSingleton::getInstance().getWindowChangeFactor();
+        auto clickPosition = Vector2(transformComponent.position->getX() * screenChangeFactor.getX(),
+                                     transformComponent.position->getY() * screenChangeFactor.getY());
+        auto clickSize = Vector2(boxColliderComponent.size->getX() * screenChangeFactor.getX(),
+                                 boxColliderComponent.size->getY() * screenChangeFactor.getY());
+        if (mousePosition.getX() >= clickPosition.getX() &&
+            mousePosition.getX() <= clickPosition.getX() + clickSize.getX() &&
+            mousePosition.getY() >= clickPosition.getY() &&
+            mousePosition.getY() <= clickPosition.getY() + clickSize.getY()) {
             clickableComponent.OnClick();
         }
     } catch (const std::exception &e) {
