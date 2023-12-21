@@ -164,6 +164,16 @@ public:
                 }
             }
         }
+
+        itType = notStartedBehaviourScripts.find(entityId);
+        if(itType != notStartedBehaviourScripts.end()) {
+            for (auto &script: itType->second) {
+                if (auto castedScript = static_cast<T *>(script.get())) {
+                    return *castedScript;
+                }
+            }
+        }
+
         throw std::runtime_error("Component not found");
     }
 
