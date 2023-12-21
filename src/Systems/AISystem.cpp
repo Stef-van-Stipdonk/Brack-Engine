@@ -157,6 +157,8 @@ Vector2 AISystem::getNextLocation(Vector2 targetPosition, Vector2 sourcePosition
         // Tag currentNode as visited and remove it from toBeVisited
         currentWrapper->currentNode.setVisited(true);
     }
+
+    return Vector2(0,0);
 }
 
 const std::string AISystem::getName() const {
