@@ -129,7 +129,6 @@ void PhysicsWrapper::addBoxes(const std::vector<BoxCollisionComponent *> &boxCol
             fixtureDef.friction = rigidBodyComp.friction;
             fixtureDef.restitution = rigidBodyComp.restitution;
             
-
             fixtureDef.filter.categoryBits = rigidBodyComp.collisionCategory;
             fixtureDef.filter.maskBits = rigidBodyComp.collisionMask;
 
