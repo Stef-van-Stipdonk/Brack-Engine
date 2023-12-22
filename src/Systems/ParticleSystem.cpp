@@ -4,7 +4,6 @@
 
 #include <Components/ParticleEmitterComponent.hpp>
 #include <Components/ParticleComponent.hpp>
-#include <Components/RectangleComponent.hpp>
 #include <Components/VelocityComponent.hpp>
 #include <Components/TransformComponent.hpp>
 #include <Components/PersistenceTag.hpp>
@@ -12,7 +11,7 @@
 #include <Components/BoxCollisionComponent.hpp>
 #include "ParticleSystem.hpp"
 #include "../includes/ComponentStore.hpp"
-#include "../ConfigSingleton.hpp"
+#include "ConfigSingleton.hpp"
 #include "Components/SpriteComponent.hpp"
 
 ParticleSystem::ParticleSystem() {
@@ -25,7 +24,7 @@ ParticleSystem::ParticleSystem() {
         auto transformComponent = std::make_unique<TransformComponent>();
         auto objectInfoComponent = std::make_unique<ObjectInfoComponent>();
         objectInfoComponent->isActive = false;
-        auto boxCollider = std::make_unique<BoxCollisionComponent>(Vector2(1,1));
+        auto boxCollider = std::make_unique<BoxCollisionComponent>(Vector2(1, 1));
         boxCollider->isTrigger = true;
         auto rigidBody = std::make_unique<RigidBodyComponent>(CollisionType::DYNAMIC);
         rigidBody->gravityScale = 0.0f;
@@ -98,7 +97,8 @@ void ParticleSystem::updateParticleEmitters(milliseconds deltaTime) {
                     inactiveParticleId);
             auto &objectInfoComponent = ComponentStore::GetInstance().tryGetComponent<ObjectInfoComponent>(
                     inactiveParticleId);
-            auto &boxCollisionComponent = ComponentStore::GetInstance().tryGetComponent<BoxCollisionComponent>(inactiveParticleId);
+            auto &boxCollisionComponent = ComponentStore::GetInstance().tryGetComponent<BoxCollisionComponent>(
+                    inactiveParticleId);
 
             particleComponent.lifeTime = particleEmitterComponent.lifeTime;
 
