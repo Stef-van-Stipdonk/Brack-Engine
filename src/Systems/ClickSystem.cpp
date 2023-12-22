@@ -9,11 +9,13 @@
 #include <Components/TransformComponent.hpp>
 #include "ClickSystem.hpp"
 #include "../includes/ComponentStore.hpp"
-#include "../ConfigSingleton.hpp"
+#include "ConfigSingleton.hpp"
 
-ClickSystem::ClickSystem() {}
+ClickSystem::ClickSystem() {
+}
 
-ClickSystem::~ClickSystem() {}
+ClickSystem::~ClickSystem() {
+}
 
 void ClickSystem::update(milliseconds deltaTime) {
     if (!InputManager::GetInstance().IsMouseReleased(LEFT_MOUSE)) return;
@@ -33,9 +35,9 @@ void ClickSystem::CheckBoxCollision(const ClickableComponent &clickableComponent
                                     const Vector2 &mousePosition) {
     try {
         auto &boxColliderComponent = ComponentStore::GetInstance().tryGetComponent<BoxCollisionComponent>(
-                clickableComponent.entityId);
+            clickableComponent.entityId);
         auto &transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(
-                clickableComponent.entityId);
+            clickableComponent.entityId);
         auto screenChangeFactor = ConfigSingleton::getInstance().getWindowChangeFactor();
         auto clickPosition = Vector2(transformComponent.position->getX() * screenChangeFactor.getX(),
                                      transformComponent.position->getY() * screenChangeFactor.getY());
@@ -48,16 +50,15 @@ void ClickSystem::CheckBoxCollision(const ClickableComponent &clickableComponent
             clickableComponent.OnClick();
         }
     } catch (const std::exception &e) {
-
     }
 }
 
 void ClickSystem::CheckCircleCollision(const ClickableComponent &clickableComponent, const Vector2 &mousePosition) {
     try {
         auto circleCollisionComponent = ComponentStore::GetInstance().tryGetComponent<CircleCollisionComponent>(
-                clickableComponent.entityId);
+            clickableComponent.entityId);
         auto transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(
-                clickableComponent.entityId);
+            clickableComponent.entityId);
         auto x = mousePosition.getX();
         auto y = mousePosition.getY();
         auto a = circleCollisionComponent.radius;
@@ -72,7 +73,6 @@ void ClickSystem::CheckCircleCollision(const ClickableComponent &clickableCompon
             clickableComponent.OnClick();
         }
     } catch (const std::exception &e) {
-
     }
 }
 
@@ -81,9 +81,7 @@ const std::string ClickSystem::getName() const {
 }
 
 void ClickSystem::cleanUp() {
-
 }
 
 void ClickSystem::clearCache() {
-
 }

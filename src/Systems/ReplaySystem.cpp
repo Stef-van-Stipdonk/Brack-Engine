@@ -7,7 +7,6 @@
 #include "AudioSystem.hpp"
 #include "RenderingSystem.hpp"
 #include "../includes/BehaviourScriptStore.hpp"
-#include "../ConfigSingleton.hpp"
 
 ReplaySystem::ReplaySystem(bool shouldResetLastTime) : shouldResetLastTime(shouldResetLastTime) {
 }

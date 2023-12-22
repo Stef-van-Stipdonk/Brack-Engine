@@ -11,7 +11,7 @@
 #include <vector>
 #include <memory>
 #include <unordered_map>
-#include "../ConfigSingleton.hpp"
+#include "../../outfacingInterfaces/ConfigSingleton.hpp"
 #include <fmod_errors.h>
 
 class AudioWrapper {
@@ -28,9 +28,9 @@ public:
 
     void resumeSound(AudioArchetype &audioComponent);
 
-    bool isValidAudioPath(const AudioArchetype& audioComponent);
+    bool isValidAudioPath(const AudioArchetype &audioComponent);
 
-    std::string getFileName(const std::string& audioPath);
+    std::string getFileName(const std::string &audioPath);
 
     int findAvailableSoundEffectsChannel();
 
@@ -40,11 +40,14 @@ public:
 
 private:
     void playSoundOnChannel(FMOD_CHANNEL *&channel, int channelID, AudioArchetype &audioComponent);
-    void pauseChannel(FMOD_CHANNEL* channel, AudioArchetype &audioComponent);
-    void resumeChannel(FMOD_CHANNEL* channel, AudioArchetype &audioComponent);
+
+    void pauseChannel(FMOD_CHANNEL *channel, AudioArchetype &audioComponent);
+
+    void resumeChannel(FMOD_CHANNEL *channel, AudioArchetype &audioComponent);
+
     FMOD_SYSTEM *system;
-    std::unordered_map<int, FMOD_CHANNEL*> soundEffectsChannelMap;
-    std::pair<int, FMOD_CHANNEL*> soundTrackChannelPair;
+    std::unordered_map<int, FMOD_CHANNEL *> soundEffectsChannelMap;
+    std::pair<int, FMOD_CHANNEL *> soundTrackChannelPair;
     int soundTrackChannel = 10;
 };
 
