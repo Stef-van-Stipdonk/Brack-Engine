@@ -8,7 +8,7 @@
 #include <Milliseconds.hpp>
 #include <memory>
 #include <vector>
-#include <Helpers/Color.hpp>
+#include <string>
 #include <Helpers/Vector2.hpp>
 #include "IComponent.hpp"
 
@@ -25,14 +25,18 @@ struct ParticleEmitterComponent : public IComponent {
     ParticleEmitterComponent(const ParticleEmitterComponent& other) : IComponent(other) {
         maxAmount = other.maxAmount;
         speed = other.speed;
-        particleSize = other.particleSize;
+        spriteSize = other.spriteSize;
+        spriteTileOffset = other.spriteTileOffset;
+        spriteMargin = other.spriteMargin;
+        spritePath = other.spritePath;
         emitInterval = other.emitInterval;
         untilNextEmit = other.untilNextEmit;
         lifeTime = other.lifeTime;
         activeParticles = other.activeParticles;
-        color = std::make_unique<Color>(*other.color);
         orderInLayer = other.orderInLayer;
         sortingLayer = other.sortingLayer;
+        scale = other.scale;
+        colliderSize = other.colliderSize;
     }
 
     std::vector<milliseconds> activeParticles;
@@ -43,9 +47,13 @@ struct ParticleEmitterComponent : public IComponent {
     float speed;
     int sortingLayer;
     int orderInLayer;
-    Vector2 particleSize;
+    Vector2 spriteSize;
+    Vector2 spriteTileOffset;
+    Vector2 scale;
+    int spriteMargin;
+    Vector2 colliderSize;
+    std::string spritePath;
     milliseconds lifeTime;
-    std::unique_ptr<Color> color = std::make_unique<Color>(255, 255, 255, 255);
 };
 
 #endif //BRACK_ENGINE_PARTICLEEMITTERCOMPONENT_HPP

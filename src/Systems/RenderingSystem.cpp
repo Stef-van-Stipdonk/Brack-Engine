@@ -30,7 +30,7 @@ void RenderingSystem::update(milliseconds deltaTime) {
         sdl2Wrapper->RenderCamera(cameraComponent);
         for (auto component: components) {
             auto &transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(
-                component->entityId);
+                    component->entityId);
             if (auto *tileMapComponent = dynamic_cast<const TileMapComponent *>(component))
                 sdl2Wrapper->RenderTileMap(cameraComponent, cameraTransformComponent, *tileMapComponent,
                                            transformComponent);
@@ -69,7 +69,7 @@ void RenderingSystem::update(milliseconds deltaTime) {
 
     for (auto component: uiComponents) {
         auto &transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(
-            component->entityId);
+                component->entityId);
         if (auto *tileMapComponent = dynamic_cast<const TileMapComponent *>(component))
             sdl2Wrapper->RenderUiTileMap(*tileMapComponent, transformComponent);
         else if (auto *spriteComponent = dynamic_cast<const SpriteComponent *>(component))
@@ -263,5 +263,9 @@ void RenderingSystem::clearCache() {
 
 RenderingSystem::RenderingSystem(const RenderingSystem &other) {
     sdl2Wrapper = std::make_unique<RenderWrapper>();
+}
+
+void RenderingSystem::setRenderWrapper(std::unique_ptr<RenderWrapper> wrapper) {
+    sdl2Wrapper = std::move(wrapper);
 }
 
