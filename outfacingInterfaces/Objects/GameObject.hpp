@@ -95,12 +95,12 @@ public:
     template<typename T>
     typename std::enable_if<std::is_base_of<IComponent, T>::value, bool>::type
     hasComponent() const {
-        for (const auto &comp: components) {
-            if (dynamic_cast<const T *>(comp.get()) != nullptr) {
-                return true;
-            }
+        try {
+            tryGetComponent<T>();
+            return true;
+        } catch(std::exception exception) {
+            return false;
         }
-        return false;
     }
 
     template<typename T>

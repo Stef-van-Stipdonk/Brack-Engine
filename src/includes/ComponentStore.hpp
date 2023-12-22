@@ -103,7 +103,6 @@ public:
         throw std::runtime_error("Component not found");
     }
 
-
     template<typename BaseT>
     typename std::enable_if<std::is_base_of<IComponent, BaseT>::value, std::vector<BaseT *>>::type
     getAllComponentsOfType() {
