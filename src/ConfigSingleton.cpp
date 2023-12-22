@@ -2,9 +2,12 @@
 // Created by jesse on 06/11/2023.
 //
 
-#include <EngineManagers/SceneManager.hpp>
-#include "ConfigSingleton.hpp"
+#include "../outfacingInterfaces/ConfigSingleton.hpp"
+
+#include <../outfacingInterfaces/EngineManagers/SceneManager.hpp>
+
 #include "includes/EntityManager.hpp"
+
 
 ConfigSingleton ConfigSingleton::instance;
 

@@ -10,7 +10,7 @@
 #include "../GameObjectConverter.hpp"
 #include "../../src/includes/SystemManager.hpp"
 #include "../FPSSingleton.hpp"
-#include "../ConfigSingleton.hpp"
+#include "ConfigSingleton.hpp"
 
 SceneManager SceneManager::instance;
 
@@ -57,12 +57,11 @@ Vector2 SceneManager::getWorldPosition(const TransformComponent &transformCompon
     auto position = *transformComponent.position;
     try {
         auto parentId = ComponentStore::GetInstance().tryGetComponent<ParentComponent>(
-                transformComponent.entityId).parentId;
+            transformComponent.entityId).parentId;
         auto &parentTransform = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(parentId);
         position += getWorldPosition(parentTransform);
         return position;
-    }
-    catch (std::runtime_error &e) {
+    } catch (std::runtime_error &e) {
         return position;
     }
 }
@@ -72,12 +71,11 @@ Vector2 SceneManager::getWorldScale(const TransformComponent &transformComponent
 
     try {
         auto parentId = ComponentStore::GetInstance().tryGetComponent<ParentComponent>(
-                transformComponent.entityId).parentId;
+            transformComponent.entityId).parentId;
         auto &parentTransform = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(parentId);
         scale *= getWorldScale(parentTransform);
         return scale;
-    }
-    catch (std::runtime_error &e) {
+    } catch (std::runtime_error &e) {
         return scale;
     }
 }
@@ -87,12 +85,11 @@ float SceneManager::getWorldRotation(const TransformComponent &transformComponen
 
     try {
         auto parentId = ComponentStore::GetInstance().tryGetComponent<ParentComponent>(
-                transformComponent.entityId).parentId;
+            transformComponent.entityId).parentId;
         auto &parentTransform = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(parentId);
         rotation += getWorldRotation(parentTransform);
         return rotation;
-    }
-    catch (std::runtime_error &e) {
+    } catch (std::runtime_error &e) {
         return rotation;
     }
 }

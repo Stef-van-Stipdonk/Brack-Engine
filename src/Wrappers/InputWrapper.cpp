@@ -5,8 +5,7 @@
 #include <SDL.h>
 #include "EngineManagers/InputManager.hpp"
 #include "InputWrapper.hpp"
-#include "../Logger.hpp"
-#include "../ConfigSingleton.hpp"
+#include "../../outfacingInterfaces/ConfigSingleton.hpp"
 
 InputWrapper::InputWrapper() {
 }

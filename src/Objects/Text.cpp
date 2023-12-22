@@ -6,7 +6,7 @@
 #include <Components/RectangleComponent.hpp>
 #include <utility>
 #include "Objects/Text.hpp"
-#include "../ConfigSingleton.hpp"
+
 
 Text::Text(const std::string &text) : GameObject() {
     auto textComponent = std::make_unique<TextComponent>();

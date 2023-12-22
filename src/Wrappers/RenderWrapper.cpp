@@ -5,7 +5,7 @@
 #include <EngineManagers/InputManager.hpp>
 
 #include "../includes/SystemManager.hpp"
-#include "../ConfigSingleton.hpp"
+#include "ConfigSingleton.hpp"
 #include "../includes/ComponentStore.hpp"
 #include "../../outfacingInterfaces/EngineManagers/SceneManager.hpp"
 
@@ -86,8 +86,8 @@ void RenderWrapper::handleEvents() {
 
     if (lastMouseMotionEvent.type != 0) {
         InputManager::GetInstance().SetMousePosition(
-                Vector2(static_cast<float>(lastMouseMotionEvent.motion.x),
-                        static_cast<float>(lastMouseMotionEvent.motion.y)));
+            Vector2(static_cast<float>(lastMouseMotionEvent.motion.x),
+                    static_cast<float>(lastMouseMotionEvent.motion.y)));
     }
     if (lastMouseButtonDownEvent.type != 0) {
         InputManager::GetInstance().SetMousePressed(lastMouseButtonDownEvent.button.button);
@@ -128,11 +128,11 @@ bool RenderWrapper::Initialize() {
     }
 
     std::unique_ptr<SDL_Window, SDLWindowDeleter> tempWindow(
-            SDL_CreateWindow(ConfigSingleton::getInstance().getWindowTitle().c_str(),
-                             SDL_WINDOWPOS_CENTERED,
-                             SDL_WINDOWPOS_CENTERED, ConfigSingleton::getInstance().getWindowSize().getX(),
-                             ConfigSingleton::getInstance().getWindowSize().getY(),
-                             SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE));
+        SDL_CreateWindow(ConfigSingleton::getInstance().getWindowTitle().c_str(),
+                         SDL_WINDOWPOS_CENTERED,
+                         SDL_WINDOWPOS_CENTERED, ConfigSingleton::getInstance().getWindowSize().getX(),
+                         ConfigSingleton::getInstance().getWindowSize().getY(),
+                         SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE));
     window = std::move(tempWindow);
 
     if (window == nullptr) {
@@ -142,8 +142,8 @@ bool RenderWrapper::Initialize() {
     }
 
     renderer = std::unique_ptr<SDL_Renderer, void (*)(SDL_Renderer *)>(
-            SDL_CreateRenderer(window.get(), -1, SDL_RENDERER_ACCELERATED),
-            [](SDL_Renderer *r) { SDL_DestroyRenderer(r); });
+        SDL_CreateRenderer(window.get(), -1, SDL_RENDERER_ACCELERATED),
+        [](SDL_Renderer *r) { SDL_DestroyRenderer(r); });
 
     if (renderer == nullptr) {
         std::cerr << "Renderer creation failed: " << SDL_GetError() << std::endl;
@@ -155,10 +155,10 @@ bool RenderWrapper::Initialize() {
 
     SDL_SetRenderDrawBlendMode(renderer.get(), SDL_BLENDMODE_BLEND);
     renderTexture = std::unique_ptr<SDL_Texture, void (*)(SDL_Texture *)>(
-            SDL_CreateTexture(renderer.get(), SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,
-                              ConfigSingleton::getInstance().getWindowSize().getX(),
-                              ConfigSingleton::getInstance().getWindowSize().getY()),
-            [](SDL_Texture *t) { SDL_DestroyTexture(t); });
+        SDL_CreateTexture(renderer.get(), SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,
+                          ConfigSingleton::getInstance().getWindowSize().getX(),
+                          ConfigSingleton::getInstance().getWindowSize().getY()),
+        [](SDL_Texture *t) { SDL_DestroyTexture(t); });
 
     SDL_SetRenderTarget(renderer.get(), renderTexture.get());
     SDL_SetRenderDrawColor(renderer.get(), 0, 0, 0, 255); // RGBA format
@@ -222,13 +222,13 @@ RenderWrapper::RenderTileMap(const CameraComponent &cameraComponent, const Trans
     auto yDifference = topMostCameraPosition - topMostTileMapPosition;
 
     size_t xStartIndex = xDifference > 0
-                         ? floor(
-                    (xDifference) / (tileMapComponent.tileSize->getX() * tileMapScale.getX()))
-                         : 0;
+                             ? floor(
+                                 (xDifference) / (tileMapComponent.tileSize->getX() * tileMapScale.getX()))
+                             : 0;
     size_t yStartIndex = yDifference > 0
-                         ? floor(
-                    (yDifference) / (tileMapComponent.tileSize->getY() * tileMapScale.getY()))
-                         : 0;
+                             ? floor(
+                                 (yDifference) / (tileMapComponent.tileSize->getY() * tileMapScale.getY()))
+                             : 0;
 
     size_t yEndIndex = std::min(yStartIndex + yTileAmount, tileMap.size());
 
@@ -255,12 +255,12 @@ RenderWrapper::RenderTileMap(const CameraComponent &cameraComponent, const Trans
             auto height = tileMapComponent.tileSize->getY() * tileMapScale.getY();
 
             SDL_Rect destRect = {
-                    static_cast<int>(tileMapPosition.getX() - cameraTransformComponent.position->getX() +
-                                     cameraComponent.size->getX() / 2 - sizeX / 2 + x * width),
-                    static_cast<int>(tileMapPosition.getY() - cameraTransformComponent.position->getY() +
-                                     cameraComponent.size->getY() / 2 - sizeY / 2 + y * height),
-                    static_cast<int>(width),
-                    static_cast<int>(height)
+                static_cast<int>(tileMapPosition.getX() - cameraTransformComponent.position->getX() +
+                                 cameraComponent.size->getX() / 2 - sizeX / 2 + x * width),
+                static_cast<int>(tileMapPosition.getY() - cameraTransformComponent.position->getY() +
+                                 cameraComponent.size->getY() / 2 - sizeY / 2 + y * height),
+                static_cast<int>(width),
+                static_cast<int>(height)
             };
 
             SDL_RenderCopy(renderer.get(), texture->second.get(), &srcRect, &destRect);
@@ -306,12 +306,12 @@ RenderWrapper::RenderSprite(const CameraComponent &cameraComponent, const Transf
     auto height = spriteComponent.spriteSize->getY() * spriteScale.getY();
     //Create a rectangle were the sprite needs to be rendered on to
     SDL_Rect destRect = {
-            static_cast<int>(spritePosition.getX() - cameraTransformComponent.position->getX() +
-                             cameraComponent.size->getX() / 2 - width / 2),
-            static_cast<int>(spritePosition.getY() - cameraTransformComponent.position->getY() +
-                             cameraComponent.size->getY() / 2 - height / 2),
-            static_cast<int>(width),
-            static_cast<int>(height)
+        static_cast<int>(spritePosition.getX() - cameraTransformComponent.position->getX() +
+                         cameraComponent.size->getX() / 2 - width / 2),
+        static_cast<int>(spritePosition.getY() - cameraTransformComponent.position->getY() +
+                         cameraComponent.size->getY() / 2 - height / 2),
+        static_cast<int>(width),
+        static_cast<int>(height)
     };
 
     render(texture->second.get(), &srcRect, &destRect, spriteRotation, spriteComponent.flipX, spriteComponent.flipY);
@@ -321,10 +321,10 @@ void
 RenderWrapper::RenderText(const CameraComponent &cameraComponent, const TransformComponent &cameraTransformComponent,
                           const TextComponent &textComponent, const TransformComponent &transformComponent) {
     SDL_Color sdlColor = {
-            static_cast<Uint8>(textComponent.color->r),
-            static_cast<Uint8>(textComponent.color->g),
-            static_cast<Uint8>(textComponent.color->b),
-            static_cast<Uint8>(textComponent.color->a)
+        static_cast<Uint8>(textComponent.color->r),
+        static_cast<Uint8>(textComponent.color->g),
+        static_cast<Uint8>(textComponent.color->b),
+        static_cast<Uint8>(textComponent.color->a)
     };
 
     TTF_Font *font = nullptr;
@@ -366,86 +366,86 @@ RenderWrapper::RenderText(const CameraComponent &cameraComponent, const Transfor
     if (!texture) {
         std::cerr << "SDL_CreateTextureFromSurface Error: " << SDL_GetError() << std::endl;
     }
-    
+
     SDL_Rect rect;
     switch (textComponent.alignment) {
         case Alignment::LEFTTOP:
             rect = {
-                    static_cast<int>(textPosition.getX() - cameraTransformComponent.position->getX() +
-                                     cameraComponent.size->getX() / 2),
-                    static_cast<int>(textPosition.getY() - cameraTransformComponent.position->getY() +
-                                     cameraComponent.size->getY() / 2),
-                    static_cast<int>(sizeX),
-                    static_cast<int>(sizeY)
+                static_cast<int>(textPosition.getX() - cameraTransformComponent.position->getX() +
+                                 cameraComponent.size->getX() / 2),
+                static_cast<int>(textPosition.getY() - cameraTransformComponent.position->getY() +
+                                 cameraComponent.size->getY() / 2),
+                static_cast<int>(sizeX),
+                static_cast<int>(sizeY)
             };
             break;
         case Alignment::LEFTCENTER:
             rect = {
-                    static_cast<int>(textPosition.getX() - cameraTransformComponent.position->getX() +
-                                     cameraComponent.size->getX() / 2),
-                    static_cast<int>(textPosition.getY() - cameraTransformComponent.position->getY() +
-                                     cameraComponent.size->getY() / 2 - sizeY / 2),
-                    static_cast<int>(sizeX),
-                    static_cast<int>(sizeY)
+                static_cast<int>(textPosition.getX() - cameraTransformComponent.position->getX() +
+                                 cameraComponent.size->getX() / 2),
+                static_cast<int>(textPosition.getY() - cameraTransformComponent.position->getY() +
+                                 cameraComponent.size->getY() / 2 - sizeY / 2),
+                static_cast<int>(sizeX),
+                static_cast<int>(sizeY)
             };
             break;
         case Alignment::LEFTBOTTOM:
             rect = {
-                    static_cast<int>(textPosition.getX() - cameraTransformComponent.position->getX() +
-                                     cameraComponent.size->getX() / 2),
-                    static_cast<int>(textPosition.getY() - cameraTransformComponent.position->getY() +
-                                     cameraComponent.size->getY() / 2 - sizeY),
-                    static_cast<int>(sizeX),
-                    static_cast<int>(sizeY)
+                static_cast<int>(textPosition.getX() - cameraTransformComponent.position->getX() +
+                                 cameraComponent.size->getX() / 2),
+                static_cast<int>(textPosition.getY() - cameraTransformComponent.position->getY() +
+                                 cameraComponent.size->getY() / 2 - sizeY),
+                static_cast<int>(sizeX),
+                static_cast<int>(sizeY)
             };
             break;
         case Alignment::CENTERTOP:
             rect = {
-                    static_cast<int>(textPosition.getX() - cameraTransformComponent.position->getX() +
-                                     cameraComponent.size->getX() / 2 - sizeX / 2),
-                    static_cast<int>(textPosition.getY() - cameraTransformComponent.position->getY() +
-                                     cameraComponent.size->getY() / 2),
-                    static_cast<int>(sizeX),
-                    static_cast<int>(sizeY)
+                static_cast<int>(textPosition.getX() - cameraTransformComponent.position->getX() +
+                                 cameraComponent.size->getX() / 2 - sizeX / 2),
+                static_cast<int>(textPosition.getY() - cameraTransformComponent.position->getY() +
+                                 cameraComponent.size->getY() / 2),
+                static_cast<int>(sizeX),
+                static_cast<int>(sizeY)
             };
         case Alignment::CENTERCENTER:
             rect = {
-                    static_cast<int>(textPosition.getX() - cameraTransformComponent.position->getX() +
-                                     cameraComponent.size->getX() / 2 - sizeX / 2),
-                    static_cast<int>(textPosition.getY() - cameraTransformComponent.position->getY() +
-                                     cameraComponent.size->getY() / 2 - sizeY / 2),
-                    static_cast<int>(sizeX),
-                    static_cast<int>(sizeY)
+                static_cast<int>(textPosition.getX() - cameraTransformComponent.position->getX() +
+                                 cameraComponent.size->getX() / 2 - sizeX / 2),
+                static_cast<int>(textPosition.getY() - cameraTransformComponent.position->getY() +
+                                 cameraComponent.size->getY() / 2 - sizeY / 2),
+                static_cast<int>(sizeX),
+                static_cast<int>(sizeY)
             };
             break;
         case Alignment::CENTERBOTTOM:
             rect = {
-                    static_cast<int>(textPosition.getX() - cameraTransformComponent.position->getX() +
-                                     cameraComponent.size->getX() / 2 - sizeX / 2),
-                    static_cast<int>(textPosition.getY() - cameraTransformComponent.position->getY() +
-                                     cameraComponent.size->getY() / 2 - sizeY),
-                    static_cast<int>(sizeX),
-                    static_cast<int>(sizeY)
+                static_cast<int>(textPosition.getX() - cameraTransformComponent.position->getX() +
+                                 cameraComponent.size->getX() / 2 - sizeX / 2),
+                static_cast<int>(textPosition.getY() - cameraTransformComponent.position->getY() +
+                                 cameraComponent.size->getY() / 2 - sizeY),
+                static_cast<int>(sizeX),
+                static_cast<int>(sizeY)
             };
             break;
         case Alignment::RIGHTCENTER:
             rect = {
-                    static_cast<int>(textPosition.getX() - cameraTransformComponent.position->getX() +
-                                     cameraComponent.size->getX() / 2 - sizeX),
-                    static_cast<int>(textPosition.getY() - cameraTransformComponent.position->getY() +
-                                     cameraComponent.size->getY() / 2 - sizeY / 2),
-                    static_cast<int>(sizeX),
-                    static_cast<int>(sizeY)
+                static_cast<int>(textPosition.getX() - cameraTransformComponent.position->getX() +
+                                 cameraComponent.size->getX() / 2 - sizeX),
+                static_cast<int>(textPosition.getY() - cameraTransformComponent.position->getY() +
+                                 cameraComponent.size->getY() / 2 - sizeY / 2),
+                static_cast<int>(sizeX),
+                static_cast<int>(sizeY)
             };
             break;
         case Alignment::RIGHTTOP:
             rect = {
-                    static_cast<int>(textPosition.getX() - cameraTransformComponent.position->getX() +
-                                     cameraComponent.size->getX() / 2 - sizeX),
-                    static_cast<int>(textPosition.getY() - cameraTransformComponent.position->getY() +
-                                     cameraComponent.size->getY() / 2),
-                    static_cast<int>(sizeX),
-                    static_cast<int>(sizeY)
+                static_cast<int>(textPosition.getX() - cameraTransformComponent.position->getX() +
+                                 cameraComponent.size->getX() / 2 - sizeX),
+                static_cast<int>(textPosition.getY() - cameraTransformComponent.position->getY() +
+                                 cameraComponent.size->getY() / 2),
+                static_cast<int>(sizeX),
+                static_cast<int>(sizeY)
             };
             break;
     }
@@ -478,11 +478,11 @@ void RenderWrapper::RenderRectangle(const CameraComponent &cameraComponent,
         return;
 
     SDL_Rect rect = {
-            static_cast<int>(rectanglePosition.getX() - cameraTransformComponent.position->getX() +
-                             cameraComponent.size->getX() / 2 - sizeX / 2),
-            static_cast<int>(rectanglePosition.getY() - cameraTransformComponent.position->getY() +
-                             cameraComponent.size->getY() / 2 - sizeY / 2),
-            static_cast<int>(sizeX), static_cast<int>(sizeY)
+        static_cast<int>(rectanglePosition.getX() - cameraTransformComponent.position->getX() +
+                         cameraComponent.size->getX() / 2 - sizeX / 2),
+        static_cast<int>(rectanglePosition.getY() - cameraTransformComponent.position->getY() +
+                         cameraComponent.size->getY() / 2 - sizeY / 2),
+        static_cast<int>(sizeX), static_cast<int>(sizeY)
     };
 
     SDL_Texture *rectangleTexture = SDL_CreateTexture(renderer.get(), SDL_PIXELFORMAT_RGBA8888,
@@ -531,8 +531,8 @@ RenderWrapper::RenderUiSprite(const SpriteComponent &spriteComponent, const Tran
 
     //Create a rectangle were the sprite needs to be rendered on to
     SDL_Rect destRect = {
-            static_cast<int>(spritePosition.getX()), static_cast<int>(spritePosition.getY()),
-            static_cast<int>(sizeX), static_cast<int>(sizeY)
+        static_cast<int>(spritePosition.getX()), static_cast<int>(spritePosition.getY()),
+        static_cast<int>(sizeX), static_cast<int>(sizeY)
     };
 
     render(texture->second.get(), &srcRect, &destRect, spriteRotation, spriteComponent.flipX, spriteComponent.flipY);
@@ -540,10 +540,10 @@ RenderWrapper::RenderUiSprite(const SpriteComponent &spriteComponent, const Tran
 
 void RenderWrapper::RenderUiText(const TextComponent &textComponent, const TransformComponent &transformComponent) {
     SDL_Color sdlColor = {
-            static_cast<Uint8>(textComponent.color->r),
-            static_cast<Uint8>(textComponent.color->g),
-            static_cast<Uint8>(textComponent.color->b),
-            static_cast<Uint8>(textComponent.color->a)
+        static_cast<Uint8>(textComponent.color->r),
+        static_cast<Uint8>(textComponent.color->g),
+        static_cast<Uint8>(textComponent.color->b),
+        static_cast<Uint8>(textComponent.color->a)
     };
 
     auto textPosition = SceneManager::getWorldPosition(transformComponent);
@@ -575,7 +575,7 @@ void RenderWrapper::RenderUiText(const TextComponent &textComponent, const Trans
     if (!texture) {
         std::cerr << "SDL_CreateTextureFromSurface Error: " << SDL_GetError() << std::endl;
     }
-    
+
     auto sizeX = surface->w;
     auto sizeY = surface->h;
 
@@ -583,74 +583,74 @@ void RenderWrapper::RenderUiText(const TextComponent &textComponent, const Trans
     switch (textComponent.alignment) {
         case Alignment::LEFTTOP:
             rect = {
-                    static_cast<int>(textPosition.getX()),
-                    static_cast<int>(textPosition.getY()),
-                    static_cast<int>(sizeX),
-                    static_cast<int>(sizeY)
+                static_cast<int>(textPosition.getX()),
+                static_cast<int>(textPosition.getY()),
+                static_cast<int>(sizeX),
+                static_cast<int>(sizeY)
             };
             break;
         case Alignment::LEFTCENTER:
             rect = {
-                    static_cast<int>(textPosition.getX()),
-                    static_cast<int>(textPosition.getY() - sizeY / 2),
-                    static_cast<int>(sizeX),
-                    static_cast<int>(sizeY)
+                static_cast<int>(textPosition.getX()),
+                static_cast<int>(textPosition.getY() - sizeY / 2),
+                static_cast<int>(sizeX),
+                static_cast<int>(sizeY)
             };
             break;
         case Alignment::LEFTBOTTOM:
             rect = {
-                    static_cast<int>(textPosition.getX()),
-                    static_cast<int>(textPosition.getY() - sizeY),
-                    static_cast<int>(sizeX),
-                    static_cast<int>(sizeY)
+                static_cast<int>(textPosition.getX()),
+                static_cast<int>(textPosition.getY() - sizeY),
+                static_cast<int>(sizeX),
+                static_cast<int>(sizeY)
             };
             break;
         case Alignment::CENTERTOP:
             rect = {
-                    static_cast<int>(textPosition.getX() - sizeX / 2),
-                    static_cast<int>(textPosition.getY()),
-                    static_cast<int>(sizeX),
-                    static_cast<int>(sizeY)
+                static_cast<int>(textPosition.getX() - sizeX / 2),
+                static_cast<int>(textPosition.getY()),
+                static_cast<int>(sizeX),
+                static_cast<int>(sizeY)
             };
             break;
         case Alignment::CENTERCENTER:
             rect = {
-                    static_cast<int>(textPosition.getX() - sizeX / 2),
-                    static_cast<int>(textPosition.getY() - sizeY / 2),
-                    static_cast<int>(sizeX),
-                    static_cast<int>(sizeY)
+                static_cast<int>(textPosition.getX() - sizeX / 2),
+                static_cast<int>(textPosition.getY() - sizeY / 2),
+                static_cast<int>(sizeX),
+                static_cast<int>(sizeY)
             };
             break;
         case Alignment::CENTERBOTTOM:
             rect = {
-                    static_cast<int>(textPosition.getX() - sizeX / 2),
-                    static_cast<int>(textPosition.getY() - sizeY),
-                    static_cast<int>(sizeX),
-                    static_cast<int>(sizeY)
+                static_cast<int>(textPosition.getX() - sizeX / 2),
+                static_cast<int>(textPosition.getY() - sizeY),
+                static_cast<int>(sizeX),
+                static_cast<int>(sizeY)
             };
             break;
         case Alignment::RIGHTTOP:
             rect = {
-                    static_cast<int>(textPosition.getX()- sizeX),
-                    static_cast<int>(textPosition.getY()),
-                    static_cast<int>(sizeX),
-                    static_cast<int>(sizeY)
+                static_cast<int>(textPosition.getX() - sizeX),
+                static_cast<int>(textPosition.getY()),
+                static_cast<int>(sizeX),
+                static_cast<int>(sizeY)
             };
             break;
         case Alignment::RIGHTCENTER:
             rect = {
-                    static_cast<int>(textPosition.getX()- sizeX),
-                    static_cast<int>(textPosition.getY()- sizeY / 2),
-                    static_cast<int>(sizeX),
-                    static_cast<int>(sizeY)
+                static_cast<int>(textPosition.getX() - sizeX),
+                static_cast<int>(textPosition.getY() - sizeY / 2),
+                static_cast<int>(sizeX),
+                static_cast<int>(sizeY)
             };
             break;
         case Alignment::RIGHTBOTTOM:
             rect = {
-                    static_cast<int>(textPosition.getX()- sizeX),
-                    static_cast<int>(textPosition.getY()- sizeY),
-                    static_cast<int>(sizeX),
-                    static_cast<int>(sizeY)
+                static_cast<int>(textPosition.getX() - sizeX),
+                static_cast<int>(textPosition.getY() - sizeY),
+                static_cast<int>(sizeX),
+                static_cast<int>(sizeY)
             };
             break;
     }
@@ -670,10 +670,10 @@ void RenderWrapper::RenderUiRectangle(const RectangleComponent &rectangleCompone
     auto renderInstance = renderer.get();
 
     SDL_Rect rect = {
-            static_cast<int>(rectanglePosition.getX()),
-            static_cast<int>(rectanglePosition.getY()),
-            static_cast<int>(rectangleComponent.size->getX() * rectangleScale.getX()),
-            static_cast<int>(rectangleComponent.size->getY() * rectangleScale.getY())
+        static_cast<int>(rectanglePosition.getX()),
+        static_cast<int>(rectanglePosition.getY()),
+        static_cast<int>(rectangleComponent.size->getX() * rectangleScale.getX()),
+        static_cast<int>(rectangleComponent.size->getY() * rectangleScale.getY())
     };
 
     SDL_Texture *rectangleTexture = SDL_CreateTexture(renderer.get(), SDL_PIXELFORMAT_RGBA8888,
@@ -717,12 +717,12 @@ void RenderWrapper::RenderBoxCollision(const CameraComponent &cameraComponent,
         return;
 
     SDL_Rect squareRect = {
-            static_cast<int>(boxPosition.getX() - cameraTransformComponent.position->getX() +
-                             cameraComponent.size->getX() / 2 - sizeX / 2),
-            static_cast<int>(boxPosition.getY() - cameraTransformComponent.position->getY() +
-                             cameraComponent.size->getY() / 2 - sizeY / 2),
-            static_cast<int>(sizeX),
-            static_cast<int>(sizeY)
+        static_cast<int>(boxPosition.getX() - cameraTransformComponent.position->getX() +
+                         cameraComponent.size->getX() / 2 - sizeX / 2),
+        static_cast<int>(boxPosition.getY() - cameraTransformComponent.position->getY() +
+                         cameraComponent.size->getY() / 2 - sizeY / 2),
+        static_cast<int>(sizeX),
+        static_cast<int>(sizeY)
     };
 
     // Render the button background (you can customize this part)
@@ -750,12 +750,12 @@ void RenderWrapper::RenderGraph(const CameraComponent &cameraComponent,
             continue;
 
         SDL_Rect squareRect = {
-                static_cast<int>(boxPosition.getX() - cameraTransformComponent.position->getX() +
-                                 cameraComponent.size->getX() / 2 - sizeX / 2),
-                static_cast<int>(boxPosition.getY() - cameraTransformComponent.position->getY() +
-                                 cameraComponent.size->getY() / 2 - sizeY / 2),
-                static_cast<int>(sizeX),
-                static_cast<int>(sizeY)
+            static_cast<int>(boxPosition.getX() - cameraTransformComponent.position->getX() +
+                             cameraComponent.size->getX() / 2 - sizeX / 2),
+            static_cast<int>(boxPosition.getY() - cameraTransformComponent.position->getY() +
+                             cameraComponent.size->getY() / 2 - sizeY / 2),
+            static_cast<int>(sizeX),
+            static_cast<int>(sizeY)
         };
         if (graphNode->isVisited()) {
             SDL_SetRenderDrawColor(renderer.get(), 255, 0, 0, 255);
@@ -774,10 +774,10 @@ void RenderWrapper::RenderUiBoxCollision(const BoxCollisionComponent &boxCollisi
     auto worldScale = SceneManager::getWorldScale(transformComponent);
 
     SDL_Rect squareRect = {
-            static_cast<int>(worldPosition.getX()),
-            static_cast<int>(worldPosition.getY()),
-            static_cast<int>(boxCollisionComponent.size->getX() * worldScale.getX()),
-            static_cast<int>(boxCollisionComponent.size->getY() * worldScale.getY())
+        static_cast<int>(worldPosition.getX()),
+        static_cast<int>(worldPosition.getY()),
+        static_cast<int>(boxCollisionComponent.size->getX() * worldScale.getX()),
+        static_cast<int>(boxCollisionComponent.size->getY() * worldScale.getY())
     };
 
     SDL_SetRenderDrawColor(renderer.get(), 255, 0, 0, 255);
@@ -861,7 +861,7 @@ std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)> RenderWrapper::GetSp
         SDL_Surface *surface = SDL_LoadBMP(newPath.c_str());
         if (surface) {
             std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)> bmpTexture(
-                    SDL_CreateTextureFromSurface(renderer.get(), surface), &SDL_DestroyTexture);
+                SDL_CreateTextureFromSurface(renderer.get(), surface), &SDL_DestroyTexture);
             SDL_FreeSurface(surface);
             return std::move(bmpTexture);
         } else {
@@ -882,7 +882,7 @@ std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)> RenderWrapper::GetSp
     return std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)>(nullptr, &SDL_DestroyTexture);
 }
 
-std::pair<SDL_Rect, std::unique_ptr<SDL_Texture, void (*)(SDL_Texture *)>> &
+std::pair<SDL_Rect, std::unique_ptr<SDL_Texture, void (*)(SDL_Texture *)> > &
 RenderWrapper::GetCameraTexturePair(const CameraComponent &cameraComponent) {
     auto cameraTexture = cameraTextures.find(cameraComponent.entityId);
     if (cameraTexture == cameraTextures.end()) {
@@ -892,15 +892,15 @@ RenderWrapper::GetCameraTexturePair(const CameraComponent &cameraComponent) {
         auto yPosition = cameraComponent.onScreenPosition->getY() - height / 2;
 
         SDL_Rect rect = {
-                static_cast<int>(xPosition), static_cast<int>(yPosition), static_cast<int>(width),
-                static_cast<int>(height)
+            static_cast<int>(xPosition), static_cast<int>(yPosition), static_cast<int>(width),
+            static_cast<int>(height)
         };
         cameraTextures.insert(
-                std::make_pair(cameraComponent.entityId,
-                               std::make_pair(rect, std::unique_ptr<SDL_Texture, void (*)(SDL_Texture *)>(
-                                       SDL_CreateTexture(renderer.get(), SDL_PIXELFORMAT_RGBA8888,
-                                                         SDL_TEXTUREACCESS_TARGET, width, height),
-                                       [](SDL_Texture *t) { SDL_DestroyTexture(t); }))));
+            std::make_pair(cameraComponent.entityId,
+                           std::make_pair(rect, std::unique_ptr<SDL_Texture, void (*)(SDL_Texture *)>(
+                                              SDL_CreateTexture(renderer.get(), SDL_PIXELFORMAT_RGBA8888,
+                                                                SDL_TEXTUREACCESS_TARGET, width, height),
+                                              [](SDL_Texture *t) { SDL_DestroyTexture(t); }))));
     }
     cameraTexture = cameraTextures.find(cameraComponent.entityId);
     return cameraTexture->second;
@@ -929,12 +929,12 @@ void RenderWrapper::RenderCircleCollision(const CameraComponent &cameraComponent
 
     SDL_Rect srcRect{0, 0, 512, 512};
     SDL_Rect destRect = {
-            static_cast<int>(circlePosition.getX() - cameraTransformComponent.position->getX() +
-                             cameraComponent.size->getX() / 2 - circleRadius),
-            static_cast<int>(circlePosition.getY() - cameraTransformComponent.position->getY() +
-                             cameraComponent.size->getY() / 2 - circleRadius),
-            static_cast<int>(circleRadius * 2),
-            static_cast<int>(circleRadius * 2)
+        static_cast<int>(circlePosition.getX() - cameraTransformComponent.position->getX() +
+                         cameraComponent.size->getX() / 2 - circleRadius),
+        static_cast<int>(circlePosition.getY() - cameraTransformComponent.position->getY() +
+                         cameraComponent.size->getY() / 2 - circleRadius),
+        static_cast<int>(circleRadius * 2),
+        static_cast<int>(circleRadius * 2)
     };
 
     render(texture->second.get(), &srcRect, &destRect, 0, false, false);
@@ -955,10 +955,10 @@ void RenderWrapper::RenderUiCircleCollision(const CircleCollisionComponent &circ
 
     SDL_Rect srcRect{0, 0, 512, 512};
     SDL_Rect destRect = {
-            static_cast<int>(worldPosition.getX() - circleRadius),
-            static_cast<int>(worldPosition.getY() - circleRadius),
-            static_cast<int>(circleRadius * 2),
-            static_cast<int>(circleRadius * 2)
+        static_cast<int>(worldPosition.getX() - circleRadius),
+        static_cast<int>(worldPosition.getY() - circleRadius),
+        static_cast<int>(circleRadius * 2),
+        static_cast<int>(circleRadius * 2)
     };
 
     render(texture->second.get(), &srcRect, &destRect, 0, false, false);

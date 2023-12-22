@@ -3,7 +3,7 @@
 //
 
 #include "FPSWrapper.hpp"
-#include "../ConfigSingleton.hpp"
+#include "ConfigSingleton.hpp"
 
 void FPSWrapper::Start() {
     start = SDL_GetPerformanceCounter();

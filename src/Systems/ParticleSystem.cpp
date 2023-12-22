@@ -12,7 +12,7 @@
 #include <Components/BoxCollisionComponent.hpp>
 #include "ParticleSystem.hpp"
 #include "../includes/ComponentStore.hpp"
-#include "../ConfigSingleton.hpp"
+#include "../../outfacingInterfaces/ConfigSingleton.hpp"
 
 ParticleSystem::ParticleSystem() {
     for (int i = 0; i < ConfigSingleton::getInstance().getParticleLimit(); ++i) {
@@ -24,7 +24,7 @@ ParticleSystem::ParticleSystem() {
         auto transformComponent = std::make_unique<TransformComponent>();
         auto objectInfoComponent = std::make_unique<ObjectInfoComponent>();
         objectInfoComponent->isActive = false;
-        auto boxCollider = std::make_unique<BoxCollisionComponent>(Vector2(1,1));
+        auto boxCollider = std::make_unique<BoxCollisionComponent>(Vector2(1, 1));
         boxCollider->isTrigger = true;
         auto rigidBody = std::make_unique<RigidBodyComponent>(CollisionType::DYNAMIC);
         rigidBody->gravityScale = 0.0f;
@@ -41,7 +41,6 @@ ParticleSystem::ParticleSystem() {
 }
 
 ParticleSystem::~ParticleSystem() {
-
 }
 
 void ParticleSystem::update(milliseconds deltaTime) {
@@ -64,7 +63,8 @@ void ParticleSystem::updateParticles(milliseconds deltaTime) {
 }
 
 void ParticleSystem::updateParticleEmitters(milliseconds deltaTime) {
-    auto particleEmitterEntityIds = ComponentStore::GetInstance().getActiveEntitiesWithComponent<ParticleEmitterComponent>();
+    auto particleEmitterEntityIds = ComponentStore::GetInstance().getActiveEntitiesWithComponent<
+        ParticleEmitterComponent>();
     for (auto id: particleEmitterEntityIds) {
         auto inactiveParticleIds = ComponentStore::GetInstance().getInactiveEntitiesWithComponent<ParticleComponent>();
         if (inactiveParticleIds.empty()) return;
@@ -88,16 +88,17 @@ void ParticleSystem::updateParticleEmitters(milliseconds deltaTime) {
             entity inactiveParticleId = inactiveParticleIds[0];
 
             auto &particleComponent = ComponentStore::GetInstance().tryGetComponent<ParticleComponent>(
-                    inactiveParticleId);
+                inactiveParticleId);
             auto &rectangleComponent = ComponentStore::GetInstance().tryGetComponent<RectangleComponent>(
-                    inactiveParticleId);
+                inactiveParticleId);
             auto &velocityComponent = ComponentStore::GetInstance().tryGetComponent<VelocityComponent>(
-                    inactiveParticleId);
+                inactiveParticleId);
             auto &transformComponent = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(
-                    inactiveParticleId);
+                inactiveParticleId);
             auto &objectInfoComponent = ComponentStore::GetInstance().tryGetComponent<ObjectInfoComponent>(
-                    inactiveParticleId);
-            auto &boxCollisionComponent = ComponentStore::GetInstance().tryGetComponent<BoxCollisionComponent>(inactiveParticleId);
+                inactiveParticleId);
+            auto &boxCollisionComponent = ComponentStore::GetInstance().tryGetComponent<BoxCollisionComponent>(
+                inactiveParticleId);
 
             particleComponent.lifeTime = particleEmitterComponent.lifeTime;
 
@@ -144,9 +145,7 @@ const std::string ParticleSystem::getName() const {
 }
 
 void ParticleSystem::cleanUp() {
-
 }
 
 void ParticleSystem::clearCache() {
-
 }
