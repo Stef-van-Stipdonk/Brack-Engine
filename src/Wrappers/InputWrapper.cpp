@@ -46,8 +46,8 @@ void InputWrapper::HandleEvents() {
 
     if (lastMouseMotionEvent.type != 0) {
         InputManager::GetInstance().SetMousePosition(
-            Vector2(static_cast<float>(lastMouseMotionEvent.motion.x),
-                    static_cast<float>(lastMouseMotionEvent.motion.y)));
+                Vector2(static_cast<float>(lastMouseMotionEvent.motion.x),
+                        static_cast<float>(lastMouseMotionEvent.motion.y)));
     }
     if (lastMouseButtonDownEvent.type != 0) {
         InputManager::GetInstance().SetMousePressed(lastMouseButtonDownEvent.button.button);
@@ -62,3 +62,4 @@ void InputWrapper::HandleEvents() {
         InputManager::GetInstance().SetKeyReleased(lastKeyUpEvent.key.keysym.sym);
     }
 }
+

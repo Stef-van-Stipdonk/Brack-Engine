@@ -21,11 +21,14 @@ public:
     const std::string getName() const override;
 
     void cleanUp() override;
+
     void clearCache() override;
 
     void update(milliseconds deltaTime) override;
 
     AudioSystem(const AudioSystem &other);
+
+    void setAudioWrapper(std::unique_ptr<AudioWrapper> wrapper);
 
 private:
     std::unique_ptr<AudioWrapper> audioWrapper;
