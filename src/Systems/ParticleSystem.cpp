@@ -13,13 +13,14 @@
 #include "ParticleSystem.hpp"
 #include "../includes/ComponentStore.hpp"
 #include "../ConfigSingleton.hpp"
+#include "Components/SpriteComponent.hpp"
 
 ParticleSystem::ParticleSystem() {
     for (int i = 0; i < ConfigSingleton::getInstance().getParticleLimit(); ++i) {
         auto particleEntity = EntityManager::getInstance().createEntity();
 
         auto particleComponent = std::make_unique<ParticleComponent>();
-        auto rectangleComponent = std::make_unique<RectangleComponent>(Vector2(0, 0));
+        auto spriteComponent = std::make_unique<SpriteComponent>();
         auto velocityComponent = std::make_unique<VelocityComponent>();
         auto transformComponent = std::make_unique<TransformComponent>();
         auto objectInfoComponent = std::make_unique<ObjectInfoComponent>();
@@ -32,7 +33,7 @@ ParticleSystem::ParticleSystem() {
         ComponentStore::GetInstance().addComponent(particleEntity, std::move(rigidBody));
         ComponentStore::GetInstance().addComponent(particleEntity, std::move(transformComponent));
         ComponentStore::GetInstance().addComponent(particleEntity, std::move(velocityComponent));
-        ComponentStore::GetInstance().addComponent(particleEntity, std::move(rectangleComponent));
+        ComponentStore::GetInstance().addComponent(particleEntity, std::move(spriteComponent));
         ComponentStore::GetInstance().addComponent(particleEntity, std::move(particleComponent));
         ComponentStore::GetInstance().addComponent(particleEntity, std::move(objectInfoComponent));
         ComponentStore::GetInstance().addComponent(particleEntity, std::move(boxCollider));
@@ -89,7 +90,7 @@ void ParticleSystem::updateParticleEmitters(milliseconds deltaTime) {
 
             auto &particleComponent = ComponentStore::GetInstance().tryGetComponent<ParticleComponent>(
                     inactiveParticleId);
-            auto &rectangleComponent = ComponentStore::GetInstance().tryGetComponent<RectangleComponent>(
+            auto &spriteComponent = ComponentStore::GetInstance().tryGetComponent<SpriteComponent>(
                     inactiveParticleId);
             auto &velocityComponent = ComponentStore::GetInstance().tryGetComponent<VelocityComponent>(
                     inactiveParticleId);
@@ -101,16 +102,19 @@ void ParticleSystem::updateParticleEmitters(milliseconds deltaTime) {
 
             particleComponent.lifeTime = particleEmitterComponent.lifeTime;
 
-            rectangleComponent.fill = std::make_unique<Color>(*particleEmitterComponent.color);
-            rectangleComponent.sortingLayer = particleEmitterComponent.sortingLayer;
-            rectangleComponent.orderInLayer = particleEmitterComponent.orderInLayer;
-            rectangleComponent.size = std::make_unique<Vector2>(particleEmitterComponent.particleSize);
+            spriteComponent.margin = particleEmitterComponent.spriteMargin;
+            spriteComponent.sortingLayer = particleEmitterComponent.sortingLayer;
+            spriteComponent.orderInLayer = particleEmitterComponent.orderInLayer;
+            spriteComponent.spritePath = particleEmitterComponent.spritePath;
+            spriteComponent.spriteSize = std::make_unique<Vector2>(particleEmitterComponent.spriteSize);
+            spriteComponent.tileOffset = std::make_unique<Vector2>(particleEmitterComponent.spriteTileOffset);
 
-            boxCollisionComponent.size = std::make_unique<Vector2>(particleEmitterComponent.particleSize);
+            boxCollisionComponent.size = std::make_unique<Vector2>(particleEmitterComponent.colliderSize);
 
             velocityComponent.velocity = generateRandomDirection(particleEmitterComponent.speed);
 
             transformComponent.position = std::make_unique<Vector2>(*particleEmitterTransformComponent.position);
+            transformComponent.scale = std::make_unique<Vector2>(particleEmitterComponent.scale);
 
             objectInfoComponent.isActive = true;
             EntityManager::getInstance().setEntityActive(inactiveParticleId, true);
