@@ -46,15 +46,11 @@ void ReplaySystem::update(milliseconds deltaTime) {
 
         totalTimeOfSnapshots += deltaTime;
 
-        while (totalTimeOfSnapshots > replayStorageDuration) {
-            auto toBeDeletedSnapshot = std::move(snapshots.front());
-            totalTimeOfSnapshots -= toBeDeletedSnapshot.first;
-
-            if (toBeDeletedSnapshot.second != nullptr)
-                toBeDeletedSnapshot.second.reset();
-
+        if(totalTimeOfSnapshots > replayStorageDuration) {
             snapshots.pop();
+            totalTimeOfSnapshots -= snapshotInterval;
         }
+
         timeElapsedSinceLastSnapshot = 0;
     }
 }
