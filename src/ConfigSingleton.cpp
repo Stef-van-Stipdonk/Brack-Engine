@@ -72,6 +72,8 @@ void ConfigSingleton::setConfig(Config config) {
     fpsLimit = config.fpsLimit;
     particleLimit = config.particleLimit;
     deltaTimeMultiplier = config.deltaTimeMultiplier;
+    if (config.appLogoPath != "")
+        appLogoPath = config.appLogoPath;
 }
 
 bool ConfigSingleton::showFps() const {
@@ -107,4 +109,8 @@ float ConfigSingleton::getAspectRatio() const {
 
 void ConfigSingleton::toggleFullScreen() {
     fullscreen = !fullscreen;
+}
+
+std::string ConfigSingleton::getAppLogoPath() const {
+    return appLogoPath;
 }

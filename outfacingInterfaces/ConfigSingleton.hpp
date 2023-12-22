@@ -64,6 +64,8 @@ public:
 
     float deltaTimeMultiplier = 1;
 
+    std::string getAppLogoPath() const;
+
 private:
     static ConfigSingleton instance;
 
@@ -75,6 +77,7 @@ private:
     Vector2 initialWindowSize = Vector2(1280, 720);
     bool fullscreen = false;
     std::string BaseAssetPath = "./Assets/";
+    std::string appLogoPath = "Resources/BrackEngineLogo.png";
     bool showFPS_ = true;
     int amountOfSoundEffectsChannels = 7;
     uint32_t fpsLimit = 60;

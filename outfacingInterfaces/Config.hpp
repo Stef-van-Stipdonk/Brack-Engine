@@ -9,8 +9,7 @@
 #include <cstdint>
 #include "Helpers/Vector2.hpp"
 
-class Config
-{
+class Config {
 public:
     Config();
 
@@ -22,6 +21,7 @@ public:
     Vector2 initialWindowSize = Vector2(1280, 720);
     bool fullscreen = false;
     std::string BaseAssetPath = "./Assets/";
+    std::string appLogoPath = "";
     bool showFPS = true;
     int amountOfSoundEffectsChannels = 7;
     uint16_t fpsLimit = 0;
