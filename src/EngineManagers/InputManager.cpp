@@ -7,8 +7,7 @@
 #include <Components/CameraComponent.hpp>
 #include <Components/TransformComponent.hpp>
 #include "EngineManagers/InputManager.hpp"
-
-#include "../ConfigSingleton.hpp"
+#include "../../outfacingInterfaces/ConfigSingleton.hpp"
 #include "../Logger.hpp"
 #include "../includes/ComponentStore.hpp"
 
@@ -144,7 +143,7 @@ Vector2 InputManager::getWorldMousePosition() const {
         auto &cameraPosition = camera.onScreenPosition;
         auto &cameraSize = camera.size;
         auto sizeFactor = ConfigSingleton::getInstance().getWindowChangeFactor();
-        
+
         if (isPositionInsideSquare(*mousePosition, *cameraPosition * sizeFactor, *cameraSize * sizeFactor)) {
             auto &cameraTransform = ComponentStore::GetInstance().tryGetComponent<TransformComponent>(id);
             auto mouseDistance = *mousePosition - *cameraPosition * sizeFactor;

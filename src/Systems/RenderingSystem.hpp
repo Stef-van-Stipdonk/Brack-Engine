@@ -25,6 +25,7 @@ public:
     ~RenderingSystem() override;
 
     void cleanUp() override;
+
     void clearCache() override;
 
     const std::string getName() const override;
@@ -32,6 +33,8 @@ public:
     RenderingSystem(const RenderingSystem &other);
 
     void update(milliseconds deltaTime) override;
+
+    void setRenderWrapper(std::unique_ptr<RenderWrapper> wrapper);
 
 private:
     void SortRenderComponents();

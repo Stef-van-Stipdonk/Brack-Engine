@@ -82,6 +82,7 @@ add_library(${PROJECT_NAME} SHARED
         src/Logger.hpp
         src/Logger.cpp
         src/ConfigSingleton.cpp
+        outfacingInterfaces/ConfigSingleton.hpp
         src/Config.cpp
         outfacingInterfaces/Helpers/KeyMap.hpp
         outfacingInterfaces/Helpers/MouseMap.hpp
