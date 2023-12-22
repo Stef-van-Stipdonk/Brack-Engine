@@ -49,3 +49,7 @@ AudioSystem::AudioSystem(const AudioSystem &other) {
 void AudioSystem::clearCache() {
     audioWrapper->clearChannels();
 }
+
+void AudioSystem::setAudioWrapper(std::unique_ptr<AudioWrapper> wrapper) {
+    audioWrapper = std::move(wrapper);
+}

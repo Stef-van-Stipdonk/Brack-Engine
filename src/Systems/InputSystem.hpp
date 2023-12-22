@@ -23,7 +23,11 @@ public:
     InputSystem(const InputSystem &other);
 
     void cleanUp() override;
+
     void clearCache() override;
+
+    void setInputWrapper(std::unique_ptr<InputWrapper> wrapper);
+    
 
 private:
     std::unique_ptr<InputWrapper> inputWrapper;

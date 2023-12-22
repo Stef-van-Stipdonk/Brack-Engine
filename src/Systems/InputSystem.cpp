@@ -15,7 +15,8 @@ InputSystem::~InputSystem() {
 
 void InputSystem::update(milliseconds deltaTime) {
     InputManager::GetInstance().UpdateEvents();
-    // inputWrapper->HandleEvents();
+    if (inputWrapper != nullptr)
+        inputWrapper->HandleEvents();
 }
 
 const std::string InputSystem::getName() const {
@@ -30,5 +31,9 @@ void InputSystem::clearCache() {
 
 InputSystem::InputSystem(const InputSystem &other) {
     inputWrapper = std::make_unique<InputWrapper>(*other.inputWrapper);
+}
+
+void InputSystem::setInputWrapper(std::unique_ptr<InputWrapper> wrapper) {
+    inputWrapper = std::move(wrapper);
 }
 
