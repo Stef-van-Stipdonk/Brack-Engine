@@ -13,7 +13,7 @@
 
 class InputManager {
 public:
-    static InputManager &GetInstance();
+    static InputManager &getInstance();
 
     ~InputManager() = default;
 

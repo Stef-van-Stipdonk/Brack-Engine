@@ -46,7 +46,7 @@ void ReplaySystem::update(milliseconds deltaTime) {
 
         totalTimeOfSnapshots += deltaTime;
 
-        if(totalTimeOfSnapshots > replayStorageDuration) {
+        if (totalTimeOfSnapshots > replayStorageDuration) {
             snapshots.pop();
             totalTimeOfSnapshots -= snapshotInterval;
         }
@@ -82,7 +82,7 @@ void ReplaySystem::replay() {
 
     replayStart = false;
     restore_ecs_snapshot(*currentSnapshot);
-    InputManager::GetInstance().clearInputs();
+    InputManager::getInstance().clearInputs();
     if (currentSnapshot != nullptr)
         currentSnapshot.reset();
 

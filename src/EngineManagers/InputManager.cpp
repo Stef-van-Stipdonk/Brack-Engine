@@ -103,7 +103,7 @@ Vector2 &InputManager::getScreenMousePosition() const {
     return *mousePosition;
 }
 
-InputManager &InputManager::GetInstance() {
+InputManager &InputManager::getInstance() {
     return instance;
 }
 
