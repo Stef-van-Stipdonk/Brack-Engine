@@ -14,7 +14,7 @@ InputSystem::~InputSystem() {
 }
 
 void InputSystem::update(milliseconds deltaTime) {
-    InputManager::GetInstance().UpdateEvents();
+    InputManager::getInstance().UpdateEvents();
     if (inputWrapper != nullptr)
         inputWrapper->HandleEvents();
 }

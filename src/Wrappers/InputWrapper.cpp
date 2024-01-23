@@ -44,21 +44,21 @@ void InputWrapper::HandleEvents() {
     }
 
     if (lastMouseMotionEvent.type != 0) {
-        InputManager::GetInstance().SetMousePosition(
+        InputManager::getInstance().SetMousePosition(
                 Vector2(static_cast<float>(lastMouseMotionEvent.motion.x),
                         static_cast<float>(lastMouseMotionEvent.motion.y)));
     }
     if (lastMouseButtonDownEvent.type != 0) {
-        InputManager::GetInstance().SetMousePressed(lastMouseButtonDownEvent.button.button);
+        InputManager::getInstance().SetMousePressed(lastMouseButtonDownEvent.button.button);
     }
     if (lastMouseButtonUpEvent.type != 0) {
-        InputManager::GetInstance().SetMouseReleased(lastMouseButtonUpEvent.button.button);
+        InputManager::getInstance().SetMouseReleased(lastMouseButtonUpEvent.button.button);
     }
     if (lastKeyDownEvent.type != 0) {
-        InputManager::GetInstance().SetKeyPressed(lastKeyDownEvent.key.keysym.sym);
+        InputManager::getInstance().SetKeyPressed(lastKeyDownEvent.key.keysym.sym);
     }
     if (lastKeyUpEvent.type != 0) {
-        InputManager::GetInstance().SetKeyReleased(lastKeyUpEvent.key.keysym.sym);
+        InputManager::getInstance().SetKeyReleased(lastKeyUpEvent.key.keysym.sym);
     }
 }
 
