@@ -5,6 +5,9 @@ The engine was designed/build by a team of 5 people.
 The engine architecture mostly adheres to ECS, but due to some of the requirements items like behaviourscripts are also supported. 
 A demo game was developed along side of the engine showcasing some of its features.
 
+## Architecture document
+https://docs.google.com/document/d/1O09pR5C1mpcvTk3S26ANW_hfk06sLuEE9fI1rAdSTI8/edit?tab=t.0#heading=h.50ougdgjydxd
+
 ## Demo Links
 - Code - [Brackocalypse](https://github.com/Stef-van-Stipdonk/Brackocalypse)
 - Downloadable Game - [itch.io](https://jessemampaey.itch.io/brackocalypse)
